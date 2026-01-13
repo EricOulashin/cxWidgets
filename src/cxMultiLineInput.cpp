@@ -23,8 +23,8 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
                  int pRightLabelOffset, int pRightLabelHeight,
                  int pRightLabelWidth, bool pShowRightLabel)
    : cxWindow(pParentWindow, pRow, pCol, (pHeight > 0) ? pHeight : 1, pWidth,
-              "", "", "", pBorderStyle, NULL, NULL),
-     mValidatorFunction(NULL),
+              "", "", "", pBorderStyle, nullptr, nullptr),
+     mValidatorFunction(nullptr),
      mRunFocusFunctions(true),
      mExtValue(pExtValue),
      mCurrentInputLine(0),
@@ -36,7 +36,7 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
      mRunValidatorFunction(true),
      mUseClearKey(true),
      mValidateOnReverse(true),
-     mParentForm(NULL),
+     mParentForm(nullptr),
      mApplyAttrDefaults(true),
      mRanFunctionAndShouldExit(false),
      mInputType(pInputType),
@@ -50,9 +50,9 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
      mExtendedHelpColor(cxBase::getDefaultMessageColor()),
      mExtendedHelpAttribute(A_NORMAL),
      mUseExtendedHelpKeys(true),
-     mRightLabel(NULL, (hasBorder() ? pRow + 1 : pRow),
+     mRightLabel(nullptr, (hasBorder() ? pRow + 1 : pRow),
                  right() + 1 + pRightLabelOffset, pRightLabelHeight,
-                 pRightLabelWidth, "", "", "", eBS_NOBORDER, NULL, NULL, false),
+                 pRightLabelWidth, "", "", "", eBS_NOBORDER, nullptr, nullptr, false),
      mRightLabelOffset(pRightLabelOffset),
      mShowRightLabel(pShowRightLabel),
      // Set mMaxInputLength to something really large so that if this input is
@@ -74,8 +74,8 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
       int row = pRow+1; // Row # for the single-line inputs
       // Create the first input line (the label will be displayed
       //  with this one)
-      cxInput *input = new cxInput(NULL, row, pCol+1, pWidth-2, pLabel,
-                                   eBS_NOBORDER, pInputOption, true, NULL);
+      cxInput *input = new cxInput(nullptr, row, pCol+1, pWidth-2, pLabel,
+                                   eBS_NOBORDER, pInputOption, true, nullptr);
       input->mParentMLInput = this;
       // The input should exit when a function key is pressed so that
       //  this multi-line input can catch it.
@@ -84,8 +84,8 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
 
       // Create the rest of the inputs (with blank labels)
       for (row = pRow+2; row < pRow+pHeight-1; ++row) {
-         cxInput *input = new cxInput(NULL, row, pCol+1, pWidth-2, "",
-                                      eBS_NOBORDER, pInputOption, true, NULL);
+         cxInput *input = new cxInput(nullptr, row, pCol+1, pWidth-2, "",
+                                      eBS_NOBORDER, pInputOption, true, nullptr);
          input->mParentMLInput = this;
          // The input should exit when a function key is pressed so that
          //  this multi-line input can catch it.
@@ -107,16 +107,16 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
       int row = pRow; // Row # for the single-line inputs
       // Create the first input line (the label will be displayed
       //  with this one)
-      cxInput *input = new cxInput(NULL, row, pCol, pWidth, pLabel,
-                                   eBS_NOBORDER, pInputOption, true, NULL);
+      cxInput *input = new cxInput(nullptr, row, pCol, pWidth, pLabel,
+                                   eBS_NOBORDER, pInputOption, true, nullptr);
       input->mParentMLInput = this;
       input->setExitOnFKey(true);
       mInputs.push_back(input);
 
       // Create the rest of the inputs (with blank labels)
       for (row = pRow+1; row < pRow+pHeight; ++row) {
-         cxInput *input = new cxInput(NULL, row, pCol, pWidth, "",
-                                      eBS_NOBORDER, pInputOption, true, NULL);
+         cxInput *input = new cxInput(nullptr, row, pCol, pWidth, "",
+                                      eBS_NOBORDER, pInputOption, true, nullptr);
          input->mParentMLInput = this;
          input->setExitOnFKey(true);
          // The input should exit when the user presses backspace at the first
@@ -127,9 +127,9 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
       }
    }
 
-   // If mExtValue is not NULL, then update the value of
+   // If mExtValue is not nullptr, then update the value of
    //  this input.
-   if (mExtValue != NULL) {
+   if (mExtValue != nullptr) {
       setValue(*mExtValue);
    }
 
@@ -155,8 +155,8 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
    mNavKeys.insert(KEY_RIGHT);
 
    // Set up the built-in validator and onKeypress functions for the input
-   setValidatorFunction(cxMultiLineInput::inputValidatorStatic, this, NULL);
-   setOnKeyFunction(cxMultiLineInput::onKeypressStatic, this, NULL);
+   setValidatorFunction(cxMultiLineInput::inputValidatorStatic, this, nullptr);
+   setOnKeyFunction(cxMultiLineInput::onKeypressStatic, this, nullptr);
    toggleOnKeyFunction(true);
 
    // Enable/disable the right label window
@@ -168,10 +168,10 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
 
 // Copy constructor
 cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
-   : cxWindow(NULL, pThatInput.top(), pThatInput.left(), pThatInput.height(),
+   : cxWindow(nullptr, pThatInput.top(), pThatInput.left(), pThatInput.height(),
      pThatInput.width(), pThatInput.getTitle(), pThatInput.getLabel(), pThatInput.getStatus(),
-     pThatInput.getBorderStyle(), NULL, NULL),
-     mValidatorFunction(NULL),
+     pThatInput.getBorderStyle(), nullptr, nullptr),
+     mValidatorFunction(nullptr),
      mRunFocusFunctions(pThatInput.mRunFocusFunctions),
      mExtValue(pThatInput.mExtValue),
      mCurrentInputLine(0),
@@ -183,7 +183,7 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
      mRunValidatorFunction(pThatInput.mRunValidatorFunction),
      mUseClearKey(pThatInput.mUseClearKey),
      mValidateOnReverse(pThatInput.mValidateOnReverse),
-     mParentForm(NULL),
+     mParentForm(nullptr),
      mApplyAttrDefaults(pThatInput.mApplyAttrDefaults),
      mRanFunctionAndShouldExit(false),
      mSkipValidatorKeys(pThatInput.mSkipValidatorKeys),
@@ -207,7 +207,7 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
      mErrorState(pThatInput.mErrorState)
 {
    // Copy the other input's single-line inputs
-   cxInput *myInput = NULL;
+   cxInput *myInput = nullptr;
    cxInputPtrContainer::const_iterator iter = pThatInput.mInputs.begin();
    for(; iter != pThatInput.mInputs.end(); ++iter) {
       myInput = new cxInput(**iter);
@@ -223,9 +223,9 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
    // Copy the other input's mValidatorFunction
    copyValidatorFunction(pThatInput);
 
-   // If mExtValue is not NULL, then update the value of
+   // If mExtValue is not nullptr, then update the value of
    //  this input.
-   if (mExtValue != NULL) {
+   if (mExtValue != nullptr) {
       setValue(*mExtValue);
    }
 
@@ -238,7 +238,7 @@ cxMultiLineInput::~cxMultiLineInput() {
    // Free the memory used by the cxInput pointers in mInputs
    freeInputs();
    // Free the memory used by mValidatorFunction
-   if (mValidatorFunction != NULL) {
+   if (mValidatorFunction != nullptr) {
       delete mValidatorFunction;
    }
 } // Destructor
@@ -255,10 +255,10 @@ long cxMultiLineInput::show(bool pBringToTop, bool pShowSubwindows) {
    long returnVal = cxID_EXIT;
    // Only show the input if it's enabled.
    if (isEnabled()) {
-      // If the "external" user value pointer is not NULL,
+      // If the "external" user value pointer is not nullptr,
       //  update the input box value, just in case it
       //  has changed.
-      if (mExtValue != NULL) {
+      if (mExtValue != nullptr) {
          setValue(*mExtValue);
       }
 
@@ -386,13 +386,13 @@ long cxMultiLineInput::showModal(bool pShowSelf, bool pBringToTop, bool pShowSub
                   //  form the input is on (if the input is on a form), then
                   //  don't do validation.
                   if ((lastKeyWasMouseEvt() && !mouseEvtWasInWindow())) {
-                     if (mParentForm != NULL) {
+                     if (mParentForm != nullptr) {
                         if (!(mParentForm->pointIsInWindow(mMouse.y, mMouse.x))) {
                            doValidation = false;
                         }
                      }
                      else {
-                        // mParentForm is NULL..  just set doValidation to
+                        // mParentForm is nullptr..  just set doValidation to
                         //  false.
                         doValidation = false;
                      }
@@ -486,7 +486,7 @@ long cxMultiLineInput::showModal(bool pShowSelf, bool pBringToTop, bool pShowSub
          }
 
          // If the external value pointer is set, then update it.
-         if (mExtValue != NULL) {
+         if (mExtValue != nullptr) {
             *mExtValue = getValue();
          }
       }
@@ -626,7 +626,7 @@ bool cxMultiLineInput::setValue(string pValue, bool pRefresh) {
       // If it's okay to set the value, then set it.
       if (setIt) {
          // If the external value pointer is set, then update it.
-         if (mExtValue != NULL) {
+         if (mExtValue != nullptr) {
             *mExtValue = pValue;
          }
 
@@ -693,7 +693,7 @@ bool cxMultiLineInput::setValue(string pValue, bool pRefresh) {
          refreshValue(pRefresh);
       }
       // If this input is on a cxForm, tell the form that it has been updated.
-      if ((mParentForm != NULL)) {
+      if ((mParentForm != nullptr)) {
          mParentForm->setChanged(true);
       }
    }
@@ -706,7 +706,7 @@ bool cxMultiLineInput::setValue(string pValue, bool pRefresh) {
 //  pRefresh: Whether or not to refresh the input.
 void cxMultiLineInput::setExtValue(string *pExtVal, bool pRefresh) {
    mExtValue = pExtVal;
-   if (mExtValue != NULL) {
+   if (mExtValue != nullptr) {
       // If pRefresh is true, then call show().  show() will
       //  update the value entered in this input box.
       //  Otherwise (if pRefresh is false), just update the
@@ -988,8 +988,8 @@ void cxMultiLineInput::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
          eInputOptions inputKind = (eInputOptions)mInputs[0]->getInputOption();
 
          for (int i = oldHeight; i < pNewHeight; ++i) {
-            cxInput *input = new cxInput(NULL, row, col, inputWidth, "",
-                                 eBS_NOBORDER, inputKind, true, NULL);
+            cxInput *input = new cxInput(nullptr, row, col, inputWidth, "",
+                                 eBS_NOBORDER, inputKind, true, nullptr);
             // Set the input's parent multi-line input to this input
             input->mParentMLInput = this;
             // Apply the attributes from the first input to the new input
@@ -1259,7 +1259,7 @@ void cxMultiLineInput::toggleCursor(bool pShowCursor) {
 } // toggleCursor
 
 string cxMultiLineInput::clearInput(void* theInput, void* unused) {
-   if (theInput != NULL) {
+   if (theInput != nullptr) {
       cxMultiLineInput *pInput = (cxMultiLineInput*)theInput;
       pInput->setValue("");
       // Refresh the input
@@ -1275,21 +1275,21 @@ bool cxMultiLineInput::setValidatorFunction(funcPtr4 pFunction, void *p1, void *
    // Free the memory used by mValidatorFunction, and then update it with the
    //  given parameters.
    clearValidatorFunction();
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mValidatorFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
                                            false, true);
-      setIt = (mValidatorFunction != NULL);
+      setIt = (mValidatorFunction != nullptr);
    }
    else {
       setIt = true;
    }
 
-   // Set mRunValidatorFunction - If mValidatorFunction is not NULL, then
+   // Set mRunValidatorFunction - If mValidatorFunction is not nullptr, then
    //  mRunValidatorFunction should be true; otherwise, it should be false.
    // Note: This uses toggleValidatorFunction() instead of setting
    //  mRunValidatorFunction directly because cxComboBox has its own
    //  mRunValidatorFunction.
-   toggleValidatorFunction(mValidatorFunction != NULL);
+   toggleValidatorFunction(mValidatorFunction != nullptr);
 
    return(setIt);
 } // setValidatorFunction
@@ -1299,21 +1299,21 @@ bool cxMultiLineInput::setValidatorFunction(funcPtr2 pFunction, void *p1, void *
    // Free the memory used by mValidatorFunction, and then update it with the
    //  given parameters.
    clearValidatorFunction();
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mValidatorFunction = new cxFunction2(pFunction, p1, p2, false, false,
                                            true);
-      setIt = (mValidatorFunction != NULL);
+      setIt = (mValidatorFunction != nullptr);
    }
    else {
       setIt = true;
    }
 
-   // Set mRunValidatorFunction - If mValidatorFunction is not NULL, then
+   // Set mRunValidatorFunction - If mValidatorFunction is not nullptr, then
    //  mRunValidatorFunction should be true; otherwise, it should be false.
    // Note: This uses toggleValidatorFunction() instead of setting
    //  mRunValidatorFunction directly because cxComboBox has its own
    //  mRunValidatorFunction.
-   toggleValidatorFunction(mValidatorFunction != NULL);
+   toggleValidatorFunction(mValidatorFunction != nullptr);
 
    return(setIt);
 } // setValidatorFunction
@@ -1323,28 +1323,28 @@ bool cxMultiLineInput::setValidatorFunction(funcPtr0 pFunction) {
    // Free the memory used by mValidatorFunction, and then update it with the
    //  given parameters.
    clearValidatorFunction();
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mValidatorFunction = new cxFunction0(pFunction, false, false, true);
-      setIt = (mValidatorFunction != NULL);
+      setIt = (mValidatorFunction != nullptr);
    }
    else {
       setIt = true;
    }
 
-   // Set mRunValidatorFunction - If mValidatorFunction is not NULL, then
+   // Set mRunValidatorFunction - If mValidatorFunction is not nullptr, then
    //  mRunValidatorFunction should be true; otherwise, it should be false.
    // Note: This uses toggleValidatorFunction() instead of setting
    //  mRunValidatorFunction directly because cxComboBox has its own
    //  mRunValidatorFunction.
-   toggleValidatorFunction(mValidatorFunction != NULL);
+   toggleValidatorFunction(mValidatorFunction != nullptr);
 
    return(setIt);
 } // setValidatorFunction
 
 void cxMultiLineInput::clearValidatorFunction() {
-   if (mValidatorFunction != NULL) {
+   if (mValidatorFunction != nullptr) {
       delete mValidatorFunction;
-      mValidatorFunction = NULL;
+      mValidatorFunction = nullptr;
    }
 } // clearValidatorFunction
 
@@ -1559,7 +1559,7 @@ void cxMultiLineInput::trapNonAssignedFKeys(bool pTrapNonAssignedFKeys) {
 bool cxMultiLineInput::runOnFocusFunction(string *pFunctionRetval) {
    bool exitInputLoop = false;
 
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       if (onFocusFunctionIsSet()) {
          exitInputLoop = mOnFocusFunction->getExitAfterRun();
          string funcRetval = mOnFocusFunction->runFunction();
@@ -1568,7 +1568,7 @@ bool cxMultiLineInput::runOnFocusFunction(string *pFunctionRetval) {
             setValue(funcRetval);
          }
 
-         if (NULL != pFunctionRetval) {
+         if (nullptr != pFunctionRetval) {
             *pFunctionRetval = funcRetval;
          }
       }
@@ -1579,9 +1579,9 @@ bool cxMultiLineInput::runOnFocusFunction(string *pFunctionRetval) {
 
 void cxMultiLineInput::runFieldFunction(int pKey) {
    if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
-      // The cxFunction pointers in mKeyFunctions shouldn't be NULL, but check
+      // The cxFunction pointers in mKeyFunctions shouldn't be nullptr, but check
       //  anyway.
-      if (mKeyFunctions[pKey] != NULL) {
+      if (mKeyFunctions[pKey] != nullptr) {
          if (mKeyFunctions[pKey]->functionIsSet()) {
             // Run the function
             string functionRetval = mKeyFunctions[pKey]->runFunction();
@@ -1728,7 +1728,7 @@ void cxMultiLineInput::setLastKey(int pLastKey) {
    cxWindow::setLastKey(pLastKey);
    // If this input is on a cxForm, then the form's
    //  last key needs to be set also.
-   if (mParentForm != NULL) {
+   if (mParentForm != nullptr) {
       mParentForm->setLastKey(pLastKey);
    }
 } // setLastKey
@@ -1756,7 +1756,7 @@ void cxMultiLineInput::quitNow(bool pMoveForward) {
    quitNow();
    // If this input is on a form, then tell the form to go onto the next
    //  input.
-   if (NULL != mParentForm) {
+   if (nullptr != mParentForm) {
       // Get the index of this input in the form, and
       //  tell the form to go to the next input.
       int myIndex = mParentForm->getInputIndex(this);
@@ -1782,7 +1782,7 @@ void cxMultiLineInput::exitNow(bool pMoveForward) {
    exitNow();
    // If this input is on a form, then tell the form to go onto the next
    //  input.
-   if (NULL != mParentForm) {
+   if (nullptr != mParentForm) {
       // Get the index of this input in the form, and
       //  tell the form to go to the next input.
       int myIndex = mParentForm->getInputIndex(this);
@@ -1812,13 +1812,13 @@ bool cxMultiLineInput::getUseValidatorFunction() const {
 } // getUseValidatorFunction
 
 cxWindow* cxMultiLineInput::getParent() const {
-   cxWindow *parentWindow = NULL;
+   cxWindow *parentWindow = nullptr;
 
-   if (mParentForm != NULL) {
+   if (mParentForm != nullptr) {
       parentWindow = mParentForm;
    }
    else {
-      // mParentMultiForm is NULL
+      // mParentMultiForm is nullptr
       parentWindow = cxWindow::getParent();
    }
 
@@ -2114,10 +2114,10 @@ string cxMultiLineInput::onKeypress() {
       // For numeric inputs, validate using the appropriate validator.
       switch (mInputType) {
          case eINPUT_TYPE_NUMERIC_FLOATING_PT:
-            retval = cxValidators::floatingPtOnKeyValidator(this, NULL);
+            retval = cxValidators::floatingPtOnKeyValidator(this, nullptr);
             break;
          case eINPUT_TYPE_NUMERIC_WHOLE:
-            retval = cxValidators::intOnKeyValidator(this, NULL);
+            retval = cxValidators::intOnKeyValidator(this, nullptr);
             break;
          case eINPUT_TYPE_TEXT:
             // Nothing to do here
@@ -2131,17 +2131,17 @@ string cxMultiLineInput::onKeypress() {
 } // onKeypress
 
 void cxMultiLineInput::useBuiltInValidator() {
-   setValidatorFunction(cxMultiLineInput::inputValidatorStatic, this, NULL);
+   setValidatorFunction(cxMultiLineInput::inputValidatorStatic, this, nullptr);
 } // useBuiltInValidator
 
 bool cxMultiLineInput::usingBuiltInValidator() const {
    bool builtInValidator = false;
 
-   if (mValidatorFunction != NULL) {
+   if (mValidatorFunction != nullptr) {
       if (mValidatorFunction->cxTypeStr() == "cxFunction2") {
          try {
             cxFunction2 *function2 = dynamic_cast<cxFunction2*>(mValidatorFunction);
-            if (function2 != NULL) {
+            if (function2 != nullptr) {
                builtInValidator = (function2->getFunction() ==
                                    cxMultiLineInput::inputValidatorStatic);
             }
@@ -2155,7 +2155,7 @@ bool cxMultiLineInput::usingBuiltInValidator() const {
 } // usingBuiltInValidator
 
 void cxMultiLineInput::useBuiltInOnKeyFunction() {
-   setOnKeyFunction(cxMultiLineInput::onKeypressStatic, this, NULL);
+   setOnKeyFunction(cxMultiLineInput::onKeypressStatic, this, nullptr);
 } // useBuiltInOnKeyFunction
 
 bool cxMultiLineInput::usingBuiltInOnKeyFunction() const {
@@ -2164,11 +2164,11 @@ bool cxMultiLineInput::usingBuiltInOnKeyFunction() const {
    // Look at the first input's mOnKeyFunction (it should be the same for all
    //  inputs)
    cxFunction *onKeyFunc = mInputs[0]->mOnKeyFunction;
-   if (onKeyFunc != NULL) {
+   if (onKeyFunc != nullptr) {
       if (onKeyFunc->cxTypeStr() == "cxFunction2") {
          try {
             cxFunction2 *function2 = dynamic_cast<cxFunction2*>(onKeyFunc);
-            if (function2 != NULL) {
+            if (function2 != nullptr) {
                builtInOnKeypress = (function2->getFunction() ==
                                     cxMultiLineInput::onKeypressStatic);
             }
@@ -2670,7 +2670,7 @@ bool cxMultiLineInput::rightLabelEnabled() const {
 bool cxMultiLineInput::validatorFunctionIsSet() const {
    bool isSet = false;
 
-   if (mValidatorFunction != NULL) {
+   if (mValidatorFunction != nullptr) {
       isSet = (mValidatorFunction->functionIsSet());
    }
 
@@ -2682,7 +2682,7 @@ bool cxMultiLineInput::validatorFunctionIsSet() const {
 /////////////////////////
 
 void cxMultiLineInput::copyCxMultiLineInputStuff(const cxMultiLineInput *pThatInput) {
-   if ((pThatInput != NULL) && (pThatInput != this)) {
+   if ((pThatInput != nullptr) && (pThatInput != this)) {
       // Remove the single-line inputs in mInputs (they will be re-created
       //  later).
       freeInputs();
@@ -2737,7 +2737,7 @@ void cxMultiLineInput::copyCxMultiLineInputStuff(const cxMultiLineInput *pThatIn
       mRightLabel.setEnabled(pThatInput->mRightLabel.isEnabled());
 
       // Copy the other input's single-line inputs
-      cxInput *myInput = NULL;
+      cxInput *myInput = nullptr;
       set<int>::iterator setIter;
       cxInputPtrContainer::const_iterator iter = pThatInput->mInputs.begin();
       for(; iter != pThatInput->mInputs.end(); ++iter) {
@@ -2751,9 +2751,9 @@ void cxMultiLineInput::copyCxMultiLineInputStuff(const cxMultiLineInput *pThatIn
          mInputs.push_back(myInput);
       }
 
-      // If mExtValue is not NULL, then update the value of
+      // If mExtValue is not nullptr, then update the value of
       //  this input.
-      if (mExtValue != NULL) {
+      if (mExtValue != nullptr) {
          setValue(*mExtValue);
       }
    }
@@ -2810,7 +2810,7 @@ long cxMultiLineInput::doInputLoop(bool pShowInputs, bool& pRunOnLeaveFunction) 
                      continue;
                   }
                   else {
-                     if (parentIsCxPanel() || (mParentForm != NULL)) {
+                     if (parentIsCxPanel() || (mParentForm != nullptr)) {
                         setReturnCode(cxID_EXIT);
                         continueOn = false;
                         break;
@@ -2972,7 +2972,7 @@ long cxMultiLineInput::doInputLoop(bool pShowInputs, bool& pRunOnLeaveFunction) 
                      //  this input should exit the input loop.  If this
                      //  input is on a form, then tell the form to go
                      //  onto the next input.
-                     if (NULL != mParentForm) {
+                     if (nullptr != mParentForm) {
                         // Get the index of this input in the form, and
                         //  tell the form to go to the next input.
                         int myIndex = mParentForm->getInputIndex(this);
@@ -3032,11 +3032,11 @@ bool cxMultiLineInput::searchParentFormsForFKey(int pKey,
    // If pIncludeNavigationalKeys was false and pKey is a navigational key,
    //  then we wouldn't search the parents for this key.
    if (searchParents) {
-      // Use mParentForm if it's not NULL; otherwise, use the parent
+      // Use mParentForm if it's not nullptr; otherwise, use the parent
       //  cxWindow.
-      if (mParentForm != NULL) {
+      if (mParentForm != nullptr) {
          cxForm *parentForm = mParentForm;
-         while (parentForm != NULL) {
+         while (parentForm != nullptr) {
             // Test to see if pKey is set in the parent
             //  form and it is not the parent form's jump hotkey
             //  (we want to ignore the jump hotkey, because otherwise
@@ -3053,7 +3053,7 @@ bool cxMultiLineInput::searchParentFormsForFKey(int pKey,
          if (!foundIt) {
             // The form could be on a cxPanel
             cxWindow *parentWin = mParentForm->getParent();
-            while (parentWin != NULL) {
+            while (parentWin != nullptr) {
                if (parentWin->hasKeyFunction(pKey)) {
                   foundIt = true;
                   break;
@@ -3065,7 +3065,7 @@ bool cxMultiLineInput::searchParentFormsForFKey(int pKey,
       else {
          // The input could be on a cxPanel if not a cxForm
          cxWindow *parentWin = getParent();
-         while (parentWin != NULL) {
+         while (parentWin != nullptr) {
             if (parentWin->hasKeyFunction(pKey)) {
                foundIt = true;
                break;
@@ -3081,7 +3081,7 @@ bool cxMultiLineInput::searchParentFormsForFKey(int pKey,
 void cxMultiLineInput::freeInputs() {
    cxInputPtrContainer::iterator iter = mInputs.begin();
    for (; iter != mInputs.end(); ++iter) {
-      if (*iter != NULL) {
+      if (*iter != nullptr) {
          delete (*iter);
       }
    }
@@ -3093,25 +3093,25 @@ bool cxMultiLineInput::handleFunctionForLastKey(bool *pFunctionExists,
    // continueOn is whether or not to continue the input loop.
    bool continueOn = true;
 
-   // If pFunctionExists or pRunOnLeaveFunction are non-NULL, then default
+   // If pFunctionExists or pRunOnLeaveFunction are non-nullptr, then default
    //  them.
-   if (pFunctionExists != NULL) {
+   if (pFunctionExists != nullptr) {
       *pFunctionExists = false;
    }
-   if (pRunOnLeaveFunction != NULL) {
+   if (pRunOnLeaveFunction != nullptr) {
       *pRunOnLeaveFunction = true;
    }
 
    int lastKey = getLastKey();
    if (mKeyFunctions.find(lastKey) != mKeyFunctions.end()) {
       cxFunction *iFunc = mKeyFunctions[lastKey];
-      // The cxFunction pointers in mKeyFunctions shouldn't be NULL, but check
+      // The cxFunction pointers in mKeyFunctions shouldn't be nullptr, but check
       //  anyway.
-      if (iFunc != NULL) {
-         if (pFunctionExists != NULL) {
+      if (iFunc != nullptr) {
+         if (pFunctionExists != nullptr) {
             *pFunctionExists = true;
          }
-         if (pRunOnLeaveFunction != NULL) {
+         if (pRunOnLeaveFunction != nullptr) {
             *pRunOnLeaveFunction = iFunc->getRunOnLeaveFunction();
          }
 
@@ -3158,7 +3158,7 @@ void cxMultiLineInput::disableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
 string cxMultiLineInput::runValidatorFunction() const {
    string retval;
 
-   if (mValidatorFunction != NULL) {
+   if (mValidatorFunction != nullptr) {
       if (mValidatorFunction->functionIsSet()) {
          retval = mValidatorFunction->runFunction();
       }
@@ -3237,8 +3237,8 @@ bool cxMultiLineInput::scrDiff() {
    // See if there's a difference in the member window vs. screen
    if (screenLines.size() == memberLines.size()) {
       unsigned numLines = screenLines.size();
-      chtype *screenBuffer = NULL;
-      chtype *memberBuffer = NULL;
+      chtype *screenBuffer = nullptr;
+      chtype *memberBuffer = nullptr;
       for (unsigned line = 0; line < numLines; ++line) {
          // Compare each character if the number of characters in each
          //  line is the same
@@ -3280,19 +3280,19 @@ bool cxMultiLineInput::scrDiff() {
 } // scrDiff
 
 void cxMultiLineInput::copyValidatorFunction(const cxMultiLineInput& pThatInput) {
-   // If mValidatorFunction is not NULL, then free the memory used by it.
-   if (mValidatorFunction != NULL) {
+   // If mValidatorFunction is not nullptr, then free the memory used by it.
+   if (mValidatorFunction != nullptr) {
       delete mValidatorFunction;
-      mValidatorFunction = NULL;
+      mValidatorFunction = nullptr;
    }
 
    // Copy the other input's mValidatorFunction.
-   if (pThatInput.mValidatorFunction != NULL) {
+   if (pThatInput.mValidatorFunction != nullptr) {
       // We'll need to check what type of cxFunction it is so we can
       //  create it properly.
       if (pThatInput.mValidatorFunction->cxTypeStr() == "cxFunction0") {
          cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pThatInput.mValidatorFunction);
-         if (iFunc0 != NULL) {
+         if (iFunc0 != nullptr) {
             mValidatorFunction = new cxFunction0(iFunc0->getFunction(),
                                           iFunc0->getUseReturnVal(),
                                           iFunc0->getExitAfterRun(),
@@ -3301,7 +3301,7 @@ void cxMultiLineInput::copyValidatorFunction(const cxMultiLineInput& pThatInput)
       }
       else if (pThatInput.mValidatorFunction->cxTypeStr() == "cxFunction2") {
          cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pThatInput.mValidatorFunction);
-         if (iFunc2 != NULL) {
+         if (iFunc2 != nullptr) {
             // When creating mOnKeyFunction, if any of its parameters point to
             //  pThatInput, have them point to this one instead.  Or if they
             //  point to the other input's parent multi-line input, have them
@@ -3320,7 +3320,7 @@ void cxMultiLineInput::copyValidatorFunction(const cxMultiLineInput& pThatInput)
       }
       else if (pThatInput.mValidatorFunction->cxTypeStr() == "cxFunction4") {
          cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pThatInput.mValidatorFunction);
-         if (iFunc4 != NULL) {
+         if (iFunc4 != nullptr) {
             // When creating mOnKeyFunction, if any of its parameters point to
             //  pThatInput, have them point to this one instead.  Or if they
             //  point to the other input's parent multi-line input, have them
@@ -3349,10 +3349,10 @@ bool cxMultiLineInput::usingOnKeyNumericValidator() const {
    //  up this input.
    // mInputs should have at least 1 input, but check just in case..
    if (mInputs.size() > 0) {
-      if (mInputs[0]->mOnKeyFunction != NULL) {
+      if (mInputs[0]->mOnKeyFunction != nullptr) {
          if (mInputs[0]->mOnKeyFunction->cxTypeStr() == "cxFunction2") {
             cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(mInputs[0]->mOnKeyFunction);
-            if (iFunc2 != NULL) {
+            if (iFunc2 != nullptr) {
                funcPtr2 funcPtr = iFunc2->getFunction();
                if ((funcPtr == cxValidators::intOnKeyValidator) ||
                    (funcPtr == cxValidators::floatingPtOnKeyValidator)) {
@@ -3367,14 +3367,14 @@ bool cxMultiLineInput::usingOnKeyNumericValidator() const {
 } // usingOnKeyNumericValidator
 
 string cxMultiLineInput::inputValidatorStatic(void *theInput, void *unused) {
-   if (theInput == NULL) { return(""); }
+   if (theInput == nullptr) { return(""); }
 
    cxMultiLineInput *pInput = static_cast<cxMultiLineInput*>(theInput);
    return(pInput->inputValidator());
 } // inputValidatorStatic
 
 string cxMultiLineInput::onKeypressStatic(void *theInput, void *unused) {
-   if (theInput == NULL) { return(""); }
+   if (theInput == nullptr) { return(""); }
 
    cxMultiLineInput *pInput = static_cast<cxMultiLineInput*>(theInput);
    return(pInput->onKeypress());

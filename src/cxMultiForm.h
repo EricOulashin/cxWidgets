@@ -45,7 +45,7 @@ class cxMultiForm : public cxForm {
    public:
       /**
        * Default constructor.  All parameters have default values.
-       * @param pParentWindow Pointer to parent window; default NULL
+       * @param pParentWindow Pointer to parent window; default nullptr
        * @param pRow Y location of form; default 0
        * @param pCol X location of form; default 0
        * @param pHeight Height of form, in lines; defaults to 24
@@ -64,12 +64,12 @@ class cxMultiForm : public cxForm {
        * @param pStacked If true, the form will behave assuming each
        *  input is on its own line.
        */
-      explicit cxMultiForm(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxMultiForm(cxWindow *pParentWindow = nullptr, int pRow = 0,
                          int pCol = 0, int pHeight = DEFAULT_HEIGHT,
                          int pWidth = DEFAULT_WIDTH, const string& pTitle = "",
                          eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                         cxWindow *pExtTitleWindow = NULL,
-                         cxWindow *pExtStatusWindow = NULL,
+                         cxWindow *pExtTitleWindow = nullptr,
+                         cxWindow *pExtStatusWindow = nullptr,
                          bool pAutoExit = false, bool pStacked = false);
 
       /**
@@ -123,13 +123,13 @@ class cxMultiForm : public cxForm {
        *  to be located
        * @param pCol The column on the form where you want the subform
        *  to be located
-       * @param pMoved If non-NULL, the boolean pointed to by this
+       * @param pMoved If non-null, the boolean pointed to by this
        *  variable will store whether or not the subform was able
        *  to be moved.
        *
        * @return Whether or not the subform got appended (true/false)
        */
-      virtual bool appendForm(cxForm* pForm, int pRow, int pCol, bool* pMoved = NULL);
+      virtual bool appendForm(cxForm* pForm, int pRow, int pCol, bool* pMoved = nullptr);
 
       /**
        * \brief Appends a subform to the form via a pointer (without
@@ -147,25 +147,25 @@ class cxMultiForm : public cxForm {
 
       /**
        * \brief Returns a pointer to one of the subforms (by index), or
-       * \brief NULL if the index is out of bounds.
+       * \brief nullptr if the index is out of bounds.
        *
        * @param pIndex The index of the subform
        *
-       * @return A pointer to the subform, or NULL if pIndex is out of bounds.
-       *  The return value should always be checked against NULL before it's
+       * @return A pointer to the subform, or nullptr if pIndex is out of bounds.
+       *  The return value should always be checked against nullptr before it's
        *  used.
        */
       virtual cxForm* getForm(unsigned pIndex) const;
 
       /**
        * \brief Returns a pointer to one of the subforms (by title), or
-       * \brief NULL if there is no subform with the given title.
+       * \brief nullptr if there is no subform with the given title.
        *
        * @param pTitle The title of the subform
        *
-       * @return A pointer to the subform, or NULL if there is no subform with
+       * @return A pointer to the subform, or nullptr if there is no subform with
        *  the given title.  The return value should always be checked against
-       *  NULL before it's used.
+       *  nullptr before it's used.
        */
       virtual cxForm* getForm(const string& pTitle) const;
 

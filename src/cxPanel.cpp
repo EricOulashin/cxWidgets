@@ -21,7 +21,7 @@ cxPanel::cxPanel(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
               pStatus, pBorderStyle, pExtTitleWindow, pExtStatusWindow,
               pMessageUnderlines),
      mCycleWin(true),
-     mLastWindow(NULL),
+     mLastWindow(nullptr),
      // mWindowIter is initialized to mWindows.begin(), but it will be
      //  invalidated when a window is added to the panel.  mWindowIter is
      //  reset in appendWindowPtr() (which is called by append()) to make sure
@@ -48,7 +48,7 @@ cxPanel::~cxPanel() {
    cxPanel::cxWindowPtrCollection::iterator iter;
    while (mWindows.size() > 0) {
       iter = mWindows.begin();
-      if (*iter != NULL) {
+      if (*iter != nullptr) {
          delete (*iter);
       }
    }
@@ -73,7 +73,7 @@ long cxPanel::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows) 
          //  If you're stepping through an application, when it gets to
          //  this line, it seems to continue on running the program without
          //  stopping.
-         if (getParent() != NULL) {
+         if (getParent() != nullptr) {
             string parentType = getParent()->cxTypeStr();
             if ((parentType == "cxPanel") || (parentType == "cxSearchPanel") ||
                 (parentType == "cxNotebook")) {
@@ -123,7 +123,7 @@ unsigned cxPanel::numWindows() const {
 } // numWindows
 
 cxWindow* cxPanel::getWindow(unsigned pIndex) const {
-   cxWindow *win = NULL;
+   cxWindow *win = nullptr;
 
    if ((pIndex >= 0) && (pIndex < mWindows.size())) {
       win = mWindows[pIndex];
@@ -198,16 +198,16 @@ void cxPanel::delAllWindows() {
 } // delAllWindows
 
 cxWindow* cxPanel::removeWindow(unsigned pIndex) {
-   cxWindow *removedWindow = NULL;
+   cxWindow *removedWindow = nullptr;
 
    if ((pIndex >= 0) && (pIndex < mWindows.size())) {
       removedWindow = mWindows[pIndex];
       // Remove the window pointer from mWindows
       mWindows.erase(mWindows.begin() + pIndex);
       // If the window had this panel as its parent window, then set its parent
-      //  window pointer to NULL
+      //  window pointer to nullptr
       if (removedWindow->getParent() == this) {
-         removedWindow->setParent(NULL);
+         removedWindow->setParent(nullptr);
       }
    }
 
@@ -311,7 +311,7 @@ bool cxPanel::setCurrentWindow(const string& pID, bool pIsTitle) {
 bool cxPanel::setCurrentWindowByPtr(cxWindow *pWindow) {
    bool success = false;
 
-   if (pWindow != NULL) {
+   if (pWindow != nullptr) {
       cxWindowPtrCollection::iterator iter = mWindows.begin();
       for (; iter != mWindows.end(); ++iter) {
          if ((*iter) == pWindow) {
@@ -424,7 +424,7 @@ int cxPanel::getWindowIndex(cxWindow *pWindow) const {
 } // getWindowIndex
 
 cxWindow* cxPanel::getCurrentWindowPtr() const {
-   cxWindow *currentWindow = NULL;
+   cxWindow *currentWindow = nullptr;
 
    if (mWindows.size() > 0) {
       currentWindow = *mWindowIter;
@@ -473,7 +473,7 @@ void cxPanel::hide(bool pHideSubwindows) {
    cxWindowPtrCollection::iterator iter = mWindows.begin();
    for (; iter != mWindows.end(); ++iter) {
       // The cxWindow pointer shouldn't be null, but check just in case.
-      if ((*iter) != NULL) {
+      if ((*iter) != nullptr) {
          (*iter)->hide(pHideSubwindows);
       }
    }
@@ -486,7 +486,7 @@ void cxPanel::unhide(bool pUnhideSubwindows) {
    cxWindowPtrCollection::iterator iter = mWindows.begin();
    for (; iter != mWindows.end(); ++iter) {
       // The cxWindow pointer shouldn't be null, but check just in case.
-      if ((*iter) != NULL) {
+      if ((*iter) != nullptr) {
          (*iter)->unhide(pUnhideSubwindows);
       }
    }
@@ -731,10 +731,10 @@ void cxPanel::quitNow() {
          else if ((*iter)->cxTypeStr() == "cxMultiForm") {
             cxMultiForm *multiForm = dynamic_cast<cxMultiForm*>(*iter);
             unsigned numSubforms = multiForm->numSubforms();
-            cxForm *subform = NULL;
+            cxForm *subform = nullptr;
             for (unsigned i = 0; i < numSubforms; ++i) {
                subform = multiForm->getForm(i);
-               if (NULL != subform) {
+               if (nullptr != subform) {
                   subform->quitNow();
                }
             }
@@ -763,10 +763,10 @@ void cxPanel::exitNow() {
          else if ((*iter)->cxTypeStr() == "cxMultiForm") {
             cxMultiForm *multiForm = dynamic_cast<cxMultiForm*>(*iter);
             unsigned numSubforms = multiForm->numSubforms();
-            cxForm *subform = NULL;
+            cxForm *subform = nullptr;
             for (unsigned i = 0; i < numSubforms; ++i) {
                subform = multiForm->getForm(i);
-               if (NULL != subform) {
+               if (nullptr != subform) {
                   subform->exitNow();
                }
             }
@@ -830,7 +830,7 @@ bool cxPanel::anyEnabledWindows() const {
    //  end up in infinite loop land.
    cxWindowPtrCollection::const_iterator iter = mWindows.begin();
    for (; iter != mWindows.end(); ++iter) {
-      if ((*iter) != NULL) {
+      if ((*iter) != nullptr) {
          if (((*iter)->isEnabled()) && ((*iter)->modalGetsKeypress())) {
             anyEnabled = true;
             break;
@@ -889,16 +889,16 @@ bool cxPanel::firstEnabledWindow(int pIndex) const {
 bool cxPanel::addWindowPtr(cxWindow* pWindow) {
    bool retval = false;
 
-   // Only add the window if pWindow isn't NULL, if it isn't the current
+   // Only add the window if pWindow isn't nullptr, if it isn't the current
    //  window, and if it's not already in the collection.
-   if ((pWindow != NULL) && (pWindow != this) && !windowIsInPanel(pWindow)) {
+   if ((pWindow != nullptr) && (pWindow != this) && !windowIsInPanel(pWindow)) {
       retval = true;
 
       // Check the window's parent window type.  If its parent is a cxNotebook,
       //  then don't add the window to this panel, or else that might mess up
       //  the cxNotebook.
       string parentType;
-      if ((pWindow->getParent() != NULL) && (pWindow->getParent() != this)) {
+      if ((pWindow->getParent() != nullptr) && (pWindow->getParent() != this)) {
          parentType = pWindow->getParent()->cxTypeStr();
       }
 
@@ -991,7 +991,7 @@ bool cxPanel::addWindowPtr(cxWindow* pWindow) {
                multiForm->setAutoExit(true);
                multiForm->setExitOnLeaveFirst(true);
                unsigned numSubforms = multiForm->numSubforms();
-               cxForm *subform = NULL;
+               cxForm *subform = nullptr;
                for (unsigned i = 0; i < numSubforms; ++i) {
                   subform = multiForm->getForm(i);
                   subform->setAutoExit(true);
@@ -1072,7 +1072,7 @@ long cxPanel::doInputLoop(bool pSubwinShow, bool& pRunOnLeaveFunction) {
                   if (numInputs > 0) {
                      multiForm->setCurrentInput(0);
                   }
-                  cxForm *subform = NULL;
+                  cxForm *subform = nullptr;
                   for (unsigned i = 0; i < numSubforms; ++i) {
                      subform = multiForm->getForm(i);
                      subform->setCurrentInput(0);
@@ -1083,7 +1083,7 @@ long cxPanel::doInputLoop(bool pSubwinShow, bool& pRunOnLeaveFunction) {
                      multiForm->setCurrentInput((int)numInputs-1);
                   }
                   unsigned numSubformInputs = 0;
-                  cxForm *subform = NULL;
+                  cxForm *subform = nullptr;
                   for (unsigned i = 0; i < numSubforms; ++i) {
                      subform = multiForm->getForm(i);
                      numSubformInputs = subform->numInputs();
@@ -1149,7 +1149,7 @@ long cxPanel::doInputLoop(bool pSubwinShow, bool& pRunOnLeaveFunction) {
                         if ((*iter)->cxTypeStr() == "cxButton") {
                            try {
                               cxButton *iButton = dynamic_cast<cxButton*>(*iter);
-                              if (iButton != NULL) {
+                              if (iButton != nullptr) {
                                  iButton->mouseButton1Click(mMouse.y, mMouse.x);
                                  iButton->doMouseBehavior();
                               }
@@ -1299,7 +1299,7 @@ long cxPanel::doInputLoop(bool pSubwinShow, bool& pRunOnLeaveFunction) {
       if (getLastKey() == KEY_MOUSE) {
          if (getmouse(&mMouse) == OK) {
             // Run a function that may exist for the mouse state.
-            handleFunctionForLastMouseState(NULL, &pRunOnLeaveFunction);
+            handleFunctionForLastMouseState(nullptr, &pRunOnLeaveFunction);
          }
       }
 #else
@@ -1327,7 +1327,7 @@ long cxPanel::doInputLoop(bool pSubwinShow, bool& pRunOnLeaveFunction) {
 //  loop).
 inline void cxPanel::addExitKeyToWindow(cxWindow *pWindow, int pKey,
                                  bool pRunOnLeaveFunction, bool pOverride) {
-   if (pWindow != NULL) {
+   if (pWindow != nullptr) {
       // If the window is a cxMenu, cxScrolledWindow, or cxFileViewer and the
       //  key is one of its scrolling keys, then don't add the key to the
       //  window.
@@ -1336,7 +1336,7 @@ inline void cxPanel::addExitKeyToWindow(cxWindow *pWindow, int pKey,
       if (winTypeStr == "cxMenu") {
          try {
             cxMenu *pMenu = dynamic_cast<cxMenu*>(pWindow);
-            if (pMenu != NULL) {
+            if (pMenu != nullptr) {
                addIt = ((pKey != PAGE_UP) && (pKey != PAGE_DOWN) &&
                         (pKey != pMenu->getAltPgUpKey()) &&
                         (pKey != pMenu->getAltPgDownKey()) &&
@@ -1367,7 +1367,7 @@ inline void cxPanel::addExitKeyToWindow(cxWindow *pWindow, int pKey,
 //  loop).
 inline void cxPanel::addQuitKeyToWindow(cxWindow *pWindow, int pKey,
                                  bool pRunOnLeaveFunction, bool pOverride) {
-   if (pWindow != NULL) {
+   if (pWindow != nullptr) {
       // If the window is a cxMenu, cxScrolledWindow, or cxFileViewer and the
       //  key is one of its scrolling keys, then don't add the key to the
       //  window.
@@ -1376,7 +1376,7 @@ inline void cxPanel::addQuitKeyToWindow(cxWindow *pWindow, int pKey,
       if (winTypeStr == "cxMenu") {
          try {
             cxMenu *pMenu = dynamic_cast<cxMenu*>(pWindow);
-            if (pMenu != NULL) {
+            if (pMenu != nullptr) {
                addIt = ((pKey != PAGE_UP) && (pKey != PAGE_DOWN) &&
                         (pKey != pMenu->getAltPgUpKey()) &&
                         (pKey != pMenu->getAltPgDownKey()) &&
@@ -1410,7 +1410,7 @@ inline void cxPanel::addQuitKeyToWindow(cxWindow *pWindow, int pKey,
 
 cxPanel::cxPanel(const cxPanel& pThatPanel)
    : cxWindow(pThatPanel),
-     mLastWindow(NULL),
+     mLastWindow(nullptr),
      mExitOnLeaveLast(pThatPanel.mExitOnLeaveLast),
      mExitOnLeaveFirst(pThatPanel.mExitOnLeaveFirst),
      mAllowExit(pThatPanel.mAllowExit),

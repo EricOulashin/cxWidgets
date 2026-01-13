@@ -7,7 +7,7 @@ cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
                    int pWidth, const string& pLabel, eBorderStyle pBorderStyle)
    : cxWindow(pParentWindowPtr, pRow, pCol, pHeight, pWidth, "", pLabel, "",
               pBorderStyle),
-     mOnClickFunction(NULL)
+     mOnClickFunction(nullptr)
 {
 } // constructor
 
@@ -31,16 +31,16 @@ cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
 } // constructor
 
 cxButton::cxButton(const cxButton& pButton)
-   : cxWindow(NULL, pButton.top(), pButton.left(), pButton.height(),
+   : cxWindow(nullptr, pButton.top(), pButton.left(), pButton.height(),
               pButton.width(), pButton.getTitle(), pButton.getMessage(),
               pButton.getStatus(), pButton.getBorderStyle()),
-     mOnClickFunction(NULL)
+     mOnClickFunction(nullptr)
 {
    copyOnClickFunction(pButton);
 } // copy constructor
 
 cxButton::~cxButton() {
-   if (mOnClickFunction != NULL) {
+   if (mOnClickFunction != nullptr) {
       delete mOnClickFunction;
    }
 } // destructor
@@ -165,7 +165,7 @@ string cxButton::runOnClickFunction() {
    string retval;
 
    // If the onClick function is set, run it.
-   if (mOnClickFunction != NULL) {
+   if (mOnClickFunction != nullptr) {
       if (mOnClickFunction->functionIsSet()) {
          retval = mOnClickFunction->runFunction();
       }
@@ -189,21 +189,21 @@ void cxButton::doMouseBehavior() {
 ///////////////////////
 
 void cxButton::freeOnClickFunction() {
-   if (mOnClickFunction != NULL) {
+   if (mOnClickFunction != nullptr) {
       delete mOnClickFunction;
-      mOnClickFunction = NULL;
+      mOnClickFunction = nullptr;
    }
 } // freeOnClickFunction
 
 void cxButton::copyOnClickFunction(const cxButton& pButton) {
    freeOnClickFunction();
    cxFunction *func = pButton.mOnClickFunction;
-   if (func != NULL) {
+   if (func != nullptr) {
       string funcType = func->cxTypeStr();
       if (funcType == "cxFunction0") {
          try {
             cxFunction0* func0 = dynamic_cast<cxFunction0*>(func);
-            if (func0 != NULL) {
+            if (func0 != nullptr) {
                mOnClickFunction = new cxFunction0(func0->getFunction(),
                                               func0->getUseReturnVal(),
                                               func0->getExitAfterRun(),
@@ -218,7 +218,7 @@ void cxButton::copyOnClickFunction(const cxButton& pButton) {
       else if (funcType == "cxFunction2") {
          try {
             cxFunction2* func2 = dynamic_cast<cxFunction2*>(func);
-            if (func2 != NULL) {
+            if (func2 != nullptr) {
                void* params[] = { func2->getParam1(), func2->getParam2() };
                for (int i = 0; i < 2; ++i) {
                   if (params[i] == (void*)(&pButton)) {
@@ -238,7 +238,7 @@ void cxButton::copyOnClickFunction(const cxButton& pButton) {
       else if (funcType == "cxFunction4") {
          try {
             cxFunction4* func4 = dynamic_cast<cxFunction4*>(func);
-            if (func4 != NULL) {
+            if (func4 != nullptr) {
                void* params[] = { func4->getParam1(), func4->getParam4(),
                                   func4->getParam3(), func4->getParam4() };
                for (int i = 0; i < 4; ++i) {

@@ -75,7 +75,7 @@ class cxMultiLineInput;
  *  display what can fit inside the input, although getValue()
  *  will return the entire string that was set by setValue().
  *  For example:<br>
- *  cxInput iInput(NULL, 0, 0, 10, "Text:");<br>
+ *  cxInput iInput(nullptr, 0, 0, 10, "Text:");<br>
  *  iInput.setValue("Some text for the input to hold");<br>
  *  iInput.getValue();  // Returns "Some text for the input to hold"<br>
  *  iInput.setFocus(); // Can only display "Some " in the input, since the width is 10<br>
@@ -108,7 +108,7 @@ class cxInput : public cxWindow {
    public:
       /**
        * \brief Default constructor
-       * @param pParentWindow Pointer to parent window; defaults to NULL
+       * @param pParentWindow Pointer to parent window; defaults to nullptr
        * @param pRow Y location of input window; defaults to 0
        * @param pCol X location of input window; defaults to 0
        * @param pWidth Width of input window; defaults to DEFAULT_WIDTH
@@ -121,14 +121,14 @@ class cxInput : public cxWindow {
        * @param pExitOnFull Whether setFocus() should return when the input
        *  is full; defaults to false
        * @param pExtVal An external value that the input should be set
-       *  to; defaults to NULL
+       *  to; defaults to nullptr
        */
-      explicit cxInput(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxInput(cxWindow *pParentWindow = nullptr, int pRow = 0,
                        int pCol = 0, int pWidth = DEFAULT_WIDTH,
                        const string& pLabel = "",
                        eBorderStyle pBorderStyle = eBS_NOBORDER,
                        eInputOptions pInputOption = eINPUT_EDITABLE,
-                       bool pExitOnFull = false, string *pExtVal = NULL);
+                       bool pExitOnFull = false, string *pExtVal = nullptr);
 
       /**
        * \brief Copy constructor
@@ -703,15 +703,15 @@ class cxInput : public cxWindow {
        * \brief value of the onFocus function will be set in the
        * \brief input.
        *
-       * @param pFunctionRetval If not NULL, the string that this points to
+       * @param pFunctionRetval If not nullptr, the string that this points to
        *  will contain the return value of the onFocus function.  Defaults to
-       *  NULL.
+       *  nullptr.
        *
        * @return Whether the input loop should exit (returns the value of
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(string *pFunctionRetval = NULL);
+      virtual bool runOnFocusFunction(string *pFunctionRetval = nullptr);
 
       /**
        * \brief Returns a pointer to the parent window.  If the cxInput
@@ -863,17 +863,17 @@ class cxInput : public cxWindow {
        * \brief value of the function may be set in the input if its
        * \brief mUseReturnValue is true.
        *
-       * @param pFunctionExists A pointer to a bool (if non-NULL,
+       * @param pFunctionExists A pointer to a bool (if non-null,
        *  it will store whether or not a function existed for the key).
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param pRunOnLeaveFunction A pointer to a bool: If non-NUL, it will
        *  store whether or not to run the onLeave function when the window
        *  exits (this is an option for cxFunction).
        *
        * @return Whether or not the input loop should continue
        */
-      virtual bool handleFunctionForLastKey(bool *pFunctionExists = NULL,
-                                          bool *pRunOnLeaveFunction = NULL);
+      virtual bool handleFunctionForLastKey(bool *pFunctionExists = nullptr,
+                                          bool *pRunOnLeaveFunction = nullptr);
 
       /**
        * \brief Enables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -929,7 +929,7 @@ class cxInput : public cxWindow {
       // mExtValue points to an "external" location to load/store the user's input
       //  (basically, it will be used for user input storage as well as mValue,
       //  but the value in this input will always be the what mExtValue contains).
-      //  If NULL, then it won't be used.
+      //  If nullptr, then it won't be used.
       string *mExtValue;
       int mInputStartX;  // Starting X cursor position for text input
       int mYPos;         // Y cursor position for input
@@ -1058,7 +1058,7 @@ class cxInput : public cxWindow {
                           cxFunction* pSrcFunc);
 
       // Returns whether or not the validator function is set (if
-      //  mValidatorFunction is not NULL and if its function pointer is set)
+      //  mValidatorFunction is not nullptr and if its function pointer is set)
       bool validatorFunctionIsSet() const;
 
 };

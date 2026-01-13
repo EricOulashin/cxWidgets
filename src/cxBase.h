@@ -482,18 +482,18 @@ namespace cxBase {
 
    /**
     * \brief Gets a pointer to the topmost cxWindow on the stack.  This could
-    * \brief return NULL, if it can't get to the topmost window.
+    * \brief return nullptr, if it can't get to the topmost window.
     *
-    * @return A pointer to the topmost cxWindow on the stack, or NULL if there
+    * @return A pointer to the topmost cxWindow on the stack, or nullptr if there
     *  is none.
     */
    cxWindow* getTopWindow();
 
    /**
     * \brief Gets a pointer to the bottom-most cxWindow on the stack.  This could
-    * \brief return NULL, if it can't get to the topmost window.
+    * \brief return nullptr, if it can't get to the topmost window.
     *
-    * @return A pointer to the bottom-most cxWindow on the stack, or NULL if
+    * @return A pointer to the bottom-most cxWindow on the stack, or nullptr if
     *  there is none.
     */
    cxWindow* getBottomWindow();
@@ -758,11 +758,11 @@ namespace cxBase {
     * @param pCol the starting column
     * @param pNumber number of characters to get
     * @param pWin A pointer to an ncurses window structure to get contents
-    *  from.  If this is NULL, curscr will be used.
+    *  from.  If this is nullptr, curscr will be used.
     * 
     * @return the "string" value of the 
     */
-   string getString(int pRow, int pCol, int pNumber, WINDOW *pWin = NULL);
+   string getString(int pRow, int pCol, int pNumber, WINDOW *pWin = nullptr);
 
    /** 
     * @brief Look for a string on the screen (for debugging/testing)
@@ -771,11 +771,11 @@ namespace cxBase {
     * @param pRow the row it was found on
     * @param pCol the column it was found on
     * @param pWin A pointer to an ncurses window structure to get contents
-    *  from.  If this is NULL, curscr will be used.
+    *  from.  If this is nullptr, curscr will be used.
     * 
     * @return bool true if we were able to find the string, false otherwise
     */
-   bool findString(const string& pSearch, int& pRow, int& pCol, WINDOW *pWin = NULL);
+   bool findString(const string& pSearch, int& pRow, int& pCol, WINDOW *pWin = nullptr);
 
 } // end of namespace cxBase
 

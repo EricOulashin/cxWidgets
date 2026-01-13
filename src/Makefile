@@ -37,6 +37,10 @@ else
 endif
 LIBDIR_OPT=-L$(LIBDIR) -L/usr/local/lib
 
+# C++ standard for g++
+#CPP_STANDARD=c++98
+CPP_STANDARD=c++17
+
 # -DWANT_TIMEOUT: Option to include/exclude the timeout handling code in cxInput.
 #                 Added this option because of brain-dead SCO does not know about
 #                 the sigaction struct. (But, it *should*.)
@@ -44,14 +48,14 @@ LIBDIR_OPT=-L$(LIBDIR) -L/usr/local/lib
 #  all the object code is put into a shared library.
 # But, AIX don't like -fPIC
 ifeq ($(OS),AIX)
-   #CFLAGS=-g -Wall -DWANT_TIMEOUT -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
-   CFLAGS=-Wall -DWANT_TIMEOUT -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
+   #CFLAGS=-g -Wall -DWANT_TIMEOUT -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
+   CFLAGS=-Wall -DWANT_TIMEOUT -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
 else
    ifeq ($(OS),SCO)
-      CFLAGS=-fPIC -Wall -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
+      CFLAGS=-fPIC -Wall -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
    else
-      #CFLAGS=-g -fPIC -DWANT_TIMEOUT -Wall -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
-      CFLAGS=   -fPIC -DWANT_TIMEOUT -Wall -pedantic -ansi $(INCDIR) $(LIBDIR_OPT) 
+      #CFLAGS=-g -fPIC -DWANT_TIMEOUT -Wall -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
+      CFLAGS=   -fPIC -DWANT_TIMEOUT -Wall -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT) 
    endif
 endif
 

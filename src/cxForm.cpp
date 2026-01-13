@@ -37,7 +37,7 @@ cxForm::cxForm(cxWindow *pParentWindow, int pRow,
      mExitOnLeaveFirst(false),
      mWaitForInputIfEmpty(true),
      mDataChanged(false),
-     mParentMultiForm(NULL),
+     mParentMultiForm(nullptr),
      mCycleInput(true),
      mUseInputStatus(true),
      mHasBeenShown(false),
@@ -49,7 +49,7 @@ cxForm::cxForm(cxWindow *pParentWindow, int pRow,
 
 // Copy constructor
 cxForm::cxForm(const cxForm& pThatForm)
-   : cxWindow(NULL, pThatForm.top(), pThatForm.left(), pThatForm.height(),
+   : cxWindow(nullptr, pThatForm.top(), pThatForm.left(), pThatForm.height(),
               pThatForm.width(), pThatForm.getTitle(), pThatForm.getMessage(),
               pThatForm.getStatus(), pThatForm.getBorderStyle(),
               pThatForm.getExtTitleWindow(), pThatForm.getExtStatusWindow()),
@@ -87,7 +87,7 @@ cxForm::cxForm(const cxForm& pThatForm)
 
    // Copy the other form's inputs
    freeInputs();
-   cxMultiLineInput *newInput = NULL; // Used in creating the copied inputs
+   cxMultiLineInput *newInput = nullptr; // Used in creating the copied inputs
    inputPtrContainer::const_iterator iter = pThatForm.mInputs.begin();
    for (; iter != pThatForm.mInputs.end(); ++iter) {
       // Copy the input as a cxComboBox or a cxMultiLineInput,
@@ -123,7 +123,7 @@ cxMultiLineInput* cxForm::append(int pRow, int pCol, int pHeight, int pWidth,
                           int pRightLabelOffset, int pRightLabelHeight,
                           int pRightLabelWidth, bool pShowRightLabel,
                           eInputType pInputType) {
-   cxMultiLineInput *input = NULL; // Stores the return value
+   cxMultiLineInput *input = nullptr; // Stores the return value
 
    // If stacking is turned on, then append the input on its own line (ignoring
    //  some of the parameters passed to this function).  Otherwise, append where
@@ -148,7 +148,7 @@ cxMultiLineInput* cxForm::append(int pRow, int pCol, int pHeight, int pWidth,
          // Create the input
          switch (pInputType) {
             case eIT_CXCOMBOBOX:  // cxComboBox
-               input = new cxComboBox(NULL, top()+pRow, left()+pCol, pHeight,
+               input = new cxComboBox(nullptr, top()+pRow, left()+pCol, pHeight,
                                       pWidth, pLabel.substr(0, pWidth),
                                       eBS_NOBORDER, pInputOption,
                                       eINPUT_TYPE_TEXT, pExtValue, true,
@@ -157,7 +157,7 @@ cxMultiLineInput* cxForm::append(int pRow, int pCol, int pHeight, int pWidth,
                break;
             case eIT_CXMULTILINEINPUT: // cxMultiLineInput (default)
             default:
-               input = new cxMultiLineInput(NULL, top()+pRow, left()+pCol, pHeight,
+               input = new cxMultiLineInput(nullptr, top()+pRow, left()+pCol, pHeight,
                                           pWidth, pLabel.substr(0, pWidth),
                                           eBS_NOBORDER, pInputOption,
                                           eINPUT_TYPE_TEXT, pExtValue,
@@ -278,7 +278,7 @@ cxComboBox* cxForm::appendComboBox(int pRow, int pCol, int pHeight,
                            string *pExtValue,
                            int pRightLabelOffset, int pRightLabelHeight,
                            int pRightLabelWidth, bool pShowRightLabel) {
-   cxComboBox *iComboBox = NULL;
+   cxComboBox *iComboBox = nullptr;
    try {
       iComboBox = dynamic_cast<cxComboBox*>(append(pRow, pCol, pHeight,
                                        pWidth, pLabel, pValidator, pHelpString,
@@ -309,13 +309,13 @@ cxMLInputPtrPair cxForm::appendPair(int pRow, int pCol, int pHeight, int pWidth,
          int pRightLabel2Width, bool pShowRightLabel2, eInputType pInput1Type,
          eInputType pInput2Type) {
    cxMLInputPtrPair inputs =
-               make_pair<cxMultiLineInput*, cxMultiLineInput*>(NULL, NULL);
+               make_pair<cxMultiLineInput*, cxMultiLineInput*>(nullptr, nullptr);
 
    // Create the inputs (they will be either cxMultiLineInput or cxComboBox,
    //  according to pInput1Type and pInput2Type).
    switch (pInput1Type) {
       case eIT_CXMULTILINEINPUT:
-         inputs.first = new cxMultiLineInput(NULL, 0, 0, pHeight, pWidth,
+         inputs.first = new cxMultiLineInput(nullptr, 0, 0, pHeight, pWidth,
                                             pLabel, eBS_NOBORDER, pInputOption,
                                             eINPUT_TYPE_TEXT, pExtValue1,
                                             pRightLabel1Offset,
@@ -324,7 +324,7 @@ cxMLInputPtrPair cxForm::appendPair(int pRow, int pCol, int pHeight, int pWidth,
                                             pShowRightLabel1);
          break;
       case eIT_CXCOMBOBOX:
-         inputs.first = new cxComboBox(NULL, 0, 0, pHeight, pWidth, pLabel,
+         inputs.first = new cxComboBox(nullptr, 0, 0, pHeight, pWidth, pLabel,
                                  eBS_NOBORDER, pInputOption, eINPUT_TYPE_TEXT,
                                  pExtValue1, true, pRightLabel1Offset,
                                  pRightLabel1Height, pRightLabel1Width,
@@ -333,7 +333,7 @@ cxMLInputPtrPair cxForm::appendPair(int pRow, int pCol, int pHeight, int pWidth,
    }
    switch (pInput2Type) {
       case eIT_CXMULTILINEINPUT:
-         inputs.second = new cxMultiLineInput(NULL, 0, 0, pHeight, pWidth,
+         inputs.second = new cxMultiLineInput(nullptr, 0, 0, pHeight, pWidth,
                                             pLabel, eBS_NOBORDER, pInputOption,
                                             eINPUT_TYPE_TEXT, pExtValue2,
                                             pRightLabel2Offset,
@@ -342,7 +342,7 @@ cxMLInputPtrPair cxForm::appendPair(int pRow, int pCol, int pHeight, int pWidth,
                                             pShowRightLabel2);
          break;
       case eIT_CXCOMBOBOX:
-         inputs.second = new cxComboBox(NULL, 0, 0, pHeight, pWidth, pLabel,
+         inputs.second = new cxComboBox(nullptr, 0, 0, pHeight, pWidth, pLabel,
                                  eBS_NOBORDER, pInputOption, eINPUT_TYPE_TEXT,
                                  pExtValue2, true, pRightLabel2Offset,
                                  pRightLabel2Height, pRightLabel2Width,
@@ -376,8 +376,8 @@ cxComboBoxPtrPair cxForm::appendComboBoxPair(int pRow, int pCol, int pHeight,
 
    // Cast the return value pointers to cxComboBox pointers
    cxComboBoxPtrPair comboBoxes =
-                        make_pair<cxComboBox*, cxComboBox*>(NULL, NULL);
-   if (inputs.first != NULL) {
+                        make_pair<cxComboBox*, cxComboBox*>(nullptr, nullptr);
+   if (inputs.first != nullptr) {
       try {
          comboBoxes.first = dynamic_cast<cxComboBox*>(inputs.first);
       }
@@ -392,7 +392,7 @@ cxComboBoxPtrPair cxForm::appendComboBoxPair(int pRow, int pCol, int pHeight,
                                   "input to a cxComboBox).");
       }
    }
-   if (inputs.second != NULL) {
+   if (inputs.second != nullptr) {
       try {
          comboBoxes.second = dynamic_cast<cxComboBox*>(inputs.second);
       }
@@ -414,10 +414,10 @@ cxComboBoxPtrPair cxForm::appendComboBoxPair(int pRow, int pCol, int pHeight,
 void cxForm::appendPair(cxMultiLineInput* pInput1, cxMultiLineInput* pInput2,
                         int pRow, int pCol, const string& pName) {
    // Append the first input
-   if (pInput1 != NULL) {
+   if (pInput1 != nullptr) {
       append(pInput1, pRow, pCol);
 
-      if (pInput2 != NULL) {
+      if (pInput2 != nullptr) {
          // Add a non-editable input that just contains "/"
          int col2 = pCol + pInput1->width();
          cxMultiLineInput *input = append(pRow, col2, 1, 1, "/", "", "",
@@ -545,12 +545,12 @@ cxMultiLineInput* cxForm::append(int pHeight, int pWidth,
       }
    }
 
-   cxMultiLineInput *input = NULL; // Holds the return value
+   cxMultiLineInput *input = nullptr; // Holds the return value
    try {
       // Create the input
       switch (pInputType) {
          case eIT_CXCOMBOBOX:  // cxComboBox
-            input = new cxComboBox(NULL, row, col, pHeight, pWidth, pLabel,
+            input = new cxComboBox(nullptr, row, col, pHeight, pWidth, pLabel,
                                    eBS_NOBORDER, pInputOption, eINPUT_TYPE_TEXT,
                                    pExtValue, true, pRightLabelOffset,
                                    pRightLabelHeight, pRightLabelWidth,
@@ -558,7 +558,7 @@ cxMultiLineInput* cxForm::append(int pHeight, int pWidth,
             break;
          case eIT_CXMULTILINEINPUT: // cxMultiLineInput (default)
          default:
-            input = new cxMultiLineInput(NULL, row, col, pHeight, pWidth, pLabel,
+            input = new cxMultiLineInput(nullptr, row, col, pHeight, pWidth, pLabel,
                                          eBS_NOBORDER, pInputOption,
                                          eINPUT_TYPE_TEXT, pExtValue,
                                          pRightLabelOffset, pRightLabelHeight,
@@ -683,7 +683,7 @@ cxComboBox* cxForm::appendComboBox(int pHeight, int pWidth, const string& pLabel
                      string *pExtValue, int pRightLabelOffset,
                      int pRightLabelHeight, int pRightLabelWidth,
                      bool pShowRightLabel) {
-   cxComboBox *iComboBox = NULL;
+   cxComboBox *iComboBox = nullptr;
    try {
       iComboBox = dynamic_cast<cxComboBox*>(append(pHeight, pWidth, pLabel,
                                            pValidator, pHelpString, pInputOption,
@@ -715,7 +715,7 @@ cxMultiLineInput* cxForm::append(const cxMultiLineInput& input) {
    }
 
    // Make sure the input has no parent window
-   iInput->setParent(NULL);
+   iInput->setParent(nullptr);
 
    // Make sure the input doesn't trap non-assigned function keys.
    iInput->trapNonAssignedFKeys(false);
@@ -777,7 +777,7 @@ cxMultiLineInput* cxForm::append(const cxMultiLineInput& input) {
 } // append
 
 void cxForm::append(cxMultiLineInput* pInput, int pRow, int pCol, bool* pMoved) {
-   if (pInput != NULL) {
+   if (pInput != nullptr) {
       // Only append the input if it isn't already in mInputs.
       bool alreadyExists = false;
       inputPtrContainer::const_iterator iter = mInputs.begin();
@@ -798,12 +798,12 @@ void cxForm::append(cxMultiLineInput* pInput, int pRow, int pCol, bool* pMoved) 
 
          // Move the input to the proper place (relative to the form)
          bool inputMoved = pInput->move(top()+pRow, left()+pCol, false);
-         if (pMoved != NULL) {
+         if (pMoved != nullptr) {
             *pMoved = inputMoved;
          }
 
          // Make sure the input has no parent window
-         pInput->setParent(NULL);
+         pInput->setParent(nullptr);
 
          // Make sure the input doesn't trap non-assigned function keys.
          pInput->trapNonAssignedFKeys(false);
@@ -2532,7 +2532,7 @@ void cxForm::toggleCursor(bool pShowCursor) {
 } // toggleCursor
 
 cxMultiLineInput* cxForm::getInput(int pIndex) const {
-   cxMultiLineInput* retval = NULL;
+   cxMultiLineInput* retval = nullptr;
 
    if ((pIndex >= 0) && (pIndex < (int)mInputs.size())) {
       retval = mInputs[pIndex];
@@ -2542,7 +2542,7 @@ cxMultiLineInput* cxForm::getInput(int pIndex) const {
 } // getInput
 
 cxMultiLineInput* cxForm::getInput(const string& pLabel, bool pIsLabel) const {
-   cxMultiLineInput* retval = NULL;
+   cxMultiLineInput* retval = nullptr;
 
    inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
@@ -2567,7 +2567,7 @@ cxMultiLineInput* cxForm::getInput(const string& pLabel, bool pIsLabel) const {
 } // getInput
 
 cxMultiLineInput* cxForm::getCurrentInput() const {
-   cxMultiLineInput *input = NULL;
+   cxMultiLineInput *input = nullptr;
 
    if (mInputs.size() > 0) {
       // Note: getCurrentInputIndex() does bounds checking and won't return
@@ -3702,7 +3702,7 @@ void cxForm::getValues(map<string, string>& pValues, bool pUseLabels,
 void cxForm::setValues(const map<string, string>& pValues, bool pUseLabels,
                        bool pRefresh, bool pDisableValidatorFunctions) {
    int inputIndex = 0;
-   cxMultiLineInput *iInput = NULL;
+   cxMultiLineInput *iInput = nullptr;
    bool useValidatorBackup = false; // For each input
 
    map<string, string>::const_iterator iter = pValues.begin();
@@ -3780,13 +3780,13 @@ bool cxForm::hasInput(const string& pStr, bool pIsLabel) const {
 } // hasInput
 
 cxWindow* cxForm::getParent() const {
-   cxWindow *parentWindow = NULL;
+   cxWindow *parentWindow = nullptr;
 
-   if (mParentMultiForm != NULL) {
+   if (mParentMultiForm != nullptr) {
       parentWindow = mParentMultiForm;
    }
    else {
-      // mParentMultiForm is NULL
+      // mParentMultiForm is nullptr
       parentWindow = cxWindow::getParent();
    }
 
@@ -3954,7 +3954,7 @@ void cxForm::setLastKey(int pLastKey) {
    cxWindow::setLastKey(pLastKey);
    // If this form is on a multiForm, then
    //  its last key needs to be set also.
-   if (mParentMultiForm != NULL) {
+   if (mParentMultiForm != nullptr) {
       mParentMultiForm->setLastKey(pLastKey);
    }
 } // setLastKey
@@ -3963,7 +3963,7 @@ void cxForm::quitNow() {
    // Tell the form to quit, as well as the current input.
    cxWindow::quitNow();
    cxMultiLineInput *input = getInput(getCurrentInputIndex());
-   if (NULL != input) {
+   if (nullptr != input) {
       input->quitNow();
    }
 } // quitNow
@@ -3972,7 +3972,7 @@ void cxForm::exitNow() {
    // Tell the form to exit, as well as the current input.
    cxWindow::exitNow();
    cxMultiLineInput *input = getInput(getCurrentInputIndex());
-   if (NULL != input) {
+   if (nullptr != input) {
       input->exitNow();
    }
 } // exitNow
@@ -4215,7 +4215,7 @@ bool cxForm::swap(cxWindow *pInput1, cxWindow *pInput2) {
 //// Protected functions
 
 void cxForm::copyCxFormStuff(const cxForm* pThatForm) {
-   if ((pThatForm != NULL) && (pThatForm != this)) {
+   if ((pThatForm != nullptr) && (pThatForm != this)) {
       // Free the memory used by the inputs
       freeInputs();
 
@@ -4266,7 +4266,7 @@ void cxForm::copyCxFormStuff(const cxForm* pThatForm) {
       mAllValidateOnJumpKey = pThatForm->mAllValidateOnJumpKey;
 
       // Copy the other form's inputs
-      cxMultiLineInput *newInput = NULL; // Used in creating the copied inputs
+      cxMultiLineInput *newInput = nullptr; // Used in creating the copied inputs
       inputPtrContainer::const_iterator iter = pThatForm->mInputs.begin();
       for (; iter != pThatForm->mInputs.end(); ++iter) {
          // Copy the input as a cxComboBox or a cxMultiLineInput,
@@ -4700,7 +4700,7 @@ inline void cxForm::clearInputIfSpace() {
 inline void cxForm::freeInputs() {
    inputPtrContainer::iterator iter = mInputs.begin();
    for (; iter != mInputs.end(); ++iter) {
-      if (*iter != NULL) {
+      if (*iter != nullptr) {
          delete (*iter);
       }
    }
@@ -4803,7 +4803,7 @@ long cxForm::doInputLoop(bool& pRunOnLeaveFunction) {
                         //  parent window is a cxPanel or a cxMultiForm, then
                         //  quit the input loop.  This can allow the user to go
                         //  to another window.
-                        if (parentIsCxPanel() || (mParentMultiForm != NULL)) {
+                        if (parentIsCxPanel() || (mParentMultiForm != nullptr)) {
                            continueOn = false;
                         }
                      }
@@ -4897,7 +4897,7 @@ long cxForm::doInputLoop(bool& pRunOnLeaveFunction) {
                                              &pRunOnLeaveFunction);
                   if (!mouseFuncExists) {
                      if (mouseEvtWasButtonEvt() && !mouseEvtWasInWindow()) {
-                        if (parentIsCxPanel() || (mParentMultiForm != NULL)) {
+                        if (parentIsCxPanel() || (mParentMultiForm != nullptr)) {
                            continueOn = false;
                         }
                      }
@@ -5064,8 +5064,8 @@ bool cxForm::doCurrentInput(long& pReturnCode, bool& pRunOnLeaveFunction,
                if (pFunctionExists) {
                   if (mKeyFunctions.find(lastKey) != mKeyFunctions.end()) {
                      // The cxFunction pointers in mKeyFunctions shouldn't be
-                     //  NULL, but check anyway, just to be sure.
-                     if (mKeyFunctions[lastKey] != NULL) {
+                     //  nullptr, but check anyway, just to be sure.
+                     if (mKeyFunctions[lastKey] != nullptr) {
                         pRunOnLeaveFunction = pRunOnLeaveFunction &&
                                            mKeyFunctions[lastKey]->getRunOnLeaveFunction();
                      }
@@ -5177,7 +5177,7 @@ void cxForm::setIsModal(bool pIsModal) {
 } // setIsModal
 
 string cxForm::changeFocus(void *theForm, void *theIndex) {
-   if ((NULL == theForm) || (NULL == theIndex)) {
+   if ((nullptr == theForm) || (nullptr == theIndex)) {
       return("");
    }
 

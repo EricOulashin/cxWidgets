@@ -71,7 +71,7 @@ class cxScrolledWindow : public cxWindow {
        * @param pMessageUnderlines Whether or not to recognize & use underline
        *  characters when displaying the message text.
        */
-      explicit cxScrolledWindow(cxWindow *pParentWindow = NULL,
+      explicit cxScrolledWindow(cxWindow *pParentWindow = nullptr,
                         int pRow = 0, int pCol = 0,
                         int pHeight = DEFAULT_HEIGHT,
                         int pWidth = DEFAULT_WIDTH,
@@ -79,8 +79,8 @@ class cxScrolledWindow : public cxWindow {
                         const string& pMessage = "",
                         const string& pStatus = "",
                         eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                        cxWindow *pExtTitleWindow = NULL,
-                        cxWindow *pExtStatusWindow = NULL,
+                        cxWindow *pExtTitleWindow = nullptr,
+                        cxWindow *pExtStatusWindow = nullptr,
                         bool pMessageUnderlines = false);
 
       /**
@@ -99,8 +99,8 @@ class cxScrolledWindow : public cxWindow {
       cxScrolledWindow(cxWindow *pParentWindow,
                int pRow, int pCol, const string& pTitle,
                const string& pMessage, const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
 
       /**
@@ -117,8 +117,8 @@ class cxScrolledWindow : public cxWindow {
       cxScrolledWindow(cxWindow *pParentWindow,
                const string& pTitle, const string& pMessage,
                const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
 
       /**
@@ -133,8 +133,8 @@ class cxScrolledWindow : public cxWindow {
        */
       cxScrolledWindow(cxWindow *pParentWindow,
                const string& pMessage, const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
 
       /**
@@ -147,8 +147,8 @@ class cxScrolledWindow : public cxWindow {
        *  displaying the message text.
        */
       cxScrolledWindow(cxWindow *pParentWindow, const string& pMessage,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
 
       /**
@@ -166,8 +166,8 @@ class cxScrolledWindow : public cxWindow {
       cxScrolledWindow(cxWindow *pParentWindow, eHPosition pHPosition,
                const string& pTitle, const string& pMessage,
                const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
 
       /**
@@ -350,14 +350,14 @@ class cxScrolledWindow : public cxWindow {
        * @param pTitle The title to use for the window
        * @param pMessage The message to display inside the window
        * @param pStatus The status text to use
-       * @param pParentWindow A pointer to the parent cxWindow (defaults to NULL)
+       * @param pParentWindow A pointer to the parent cxWindow (defaults to nullptr)
        * @param pResizeVertically Whether or not to resize vertically so that
        *  all the message text shows (defaults to false).
        */
       virtual void init(int pRow, int pCol, int pHeight, int pWidth,
                         const string& pTitle, string pMessage,
                         const string& pStatus,
-                        cxWindow *pParentWindow = NULL,
+                        cxWindow *pParentWindow = nullptr,
                         bool pResizeVertically = false);
 
       /**

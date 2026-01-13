@@ -14,7 +14,7 @@ namespace cxValidators {
     * \brief keypress).
     *
     * @param theInput A pointer to a cxMultiLineInput whose input to validate
-    * @param clearOnSpace A pointer to a boolean (if non-NULL and true, will clear the input
+    * @param clearOnSpace A pointer to a boolean (if non-null and true, will clear the input
     *  when the spacebar is pressed).
     *
     * @return Blank string for valid data or a warning for invalid data.
@@ -27,7 +27,7 @@ namespace cxValidators {
    * \brief validate on each keypress).
    *
    * @param theInput A pointer to the cxMultiLineInput to validate
-   * @param clearOnSpace A pointer to a boolean (if non-NULL and true, will clear the input
+   * @param clearOnSpace A pointer to a boolean (if non-null and true, will clear the input
    *  when the spacebar is pressed).
    *
    * @return Blank string for valid data or a warning for invalid data.

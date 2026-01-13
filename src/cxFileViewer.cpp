@@ -21,7 +21,7 @@ cxFileViewer::cxFileViewer(cxWindow *pParentWindow, const string& pFilename,
 
    // Make sure that the line numbers get updated after each cycle
    //  through the input loop
-   setLoopEndFunction(cxFileViewer::updateLineNumbers, this, NULL, NULL, NULL, false);
+   setLoopEndFunction(cxFileViewer::updateLineNumbers, this, nullptr, nullptr, nullptr, false);
 }
 
 cxFileViewer::cxFileViewer(const cxFileViewer& pThatFileViewer)
@@ -44,7 +44,7 @@ cxFileViewer::cxFileViewer(const cxFileViewer& pThatFileViewer)
 
    // Make sure that the line numbers get updated after each cycle
    //  through the input loop
-   setLoopEndFunction(cxFileViewer::updateLineNumbers, this, NULL, NULL, NULL, false);
+   setLoopEndFunction(cxFileViewer::updateLineNumbers, this, nullptr, nullptr, nullptr, false);
 }
 
 cxFileViewer::~cxFileViewer() {
@@ -101,7 +101,7 @@ string cxFileViewer::cxTypeStr() const {
 //// Protected functions
 
 void cxFileViewer::copyCxFileViewerStuff(const cxFileViewer* pThatFileViewer) {
-   if ((pThatFileViewer != NULL) && (pThatFileViewer != this)) {
+   if ((pThatFileViewer != nullptr) && (pThatFileViewer != this)) {
       // Copy the cxWindow stuff inherited from the parent, then copy
       //  this class' stuff
       try {
@@ -137,21 +137,21 @@ void cxFileViewer::displayLineNumbers() {
    // Enable the status attributes
    enableAttrs(mWindow, eSTATUS);
    if (useColors) {
-      wcolor_set(mWindow, mStatusColorPair, NULL);
+      wcolor_set(mWindow, mStatusColorPair, nullptr);
    }
    mvwprintw(mWindow, bottom()-top(), right()-left()-10, "%4d-%-4d", firstLineNum, lastLineNum);
    // Disable the attributes
    disableAttrs(mWindow, eSTATUS);
    // Disable the colors
    if (useColors) {
-      wcolor_set(mWindow, 0, NULL);
+      wcolor_set(mWindow, 0, nullptr);
    }
    wrefresh(mWindow);
 } // displayLineNumbers
 
 string cxFileViewer::updateLineNumbers(void *theFileViewer, void *unused,
                             void *unused2, void *unused3) {
-   if (theFileViewer == NULL) {
+   if (theFileViewer == nullptr) {
       return("");
    }
 

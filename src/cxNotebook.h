@@ -35,7 +35,7 @@ class cxNotebook: public cxPanel {
       /** 
        * \brief Constructor
        *
-       * @param pParentWindow A pointer to the parent window.  Can be NULL.
+       * @param pParentWindow A pointer to the parent window.  Can be nullptr.
        * @param pRow The row of the upper-left corner.
        * @param pCol The column of the upper-left corner.
        * @param pHeight The height of the window.
@@ -59,7 +59,7 @@ class cxNotebook: public cxPanel {
        *  the first and last enabled tabs using the navigation keys.  Defaults
        *  to true.
        */
-      explicit cxNotebook(cxWindow *pParentWindow = NULL,
+      explicit cxNotebook(cxWindow *pParentWindow = nullptr,
                           int pRow = 0, int pCol = 0,
                           int pHeight = DEFAULT_HEIGHT,
                           int pWidth = DEFAULT_WIDTH,
@@ -67,8 +67,8 @@ class cxNotebook: public cxPanel {
                           bool pLeftLabelSpace = true,
                           bool pRightLabelSpace = true,
                           int pTabSpacing = 0,
-                          cxWindow *pExtTitleWindow = NULL,
-                          cxWindow *pExtStatusWindow = NULL,
+                          cxWindow *pExtTitleWindow = nullptr,
+                          cxWindow *pExtStatusWindow = nullptr,
                           bool pTabNavWrap = true);
 
       virtual ~cxNotebook();
@@ -234,14 +234,14 @@ class cxNotebook: public cxPanel {
        * \brief to the cxPanel that was added.  If the panel can't be added
        * \brief (i.e., if the label is too long for the tab to fit on the
        * \brief screen), this won't create the panel, and this will return
-       * \brief NULL.
+       * \brief nullptr.
        *
        * @param pLabel The label for the panel
        * @param pPanelName This can specify a name for the panel to allow
        *  identification later.  This is optional and defaults to a blank
        *  string.
        *
-       * @return A pointer to the cxPanel that was added, or NULL if it
+       * @return A pointer to the cxPanel that was added, or nullptr if it
        *  couldn't be added
        */
       virtual cxPanel* append(const string& pLabel, const string& pPanelName = "");
@@ -253,7 +253,7 @@ class cxNotebook: public cxPanel {
        * @param pIndex The index of the panel to retrieve
        *
        * @return A pointer to the panel with the given index.  If there is
-       *  no panel for the given index, this will return NULL.
+       *  no panel for the given index, this will return nullptr.
        */
       virtual cxPanel* getPanel(unsigned pIndex) const;
 
@@ -266,16 +266,16 @@ class cxNotebook: public cxPanel {
        *  this will treat pID as a name for a panel.  This defaults to true.
        *
        * @return A pointer to the panel with the given label/name.  If there is
-       *  no panel for the given label/name, this will return NULL.
+       *  no panel for the given label/name, this will return nullptr.
        */
       virtual cxPanel* getPanel(const string& pID, bool pIsLabel = true) const;
 
       /**
-       * \brief Returns a pointer to the current panel, or NULL if there is
+       * \brief Returns a pointer to the current panel, or nullptr if there is
        * \brief no current panel for some reason (i.e., if the notebook has
        * \brief no panels).
        *
-       * @return A pointer to the current panel, or NULL if there is none
+       * @return A pointer to the current panel, or nullptr if there is none
        */
       virtual cxPanel* getCurrentPanelPtr() const;
 
@@ -551,7 +551,7 @@ class cxNotebook: public cxPanel {
        * @param pIndex The index of the window in the panel to remove
        *
        * @return A pointer to the panel removed.  If pIndex is not a valid
-       *  index, the return value will be NULL.
+       *  index, the return value will be nullptr.
        */
       virtual cxWindow* removeWindow(unsigned pIndex);
 

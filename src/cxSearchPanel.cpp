@@ -7,9 +7,9 @@ cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
                  const string& pMenuTitle, eBorderStyle pFormBorderStyle,
                  eBorderStyle pMenuBorderStyle)
    : cxPanel(pParentWindow, pRow, pCol, pHeight, pWidth, "", "", "",
-             eBS_NOBORDER, NULL, NULL, false),
-     mForm(NULL),
-     mMenu(NULL)
+             eBS_NOBORDER, nullptr, nullptr, false),
+     mForm(nullptr),
+     mMenu(nullptr)
 {
    // As a screen optimization, don't show the panel window when showing the
    //  panel, since the cxForm and cxMenu will completely cover the panel
@@ -29,24 +29,24 @@ cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
       winHeight = 1;
    }
    int winWidth = width();
-   mForm = new cxForm(NULL, 0, 0, winHeight, winWidth, pFormTitle,
-                      pFormBorderStyle, NULL, NULL, true, false);
+   mForm = new cxForm(nullptr, 0, 0, winHeight, winWidth, pFormTitle,
+                      pFormBorderStyle, nullptr, nullptr, true, false);
    // Have the enter key exit the form (to go onto the menu).
    mForm->addExitKey(ENTER, true, true);
    mForm->addExitKey(KEY_ENTER, true, true);
    // Set up formReverseNavigation()
-   mForm->setKeyFunction(KEY_UP, cxSearchPanel::formReverseNavigation, this, NULL, false,
+   mForm->setKeyFunction(KEY_UP, cxSearchPanel::formReverseNavigation, this, nullptr, false,
                          false, true);
-   mForm->setKeyFunction(SHIFT_TAB, cxSearchPanel::formReverseNavigation, this, NULL, false,
+   mForm->setKeyFunction(SHIFT_TAB, cxSearchPanel::formReverseNavigation, this, nullptr, false,
                          false, true);
    append(mForm, 0, 0, false);
 
    // Create the cxMenu with the remaining height of the panel, and append it
    //  below the form
    winHeight = height() - winHeight;
-   mMenu = new cxMenu(NULL, 0, 0, winHeight, winWidth, pMenuTitle, NULL, NULL,
+   mMenu = new cxMenu(nullptr, 0, 0, winHeight, winWidth, pMenuTitle, nullptr, nullptr,
                       pMenuBorderStyle);
-   mMenu->setOnSelectItemFunction(cxSearchPanel::menuOnSelect, this, NULL, true,
+   mMenu->setOnSelectItemFunction(cxSearchPanel::menuOnSelect, this, nullptr, true,
                                   true);
    // Have the menu refresh its item list when it gets focus.
    mMenu->setRefreshItemsWhenModal(true);
@@ -57,14 +57,14 @@ cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
    append(mMenu, row, 0, false);
 
    // ESC on the menu
-   mMenu->setKeyFunction(ESCAPE, cxSearchPanel::menuOnESC, this, NULL, false,
+   mMenu->setKeyFunction(ESCAPE, cxSearchPanel::menuOnESC, this, nullptr, false,
                          false, false);
-   mMenu->setKeyFunction(ESC, cxSearchPanel::menuOnESC, this, NULL, false,
+   mMenu->setKeyFunction(ESC, cxSearchPanel::menuOnESC, this, nullptr, false,
                          false, false);
 } // constructor
 
 cxSearchPanel::cxSearchPanel(const cxSearchPanel& pPanel)
-   : cxPanel(NULL, pPanel.top(), pPanel.left(), pPanel.height(),
+   : cxPanel(nullptr, pPanel.top(), pPanel.left(), pPanel.height(),
              pPanel.width(), pPanel.getTitle(), pPanel.getMessage(),
              pPanel.getStatus(), pPanel.getBorderStyle(),
              pPanel.getExtTitleWindow(), pPanel.getExtStatusWindow(),
@@ -73,9 +73,9 @@ cxSearchPanel::cxSearchPanel(const cxSearchPanel& pPanel)
      mMenu(new cxMenu(*(pPanel.mMenu)))
 {
    // Set up formReverseNavigation() for the form and append the form
-   mForm->setKeyFunction(KEY_UP, cxSearchPanel::formReverseNavigation, this, NULL, false,
+   mForm->setKeyFunction(KEY_UP, cxSearchPanel::formReverseNavigation, this, nullptr, false,
                          false, true);
-   mForm->setKeyFunction(SHIFT_TAB, cxSearchPanel::formReverseNavigation, this, NULL, false,
+   mForm->setKeyFunction(SHIFT_TAB, cxSearchPanel::formReverseNavigation, this, nullptr, false,
                          false, true);
    // Have the enter key exit the form (to go onto the menu).
    mForm->addExitKey(ENTER, true, true);
@@ -91,9 +91,9 @@ cxSearchPanel::cxSearchPanel(const cxSearchPanel& pPanel)
    checkEventFunctionPointers(pPanel);
 
    // ESC on the menu
-   mMenu->setKeyFunction(ESCAPE, cxSearchPanel::menuOnESC, this, NULL, false,
+   mMenu->setKeyFunction(ESCAPE, cxSearchPanel::menuOnESC, this, nullptr, false,
                          false, false);
-   mMenu->setKeyFunction(ESC, cxSearchPanel::menuOnESC, this, NULL, false,
+   mMenu->setKeyFunction(ESC, cxSearchPanel::menuOnESC, this, nullptr, false,
                          false, false);
 } // copy constructor
 
@@ -252,7 +252,7 @@ bool cxSearchPanel::setFormOnEnterFunction(funcPtr4 pFunction, void *p1,
                                            void *p2, void *p3, void *p4) {
    bool retval = false;
 
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       retval = mForm->setKeyFunction(KEY_ENTER, pFunction, p1, p2, p3, p4,
                                      false, true, true) &&
                mForm->setKeyFunction(ENTER, pFunction, p1, p2, p3, p4, false,
@@ -266,7 +266,7 @@ bool cxSearchPanel::setFormOnEnterFunction(funcPtr2 pFunction, void *p1,
                                            void *p2) {
    bool retval = false;
 
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       retval = mForm->setKeyFunction(KEY_ENTER, pFunction, p1, p2, false, true,
                                      true) &&
                mForm->setKeyFunction(ENTER, pFunction, p1, p2, false, true,
@@ -279,7 +279,7 @@ bool cxSearchPanel::setFormOnEnterFunction(funcPtr2 pFunction, void *p1,
 bool cxSearchPanel::setFormOnEnterFunction(funcPtr0 pFunction) {
    bool retval = false;
 
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       retval = mForm->setKeyFunction(KEY_ENTER, pFunction, false, true, true)
                && mForm->setKeyFunction(ENTER, pFunction, false, true, true);
    }
@@ -288,7 +288,7 @@ bool cxSearchPanel::setFormOnEnterFunction(funcPtr0 pFunction) {
 } // setFormOnEnterFunction
 
 void cxSearchPanel::clearFormOnEnterFunction() {
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       mForm->clearKeyFunction(KEY_ENTER);
       mForm->clearKeyFunction(ENTER);
       // Make sure the form still exits focus when the user presses the
@@ -305,7 +305,7 @@ bool cxSearchPanel::setFormKeyFunction(int pFunctionKey, funcPtr4 pFunction,
                                        bool pRunOnLeaveFunction) {
    bool retval = false;
 
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       retval = mForm->setKeyFunction(pFunctionKey, pFunction, p1, p2, p3, p4,
                                      false, true, true);
    }
@@ -320,7 +320,7 @@ bool cxSearchPanel::setFormKeyFunction(int pFunctionKey, funcPtr2 pFunction,
                                        bool pRunOnLeaveFunction) {
    bool retval = false;
 
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       retval = mForm->setKeyFunction(pFunctionKey, pFunction, p1, p2, false, true,
                                      true);
    }
@@ -334,7 +334,7 @@ bool cxSearchPanel::setFormKeyFunction(int pFunctionKey, funcPtr0 pFunction,
                                        bool pRunOnLeaveFunction) {
    bool retval = false;
 
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       retval = mForm->setKeyFunction(pFunctionKey, pFunction, false, true,
                                      true);
    }
@@ -343,13 +343,13 @@ bool cxSearchPanel::setFormKeyFunction(int pFunctionKey, funcPtr0 pFunction,
 } // setFormKeyFunction
 
 void cxSearchPanel::clearFormKeyFunction(int pFunctionKey) {
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       mForm->clearKeyFunction(pFunctionKey);
    }
 } // clearFormKeyFunction
 
 void cxSearchPanel::clearFormKeyFunctions() {
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       mForm->clearKeyFunctions();
    }
 } // clearFormKeyFunctions
@@ -357,7 +357,7 @@ void cxSearchPanel::clearFormKeyFunctions() {
 bool cxSearchPanel::formHasKeyFunction(int pFunctionKey) const {
    bool retval = false;
 
-   if (mForm != NULL) {
+   if (mForm != nullptr) {
       retval = mForm->hasKeyFunction(pFunctionKey);
    }
 
@@ -370,7 +370,7 @@ bool cxSearchPanel::setMenuKeyFunction(int pFunctionKey, funcPtr4 pFunction,
                                        bool pRunOnLeaveFunction) {
    bool retval = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       retval = mMenu->setKeyFunction(pFunctionKey, pFunction, p1, p2, p3, p4,
                                      false, true, true);
    }
@@ -384,7 +384,7 @@ bool cxSearchPanel::setMenuKeyFunction(int pFunctionKey, funcPtr2 pFunction,
                                        bool pRunOnLeaveFunction) {
    bool retval = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       retval = mMenu->setKeyFunction(pFunctionKey, pFunction, p1, p2, false, true,
                                      true);
    }
@@ -397,7 +397,7 @@ bool cxSearchPanel::setMenuKeyFunction(int pFunctionKey, funcPtr0 pFunction,
                                        bool pRunOnLeaveFunction) {
    bool retval = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       retval = mMenu->setKeyFunction(pFunctionKey, pFunction, false, true,
                                      true);
    }
@@ -406,13 +406,13 @@ bool cxSearchPanel::setMenuKeyFunction(int pFunctionKey, funcPtr0 pFunction,
 } // setMenuKeyFunction
 
 void cxSearchPanel::clearMenuKeyFunction(int pFunctionKey) {
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       mMenu->clearKeyFunction(pFunctionKey);
    }
 } // clearMenuKeyFunction
 
 void cxSearchPanel::clearMenuKeyFunctions() {
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       mMenu->clearKeyFunctions();
    }
 } // clearMenuKeyFunctions
@@ -420,7 +420,7 @@ void cxSearchPanel::clearMenuKeyFunctions() {
 bool cxSearchPanel::menuHasKeyFunction(int pFunctionKey) const {
    bool retval = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       retval = mMenu->hasKeyFunction(pFunctionKey);
    }
 
@@ -433,7 +433,7 @@ bool cxSearchPanel::setMenuOnSelectItemFunction(funcPtr4 pFunction, void *p1,
                                                 bool pRunOnLeaveFunction) {
    bool funcWasSet = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       funcWasSet = mMenu->setOnSelectItemFunction(pFunction, p1, p2, p3, p4,
                                      pExitAfterRun, pRunOnLeaveFunction);
    }
@@ -446,7 +446,7 @@ bool cxSearchPanel::setMenuOnSelectItemFunction(funcPtr2 pFunction, void *p1,
                                                 bool pRunOnLeaveFunction) {
    bool funcWasSet = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       funcWasSet = mMenu->setOnSelectItemFunction(pFunction, p1, p2,
                                          pExitAfterRun, pRunOnLeaveFunction);
    }
@@ -459,7 +459,7 @@ bool cxSearchPanel::setMenuOnSelectItemFunction(funcPtr0 pFunction,
                                                 bool pRunOnLeaveFunction) {
    bool funcWasSet = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       funcWasSet = mMenu->setOnSelectItemFunction(pFunction, pExitAfterRun,
                                                   pRunOnLeaveFunction);
    }
@@ -470,7 +470,7 @@ bool cxSearchPanel::setMenuOnSelectItemFunction(funcPtr0 pFunction,
 bool cxSearchPanel::itemWasSelected() const {
    bool itemSelected = false;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       itemSelected = mMenu->itemWasSelected();
    }
 
@@ -480,7 +480,7 @@ bool cxSearchPanel::itemWasSelected() const {
 string cxSearchPanel::getSelectedItem(bool pDisplayText) const {
    string retval;
 
-   if (mMenu != NULL) {
+   if (mMenu != nullptr) {
       if (mMenu->itemWasSelected()) {
          retval = mMenu->getCurrentItemText(pDisplayText);
       }
@@ -500,7 +500,7 @@ bool cxSearchPanel::setMenuCurrent() {
 //// Protected functions
 
 void cxSearchPanel::copyCxSearchPanelStuff(const cxSearchPanel* pThatPanel) {
-   if ((pThatPanel != NULL) && (pThatPanel != this)) {
+   if ((pThatPanel != nullptr) && (pThatPanel != this)) {
       // Copy the cxPanel stuff inherited from the parent, then copy this
       //  class' stuff.  (Note: cxPanel doesn't have a copyCxPanelStuff(),
       //  so we're calling copyCxWinStuff()).
@@ -551,10 +551,10 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    //  parameters point to the other searchPanel or its form or menu, then
    //  have them use this one instead.
    cxFunction *onFocusFunc = mForm->getOnFocusFunction();
-   if (onFocusFunc != NULL) {
+   if (onFocusFunc != nullptr) {
       if (onFocusFunc->cxTypeStr() == "cxFunction2") {
          cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onFocusFunc);
-         if (iFunc2 != NULL) {
+         if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
                if (params[i] == (void*)(&pPanel)) {
@@ -568,7 +568,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       }
       else if (onFocusFunc->cxTypeStr() == "cxFunction4") {
          cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onFocusFunc);
-         if (iFunc4 != NULL) {
+         if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
             for (int i = 0; i < 4; ++i) {
@@ -583,10 +583,10 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       }
    }
    cxFunction *onLeaveFunc = mForm->getOnLeaveFunction();
-   if (onLeaveFunc != NULL) {
+   if (onLeaveFunc != nullptr) {
       if (onLeaveFunc->cxTypeStr() == "cxFunction2") {
          cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onLeaveFunc);
-         if (iFunc2 != NULL) {
+         if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
                if (params[i] == (void*)(&pPanel)) {
@@ -599,7 +599,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       }
       else if (onLeaveFunc->cxTypeStr() == "cxFunction4") {
          cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onLeaveFunc);
-         if (iFunc4 != NULL) {
+         if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
             for (int i = 0; i < 4; ++i) {
@@ -615,10 +615,10 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
 
    // Do the same for the menu's onFocus and onLeave functions
    onFocusFunc = mMenu->getOnFocusFunction();
-   if (onFocusFunc != NULL) {
+   if (onFocusFunc != nullptr) {
       if (onFocusFunc->cxTypeStr() == "cxFunction2") {
          cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onFocusFunc);
-         if (iFunc2 != NULL) {
+         if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
                if (params[i] == (void*)(&pPanel)) {
@@ -632,7 +632,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       }
       else if (onFocusFunc->cxTypeStr() == "cxFunction4") {
          cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onFocusFunc);
-         if (iFunc4 != NULL) {
+         if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
             for (int i = 0; i < 4; ++i) {
@@ -647,10 +647,10 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       }
    }
    onLeaveFunc = mMenu->getOnLeaveFunction();
-   if (onLeaveFunc != NULL) {
+   if (onLeaveFunc != nullptr) {
       if (onLeaveFunc->cxTypeStr() == "cxFunction2") {
          cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onLeaveFunc);
-         if (iFunc2 != NULL) {
+         if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
                if (params[i] == (void*)(&pPanel)) {
@@ -663,7 +663,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       }
       else if (onLeaveFunc->cxTypeStr() == "cxFunction4") {
          cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onLeaveFunc);
-         if (iFunc4 != NULL) {
+         if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
             for (int i = 0; i < 4; ++i) {
@@ -681,7 +681,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    cxFunction *onSelectItemFunc = mMenu->getOnSelectItemFunction();
    if (onSelectItemFunc->cxTypeStr() == "cxFunction2") {
       cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onSelectItemFunc);
-      if (iFunc2 != NULL) {
+      if (iFunc2 != nullptr) {
          void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
          for (int i = 0; i < 2; ++i) {
             if (params[i] == (void*)(&pPanel)) {
@@ -695,7 +695,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    }
    else if (onSelectItemFunc->cxTypeStr() == "cxFunction2") {
       cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onSelectItemFunc);
-      if (iFunc4 != NULL) {
+      if (iFunc4 != nullptr) {
          void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                             iFunc4->getParam3(), iFunc4->getParam4() };
          for (int i = 0; i < 4; ++i) {
@@ -717,7 +717,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       //  parameters if it's a cxFunction4.
       cxFunction2 *iFunction2 = getKeyFunction2(funcIter->first);
       cxFunction4 *iFunction4 = getKeyFunction4(funcIter->first);
-      if (iFunction4 != NULL) {
+      if (iFunction4 != nullptr) {
          void* params[] = { iFunction4->getParam1(), iFunction4->getParam2(),
                             iFunction4->getParam3(), iFunction4->getParam4() };
          for (int i = 0; i < 4; ++i) {
@@ -730,7 +730,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
                iFunction4->getUseReturnVal(), iFunction4->getExitAfterRun(),
                iFunction4->getRunOnLeaveFunction());
       }
-      else if (iFunction2 != NULL) {
+      else if (iFunction2 != nullptr) {
          void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
          for (int i = 0; i < 2; ++i) {
             if (params[i] == (void*)(&pPanel)) {
@@ -749,7 +749,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       //  parameters if it's a cxFunction4.
       cxFunction2 *iFunction2 = getKeyFunction2(funcIter->first);
       cxFunction4 *iFunction4 = getKeyFunction4(funcIter->first);
-      if (iFunction4 != NULL) {
+      if (iFunction4 != nullptr) {
          void* params[] = { iFunction4->getParam1(), iFunction4->getParam2(),
                             iFunction4->getParam3(), iFunction4->getParam4() };
          for (int i = 0; i < 4; ++i) {
@@ -762,7 +762,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
                iFunction4->getUseReturnVal(), iFunction4->getExitAfterRun(),
                iFunction4->getRunOnLeaveFunction());
       }
-      else if (iFunction2 != NULL) {
+      else if (iFunction2 != nullptr) {
          void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
          for (int i = 0; i < 2; ++i) {
             if (params[i] == (void*)(&pPanel)) {
@@ -778,7 +778,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
 } // checkEventFunctionPointers
 
 string cxSearchPanel::formReverseNavigation(void *theSearchPanel, void *unused) {
-   if (theSearchPanel == NULL) { return(""); }
+   if (theSearchPanel == nullptr) { return(""); }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
    cxForm *mForm = pSearchPanel->mForm;
@@ -798,7 +798,7 @@ string cxSearchPanel::formReverseNavigation(void *theSearchPanel, void *unused) 
 } // formReverseNavigation
 
 string cxSearchPanel::menuOnESC(void *theSearchPanel, void *unused) {
-   if (theSearchPanel == NULL) { return(""); }
+   if (theSearchPanel == nullptr) { return(""); }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
    cxForm *mForm = pSearchPanel->mForm;
@@ -820,14 +820,14 @@ string cxSearchPanel::menuOnESC(void *theSearchPanel, void *unused) {
 } // menuOnESC
 
 string cxSearchPanel::menuOnSelect(void *theSearchPanel, void *unused) {
-   if (theSearchPanel == NULL) { return(""); }
+   if (theSearchPanel == nullptr) { return(""); }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
    // Tell the search panel to exit now
    pSearchPanel->exitNow();
    // Manually set the menu's return code to the current item's return code.
    //  (This is because exitNow() will set its return code to cxID_EXIT.)
-   if (pSearchPanel->mMenu != NULL) {
+   if (pSearchPanel->mMenu != nullptr) {
       long itemReturnCode = pSearchPanel->mMenu->getCurrentItemReturnCode();
       pSearchPanel->mMenu->setReturnCode(itemReturnCode);
    }

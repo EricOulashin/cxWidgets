@@ -43,8 +43,8 @@ class cxFunction {
       virtual ~cxFunction();
 
       /**
-       * Returns whether the internal funtion pointer is set (non-NULL).
-       * @return Returns true if the internal function pointer is set (not NULL), or false otherwise.
+       * Returns whether the internal funtion pointer is set (non-null).
+       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
        */
       virtual bool functionIsSet() const = 0;
 
@@ -52,7 +52,7 @@ class cxFunction {
        * \brief Runs the function pointed to by the cxFunction.  This is a
        * \brief pure virtual method and must be overridden in deriving classes.
        *
-       * @return Returns return value of function pointed to if pointer is not NULL,
+       * @return Returns return value of function pointed to if pointer is not nullptr,
        *		otherwise returns empty string.
        */
       virtual string runFunction() const = 0;
@@ -142,7 +142,7 @@ class cxFunction0 : public cxFunction {
        * \brief available.  Note that function must have this signature:
        * \brief string func(void*, void*)
        *
-       * @param pFuncPtr Pointer to the function to be run.  Defaults to NULL.
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
        * @param pUseReturnVal Indicates whether caller will make use of return
        *  value.  Defaults to false
        * @param pExitAfterRun Whether or not the caller should exit from its
@@ -151,7 +151,7 @@ class cxFunction0 : public cxFunction {
        *  onLeave function when it exits (useful if pExitAfterRun is true).
        *  This defaults to true.
        */
-      explicit cxFunction0(funcPtr0 pFuncPtr = NULL, bool pUseReturnVal = false,
+      explicit cxFunction0(funcPtr0 pFuncPtr = nullptr, bool pUseReturnVal = false,
                            bool pExitAfterRun = false,
                            bool pRunOnLeaveFunction = true);
 
@@ -162,7 +162,7 @@ class cxFunction0 : public cxFunction {
 
       /**
        * Returns whether the internal funtion pointer is set.
-       * @return Returns true if the internal function pointer is set (not NULL), or false otherwise.
+       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
        */
       virtual bool functionIsSet() const;
 
@@ -180,9 +180,9 @@ class cxFunction0 : public cxFunction {
       funcPtr0 getFunction() const;
 
       /**
-       * If function pointer is not NULL, runs the function and returns its return value;
-       * If function pointer is NULL, returns empty string
-       * @return Returns return value of function pointed to if pointer is not NULL,
+       * If function pointer is not nullptr, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not nullptr,
        *		otherwise returns empty string
        */
       virtual string runFunction() const;
@@ -235,7 +235,7 @@ class cxFunction2 : public cxFunction {
        * \brief available.  Note that function must have this signature:
        * \brief string func(void*, void*)
        *
-       * @param pFuncPtr Pointer to the function to be run.  Defaults to NULL.
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
        * @param pParam1 The first parameter to pass to the function when it's
        *  run - This is a void pointer.
        * @param pParam2 The second parameter to pass to the function when it's
@@ -248,8 +248,8 @@ class cxFunction2 : public cxFunction {
        *  onLeave function when it exits (useful if pExitAfterRun is true).
        *  This defaults to true.
        */
-      explicit cxFunction2(funcPtr2 pFuncPtr = NULL, void *pParam1 = NULL,
-                           void *pParam2 = NULL, bool pUseReturnVal = false,
+      explicit cxFunction2(funcPtr2 pFuncPtr = nullptr, void *pParam1 = nullptr,
+                           void *pParam2 = nullptr, bool pUseReturnVal = false,
                            bool pExitAfterRun = false,
                            bool pRunOnLeaveFunction = true);
 
@@ -260,7 +260,7 @@ class cxFunction2 : public cxFunction {
 
       /**
        * Returns whether the internal funtion pointer is set.
-       * @return Returns true if the internal function pointer is set (not NULL), or false otherwise.
+       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
        */
       virtual bool functionIsSet() const;
 
@@ -309,9 +309,9 @@ class cxFunction2 : public cxFunction {
       void* getParam2() const;
 
       /**
-       * If function pointer is not NULL, runs the function and returns its return value;
-       * If function pointer is NULL, returns empty string
-       * @return Returns return value of function pointed to if pointer is not NULL,
+       * If function pointer is not nullptr, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not nullptr,
        *		otherwise returns empty string
        */
       virtual string runFunction() const;
@@ -343,7 +343,7 @@ class cxFunction4 : public cxFunction {
        * \brief available.  Note that function must have this signature:
        * \brief string func(void*, void*)
        *
-       * @param pFuncPtr Pointer to the function to be run.  Defaults to NULL.
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
        * @param pParam1 The first parameter to pass to the function when it's
        *  run - This is a void pointer.
        * @param pParam2 The second parameter to pass to the function when it's
@@ -360,9 +360,9 @@ class cxFunction4 : public cxFunction {
        *  onLeave function when it exits (useful if pExitAfterRun is true).
        *  This defaults to true.
        */
-      explicit cxFunction4(funcPtr4 pFuncPtr = NULL, void *pParam1 = NULL,
-                           void *pParam2 = NULL, void *pParam3 = NULL,
-                           void *pParam4 = NULL, bool pUseReturnVal = false,
+      explicit cxFunction4(funcPtr4 pFuncPtr = nullptr, void *pParam1 = nullptr,
+                           void *pParam2 = nullptr, void *pParam3 = nullptr,
+                           void *pParam4 = nullptr, bool pUseReturnVal = false,
                            bool pExitAfterRun = false,
                            bool pRunOnLeaveFunction = true);
 
@@ -373,7 +373,7 @@ class cxFunction4 : public cxFunction {
 
       /**
        * Returns whether the internal funtion pointer is set.
-       * @return Returns true if the internal function pointer is set (not NULL), or false otherwise.
+       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
        */
       virtual bool functionIsSet() const;
 
@@ -448,9 +448,9 @@ class cxFunction4 : public cxFunction {
       void* getParam4() const;
 
       /**
-       * If function pointer is not NULL, runs the function and returns its return value;
-       * If function pointer is NULL, returns empty string
-       * @return Returns return value of function pointed to if pointer is not NULL,
+       * If function pointer is not nullptr, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not nullptr,
        *    otherwise returns empty string
        */
       virtual string runFunction() const;

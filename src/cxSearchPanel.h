@@ -31,7 +31,7 @@ class cxSearchPanel : public cxPanel {
        * @param pFormBorderStyle The border style for the form
        * @param pMenuBorderStyle The border style for the menu
        */
-      explicit cxSearchPanel(cxWindow *pParentWindow = NULL,
+      explicit cxSearchPanel(cxWindow *pParentWindow = nullptr,
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
@@ -81,7 +81,7 @@ class cxSearchPanel : public cxPanel {
        * @param pName A name for the input (can be used as an alternative way to
        *  identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for its
-       *  value.  Defaults to NULL for none.
+       *  value.  Defaults to nullptr for none.
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
@@ -91,7 +91,7 @@ class cxSearchPanel : public cxPanel {
                                      const string& pHelpString = "",
                                      eInputOptions pInputKind = eINPUT_EDITABLE,
                                      const string& pName = "",
-                                     string *pExtValue = NULL);
+                                     string *pExtValue = nullptr);
 
       /**
        * \brief Adds a combo box to the form.  Returns a pointer to the new input.
@@ -110,7 +110,7 @@ class cxSearchPanel : public cxPanel {
        * @param pName A name for the input (can be used as an alternative way to
        *  identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for its
-       *  value.  Defaults to NULL for none.
+       *  value.  Defaults to nullptr for none.
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
       virtual cxComboBox* appendComboBoxToForm(int pRow, int pCol, int pHeight,
@@ -119,7 +119,7 @@ class cxSearchPanel : public cxPanel {
                                      const string& pHelpString = "",
                                      eInputOptions pInputKind = eINPUT_EDITABLE,
                                      const string& pName = "",
-                                     string *pExtValue = NULL);
+                                     string *pExtValue = nullptr);
 
       /**
        * \brief Adds a string item to the end of the menu.

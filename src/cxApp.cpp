@@ -2,7 +2,7 @@
 // Note: This is not complete!
 
 cxApp::cxApp()
-   : mAppFrame(NULL)
+   : mAppFrame(nullptr)
 {
 }
 

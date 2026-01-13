@@ -10,13 +10,13 @@
 
 class floatingPtInputWithRightLabel : public cxMultiLineInput {
    public:
-      explicit floatingPtInputWithRightLabel(cxWindow *pParentWindow = NULL,
+      explicit floatingPtInputWithRightLabel(cxWindow *pParentWindow = nullptr,
                                 int pRow = 0, int pCol = 0, int pHeight = 1,
                                 int pWidth = DEFAULT_WIDTH,
                                 const string& pLabel = "",
                                 eBorderStyle pBorderStyle = eBS_NOBORDER,
                                 eInputOptions pInputOption = eINPUT_EDITABLE,
-                                string *pExtValue = NULL);
+                                string *pExtValue = nullptr);
 
       ~floatingPtInputWithRightLabel();
 

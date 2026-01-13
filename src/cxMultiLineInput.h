@@ -101,7 +101,7 @@ class cxForm; // Pre-declaration to avoid a circular reference
  *  function setCanBeEditable().  If you call this with false, then
  *  the input can never be set editable, even with a call to
  *  setInputOption() with a parameter of eINPUT_EDITABLE.<br>
- *  cxMultiLineInput iInput(NULL, 0, 0, 10, "Text:");<br>
+ *  cxMultiLineInput iInput(nullptr, 0, 0, 10, "Text:");<br>
  *  iInput.setValue("Some text for the input to hold");<br>
  *  iInput.getValue();  // Returns "Some text for the input to hold"<br>
  *  iInput.setFocus(); // Can only display "Some " in the input, since
@@ -153,7 +153,7 @@ class cxMultiLineInput : public cxWindow {
    public:
       /**
        * Default constructor
-       * @param pParentWindow Pointer to parent window; defaults to NULL
+       * @param pParentWindow Pointer to parent window; defaults to nullptr
        * @param pRow Y location of input window (upper-left corner)
        * @param pCol X location of input window (upper-left corner)
        * @param pHeight Height of input window; defaults to 1
@@ -166,7 +166,7 @@ class cxMultiLineInput : public cxWindow {
        *  cxInputOptions.h.
        * @param pInputType Specifies the type of input (text, numeric floating
        *  point, or numeric whole).  This defaults to eINPUT_TYPE_TEXT.
-       * @param pExtValue Pointer to external input value; defaults to NULL
+       * @param pExtValue Pointer to external input value; defaults to nullptr
        * @param pRightLabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -177,14 +177,14 @@ class cxMultiLineInput : public cxWindow {
        * @param pShowRightLabel Whether or not to show the right label.
        *  Defaults to false.
        */
-      explicit cxMultiLineInput(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxMultiLineInput(cxWindow *pParentWindow = nullptr, int pRow = 0,
                                 int pCol = 0, int pHeight = 1,
                                 int pWidth = DEFAULT_WIDTH,
                                 const string& pLabel = "",
                                 eBorderStyle pBorderStyle = eBS_NOBORDER,
                                 eInputOptions pInputOption = eINPUT_EDITABLE,
                                 eInputTypes pInputType = eINPUT_TYPE_TEXT,
-                                string *pExtValue = NULL,
+                                string *pExtValue = nullptr,
                                 int pRightLabelOffset = 0,
                                 int pRightLabelHeight = 1,
                                 int pRightLabelWidth = 7,
@@ -899,15 +899,15 @@ class cxMultiLineInput : public cxWindow {
        * \brief value of the onFocus function will be set in the
        * \brief input.
        *
-       * @param pFunctionRetval If not NULL, the string that this points to
+       * @param pFunctionRetval If not nullptr, the string that this points to
        *  will contain the return value of the onFocus function.  Defaults to
-       *  NULL.
+       *  nullptr.
        *
        * @return Whether the input loop should exit (returns the value of
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(string *pFunctionRetval = NULL);
+      virtual bool runOnFocusFunction(string *pFunctionRetval = nullptr);
 
       /**
        * \brief Runs the function that was set with setKeyFunction for this key
@@ -2088,7 +2088,7 @@ class cxMultiLineInput : public cxWindow {
 
       /**
        * \brief Returns whether or not the validator function is set (if
-       * \brief mValidatorFunction is not NULL and if its function pointer is set)
+       * \brief mValidatorFunction is not nullptr and if its function pointer is set)
        *
        * @return true if the validator function is set, or false if not
        */
@@ -2156,7 +2156,7 @@ class cxMultiLineInput : public cxWindow {
       void setParentForm(cxForm *pParentForm);
 
       /**
-       * \brief Searches the parent cxForm (if mParentForm isn't NULL)
+       * \brief Searches the parent cxForm (if mParentForm isn't nullptr)
        * \brief for a key that runs a function.  Returns true if it is found
        * \brief or false if not.
        *
@@ -2183,17 +2183,17 @@ class cxMultiLineInput : public cxWindow {
        * \brief value of the function may be set in the input if its
        * \brief mUseReturnValue is true.
        *
-       * @param pFunctionExists A pointer to a bool (if non-NULL,
+       * @param pFunctionExists A pointer to a bool (if non-null,
        *  it will store whether or not a function existed for the key).
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param pRunOnLeaveFunction A pointer to a bool: If non-NUL, it will
        *  store whether or not to run the onLeave function when the window
        *  exits (this is an option for cxFunction).
        *
        * @return Whether or not the input loop should continue
        */
-      virtual bool handleFunctionForLastKey(bool *pFunctionExists = NULL,
-                                            bool *pRunOnLeaveFunction = NULL);
+      virtual bool handleFunctionForLastKey(bool *pFunctionExists = nullptr,
+                                            bool *pRunOnLeaveFunction = nullptr);
 
       /**
        * \brief Enables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -2230,7 +2230,7 @@ class cxMultiLineInput : public cxWindow {
       // mExtValue points to an "external" location to load/store the user's
       //  input (basically, it will be used for user input storage as well as
       //  mValue, but the value in this input will always be the what mExtValue
-      //  contains).  If NULL, then it won't be used.
+      //  contains).  If nullptr, then it won't be used.
       string *mExtValue;
       int mCurrentInputLine; // The index of the current single-line input
       // If mEnterAlwaysExits is true, enter will exit the input loop if
@@ -2250,7 +2250,7 @@ class cxMultiLineInput : public cxWindow {
       bool mValidateOnReverse;
 
       // mParentForm is a pointer to a cxForm, in case the input appears on a
-      //  cxForm.  This can be NULL.
+      //  cxForm.  This can be nullptr.
       cxForm *mParentForm;
 
       // If mApplyAttrDefaults is true, some attributes will be applied to

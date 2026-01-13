@@ -111,7 +111,7 @@ bool cxStringUtils::Find(const string& input, const string& regex, bool useBasic
    // Compile the regular expression and execute it..  If regexec
    //  returns 0, that means it was found.
    if( regcomp(&regEx, regex.c_str(), cflags) == 0 ) {
-      if( regexec(&regEx, input.c_str(), 0, NULL, 0) == 0 )
+      if( regexec(&regEx, input.c_str(), 0, nullptr, 0) == 0 )
          found = true;
    }
 

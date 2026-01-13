@@ -5,7 +5,7 @@
 #include <cctype> // For isprint()
 
 string cxValidators::intOnKeyValidator(void *theInput, void *clearOnSpace) {
-   if (theInput == NULL) {
+   if (theInput == nullptr) {
       return("");
    }
 
@@ -72,7 +72,7 @@ string cxValidators::intOnKeyValidator(void *theInput, void *clearOnSpace) {
                }
                break;
             case ' ':
-               if (clearOnSpace != NULL) {
+               if (clearOnSpace != nullptr) {
                   bool *pClearOnSpace = (bool*)clearOnSpace;
                   if (*pClearOnSpace) {
                      value = "";
@@ -115,7 +115,7 @@ string cxValidators::intOnKeyValidator(void *theInput, void *clearOnSpace) {
 } // intOnKeyValidator
 
 string cxValidators::floatingPtOnKeyValidator(void *theInput, void *clearOnSpace) {
-   if (NULL == theInput) {
+   if (nullptr == theInput) {
       return("");
    }
 
@@ -185,7 +185,7 @@ string cxValidators::floatingPtOnKeyValidator(void *theInput, void *clearOnSpace
                }
                break;
             case ' ':
-               if (clearOnSpace != NULL) {
+               if (clearOnSpace != nullptr) {
                   bool *pClearOnSpace = (bool*)clearOnSpace;
                   if (*pClearOnSpace) {
                      value = "";

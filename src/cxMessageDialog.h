@@ -29,7 +29,7 @@ class cxMessageDialog : public cxDialog {
    public:
       /**
        * Default constructor
-       * @param pParentWindow Pointer to parent window; defaults to NULL
+       * @param pParentWindow Pointer to parent window; defaults to nullptr
        * @param pRow Y location of upper-left corner of dialog; defaults to 0
        * @param pCol X location of upper-left corner of dialog; defaults to 0
        * @param pHeight Height of dialog; defaults to 24
@@ -39,7 +39,7 @@ class cxMessageDialog : public cxDialog {
        * @param pStyle Type of dialog from eMessageDialogStyles enumeration; defaults to cxOK|cxCancel
        * @param pStatus The status to display at the bottom of the window
        */
-      explicit cxMessageDialog(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxMessageDialog(cxWindow *pParentWindow = nullptr, int pRow = 0,
                                int pCol = 0, int pHeight = DEFAULT_HEIGHT,
                                int pWidth = DEFAULT_WIDTH,
                                const string& pTitle = "",

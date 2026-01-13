@@ -159,7 +159,7 @@ typedef deque<string> messageLineContainer;
  *  cxTypeStr(), as folows:
 \verbatim
    cxWindow *parent = getParent();
-   if (parent != NULL) {
+   if (parent != nullptr) {
       if (parent->cxTypeStr() == "cxPanel") {
          // The parent is a cxPanel
       }
@@ -224,7 +224,7 @@ class cxWindow : public cxObject {
        * @param pHotkeyHighlighting Whether or not to recognize & use
        *  underline characters when displaying the message text.
        */
-      explicit cxWindow(cxWindow *pParentWindow = NULL,
+      explicit cxWindow(cxWindow *pParentWindow = nullptr,
                         int pRow = 0, int pCol = 0,
                         int pHeight = DEFAULT_HEIGHT,
                         int pWidth = DEFAULT_WIDTH,
@@ -232,8 +232,8 @@ class cxWindow : public cxObject {
                         const string& pMessage = "",
                         const string& pStatus = "",
                         eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                        cxWindow *pExtTitleWindow = NULL,
-                        cxWindow *pExtStatusWindow = NULL,
+                        cxWindow *pExtTitleWindow = nullptr,
+                        cxWindow *pExtStatusWindow = nullptr,
                         bool pHotkeyHighlighting = false);
 
       /**
@@ -252,8 +252,8 @@ class cxWindow : public cxObject {
       cxWindow(cxWindow *pParentWindow,
                int pRow, int pCol, const string& pTitle,
                const string& pMessage, const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Centers the window in the middle of the screen.
@@ -269,8 +269,8 @@ class cxWindow : public cxObject {
       cxWindow(cxWindow *pParentWindow,
                const string& pTitle, const string& pMessage,
                const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Centers the window in the middle of the screen.
@@ -284,8 +284,8 @@ class cxWindow : public cxObject {
        */
       cxWindow(cxWindow *pParentWindow,
                const string& pMessage, const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Centers the window in the middle of the screen.
@@ -297,8 +297,8 @@ class cxWindow : public cxObject {
        *  displaying the message text.
        */
       cxWindow(cxWindow *pParentWindow, const string& pMessage,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Lets you specify the horizontal position
@@ -315,8 +315,8 @@ class cxWindow : public cxObject {
       cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
                const string& pTitle, const string& pMessage,
                const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
 
       /**
@@ -1212,30 +1212,30 @@ class cxWindow : public cxObject {
       /**
        * \brief Runs the onFocus function, if it's set.
        *
-       * @param pFunctionRetval If not NULL, the string that this points to
+       * @param pFunctionRetval If not nullptr, the string that this points to
        *  will contain the return value of the onFocus function.  Defaults to
-       *  NULL.
+       *  nullptr.
        *
        * @return Whether the input loop should exit (returns the value of
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(string *pFunctionRetval = NULL);
+      virtual bool runOnFocusFunction(string *pFunctionRetval = nullptr);
 
       /**
        * \brief Runs the onLeave function, if it's set.  However, if the last
        * \brief keypress is in mExitKeys or mQuitKeys and the boolean for that
        * \brief key is false, the onLeave function won't be run.
        *
-       * @param pFunctionRetval If not NULL, the string that this points to
+       * @param pFunctionRetval If not nullptr, the string that this points to
        *  will contain the return value of the onLeave function.  Defaults to
-       *  NULL.
+       *  nullptr.
        *
        * @return Whether the input loop should exit (returns the value of
        *  the onLeave function's mExitAfterRun, or false if the onLeave
        *  function isn't set).
        */
-      virtual bool runOnLeaveFunction(string *pFunctionRetval = NULL);
+      virtual bool runOnLeaveFunction(string *pFunctionRetval = nullptr);
 
       /**
        * \brief Sets whether or not the onFocus function should run.
@@ -2151,11 +2151,11 @@ class cxWindow : public cxObject {
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction0
        * \brief pointer.  If the key does not exist in mKeyFunctions, or if the
        * \brief pointer is not a cxFunction2 pointer (i.e., its cxTypeStr()
-       * \brief doesn't return "cxFunction2"),, this will return NULL.
+       * \brief doesn't return "cxFunction2"),, this will return nullptr.
        *
        * @param pKey The key to look for in mKeyFunctions
        *
-       * @return A cxFunction2 pointer for the key, or NULL if there is no
+       * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
       cxFunction0* getKeyFunction0(int pKey) const;
@@ -2164,11 +2164,11 @@ class cxWindow : public cxObject {
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction2
        * \brief pointer.  If the key does not exist in mKeyFunctions, or if the
        * \brief pointer is not a cxFunction2 pointer (i.e., its cxTypeStr()
-       * \brief doesn't return "cxFunction2"),, this will return NULL.
+       * \brief doesn't return "cxFunction2"),, this will return nullptr.
        *
        * @param pKey The key to look for in mKeyFunctions
        *
-       * @return A cxFunction2 pointer for the key, or NULL if there is no
+       * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
       cxFunction2* getKeyFunction2(int pKey) const;
@@ -2177,11 +2177,11 @@ class cxWindow : public cxObject {
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction4
        * \brief pointer.  If the key does not exist in mKeyFunctions, or if the
        * \brief pointer is not a cxFunction4 pointer (i.e., its cxTypeStr()
-       * \brief doesn't return "cxFunction4"),, this will return NULL.
+       * \brief doesn't return "cxFunction4"),, this will return nullptr.
        *
        * @param pKey The key to look for in mKeyFunctions
        *
-       * @return A cxFunction4 pointer for the key, or NULL if there is no
+       * @return A cxFunction4 pointer for the key, or nullptr if there is no
        *  cxFunction4 for the key.
        */
       cxFunction4* getKeyFunction4(int pKey) const;
@@ -2526,13 +2526,13 @@ class cxWindow : public cxObject {
        * @param pTitle The title to use for the window
        * @param pMessage The message to display inside the window
        * @param pStatus The status text to use
-       * @param pParentWindow A pointer to the parent cxWindow (defaults to NULL)
+       * @param pParentWindow A pointer to the parent cxWindow (defaults to nullptr)
        * @param pResizeVertically Whether or not to resize vertically so that
        *  all the message text shows (defaults to true).
        */
       virtual void init(int pRow, int pCol, int pHeight, int pWidth,
                         string pTitle, string pMessage, string pStatus,
-                        cxWindow *pParentWindow = NULL,
+                        cxWindow *pParentWindow = nullptr,
                         bool pResizeVertically = true);
 
       /**
@@ -2640,33 +2640,33 @@ class cxWindow : public cxObject {
        * \brief Looks for a function tied to the last keypress and
        * \brief runs it, if one exists.
        *
-       * @param pFunctionExists A pointer to a bool: If non-NULL, it will
+       * @param pFunctionExists A pointer to a bool: If non-null, it will
        *  store whether or not a function existed for the last keypress.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param pRunOnLeaveFunction A pointer to a bool: If non-NUL, it will
        *  store whether or not to run the onLeave function when the window
        *  exits (this is an option for cxFunction).
        *
        * @return Whether or not the input loop should continue
        */
-      virtual bool handleFunctionForLastKey(bool *pFunctionExists = NULL,
-                                            bool *pRunOnLeaveFunction = NULL);
+      virtual bool handleFunctionForLastKey(bool *pFunctionExists = nullptr,
+                                            bool *pRunOnLeaveFunction = nullptr);
 
       /**
        * \brief Looks for a function tied to the last mouse state captured
        * \brief by the window and runs it, if one exists.
        *
-       * @param pFunctionExists A pointer to a bool: If non-NULL,
+       * @param pFunctionExists A pointer to a bool: If non-null,
        *  it will store whether or not a function existed for the last mouse
-       *  event.  Defaults to NULL.
+       *  event.  Defaults to nullptr.
        * @param pRunOnLeaveFunction A pointer to a bool: If non-NUL, it will
        *  store whether or not to run the onLeave function when the window
        *  exits (this is an option for cxFunction).
        *
        * @return Whether or not the input loop should continue
        */
-      virtual bool handleFunctionForLastMouseState(bool *pFunctionExists = NULL,
-                                            bool *pRunOnLeaveFunction = NULL);
+      virtual bool handleFunctionForLastMouseState(bool *pFunctionExists = nullptr,
+                                            bool *pRunOnLeaveFunction = nullptr);
 
       /**
        * \brief Fills the member ncurses window structure with the current
@@ -2763,7 +2763,7 @@ class cxWindow : public cxObject {
 
       /**
        * \brief Returns whether or not the onFocus function is set (if
-       * \brief mOnFocusFunction is not NULL and if its function pointer is
+       * \brief mOnFocusFunction is not nullptr and if its function pointer is
        * \brief set)
        *
        * @return true if the onFocus function is set, or false if not
@@ -2772,7 +2772,7 @@ class cxWindow : public cxObject {
 
       /**
        * \brief Returns whether or not the onLeave function is set (if
-       * \brief mOnLeaveFunction is not NULL and if its function pointer is
+       * \brief mOnLeaveFunction is not nullptr and if its function pointer is
        * \brief set)
        *
        * @return true if the onLeave function is set, or false if not
@@ -2788,7 +2788,7 @@ class cxWindow : public cxObject {
       cxWindow *mStatusParent;    // Pointer to a window using me for its status
       string mExtTitleTemp;       // Keeps track of old external title window text
       string mExtStatusTemp;      // Keeps track of old external status window text
-      cxWindow *mParentWindow;    // Pointer to the parent window (can be NULL for none)
+      cxWindow *mParentWindow;    // Pointer to the parent window (can be nullptr for none)
       cxWindowPtrContainer mSubWindows; // Contains subwindows for this window
       bool mFocus;                 // Whether or not the window has focus
       eBorderStyle mBorderStyle;   // Border style

@@ -62,7 +62,7 @@ class cxPanel : public cxWindow {
        * @param pMessageUnderlines Whether or not to recognize & use
        *  underline characters when displaying the message text.
        */
-      explicit cxPanel(cxWindow *pParentWindow = NULL,
+      explicit cxPanel(cxWindow *pParentWindow = nullptr,
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
@@ -70,8 +70,8 @@ class cxPanel : public cxWindow {
                        const string& pMessage = "",
                        const string& pStatus = "",
                        eBorderStyle pBorderStyle = eBS_NOBORDER,
-                       cxWindow *pExtTitleWindow = NULL,
-                       cxWindow *pExtStatusWindow = NULL,
+                       cxWindow *pExtTitleWindow = nullptr,
+                       cxWindow *pExtStatusWindow = nullptr,
                        bool pMessageUnderlines = false);
 
       virtual ~cxPanel();
@@ -150,13 +150,13 @@ class cxPanel : public cxWindow {
 
       /**
        * \brief Gets a pointer to one of the subwindows (by index).
-       * \brief Returns NULL if the index is out of bounds.
+       * \brief Returns nullptr if the index is out of bounds.
        * \brief pIndex should be between 0 and 1 less than the
        * \brief number of subwindows.
        *
        * @param pIndex The index of the subwindow
        *
-       * @return A pointer to one of the subwindows, or NULL
+       * @return A pointer to one of the subwindows, or nullptr
        *  if pIndex is out of bounds.
        */
       virtual cxWindow* getWindow(unsigned pIndex) const;
@@ -236,7 +236,7 @@ class cxPanel : public cxWindow {
        * @param pIndex The index of the window in the panel to remove
        *
        * @return A pointer to the window removed.  If pIndex is not a valid
-       *  index, the return value will be NULL.
+       *  index, the return value will be nullptr.
        */
       virtual cxWindow* removeWindow(unsigned pIndex);
 
@@ -433,7 +433,7 @@ class cxPanel : public cxWindow {
 
       /**
        * \brief Returns a pointer to the current window.
-       * \brief Could return NULL if there are no windows
+       * \brief Could return nullptr if there are no windows
        * \brief in the panel.
        *
        * @return A pointer to the current window
@@ -690,14 +690,14 @@ class cxPanel : public cxWindow {
       /**
        * \brief Returns a pointer to the last window in the panel that was
        * \brief visited in the input loop (during a showModal()).  Could
-       * \brief return NULL if there was no last window visited (i.e., when a
+       * \brief return nullptr if there was no last window visited (i.e., when a
        * \brief cxPanel is first created).  If the cxPanel has been shown
        * \brief previously, then the next time it is shown, the last window
        * \brief will still be set to the window that the focus was on the
        * \brief last time the cxPanel was shown.
        *
        * @return A pointer to the last window visited during the input loop,
-       *  or NULL if there was no last window visited.
+       *  or nullptr if there was no last window visited.
        */
       cxWindow* getLastWindow() const;
 
@@ -804,8 +804,8 @@ class cxPanel : public cxWindow {
       //  will remove the window from the other cxPanel.
       // Parameters:
       //  pWindow: A cxWindow pointer to be added to mWindows.
-      //           This is assumed to be non-NULL.  A cxWindow pointer
-      //           should be NULL-checked before calling this method.
+      //           This is assumed to be non-null.  A cxWindow pointer
+      //           should be nullptr-checked before calling this method.
       //
       // Return: true if the window was added, or false if not.
       bool addWindowPtr(cxWindow* pWindow);

@@ -61,7 +61,7 @@ class cxComboBox : public cxMultiLineInput {
        *  cxInputOptions.h.
        * @param pInputType Specifies the type of input (text, numeric floating
        *  point, or numeric whole).  This defaults to eINPUT_TYPE_TEXT.
-       * @param pExtValue Pointer to external input value; defaults to NULL
+       * @param pExtValue Pointer to external input value; defaults to nullptr
        * @param pMenuEnabled Whether or not the menu should be enabled (defaults
        *  to true)
        * @param pRightlabelOffset The distance between the right edge of the
@@ -73,7 +73,7 @@ class cxComboBox : public cxMultiLineInput {
        * @param pShowRightLabel Whether or not to show the right label.
        *  Defaults to false.
        */
-      explicit cxComboBox(cxWindow *pParentWindow = NULL,
+      explicit cxComboBox(cxWindow *pParentWindow = nullptr,
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
@@ -81,7 +81,7 @@ class cxComboBox : public cxMultiLineInput {
                        eBorderStyle pBorderStyle = eBS_NOBORDER,
                        eInputOptions pInputOption = eINPUT_EDITABLE,
                        eInputTypes pInputType = eINPUT_TYPE_TEXT,
-                       string *pExtValue = NULL, bool pMenuEnabled = true,
+                       string *pExtValue = nullptr, bool pMenuEnabled = true,
                        int pRightLabelOffset = 0, 
                        int pRightLabelHeight = 1,
                        int pRightLabelWidth = 5,

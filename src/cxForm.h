@@ -83,7 +83,7 @@ class cxForm : public cxWindow {
    public:
       /**
        * Default constructor.  All parameters have default values.
-       * @param pParentWindow Pointer to parent window; default NULL
+       * @param pParentWindow Pointer to parent window; default nullptr
        * @param pRow Y location of form; default 0
        * @param pCol X location of form; default 0
        * @param pHeight Height of form, in lines; defaults to 24
@@ -100,12 +100,12 @@ class cxForm : public cxWindow {
        * @param pStacked If true, the form will behave assuming each input is on its
        *  own line.
        */
-      explicit cxForm(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxForm(cxWindow *pParentWindow = nullptr, int pRow = 0,
                       int pCol = 0, int pHeight = DEFAULT_HEIGHT,
                       int pWidth = DEFAULT_WIDTH, const string& pTitle = "",
                       eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                      cxWindow *pExtTitleWindow = NULL,
-                      cxWindow *pExtStatusWindow = NULL,
+                      cxWindow *pExtTitleWindow = nullptr,
+                      cxWindow *pExtStatusWindow = nullptr,
                       bool pAutoExit = false, bool pStacked = false);
 
       /**
@@ -137,7 +137,7 @@ class cxForm : public cxWindow {
        * @param pName A name for the input (can be used as an alternative way to
        *  identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for its
-       *  value.  Defaults to NULL for none.
+       *  value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -162,7 +162,7 @@ class cxForm : public cxWindow {
                                      const string& pHelpString = "",
                                      eInputOptions pInputOption = eINPUT_EDITABLE,
                                      const string& pName = "",
-                                     string *pExtValue = NULL,
+                                     string *pExtValue = nullptr,
                                      int pRightLabelOffset = 0,
                                      int pRightLabelHeight = 1,
                                      int pRightLabelWidth = 7,
@@ -187,7 +187,7 @@ class cxForm : public cxWindow {
        * @param pName A name for the input (can be used as an alternative way to
        *  identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for its
-       *  value.  Defaults to NULL for none.
+       *  value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -205,7 +205,7 @@ class cxForm : public cxWindow {
                                      const string& pHelpString = "",
                                      eInputOptions pInputOption = eINPUT_EDITABLE,
                                      const string& pName = "",
-                                     string *pExtValue = NULL,
+                                     string *pExtValue = nullptr,
                                      int pRightLabelOffset = 0,
                                      int pRightLabelHeight = 1,
                                      int pRightLabelWidth = 7,
@@ -236,9 +236,9 @@ class cxForm : public cxWindow {
        *  be appended to the input names, referring to the first and second
        *  inputs, respectively.
        * @param pExtValue1 A pointer to a string to be linked to the first
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pExtValue2 A pointer to a string to be linked to the second
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pRightlabel1Offset The distance between the right edge of the
        *  first input and its right label.  Defaults to 0.
        * @param pRightLabel1Height The height of the first input's right label
@@ -280,8 +280,8 @@ class cxForm : public cxWindow {
                               const string& pHelpString = "",
                               eInputOptions pInputOption = eINPUT_EDITABLE,
                               const string& pName = "",
-                              string *pExtValue1 = NULL,
-                              string *pExtValue2 = NULL,
+                              string *pExtValue1 = nullptr,
+                              string *pExtValue2 = nullptr,
                               int pRightLabel1Offset = 0,
                               int pRightLabel1Height = 1,
                               int pRightLabel1Width = 7,
@@ -318,9 +318,9 @@ class cxForm : public cxWindow {
        *  be appended to the input names, referring to the first and second
        *  inputs, respectively.
        * @param pExtValue1 A pointer to a string to be linked to the first
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pExtValue2 A pointer to a string to be linked to the second
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pRightlabel1Offset The distance between the right edge of the
        *  first input and its right label.  Defaults to 0.
        * @param pRightLabel1Height The height of the first input's right label
@@ -358,8 +358,8 @@ class cxForm : public cxWindow {
                                      const string& pHelpString = "",
                                      eInputOptions pInputOption = eINPUT_EDITABLE,
                                      const string& pName = "",
-                                     string *pExtValue1 = NULL,
-                                     string *pExtValue2 = NULL,
+                                     string *pExtValue1 = nullptr,
+                                     string *pExtValue2 = nullptr,
                                      int pRightLabel1Offset = 0,
                                      int pRightLabel1Height = 1,
                                      int pRightLabel1Width = 7,
@@ -404,7 +404,7 @@ class cxForm : public cxWindow {
        *  from eInputOptions enumeration in cxInput.h
        * @param pName A name for the input (can be used as an alternative way to identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for
-       *  its value.  Defaults to NULL for none.
+       *  its value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -428,7 +428,7 @@ class cxForm : public cxWindow {
                                const string& pHelpString = "",
                                eInputOptions pInputOption = eINPUT_EDITABLE,
                                const string& pName = "",
-                               string *pExtValue = NULL,
+                               string *pExtValue = nullptr,
                                int pRightLabelOffset = 0,
                                int pRightLabelHeight = 1,
                                int pRightLabelWidth = 7,
@@ -451,7 +451,7 @@ class cxForm : public cxWindow {
        *  from eInputOptions enumeration in cxInput.h
        * @param pName A name for the input (can be used as an alternative way to identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for
-       *  its value.  Defaults to NULL for none.
+       *  its value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -469,7 +469,7 @@ class cxForm : public cxWindow {
                                const string& pHelpString = "",
                                eInputOptions pInputOption = eINPUT_EDITABLE,
                                const string& pName = "",
-                               string *pExtValue = NULL,
+                               string *pExtValue = nullptr,
                                int pRightLabelOffset = 0,
                                int pRightLabelHeight = 1,
                                int pRightLabelWidth = 7,
@@ -496,12 +496,12 @@ class cxForm : public cxWindow {
        *  be located
        * @param pCol The column on the form where you want the input to
        *  be located
-       * @param pMoved If non-NULL, the boolean pointed to by this
+       * @param pMoved If non-null, the boolean pointed to by this
        *  variable will store whether or not the input was able
        *  to be moved.
        *
        */
-      virtual void append(cxMultiLineInput* pInput, int pRow, int pCol, bool* pMoved = NULL);
+      virtual void append(cxMultiLineInput* pInput, int pRow, int pCol, bool* pMoved = nullptr);
 
       /**
        * Removes an input from the form (by index)
@@ -1576,7 +1576,7 @@ class cxForm : public cxWindow {
       virtual void toggleCursor(bool pShowCursor);
 
       /**
-       * \brief Returns a pointer to an input at a given index, or NULL if the index
+       * \brief Returns a pointer to an input at a given index, or nullptr if the index
        * \brief is not valid.  Note that inputs are dynamically allocated when
        * \brief they're appended to a cxForm, and the memory is freed in the cxForm
        * \brief destructor.  Therefore, it is vital that if the return value of this
@@ -1586,13 +1586,13 @@ class cxForm : public cxWindow {
        *
        * @param pIndex The index of the input
        *
-       * @return A pointer to the input at pIndex, or NULL if the input is not valid
+       * @return A pointer to the input at pIndex, or nullptr if the input is not valid
        */
       cxMultiLineInput* getInput(int pIndex) const;
 
       /**
        * \brief Returns a pointer to an input with a given label/name, or
-       * \brief NULL if no input is found with the given label/name.  Note
+       * \brief nullptr if no input is found with the given label/name.  Note
        * \brief that inputs are dynamically allocated when they're appended
        * \brief to a cxForm, and the memory is freed in the cxForm
        * \brief destructor.  Therefore, it is vital that if the return value
@@ -1603,16 +1603,16 @@ class cxForm : public cxWindow {
        * @param pLabel The label/name of the input
        * @param pIsLabel True if pLabel specifies the label (default), or false if it specifies the name
        *
-       * @return A pointer to the input with the given label/name, or NULL if none is found
+       * @return A pointer to the input with the given label/name, or nullptr if none is found
        */
       cxMultiLineInput* getInput(const string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns a pointer to the current input.  If there are no inputs
        * \brief on the form or there is some other error, this method will
-       * \brief return NULL.
+       * \brief return nullptr.
        *
-       * @return A pointer to the current input on the form, or NULL if there
+       * @return A pointer to the current input on the form, or nullptr if there
        *  are no inputs or if there is an error.
        */
       cxMultiLineInput* getCurrentInput() const;
@@ -1920,7 +1920,7 @@ class cxForm : public cxWindow {
        * \brief Adds a hotkey for the form that will cause the
        * \brief focus to jump to another input during showModal().
        * \verbatim For example:
-         cxForm iForm(NULL, 1, 0, 12, 65, "Test form");
+         cxForm iForm(nullptr, 1, 0, 12, 65, "Test form");
          iForm.append(1, 1, 1, 25, "Input 1:");
          iForm.append(1, 27, 1, 25, "Input 2:");
          iForm.append(2, 1, 1, 25, "Input 3:");
@@ -1946,7 +1946,7 @@ when the user presses the 'n' key.
        * \brief Adds a hotkey for the form that will cause the
        * \brief focus to jump to another input during showModal().
        * \verbatim For example:
-         cxForm iForm(NULL, 1, 0, 12, 65, "Test form");
+         cxForm iForm(nullptr, 1, 0, 12, 65, "Test form");
          iForm.append(1, 1, 1, 25, "Input 1:");
          iForm.append(1, 27, 1, 25, "Input 2:");
          iForm.append(2, 1, 1, 25, "Input 3:");
@@ -2417,7 +2417,7 @@ when the user presses the 'n' key.
        * \brief Sets the parent cxMultiForm that this cxForm is associated with
        *
        * @param pParentMultiForm A pointer to the form's parent cxMultiForm
-       *  (or NULL if there is no parent cxMultiForm)
+       *  (or nullptr if there is no parent cxMultiForm)
        */
       void setParentMultiForm(cxMultiForm *pParentMultiForm);
 
@@ -3044,7 +3044,7 @@ when the user presses the 'n' key.
 
       // mParentMultiForm is a pointer to a cxMultiForm, in
       //  case the form appears on a cxMultiForm (it can be
-      //  NULL if it isn't on a cxMultiForm).
+      //  nullptr if it isn't on a cxMultiForm).
       cxMultiForm *mParentMultiForm;
 
       bool mCycleInput; // Whether or not to cycle to the next/previous

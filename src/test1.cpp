@@ -37,9 +37,9 @@ string endB1(void *theForm, void *theCount, void *foo3, void *foo4) {
    //messageBox("bName:" + bName);
    pForm->append(*i, 1, 1, 5, "", "", "", eINPUT_EDITABLE, aName);
    pForm->append(*i, 7, 1, 5, "", "", "", eINPUT_EDITABLE, bName);
-   pForm->setOnLeaveFunction(bName, endB1, pForm, i, NULL, NULL, false);
+   pForm->setOnLeaveFunction(bName, endB1, pForm, i, nullptr, nullptr, false);
    if (*i > 1) {
-      pForm->setOnKeyFunction(bName, arrowUp, pForm, i, NULL, NULL, false);
+      pForm->setOnKeyFunction(bName, arrowUp, pForm, i, nullptr, nullptr, false);
    }
    pForm->setCurrentInput(bName); 
    //pForm->show(); 
@@ -48,7 +48,7 @@ string endB1(void *theForm, void *theCount, void *foo3, void *foo4) {
 */
 
 string updateMenu(void *theComboBox, void *unused, void *unused2, void *unused3) {
-   if (theComboBox == NULL) {
+   if (theComboBox == nullptr) {
       return("");
    }
 
@@ -60,7 +60,7 @@ string updateMenu(void *theComboBox, void *unused, void *unused2, void *unused3)
 
 string onFocus(void *theComboBox, void *unused2, void *unused3, void *unused4) {
    //messageBox("onFocus function");
-   if (theComboBox == NULL) {
+   if (theComboBox == nullptr) {
       return("");
    }
 
@@ -79,7 +79,7 @@ string onFocus(void *theComboBox, void *unused2, void *unused3, void *unused4) {
 int main(int argc, char* argv[]) {
    cxBase::init();
 
-   cxForm iForm(NULL, 2, 2, 9, 20, "Test");
+   cxForm iForm(nullptr, 2, 2, 9, 20, "Test");
    iForm.append(1, 1, 1, 15, "A:");
    iForm.appendComboBox(2, 1, 1, 15, "B:");
    iForm.append(3, 1, 1, 15, "C:");
@@ -88,8 +88,8 @@ int main(int argc, char* argv[]) {
    // Enable reverse video for the inputs
    iForm.addAttr(eDATA_EDITABLE, A_REVERSE);
 
-   //iForm.setOnKeyFunction("B:", updateMenu, (cxComboBox*)iForm.getInput("B:"), NULL, NULL, NULL);
-   iForm.setOnFocusFunction("B:", onFocus, (cxComboBox*)iForm.getInput("B:"), NULL, NULL, NULL, false);
+   //iForm.setOnKeyFunction("B:", updateMenu, (cxComboBox*)iForm.getInput("B:"), nullptr, nullptr, nullptr);
+   iForm.setOnFocusFunction("B:", onFocus, (cxComboBox*)iForm.getInput("B:"), nullptr, nullptr, nullptr, false);
 
    iForm.showModal();
 
@@ -98,10 +98,10 @@ int main(int argc, char* argv[]) {
    ourcxObject.UseColors(true);
 
    int i=1;
-   cxForm iForm(NULL, 2, 2, 8, 20, "Test form");
+   cxForm iForm(nullptr, 2, 2, 8, 20, "Test form");
    iForm.append(1, 1, 1, 5, "", "", "", eINPUT_EDITABLE, "A1");
    iForm.append(1, 7, 1, 5, "", "", "", eINPUT_EDITABLE, "B1");
-   iForm.setOnLeaveFunction("B1", endB1, &iForm, &i, NULL, NULL, false);
+   iForm.setOnLeaveFunction("B1", endB1, &iForm, &i, nullptr, nullptr, false);
    iForm.setAutoExit(true);
    bool continueOn=true;
    long choice=0;

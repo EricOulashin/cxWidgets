@@ -28,7 +28,7 @@ class cxDialog : public cxWindow {
        * @param pMessage The message to appear with the dialog
        * @param pStatus The status (appears in the bottom border).
        */
-      explicit cxDialog(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxDialog(cxWindow *pParentWindow = nullptr, int pRow = 0,
                         int pCol = 0, int pHeight = DEFAULT_HEIGHT,
                         int pWidth = DEFAULT_WIDTH,
                         const string& pTitle = "",

@@ -63,7 +63,7 @@ class cxMenu : public cxWindow {
    public:
       /**
        * Default constructor
-       * @param pParentWindow Pointer to parent window; defaults to NULL
+       * @param pParentWindow Pointer to parent window; defaults to nullptr
        * @param pRow The y location of the upper-left corner of menu;
        *  defaults to 0
        * @param pCol the x location of the upper-left corner of menu;
@@ -79,10 +79,10 @@ class cxMenu : public cxWindow {
        *  eBS_SINGLE_LINE for a single-line border or eBS_NOBORDER for
        *  no border.
        */
-      explicit cxMenu(cxWindow *pParentWindow = NULL, int pRow = 0, int pCol = 0,
+      explicit cxMenu(cxWindow *pParentWindow = nullptr, int pRow = 0, int pCol = 0,
                       int pHeight = DEFAULT_HEIGHT, int pWidth = DEFAULT_WIDTH,
-                      const string& pTitle = "", cxWindow *pExtTitleWindow = NULL,
-                      cxWindow *pExtStatusWindow = NULL,
+                      const string& pTitle = "", cxWindow *pExtTitleWindow = nullptr,
+                      cxWindow *pExtStatusWindow = nullptr,
                       eBorderStyle pBorderStyle = eBS_SINGLE_LINE);
 
       /**
@@ -1201,7 +1201,7 @@ class cxMenu : public cxWindow {
       //  pItemIndex: The index of the item to highlight
       void highlightItem(int pItemIndex);
 
-      // Frees the memory used by mOnSelectItemFunction and sets it to NULL.
+      // Frees the memory used by mOnSelectItemFunction and sets it to nullptr.
       void freeOnSelectItemFunction();
 
       // Runs the function for when the user selects an item, if one is set.

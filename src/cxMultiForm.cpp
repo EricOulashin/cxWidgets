@@ -54,8 +54,8 @@ cxForm* cxMultiForm::appendForm(int pRow, int pCol, int pHeight,
                        eBorderStyle pBorderStyle, bool pStacked) {
    // Create the subform.  Set the form's autoExit to true so
    //  that it will exit its input loop when the user exits the last field.
-   cxForm *form = new cxForm(NULL, pRow+top(), pCol+left(), pHeight, pWidth,
-                       pTitle, pBorderStyle, NULL, NULL, true,
+   cxForm *form = new cxForm(nullptr, pRow+top(), pCol+left(), pHeight, pWidth,
+                       pTitle, pBorderStyle, nullptr, nullptr, true,
                        pStacked);
    // Make sure the subform will exit its input loop when the user
    //  leaves the first input going backwards (so that the user can
@@ -82,9 +82,9 @@ cxForm* cxMultiForm::appendForm(int pRow, int pCol, int pHeight,
 bool cxMultiForm::appendForm(cxForm* pForm, int pRow, int pCol, bool* pMoved) {
    bool appendedIt = false;
 
-   // Don't append the form if it's NULL, and don't
+   // Don't append the form if it's nullptr, and don't
    //  allow appending a cxMultiForm to itself.
-   if ((pForm != NULL) && (pForm != this)) {
+   if ((pForm != nullptr) && (pForm != this)) {
       // Only let them append the form if it isn't already in mForms.
       bool alreadyExists = false;
       formPtrContainer::const_iterator iter = mForms.begin();
@@ -98,12 +98,12 @@ bool cxMultiForm::appendForm(cxForm* pForm, int pRow, int pCol, bool* pMoved) {
          // Move the subform to the proper place (relative to the form).
          //  Make sure it's not refreshed if it's hidden.
          bool subformMoved = pForm->move(top()+pRow, left()+pCol, !(pForm->isHidden()));
-         if (pMoved != NULL) {
+         if (pMoved != nullptr) {
             *pMoved = subformMoved;
          }
 
          // Make sure the form has no parent window
-         pForm->setParent(NULL);
+         pForm->setParent(nullptr);
 
          // Make sure the subform will exit its input loop when the user
          //  leaves the first input going backwards (so that the user can
@@ -137,9 +137,9 @@ bool cxMultiForm::appendForm(cxForm* pForm, int pRow, int pCol, bool* pMoved) {
 bool cxMultiForm::appendForm(cxForm* pForm) {
    bool appendedIt = false;
 
-   // Don't append the form if it's NULL, and don't
+   // Don't append the form if it's nullptr, and don't
    //  allow appending a cxMultiForm to itself.
-   if ((pForm != NULL) && (pForm != this)) {
+   if ((pForm != nullptr) && (pForm != this)) {
       // Only let them append the form if it isn't already in mForms.
       bool alreadyExists = false;
       formPtrContainer::const_iterator iter = mForms.begin();
@@ -151,7 +151,7 @@ bool cxMultiForm::appendForm(cxForm* pForm) {
       }
       if (!alreadyExists) {
          // Make sure the form has no parent window
-         pForm->setParent(NULL);
+         pForm->setParent(nullptr);
 
          // Make sure the subform will exit its input loop when the user
          //  leaves the first input going backwards (so that the user can
@@ -183,7 +183,7 @@ bool cxMultiForm::appendForm(cxForm* pForm) {
 } // appendForm
 
 cxForm* cxMultiForm::getForm(unsigned pIndex) const {
-   cxForm *form = NULL;
+   cxForm *form = nullptr;
 
    if ((pIndex >= 0) && (pIndex < mForms.size())) {
       form = mForms[pIndex];
@@ -193,7 +193,7 @@ cxForm* cxMultiForm::getForm(unsigned pIndex) const {
 } // getForm
 
 cxForm* cxMultiForm::getForm(const string& pTitle) const {
-   cxForm *form = NULL;
+   cxForm *form = nullptr;
 
    formPtrContainer::const_iterator iter = mForms.begin();
    for (; iter != mForms.end(); ++iter) {
@@ -629,7 +629,7 @@ bool cxMultiForm::setCurrentSubform(const string& pTitle) {
 bool cxMultiForm::setCurrentSubformByPtr(cxForm *pForm) {
    bool succeeded = false;
 
-   if (pForm != NULL) {
+   if (pForm != nullptr) {
       int numSubforms = (int)(mForms.size());
       for (int i = 0; i < numSubforms; ++i) {
          if (mForms[i] == pForm) {
@@ -828,7 +828,7 @@ bool cxMultiForm::subformIsEnabled(const string& pTitle) const {
 //// Protected functions
 
 void cxMultiForm::copyCxMultiFormStuff(const cxMultiForm* pThatMultiForm) {
-   if ((pThatMultiForm != NULL) && (pThatMultiForm != this)) {
+   if ((pThatMultiForm != nullptr) && (pThatMultiForm != this)) {
       freeSubforms();
 
       // Copy the parent cxForm stuff, then copy the stuff for this class.
@@ -900,7 +900,7 @@ long cxMultiForm::doInputLoop(bool pShowSubforms) {
                   if (!mouseFuncExists) {
                      if (mouseButton1Clicked()) {
                         if (!mouseEvtWasInWindow()) {
-                           if (parentIsCxPanel() || (mParentMultiForm != NULL)) {
+                           if (parentIsCxPanel() || (mParentMultiForm != nullptr)) {
                               continueOn = false;
                            }
                         }
@@ -1079,7 +1079,7 @@ long cxMultiForm::doInputs(bool& pContinueOn) {
                      //  cxForm/cxMultiForm, then set pContinueOn to false so
                      //  that the main input loop with exit.
                      if (!clickedASubform && !mouseEvtWasInWindow()) {
-                        if (parentIsCxPanel() || (mParentMultiForm != NULL)) {
+                        if (parentIsCxPanel() || (mParentMultiForm != nullptr)) {
                            pContinueOn = false;
                         }
                         else {
@@ -1245,7 +1245,7 @@ long cxMultiForm::doSubforms(bool pShowSubforms, bool& pContinueOn, bool& pClick
                         //  cxForm/cxMultiForm, then set pContinueOn to false so
                         //  that the main input loop with exit.
                         if (!pClickedInput && !mouseEvtWasInWindow()) {
-                           if (parentIsCxPanel() || (mParentMultiForm != NULL)) {
+                           if (parentIsCxPanel() || (mParentMultiForm != nullptr)) {
                               pContinueOn = false;
                            }
                            else {

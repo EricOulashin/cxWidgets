@@ -26,13 +26,13 @@ cxComboBox::cxComboBox(cxWindow *pParentWindow,
      // The location & width of mMenu may be slightly different,
      //  depending on whether there is a border or not.
      // New way - With a border, on the same row as the input portion
-     mMenu(NULL, (pBorderStyle == eBS_NOBORDER ? pRow : pRow+1),
+     mMenu(nullptr, (pBorderStyle == eBS_NOBORDER ? pRow : pRow+1),
             (pBorderStyle == eBS_NOBORDER ? pCol+(int)pLabel.length() :
                                 pCol+(int)pLabel.length()+1),
             (pHeight > 1 ? pHeight-1 : 1),
             (pBorderStyle == eBS_NOBORDER ? pWidth-(int)pLabel.length() :
                 pWidth-(int)pLabel.length()-2),
-            "", NULL, NULL, eBS_SINGLE_LINE),
+            "", nullptr, nullptr, eBS_SINGLE_LINE),
      mUseAltMenuItemText(false),
      mRunValidatorFunction(true)
 {
@@ -58,7 +58,7 @@ cxComboBox::cxComboBox(cxWindow *pParentWindow,
 
 // Copy constructor
 cxComboBox::cxComboBox(const cxComboBox& pThatComboBox)
-   : cxMultiLineInput(NULL, pThatComboBox.top(), pThatComboBox.left(),
+   : cxMultiLineInput(nullptr, pThatComboBox.top(), pThatComboBox.left(),
            // If the menu is enabled, ensure that the input portion is 1 line
            //  high.  Otherwise, go ahead and just use the height of the other
            //  input.
@@ -129,13 +129,13 @@ long cxComboBox::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindow
                //  don't do validation.
                if ((lastKeyWasMouseEvt() && !mouseEvtWasInWindow())) {
                   cxForm *parentForm = getParentForm();
-                  if (parentForm != NULL) {
+                  if (parentForm != nullptr) {
                      if (!(parentForm->pointIsInWindow(mMouse.y, mMouse.x))) {
                         doValidation = false;
                      }
                   }
                   else {
-                     // mParentForm is NULL..  just set doValidation to
+                     // mParentForm is nullptr..  just set doValidation to
                      //  false.
                      doValidation = false;
                   }
@@ -549,7 +549,7 @@ long cxComboBox::doInputLoop(bool pShowSelf, bool& pRunOnLeaveFunction) {
 } // doInputLoop
 
 void cxComboBox::copyCxComboBoxStuff(const cxComboBox* pThatComboBox) {
-   if ((pThatComboBox != NULL) && (pThatComboBox != this)) {
+   if ((pThatComboBox != nullptr) && (pThatComboBox != this)) {
       // Copy the stuff inherited from cxMultiLineInput, then copy
       //  this class' stuff.
       try {
