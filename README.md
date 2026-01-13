@@ -3,8 +3,8 @@ This is an object-oriented text user interface library for Linux written in C++.
 those developing a text terminal-based software application in Linux with C++.
 
 This is a wrapper around <a href='https://invisible-island.net/ncurses/' target='_blank'>nCurses</a>; thus,
-this library requires the package libncurses-dev to be installed, and any software using which uses this
-(and thus, ncurses) requires the package ncurses-bin and related packages to be installed.
+this library requires the package libncurses-dev to be installed, and any software that uses this (and
+thus, nCurses) requires the package ncurses-bin and related packages to be installed.
 
 This library contains C++ classes for text-based UI elements such as a button, text input, multi-line text
 input, combo box, dialog, form, menu, file viewer, frame, panel, etc.  All the UI element classes
@@ -59,7 +59,7 @@ We had tried to ensure the code base works well with the following software emul
 </ul>
 
 Recently, I have made sure this builds on Linux Mint; otherwise, the source & makefile is as it was in 2007.
-Aside from Linux Mint, it should also (hopefully) build farily easily on similar modern distributions such as
+Aside from Linux Mint, it should also (hopefully) build fairly easily on similar modern distributions such as
 Ubuntu, Debian, etc.
 
 We had also been able to build the library on OS X (Darwin), though that hasn't been tested recently.
