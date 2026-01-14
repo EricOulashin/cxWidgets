@@ -15,16 +15,14 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-using std::string;
-using std::vector;
 
 #include "cxColors.h"
 #include "cxKeyDefines.h"
 #include "cxWidgetsException.h" // Included here so that
                                 //  everything has access to it
 
-typedef vector<string> stringContainer;
-typedef vector<string>::iterator stringContainerIterator;
+typedef std::vector<std::string> stringContainer;
+typedef std::vector<std::string>::iterator stringContainerIterator;
 
 // Un-comment this line to include some test-only
 //  helper functionality in classes where it might
@@ -88,7 +86,7 @@ class cxObject {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    protected:
       /**

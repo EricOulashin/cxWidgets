@@ -2,6 +2,7 @@
 //
 
 #include "cxFunction.h"
+using std::string;
 
 //// cxFunction class methods
 

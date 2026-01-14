@@ -6,6 +6,12 @@
 #include "cxStringUtils.h"
 #include "cxValidators.h"
 #include <cstdlib>
+using std::string;
+using std::vector;
+using std::make_pair;
+using std::pair;
+using std::set;
+using std::map;
 using cxStringUtils::stringToLong;
 using cxStringUtils::stringToLongDouble;
 using cxStringUtils::toString;

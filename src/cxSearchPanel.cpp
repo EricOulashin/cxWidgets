@@ -1,6 +1,8 @@
 // Copyright (c) 2006-2007 Michael H. Kinney
 
 #include "cxSearchPanel.h"
+using std::string;
+using std::map;
 
 cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
                  int pHeight, int pWidth, const string& pFormTitle,

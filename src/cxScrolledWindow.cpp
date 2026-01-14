@@ -11,6 +11,7 @@
 #include "cxBase.h"
 #include "cxValidators.h"
 using cxStringUtils::strToLower;
+using std::string;
 
 cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
              int pRow, int pCol, int pHeight, int pWidth,

@@ -4,6 +4,7 @@
 
 #include "cxWindow.h"
 #include "cxFunction.h"
+#include <string>
 
 #define DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY '/'     // Default search key
 #define DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY CTRL_G    // Default key to go to a line#
@@ -42,7 +43,7 @@
  * </ul>
  * Note that the functions you provide must have this signature:<br>
  * \verbatim
-string someFunc(void*, void*, void*, void*)
+std::string someFunc(void*, void*, void*, void*)
 \endverbatim
  *
  * \author $Author: erico $
@@ -75,9 +76,9 @@ class cxScrolledWindow : public cxWindow {
                         int pRow = 0, int pCol = 0,
                         int pHeight = DEFAULT_HEIGHT,
                         int pWidth = DEFAULT_WIDTH,
-                        const string& pTitle = "",
-                        const string& pMessage = "",
-                        const string& pStatus = "",
+                        const std::string& pTitle = "",
+                        const std::string& pMessage = "",
+                        const std::string& pStatus = "",
                         eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
                         cxWindow *pExtTitleWindow = nullptr,
                         cxWindow *pExtStatusWindow = nullptr,
@@ -97,8 +98,8 @@ class cxScrolledWindow : public cxWindow {
        *  displaying the message text.
        */
       cxScrolledWindow(cxWindow *pParentWindow,
-               int pRow, int pCol, const string& pTitle,
-               const string& pMessage, const string& pStatus,
+               int pRow, int pCol, const std::string& pTitle,
+               const std::string& pMessage, const std::string& pStatus,
                cxWindow *pExtTitleWindow = nullptr,
                cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
@@ -115,8 +116,8 @@ class cxScrolledWindow : public cxWindow {
        *  displaying the message text.
        */
       cxScrolledWindow(cxWindow *pParentWindow,
-               const string& pTitle, const string& pMessage,
-               const string& pStatus,
+               const std::string& pTitle, const std::string& pMessage,
+               const std::string& pStatus,
                cxWindow *pExtTitleWindow = nullptr,
                cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
@@ -132,7 +133,7 @@ class cxScrolledWindow : public cxWindow {
        *  displaying the message text.
        */
       cxScrolledWindow(cxWindow *pParentWindow,
-               const string& pMessage, const string& pStatus,
+               const std::string& pMessage, const std::string& pStatus,
                cxWindow *pExtTitleWindow = nullptr,
                cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
@@ -146,7 +147,7 @@ class cxScrolledWindow : public cxWindow {
        * @param pMessageUnderlines Whether or not to recognize & use underline characters when
        *  displaying the message text.
        */
-      cxScrolledWindow(cxWindow *pParentWindow, const string& pMessage,
+      cxScrolledWindow(cxWindow *pParentWindow, const std::string& pMessage,
                cxWindow *pExtTitleWindow = nullptr,
                cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
@@ -164,8 +165,8 @@ class cxScrolledWindow : public cxWindow {
        *  displaying the message text.
        */
       cxScrolledWindow(cxWindow *pParentWindow, eHPosition pHPosition,
-               const string& pTitle, const string& pMessage,
-               const string& pStatus,
+               const std::string& pTitle, const std::string& pMessage,
+               const std::string& pStatus,
                cxWindow *pExtTitleWindow = nullptr,
                cxWindow *pExtStatusWindow = nullptr,
                bool pMessageUnderlines = false);
@@ -326,7 +327,7 @@ class cxScrolledWindow : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Draws a border around the window
@@ -355,8 +356,8 @@ class cxScrolledWindow : public cxWindow {
        *  all the message text shows (defaults to false).
        */
       virtual void init(int pRow, int pCol, int pHeight, int pWidth,
-                        const string& pTitle, string pMessage,
-                        const string& pStatus,
+                        const std::string& pTitle, std::string pMessage,
+                        const std::string& pStatus,
                         cxWindow *pParentWindow = nullptr,
                         bool pResizeVertically = false);
 
@@ -399,7 +400,7 @@ class cxScrolledWindow : public cxWindow {
       int mGoToKey;       // Key to use to go to a specific line#
       int mAltPgUpKey;    // Alternate key for a pageUp
       int mAltPgDownKey;   // Alternate key for a pageDown
-      string mSearchKeyword; // Previous keyword used for searching
+      std::string mSearchKeyword; // Previous keyword used for searching
       bool mUseLastKeyword; // Whether or not to use mSearchKeyword for searching
 
       // Functions to be run at various points in the input loop
@@ -421,7 +422,7 @@ class cxScrolledWindow : public cxWindow {
        * @param pLineNumber The line number of the desired line
        * @return The line
        */
-      string getLine(int pLineNumber);
+      std::string getLine(int pLineNumber);
 
       // Scrolls to a specific line in mMessageLines.
       // Parameters:

@@ -2,6 +2,7 @@
 
 #include "cxTextValidator.h"
 #include <cstdlib> // For toupper()
+using std::string;
 
 // Default constructor - Takes a text string and
 //  a validator string.

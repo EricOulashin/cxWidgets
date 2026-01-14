@@ -3,6 +3,7 @@
 
 #include "cxMultiLineInput.h"
 #include "cxMenu.h"
+#include <string>
 
 /** \class cxComboBox
  *
@@ -77,11 +78,11 @@ class cxComboBox : public cxMultiLineInput {
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
-                       const string& pLabel = "",
+                       const std::string& pLabel = "",
                        eBorderStyle pBorderStyle = eBS_NOBORDER,
                        eInputOptions pInputOption = eINPUT_EDITABLE,
                        eInputTypes pInputType = eINPUT_TYPE_TEXT,
-                       string *pExtValue = nullptr, bool pMenuEnabled = true,
+                       std::string *pExtValue = nullptr, bool pMenuEnabled = true,
                        int pRightLabelOffset = 0, 
                        int pRightLabelHeight = 1,
                        int pRightLabelWidth = 5,
@@ -163,8 +164,8 @@ class cxComboBox : public cxMultiLineInput {
        * @param pBringToTop Whether or not to bring the menu to the top if
        *  it's being shown (defaults to false).
        */
-      virtual void appendToMenu(const string& pDisplayText,
-                                const string& pItemText = "",
+      virtual void appendToMenu(const std::string& pDisplayText,
+                                const std::string& pItemText = "",
                                 bool pRefresh = false, bool pBringToTop = false);
 
       /**
@@ -188,7 +189,7 @@ class cxComboBox : public cxMultiLineInput {
        *
        * @return True if the item was deleted; false if not.
        */
-      virtual bool removeFromMenu(const string& pItemText,
+      virtual bool removeFromMenu(const std::string& pItemText,
                                   bool pDisplayText = true,
                                   bool pRefresh = false);
 
@@ -222,7 +223,7 @@ class cxComboBox : public cxMultiLineInput {
        * @param pIndex The index of the menu item
        * @return The menu item text at the specified index, or a blank string if the index is out of bounds.
        */
-      virtual string getItemText(int pIndex) const;
+      virtual std::string getItemText(int pIndex) const;
 
       /**
        * \brief Returns the total height of the combo box, including
@@ -304,7 +305,7 @@ class cxComboBox : public cxMultiLineInput {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Returns a pointer to the drop-down menu.

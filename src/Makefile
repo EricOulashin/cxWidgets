@@ -48,14 +48,17 @@ CPP_STANDARD=c++17
 #  all the object code is put into a shared library.
 # But, AIX don't like -fPIC
 ifeq ($(OS),AIX)
-   #CFLAGS=-g -Wall -DWANT_TIMEOUT -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
-   CFLAGS=-Wall -DWANT_TIMEOUT -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
+   #CFLAGS=-g -Wall -DWANT_TIMEOUT -std=$(CPP_STANDARD) -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
+   #CFLAGS=-Wall -DWANT_TIMEOUT -std=$(CPP_STANDARD) -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
+   CFLAGS=-Wall -DWANT_TIMEOUT -std=$(CPP_STANDARD) -pedantic $(INCDIR) $(LIBDIR_OPT)
 else
    ifeq ($(OS),SCO)
-      CFLAGS=-fPIC -Wall -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
+      #CFLAGS=-fPIC -Wall -std=$(CPP_STANDARD) -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
+	  CFLAGS=-fPIC -Wall -std=$(CPP_STANDARD) -pedantic $(INCDIR) $(LIBDIR_OPT)
    else
-      #CFLAGS=-g -fPIC -DWANT_TIMEOUT -Wall -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT)
-      CFLAGS=   -fPIC -DWANT_TIMEOUT -Wall -std=$(CPP_STANDARD) -pedantic -Wc++11-compat -ansi $(INCDIR) $(LIBDIR_OPT) 
+      #CFLAGS=-g -fPIC -DWANT_TIMEOUT -Wall -std=$(CPP_STANDARD) -pedantic -ansi $(INCDIR) $(LIBDIR_OPT)
+      #CFLAGS=-fPIC -DWANT_TIMEOUT -Wall -std=$(CPP_STANDARD) -pedantic -ansi $(INCDIR) $(LIBDIR_OPT) 
+	  CFLAGS=-fPIC -DWANT_TIMEOUT -Wall -std=$(CPP_STANDARD) -pedantic $(INCDIR) $(LIBDIR_OPT) 
    endif
 endif
 

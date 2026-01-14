@@ -45,7 +45,7 @@ class cxTimer {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    private:
       cxFunction4 mFunction; // The function to run after the delay

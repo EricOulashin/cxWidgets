@@ -1,6 +1,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxWidgetsException.h"
+using std::string;
 
 cxWidgetsException::cxWidgetsException(const string& pErrorMsg)
    : mErrorMsg(pErrorMsg)

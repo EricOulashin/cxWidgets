@@ -1,6 +1,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxMessageDialog.h"
+using std::string;
 using std::make_pair;
 
 cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,

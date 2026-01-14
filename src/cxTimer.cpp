@@ -25,7 +25,7 @@ void cxTimer::start() {
 void cxTimer::stop() {
 }
 
-string cxTimer::cxTypeStr() const {
+std::string cxTimer::cxTypeStr() const {
    return("cxTimer");
 } // cxTypeStr
 

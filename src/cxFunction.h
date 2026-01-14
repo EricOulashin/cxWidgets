@@ -13,12 +13,11 @@
  */
 
 #include <string>
-using std::string;
 
 // Typedefs for various function pointer types
-typedef string (*funcPtr0)();
-typedef string (*funcPtr2)(void *p1, void *p2);
-typedef string (*funcPtr4)(void *p1, void *p2, void *p3, void *p4);
+typedef std::string (*funcPtr0)();
+typedef std::string (*funcPtr2)(void *p1, void *p2);
+typedef std::string (*funcPtr4)(void *p1, void *p2, void *p3, void *p4);
 
 /**
  * \class cxFunction
@@ -43,8 +42,8 @@ class cxFunction {
       virtual ~cxFunction();
 
       /**
-       * Returns whether the internal funtion pointer is set (non-null).
-       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
+       * Returns whether the internal function pointer is set (non-null).
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
        */
       virtual bool functionIsSet() const = 0;
 
@@ -52,10 +51,10 @@ class cxFunction {
        * \brief Runs the function pointed to by the cxFunction.  This is a
        * \brief pure virtual method and must be overridden in deriving classes.
        *
-       * @return Returns return value of function pointed to if pointer is not nullptr,
+       * @return Returns return value of function pointed to if pointer is not null,
        *		otherwise returns empty string.
        */
-      virtual string runFunction() const = 0;
+      virtual std::string runFunction() const = 0;
 
       /**
        * \brief Accessor for whether the caller should use the return value
@@ -116,7 +115,7 @@ class cxFunction {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const = 0;
+      virtual std::string cxTypeStr() const = 0;
 
    private:
       bool mUseReturnVal;
@@ -142,7 +141,7 @@ class cxFunction0 : public cxFunction {
        * \brief available.  Note that function must have this signature:
        * \brief string func(void*, void*)
        *
-       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to null.
        * @param pUseReturnVal Indicates whether caller will make use of return
        *  value.  Defaults to false
        * @param pExitAfterRun Whether or not the caller should exit from its
@@ -162,7 +161,7 @@ class cxFunction0 : public cxFunction {
 
       /**
        * Returns whether the internal funtion pointer is set.
-       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
        */
       virtual bool functionIsSet() const;
 
@@ -180,12 +179,12 @@ class cxFunction0 : public cxFunction {
       funcPtr0 getFunction() const;
 
       /**
-       * If function pointer is not nullptr, runs the function and returns its return value;
+       * If function pointer is not null, runs the function and returns its return value;
        * If function pointer is nullptr, returns empty string
-       * @return Returns return value of function pointed to if pointer is not nullptr,
+       * @return Returns return value of function pointed to if pointer is not null,
        *		otherwise returns empty string
        */
-      virtual string runFunction() const;
+      virtual std::string runFunction() const;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction0".  This can be
@@ -194,7 +193,7 @@ class cxFunction0 : public cxFunction {
        *
        * @return The name of the cxWidgets class ("cxFunction0").
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    private:
       funcPtr0 mFunction; // This is the actual function pointer
@@ -260,7 +259,7 @@ class cxFunction2 : public cxFunction {
 
       /**
        * Returns whether the internal funtion pointer is set.
-       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
        */
       virtual bool functionIsSet() const;
 
@@ -309,12 +308,12 @@ class cxFunction2 : public cxFunction {
       void* getParam2() const;
 
       /**
-       * If function pointer is not nullptr, runs the function and returns its return value;
+       * If function pointer is not null, runs the function and returns its return value;
        * If function pointer is nullptr, returns empty string
-       * @return Returns return value of function pointed to if pointer is not nullptr,
+       * @return Returns return value of function pointed to if pointer is not null,
        *		otherwise returns empty string
        */
-      virtual string runFunction() const;
+      virtual std::string runFunction() const;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction2".  This can be
@@ -323,7 +322,7 @@ class cxFunction2 : public cxFunction {
        *
        * @return The name of the cxWidgets class ("cxFunction2").
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    private:
       funcPtr2 mFunction; // The actual function pointer
@@ -373,7 +372,7 @@ class cxFunction4 : public cxFunction {
 
       /**
        * Returns whether the internal funtion pointer is set.
-       * @return Returns true if the internal function pointer is set (not nullptr), or false otherwise.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
        */
       virtual bool functionIsSet() const;
 
@@ -448,12 +447,12 @@ class cxFunction4 : public cxFunction {
       void* getParam4() const;
 
       /**
-       * If function pointer is not nullptr, runs the function and returns its return value;
+       * If function pointer is not null, runs the function and returns its return value;
        * If function pointer is nullptr, returns empty string
-       * @return Returns return value of function pointed to if pointer is not nullptr,
+       * @return Returns return value of function pointed to if pointer is not null,
        *    otherwise returns empty string
        */
-      virtual string runFunction() const;
+      virtual std::string runFunction() const;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction4".  This can be
@@ -462,7 +461,7 @@ class cxFunction4 : public cxFunction {
        *
        * @return The name of the cxWidgets class ("cxFunction4").
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    private:
       funcPtr4 mFunction; // The actual function pointer

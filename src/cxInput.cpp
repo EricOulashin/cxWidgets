@@ -8,6 +8,8 @@
 #include <exception> // for try/catch
 #include <typeinfo> // for bad_cast
 #include <cstdlib>
+using std::string;
+using std::set;
 using cxStringUtils::indexOfLastCap;
 using cxStringUtils::isPrintable;
 using cxBase::visualStrLen;

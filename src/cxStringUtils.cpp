@@ -10,6 +10,10 @@
 #include <ncurses.h> // For ncurses key codes
 #include <typeinfo>
 #include <algorithm>
+using std::string;
+using std::vector;
+using std::list;
+using std::ostringstream;
 using std::transform;
 
 #ifndef NDEBUG
@@ -285,61 +289,61 @@ void cxStringUtils::test_stringTo() {
 }
 
 std::string cxStringUtils::toString(const int& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const long& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const double& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const long double& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const unsigned& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const unsigned long& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const eReturnCode& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const eInputOptions& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const eBorderStyle& x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString
 
 std::string cxStringUtils::toString(const void* x) {
-   std::ostringstream oss;
+   ostringstream oss;
    oss << x;
    return oss.str();
 } // toString

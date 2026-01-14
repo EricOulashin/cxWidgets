@@ -23,7 +23,6 @@
 #include "cxWindow.h"
 #include "cxFunction.h"
 #include <string>
-using std::string;
 
 class cxButton : public cxWindow {
    public:
@@ -42,7 +41,7 @@ class cxButton : public cxWindow {
        */
       explicit cxButton(cxWindow *pParentWindowPtr = nullptr, int pRow = 0,
                         int pCol = 0, int pHeight = 3, int pWidth = 5,
-                        const string& pLabel = "",
+                        const std::string& pLabel = "",
                         eBorderStyle pBorderStyle = eBS_SINGLE_LINE);
 
       /**
@@ -70,7 +69,7 @@ class cxButton : public cxWindow {
        *  Defaults to nullptr.
        */
       cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
-               int pWidth, const string& pLabel, eBorderStyle pBorderStyle,
+               int pWidth, const std::string& pLabel, eBorderStyle pBorderStyle,
                funcPtr4 pFunction, void *p1 = nullptr, void *p2 = nullptr,
                void *p3 = nullptr, void *p4 = nullptr);
 
@@ -95,7 +94,7 @@ class cxButton : public cxWindow {
        *  Defaults to nullptr.
        */
       cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
-               int pWidth, const string& pLabel, eBorderStyle pBorderStyle,
+               int pWidth, const std::string& pLabel, eBorderStyle pBorderStyle,
                funcPtr2 pFunction, void *p1 = nullptr, void *p2 = nullptr);
 
       /**
@@ -126,7 +125,7 @@ class cxButton : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Shows the button and waits for input.  Fires the button's set
@@ -187,7 +186,7 @@ class cxButton : public cxWindow {
        *
        * @return The return value of the onClick function
        */
-      virtual string runOnClickFunction();
+      virtual std::string runOnClickFunction();
 
       /**
        * \brief If the last mouse event occurred in the button, this will run

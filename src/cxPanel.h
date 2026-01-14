@@ -4,8 +4,8 @@
 // Copyright (c) 2006-2007 Michael H. Kinney
 
 #include "cxWindow.h"
+#include <string>
 #include <vector>
-using std::vector;
 
 /** 
  * \brief cxPanel is a window that contains other windows.  When showModal()
@@ -66,9 +66,9 @@ class cxPanel : public cxWindow {
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
-                       const string& pTitle = "",
-                       const string& pMessage = "",
-                       const string& pStatus = "",
+                       const std::string& pTitle = "",
+                       const std::string& pMessage = "",
+                       const std::string& pStatus = "",
                        eBorderStyle pBorderStyle = eBS_NOBORDER,
                        cxWindow *pExtTitleWindow = nullptr,
                        cxWindow *pExtStatusWindow = nullptr,
@@ -294,7 +294,7 @@ class cxPanel : public cxWindow {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindow(const string& pID, bool pIsTitle = true);
+      virtual bool setCurrentWindow(const std::string& pID, bool pIsTitle = true);
 
       /**
        * \brief Sets which window will get focus in the next
@@ -630,7 +630,7 @@ class cxPanel : public cxWindow {
        *  window's title.  If this is false, then pID will refer to the
        *  window's name.
        */
-      virtual void setEnabled(const string& pID, bool pEnabled, bool pIsTitle = true);
+      virtual void setEnabled(const std::string& pID, bool pEnabled, bool pIsTitle = true);
 
       /**
        * \brief Swaps the order of 2 subwindows (by index).  If both indexes
@@ -673,7 +673,7 @@ class cxPanel : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief This causes the panel to stop its input loop with a code of
@@ -707,7 +707,7 @@ class cxPanel : public cxWindow {
        * @param pIndex The index of the window in the panel
        * @param pName The new name for the window
        */
-      virtual void setName(unsigned pIndex, const string& pName);
+      virtual void setName(unsigned pIndex, const std::string& pName);
 
       /**
        * \brief Sets the name of one of the windows in the panel (by title/name).
@@ -718,7 +718,7 @@ class cxPanel : public cxWindow {
        *  the window.  If false, then pID refers to the current name of the
        *  window.
        */
-      virtual void setName(const string& pID, const string& pName, bool pIsTitle = true);
+      virtual void setName(const std::string& pID, const std::string& pName, bool pIsTitle = true);
 
       /**
        * \brief Sets the name of the panel.  The name is an alternative means
@@ -727,7 +727,7 @@ class cxPanel : public cxWindow {
        *
        * @param pName The new name for the panel
        */
-      virtual void setName(const string& pName);
+      virtual void setName(const std::string& pName);
 
       /**
        * \brief Returns the top row of the window
@@ -742,7 +742,7 @@ class cxPanel : public cxWindow {
       virtual int bottom() const;
 
    protected:
-      typedef vector<cxWindow*> cxWindowPtrCollection;
+      typedef std::vector<cxWindow*> cxWindowPtrCollection;
       cxWindowPtrCollection mWindows; // The windows in the panel to cycle between
       bool mCycleWin;          // Whether or not to cycle to the next/previous
                                //  window in the input loop (this is set false

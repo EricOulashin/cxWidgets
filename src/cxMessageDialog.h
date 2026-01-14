@@ -6,6 +6,7 @@
 #include "cxDialog.h"
 #include "cxButton.h"
 #include "cxMessageDialogStyles.h"
+#include <string>
 
 #define OKBTN_HEIGHT 3
 #define OKBTN_WIDTH 4
@@ -42,10 +43,10 @@ class cxMessageDialog : public cxDialog {
       explicit cxMessageDialog(cxWindow *pParentWindow = nullptr, int pRow = 0,
                                int pCol = 0, int pHeight = DEFAULT_HEIGHT,
                                int pWidth = DEFAULT_WIDTH,
-                               const string& pTitle = "",
-                               const string& pMessage = "",
+                               const std::string& pTitle = "",
+                               const std::string& pMessage = "",
                                long pStyle = cxOK|cxCANCEL,
-                               const string& pStatus = "");
+                               const std::string& pStatus = "");
 
       /**
        * Simplified constructor - Displays a message dialog centered in the screen with a message and an OK button.
@@ -54,7 +55,7 @@ class cxMessageDialog : public cxDialog {
        * @param pMessage The message to be displayed in the dialog
        * @return 
        */
-      cxMessageDialog(cxWindow *pParentWindow, const string& pTitle, const string& pMessage);
+      cxMessageDialog(cxWindow *pParentWindow, const std::string& pTitle, const std::string& pMessage);
 
       /**
        * Copy constructor
@@ -133,7 +134,7 @@ class cxMessageDialog : public cxDialog {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    protected:
       // Handles the input loop.  Returns the return code as a result of

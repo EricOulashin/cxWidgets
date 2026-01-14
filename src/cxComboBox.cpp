@@ -3,6 +3,9 @@
 #include "cxComboBox.h"
 #include "cxForm.h"
 #include "cxBase.h"
+#include <set>
+using std::string;
+using std::set;
 using cxBase::stringWithoutHotkeyChars;
 
 cxComboBox::cxComboBox(cxWindow *pParentWindow,

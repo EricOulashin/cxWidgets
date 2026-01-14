@@ -24,16 +24,15 @@
  * <center>Thank you for your interest in cxWidgets! :)</center>
  */
 
-#include <string>
-#include <set>
 #include "cxWindow.h"
 #include "cxColors.h"
 #include "cxInputOptions.h"
 #include "cxInputTypes.h"
 #include "cxWidgetsException.h" // Included here so that everything gets it
 #include "cxMessageDialogStyles.h"
-using std::string;
-using std::set;
+#include <string>
+#include <set>
+#include <list>
 
 /** \namespace cxBase
  * \brief Contains some miscellaneous cxWidgets helper functions.
@@ -191,8 +190,8 @@ namespace cxBase {
     * @param pBorderStyle The type of border to use
     *  for the message box - Defaults to eBS_SINGLE_LINE
     */
-   void messageBox(int pRow, int pCol, int pHeight, int pWidth, const string& pTitle,
-                   const string& pMessage, const string& pStatus = "",
+   void messageBox(int pRow, int pCol, int pHeight, int pWidth, const std::string& pTitle,
+                   const std::string& pMessage, const std::string& pStatus = "",
                    eBorderStyle pBorderStyle = eBS_SINGLE_LINE);
 
    /**
@@ -203,8 +202,8 @@ namespace cxBase {
     * @param pMessage message of message box
     * @param pStatus status of message box
     */
-   void messageBox(int pRow, int pCol, const string& pTitle,
-                   const string& pMessage, const string& pStatus);
+   void messageBox(int pRow, int pCol, const std::string& pTitle,
+                   const std::string& pMessage, const std::string& pStatus);
 
    /**
     * \brief Shows a message box, automatically setting its height & width.
@@ -213,7 +212,7 @@ namespace cxBase {
     * @param pCol Column of upper-left corner
     * @param pMessage The message to appear in the box
     */
-   void messageBox(int pRow, int pCol, const string& pMessage);
+   void messageBox(int pRow, int pCol, const std::string& pMessage);
 
    /**
     * \brief Shows a message box
@@ -221,15 +220,15 @@ namespace cxBase {
     * @param pMessage message of message box
     * @param pStatus status of message box
     */
-   void messageBox(const string& pTitle, const string& pMessage,
-                   const string& pStatus);
+   void messageBox(const std::string& pTitle, const std::string& pMessage,
+                   const std::string& pStatus);
 
    /**
     * \brief Shows a message box
     * @param pMessage Message of message box
     * @param pStatus Status of message box.  Defaults to blank.
     */
-   void messageBox(const string& pMessage, const string& pStatus);
+   void messageBox(const std::string& pMessage, const std::string& pStatus);
 
    /**
     * \brief Shows a message box.
@@ -241,7 +240,7 @@ namespace cxBase {
     * @param pStatusColor The color for the status
     * @param pBorderColor The color for the border
     */
-   void messageBox(const string& pMessage,
+   void messageBox(const std::string& pMessage,
                    e_cxColors pMessageColor = getDefaultMessageColor(),
                    attr_t pMessageAttr = A_NORMAL,
                    e_cxColors pTitleColor = getDefaultTitleColor(),
@@ -252,13 +251,13 @@ namespace cxBase {
     * \brief Shows a message dialog (a message box with an OK button)
     * @param pMessage message of message dialog
     */
-   void messageDialog(const string& pMessage);
+   void messageDialog(const std::string& pMessage);
 
    /**
     * \brief Shows a message dialog (a message box with an OK button)
     * @param pMessages message of message dialog
     */
-   void messageDialog(const list<string>& pMessages);
+   void messageDialog(const std::list<std::string>& pMessages);
 
    /**
     * \brief Shows a splash message
@@ -266,14 +265,14 @@ namespace cxBase {
     * @param pMessage Message of splash message
     * @param pSleep Duration in seconds of splash message
     */
-   void splash(const string& pTitle, const string& pMessage, int pSleep);
+   void splash(const std::string& pTitle, const std::string& pMessage, int pSleep);
 
    /**
     * \brief Shows a splash message
     * @param pMessage Message of splash message
     * @param pSleep Duration in seconds of splash message
     */
-   void splash(const string& pMessage, int pSleep);
+   void splash(const std::string& pMessage, int pSleep);
 
    /**
     * \brief Erases the screen
@@ -311,12 +310,12 @@ namespace cxBase {
     * \brief value of the environment variable TERM.
     * @return A string representing the terminal type, i.e. "xterm", "wy50", etc.
     */
-   string getTermType();
+   std::string getTermType();
 
    /**
     * \brief Contains the terminal type string
     */
-   static const string termType = getTermType();
+   static const std::string termType = getTermType();
 
    /**
     * \brief Returns whether a color has the brightness bit set.
@@ -335,7 +334,7 @@ namespace cxBase {
     *
     * @return The number of hotkeys in pStr
     */
-   int countHotkeys(const string& pStr);
+   int countHotkeys(const std::string& pStr);
 
    /**
     * \brief Takes a string and returns a version without the & characters
@@ -345,7 +344,7 @@ namespace cxBase {
     *
     * @return A version of pStr without the highlighting characters.
     */
-   string stringWithoutHotkeyChars(const string& pStr);
+   std::string stringWithoutHotkeyChars(const std::string& pStr);
 
    /**
     * \brief Returns the length of a string without its hotkey characters -
@@ -357,7 +356,7 @@ namespace cxBase {
     *
     * @return The length of the string as it would appear on the screen
     */
-   unsigned visualStrLen(const string& pStr);
+   unsigned visualStrLen(const std::string& pStr);
 
    /**
     * \brief Brings a cxWindow to the top of the stack.  Doesn't refresh
@@ -369,7 +368,7 @@ namespace cxBase {
     * @param unused Not used
     * @return A blank string
     */
-   string bringToTop(void* theWindow, void* unused);
+   std::string bringToTop(void* theWindow, void* unused);
 
    /**
     * \brief Runs showModal() on a cxForm and returns the result.  This
@@ -384,7 +383,7 @@ namespace cxBase {
     *    as a string, or the string value of cxID_QUIT
     *    on error.
     */
-   string cxFormShowModal(void* theForm, void* unused);
+   std::string cxFormShowModal(void* theForm, void* unused);
 
    /**
     * \brief Runs showModal() on a cxMenu and returns the result.  This
@@ -399,7 +398,7 @@ namespace cxBase {
     *    as a string, or the string value of cxID_QUIT
     *    on error.
     */
-   string cxMenuShowModal(void* theMenu, void* unused);
+   std::string cxMenuShowModal(void* theMenu, void* unused);
 
    /**
     * \brief Does nothing.  Can be used, for example, as an event function
@@ -410,7 +409,7 @@ namespace cxBase {
     *
     * @return A blank string
     */
-   string noOp(void *p1, void *p2);
+   std::string noOp(void *p1, void *p2);
 
    /**
     * \brief Does nothing.  Can be used, for example, as an event function
@@ -421,9 +420,9 @@ namespace cxBase {
     * @param p3 Not used
     * @param p4 Not used
     *
-    * @return A blank string
+    * @return An empty string
     */
-   string noOp(void *p1, void *p2, void *p3, void *p4);
+   std::string noOp(void *p1, void *p2, void *p3, void *p4);
 
    /**
     * \brief Runs a command on the system, calling the system() function.
@@ -440,7 +439,7 @@ namespace cxBase {
     *
     * @return The return value of system()
     */
-   int runSystemCmd(const string& pCmd);
+   int runSystemCmd(const std::string& pCmd);
 
    /**
     * \brief Writes text on the screen
@@ -453,7 +452,7 @@ namespace cxBase {
     * @param pColor The text color (see e_cxColors enumeration in cxColors.h).
     *  Defaults to gray on black.
     */
-   void writeText(int pRow, int pCol, const string& pText, attr_t pAttr = A_NORMAL, e_cxColors pColor = eGRAY_BLACK);
+   void writeText(int pRow, int pCol, const std::string& pText, attr_t pAttr = A_NORMAL, e_cxColors pColor = eGRAY_BLACK);
 
    /**
     * \brief Scans a string for hotkeys (characters preceeded by an ampersand)
@@ -468,7 +467,7 @@ namespace cxBase {
     *  will be converted to upper-case; if false, they will be converted to
     *  lowercase (if pConvertCase is true).
     */
-   void getHotkeyChars(const string& pStr, set<char>& pHotkeys,
+   void getHotkeyChars(const std::string& pStr, std::set<char>& pHotkeys,
                        bool pConvertCase = false, bool pToUpper = false);
 
    /**
@@ -505,7 +504,7 @@ namespace cxBase {
     *
     * @return A string representation of the key
     */
-   string getKeyStr(int pKey);
+   std::string getKeyStr(int pKey);
 
    /**
     * \brief Returns a string version of a mouse state.
@@ -514,7 +513,7 @@ namespace cxBase {
     *
     * @return A string representation of the mouse state
     */
-   string getMouseStateStr(int pMouseState);
+   std::string getMouseStateStr(int pMouseState);
 
    /**
     * \brief Returns a string version of a return code.
@@ -523,7 +522,7 @@ namespace cxBase {
     *
     * @return A string representation of the return code
     */
-   string getReturnCodeStr(long pReturnCode);
+   std::string getReturnCodeStr(long pReturnCode);
 
    /**
     * \brief Returns a string version of a value from the eInputOptions
@@ -533,7 +532,7 @@ namespace cxBase {
     *
     * @return A string representation of pInputOption
     */
-   string getInputOptionStr(eInputOptions pInputOption);
+   std::string getInputOptionStr(eInputOptions pInputOption);
 
    /**
     * \brief Returns a string version of an eBorderStyle value.
@@ -542,7 +541,7 @@ namespace cxBase {
     *
     * @return A string representation of the eBorderStyle value
     */
-   string getBorderStyleStr(eBorderStyle pBorderStyle);
+   std::string getBorderStyleStr(eBorderStyle pBorderStyle);
 
    /**
     * \brief Returns a string version of an eInputType value.
@@ -551,7 +550,7 @@ namespace cxBase {
     *
     * @return A string representation of the value
     */
-   string getInputTypeStr(eInputTypes pInputType);
+   std::string getInputTypeStr(eInputTypes pInputType);
 
    /**
     * \brief Handler for system signals
@@ -574,7 +573,7 @@ namespace cxBase {
     *
     * @return True if the user chose yes, or false otherwise.
     */
-   bool promptYesNo(const string& pMessage, const string& pTitle = "",
+   bool promptYesNo(const std::string& pMessage, const std::string& pTitle = "",
                     long pButtons = cxYES_NO);
 
    /**
@@ -630,7 +629,7 @@ namespace cxBase {
     *  enumeration).
     * @param pAttrs This will contain the attributes for the item.
     */
-   void getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs);
+   void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs);
 
 
    /** 
@@ -673,7 +672,7 @@ namespace cxBase {
     *
     * @return attr_t that corresponds with that string
     */
-   attr_t getAttr(const string& pAttr);
+   attr_t getAttr(const std::string& pAttr);
 
    /**
     * \brief Returns a string version of an ncurses attribute.
@@ -682,7 +681,7 @@ namespace cxBase {
     *
     * @return A descriptive string version of the attribute
     */
-   string getAttrStr(attr_t pAttr);
+   std::string getAttrStr(attr_t pAttr);
 
    /**
     * \brief Returns a string version of an e_WidgetItems value.
@@ -692,7 +691,7 @@ namespace cxBase {
     *
     * @return The string version of the item
     */
-   string getWidgetItemStr(e_WidgetItems pItem);
+   std::string getWidgetItemStr(e_WidgetItems pItem);
 
    /**
     * \brief Sets the key that should be used to clear the "Keyword" input
@@ -721,7 +720,7 @@ namespace cxBase {
     * 
     * @return string "" on success otherwise message
     */
-   string dump(bool pFancy=false, const string& pFilename="");
+   std::string dump(bool pFancy=false, const std::string& pFilename="");
 
    /**
     * \brief Returns whether a key is a navigational key, according to
@@ -760,9 +759,9 @@ namespace cxBase {
     * @param pWin A pointer to an ncurses window structure to get contents
     *  from.  If this is nullptr, curscr will be used.
     * 
-    * @return the "string" value of the 
+    * @return the "string" value of the screen
     */
-   string getString(int pRow, int pCol, int pNumber, WINDOW *pWin = nullptr);
+   std::string getString(int pRow, int pCol, int pNumber, WINDOW *pWin = nullptr);
 
    /** 
     * @brief Look for a string on the screen (for debugging/testing)
@@ -775,7 +774,7 @@ namespace cxBase {
     * 
     * @return bool true if we were able to find the string, false otherwise
     */
-   bool findString(const string& pSearch, int& pRow, int& pCol, WINDOW *pWin = nullptr);
+   bool findString(const std::string& pSearch, int& pRow, int& pCol, WINDOW *pWin = nullptr);
 
 } // end of namespace cxBase
 

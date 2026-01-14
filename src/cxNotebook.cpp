@@ -7,6 +7,10 @@
 #include <exception>
 #include <typeinfo> // for try/catch
 #include <list>
+using std::string;
+using std::list;
+using std::vector;
+using std::map;
 using cxStringUtils::TrimSpaces;
 using cxStringUtils::Find;
 using std::list;

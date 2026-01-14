@@ -7,7 +7,12 @@
 #include <set>
 #include <iterator>
 #include <typeinfo>
+using std::string;
 using std::set;
+using std::map;
+using std::pair;
+using std::make_pair;
+using std::vector;
 using std::insert_iterator;
 using cxBase::stringWithoutHotkeyChars;
 

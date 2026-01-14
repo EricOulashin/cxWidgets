@@ -14,12 +14,9 @@
 #ifdef WANT_TIMEOUT
 #include <sys/signal.h> // For sigaction
 #endif
+#include <string>
 #include <map>
 #include <set>
-using std::map;
-using std::make_pair;
-using std::pair;
-using std::set;
 
 // Forward declaration
 class cxMultiLineInput;
@@ -125,10 +122,10 @@ class cxInput : public cxWindow {
        */
       explicit cxInput(cxWindow *pParentWindow = nullptr, int pRow = 0,
                        int pCol = 0, int pWidth = DEFAULT_WIDTH,
-                       const string& pLabel = "",
+                       const std::string& pLabel = "",
                        eBorderStyle pBorderStyle = eBS_NOBORDER,
                        eInputOptions pInputOption = eINPUT_EDITABLE,
-                       bool pExitOnFull = false, string *pExtVal = nullptr);
+                       bool pExitOnFull = false, std::string *pExtVal = nullptr);
 
       /**
        * \brief Copy constructor
@@ -169,13 +166,13 @@ class cxInput : public cxWindow {
        * Returns the label for the input
        * @return The label associated with the input
        */
-      virtual string getLabel() const;
+      virtual std::string getLabel() const;
 
       /**
        * Sets the label for the input
        * @param pLabel The new label
        */
-      virtual void setLabel(const string& pLabel);
+      virtual void setLabel(const std::string& pLabel);
 
       /**
        * \brief Clears the input value
@@ -200,7 +197,7 @@ class cxInput : public cxWindow {
        * @param pRemoveTrailingSpaces Whether or not to remove trailing spaces.  Defaults to false.
        * @return The user's input
        */
-      virtual string getValue(bool pRemoveLeadingSpaces = false, bool pRemoveTrailingSpaces = false) const;
+      virtual std::string getValue(bool pRemoveLeadingSpaces = false, bool pRemoveTrailingSpaces = false) const;
 
       /**
        * Sets the input text
@@ -208,20 +205,20 @@ class cxInput : public cxWindow {
        * @param pRefresh Whether or not to refresh the input (defaults to false)
        * @return Whether or not the new value is valid.
        */
-      virtual bool setValue(const string& pValue, bool pRefresh = false);
+      virtual bool setValue(const std::string& pValue, bool pRefresh = false);
 
       /**
        * Returns the pointer to the "external" variable storing user input.
        * @return Pointer to location of input, if external input set
        */
-      string* getExtValue() const;
+      std::string* getExtValue() const;
 
       /**
        * Setter for the "external" user value variable pointer.
        * @param pExtVal The new pointer to the external variable
        * @param pRefresh Whether or not to refresh the input
        */
-      void setExtValue(string *pExtVal, bool pRefresh = false);
+      void setExtValue(std::string *pExtVal, bool pRefresh = false);
 
       /**
        * Accessor for mExitOnFull
@@ -312,13 +309,13 @@ class cxInput : public cxWindow {
        * Sets the validator string
        * @param pVString The new validator string
        */
-      void setValidator(const string& pVString);
+      void setValidator(const std::string& pVString);
 
       /**
        * Returns the validator string
        * @return The validator string
        */
-      const string& getValidatorStr() const;
+      const std::string& getValidatorStr() const;
 
       /**
        * Returns the maximum length of input that can be accepted
@@ -371,7 +368,7 @@ class cxInput : public cxWindow {
        * @param pText The text to be validated
        * @return Whether or not the text is valid
        */
-      virtual bool textIsValid(const string& pText) const;
+      virtual bool textIsValid(const std::string& pText) const;
 
       /**
        * \brief Sets the label color
@@ -428,7 +425,7 @@ class cxInput : public cxWindow {
        *
        * @return A blank string
        */
-      static string clearInput(void* theInput, void* unused);
+      static std::string clearInput(void* theInput, void* unused);
 
       /**
        * Sets a validator function to be run before focus is lost.
@@ -711,7 +708,7 @@ class cxInput : public cxWindow {
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(string *pFunctionRetval = nullptr);
+      virtual bool runOnFocusFunction(std::string *pFunctionRetval = nullptr);
 
       /**
        * \brief Returns a pointer to the parent window.  If the cxInput
@@ -769,7 +766,7 @@ class cxInput : public cxWindow {
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
 
       /**
        * \brief Runs the input's validator function and returns its return
@@ -779,7 +776,7 @@ class cxInput : public cxWindow {
        * @return The return value of the validator function, or a blank string
        *  if the validator function is not set.
        */
-      virtual string runValidatorFunction() const;
+      virtual std::string runValidatorFunction() const;
 
       /**
        * \brief Sets the amount of time (in seconds) that the input should
@@ -804,7 +801,7 @@ class cxInput : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Toggles the option to force text to be upper-case.
@@ -847,15 +844,15 @@ class cxInput : public cxWindow {
       /**
        * \brief Label attributes
        */
-      set<attr_t> mLabelAttrs;
+      std::set<attr_t> mLabelAttrs;
       /**
        * \brief Read-only data attributes
        */
-      set<attr_t> mDataReadonlyAttrs;
+      std::set<attr_t> mDataReadonlyAttrs;
       /**
        * \brief Editable data attributes
        */
-      set<attr_t> mDataEditableAttrs;
+      std::set<attr_t> mDataEditableAttrs;
 
       /**
        * \brief Looks for a function tied to the last keypress and
@@ -923,14 +920,14 @@ class cxInput : public cxWindow {
 
       // The following member is set if this input is in a cxMultiLineInput.
       cxMultiLineInput *mParentMLInput;
-      string mValue; // Holds the user's input
+      std::string mValue; // Holds the user's input
       // mName is an alternative means of identifying the input (by name).
-      string mName;
+      std::string mName;
       // mExtValue points to an "external" location to load/store the user's input
       //  (basically, it will be used for user input storage as well as mValue,
       //  but the value in this input will always be the what mExtValue contains).
       //  If nullptr, then it won't be used.
-      string *mExtValue;
+      std::string *mExtValue;
       int mInputStartX;  // Starting X cursor position for text input
       int mYPos;         // Y cursor position for input
       int mInputLen;     // Valid length of input
@@ -982,7 +979,7 @@ class cxInput : public cxWindow {
       //  pCheckPrintable: Whether or not to check whether the last key
       //   pressed is a printable character before grabbing the value.
       //   Defaults to true.
-      void getInputText(string& pValue, int pX, bool pCheckPrintable = true);
+      void getInputText(std::string& pValue, int pX, bool pCheckPrintable = true);
 
       // Performs a 'backspace' behavior.  This was written as a facilitator for
       //  setFocus().
@@ -990,7 +987,7 @@ class cxInput : public cxWindow {
       //  y: The current vertical cursor position
       //  x: The current horizontal cursor position
       //  prevInput: The last contents of the input
-      inline void doBackspace(int y, int x, string& prevInput);
+      inline void doBackspace(int y, int x, std::string& prevInput);
 
       // Enables the attributes in mValueAttrs.
       inline void enableValueAttrs();
@@ -1007,7 +1004,7 @@ class cxInput : public cxWindow {
       //  updatePrevInput: Whether or not to update the previous input value
       //  prevInput: The previous input value
       long doInputLoop(int x, int y, int rightLimit,
-                       bool updatePrevInput, string& prevInput);
+                       bool updatePrevInput, std::string& prevInput);
 
       // Adds a key to the list of keys that will stop the input
       //  loop.
@@ -1038,7 +1035,7 @@ class cxInput : public cxWindow {
 
       // Runs the function pointed to by mOnKeyFunction, and returns the return
       //  value of the function.
-      string runOnKeyFunction() const;
+      std::string runOnKeyFunction() const;
 
       // This is for copying a cxInput - This copies one of the cxFunction
       //  pointers (mOnKeyFunction, mValidatorFunction) from the other input.

@@ -12,6 +12,13 @@ using std::copy;
 using std::insert_iterator;
 using std::front_insert_iterator;
 using std::make_pair;
+using std::string;
+using std::vector;
+using std::set;
+using std::list;
+using std::deque;
+using std::map;
+using std::pair;
 using cxStringUtils::SplitStringRegex;
 using cxStringUtils::toString;
 

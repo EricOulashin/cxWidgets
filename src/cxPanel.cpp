@@ -6,6 +6,9 @@
 #include "cxMultiForm.h"
 #include <typeinfo>  // for try/catch
 #include <exception> // for try/catch
+#include <map>
+using std::string;
+using std::map;
 
 // Note to developers: When calling the panel's top(), bottom(), or height(),
 //  fully scope them, as in cxPanel::top(), cxPanel::bottom(), cxPanel::height().

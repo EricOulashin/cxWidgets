@@ -2,6 +2,12 @@
 
 #include "cxMultiForm.h"
 #include "cxBase.h"
+#include <map>
+#include <utility>
+using std::string;
+using std::vector;
+using std::map;
+using std::pair;
 
 cxMultiForm::cxMultiForm(cxWindow *pParentWindow, int pRow,
                int pCol, int pHeight,

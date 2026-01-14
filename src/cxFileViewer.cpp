@@ -4,6 +4,9 @@
 #include "cxFileViewer.h"
 #include "cxStringUtils.h"
 #include <fstream>
+using std::string;
+using std::set;
+using std::map;
 using std::ifstream;
 
 cxFileViewer::cxFileViewer(cxWindow *pParentWindow, const string& pFilename,

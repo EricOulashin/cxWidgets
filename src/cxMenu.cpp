@@ -18,6 +18,12 @@
 #include <set>
 #include <stdexcept> // For std::out_of_range exception
 #include <cstdlib>   // For tolower()
+using std::string;
+using std::map;
+using std::multimap;
+using std::make_pair;
+using std::set;
+using std::vector;
 using cxBase::stringWithoutHotkeyChars;
 using cxBase::messageBox;
 using cxStringUtils::Find;

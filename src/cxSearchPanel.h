@@ -9,6 +9,7 @@
 #include "cxPanel.h"
 #include "cxForm.h"
 #include "cxMenu.h"
+#include <string>
 
 /**
   * \brief This class is based on cxPanel, and it contains a cxForm at the top
@@ -35,8 +36,8 @@ class cxSearchPanel : public cxPanel {
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
-                       const string& pFormTitle = "",
-                       const string& pMenuTitle = "",
+                       const std::string& pFormTitle = "",
+                       const std::string& pMenuTitle = "",
                        eBorderStyle pFormBorderStyle = eBS_SINGLE_LINE,
                        eBorderStyle pMenuBorderStyle = eBS_SINGLE_LINE);
 
@@ -86,12 +87,12 @@ class cxSearchPanel : public cxPanel {
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
       virtual cxMultiLineInput* appendToForm(int pRow, int pCol, int pHeight,
-                                     int pWidth, const string& pLabel,
-                                     const string& pValidator = "",
-                                     const string& pHelpString = "",
+                                     int pWidth, const std::string& pLabel,
+                                     const std::string& pValidator = "",
+                                     const std::string& pHelpString = "",
                                      eInputOptions pInputKind = eINPUT_EDITABLE,
-                                     const string& pName = "",
-                                     string *pExtValue = nullptr);
+                                     const std::string& pName = "",
+                                     std::string *pExtValue = nullptr);
 
       /**
        * \brief Adds a combo box to the form.  Returns a pointer to the new input.
@@ -114,12 +115,12 @@ class cxSearchPanel : public cxPanel {
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
       virtual cxComboBox* appendComboBoxToForm(int pRow, int pCol, int pHeight,
-                                     int pWidth, const string& pLabel,
-                                     const string& pValidator = "",
-                                     const string& pHelpString = "",
+                                     int pWidth, const std::string& pLabel,
+                                     const std::string& pValidator = "",
+                                     const std::string& pHelpString = "",
                                      eInputOptions pInputKind = eINPUT_EDITABLE,
-                                     const string& pName = "",
-                                     string *pExtValue = nullptr);
+                                     const std::string& pName = "",
+                                     std::string *pExtValue = nullptr);
 
       /**
        * \brief Adds a string item to the end of the menu.
@@ -132,9 +133,9 @@ class cxSearchPanel : public cxPanel {
        * @param pType The kind of menu item (from the cxMenuItemType
        *  enumeration in cxMenuItemType.h)
        */
-      virtual void appendToMenu(const string& pDisplayText, long pReturnCode,
-                          const string& pHelpString = "",
-                          const string& pItemText = "",
+      virtual void appendToMenu(const std::string& pDisplayText, long pReturnCode,
+                          const std::string& pHelpString = "",
+                          const std::string& pItemText = "",
                           cxMenuItemType pType = cxITEM_NORMAL);
 
       /**
@@ -148,8 +149,8 @@ class cxSearchPanel : public cxPanel {
        * @param pType The kind of menu item (from the cxMenuItemType
        *  enumeration in cxMenuItemType.h)
        */
-      virtual void appendToMenu(const string& pDisplayText, const string& pHelpString = "",
-                                const string& pItemText = "",
+      virtual void appendToMenu(const std::string& pDisplayText, const std::string& pHelpString = "",
+                                const std::string& pItemText = "",
                                 cxMenuItemType pType = cxITEM_NORMAL);
 
       /**
@@ -356,7 +357,7 @@ class cxSearchPanel : public cxPanel {
        *
        * @return The name of the cxWidgets class ("cxSearchPanel")
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Sets a function to be called when the enter key is pressed on
@@ -686,7 +687,7 @@ class cxSearchPanel : public cxPanel {
        *
        * @return The text of the item selected from the menu
        */
-      virtual string getSelectedItem(bool pDisplayText = true) const;
+      virtual std::string getSelectedItem(bool pDisplayText = true) const;
 
       /**
        * \brief Makes the form be the current window
@@ -732,16 +733,16 @@ class cxSearchPanel : public cxPanel {
       //  shift-tab in the cxForm.  If they are on the first input, it will go
       //  to the last input on the form.  Otherise, it will go to the previous
       //  input as usual.
-      static string formReverseNavigation(void *theSearchPanel, void *unused);
+      static std::string formReverseNavigation(void *theSearchPanel, void *unused);
 
       // This is an event function for when the user presses the ESCAPE in
       //  the cxMenu.  It will clear the form fields, the menu items, and 
       //  apply focus to the first field on the form.
-      static string menuOnESC(void *theSearchPanel, void *unused);
+      static std::string menuOnESC(void *theSearchPanel, void *unused);
 
       // This is an event function for when the user selects an item in the
       //  menu.
-      static string menuOnSelect(void *theSearchPanel, void *unused);
+      static std::string menuOnSelect(void *theSearchPanel, void *unused);
 };
 
 #endif

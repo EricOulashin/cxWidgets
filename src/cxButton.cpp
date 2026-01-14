@@ -2,6 +2,7 @@
 
 #include "cxButton.h"
 #include "cxKeyDefines.h"
+using std::string;
 
 cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
                    int pWidth, const string& pLabel, eBorderStyle pBorderStyle)

@@ -24,7 +24,17 @@
 #include "cxMenu.h"
 #include "cxForm.h"
 #include "cxStringUtils.h"
+#include <vector>
+#include <map>
+#include <iostream>
+using std::string;
 using std::set;
+using std::list;
+using std::vector;
+using std::map;
+using std::ofstream;
+using std::cerr;
+using std::endl;
 using cxStringUtils::toString;
 using cxStringUtils::isPrintable;
 
@@ -69,7 +79,7 @@ namespace cxBase {
 void cxBase::init(bool pEnableMouse) {
    WINDOW* tmpWindow=initscr();         // initialize the curses library
    if (tmpWindow == nullptr) {
-      std::cerr << "Warning: initscr() returned a nullptr pointer" << std::endl;
+      cerr << "Warning: initscr() returned a nullptr pointer" << endl;
       throw(cxWidgetsException("Warning: initscr() returned a nullptr pointer."));
    }
    //trace(TRACE_DISABLE);

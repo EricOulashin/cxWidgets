@@ -7,22 +7,23 @@
 //  function can be overridden.
 
 #include "cxMultiLineInput.h"
+#include <string>
 
 class floatingPtInputWithRightLabel : public cxMultiLineInput {
    public:
       explicit floatingPtInputWithRightLabel(cxWindow *pParentWindow = nullptr,
                                 int pRow = 0, int pCol = 0, int pHeight = 1,
                                 int pWidth = DEFAULT_WIDTH,
-                                const string& pLabel = "",
+                                const std::string& pLabel = "",
                                 eBorderStyle pBorderStyle = eBS_NOBORDER,
                                 eInputOptions pInputOption = eINPUT_EDITABLE,
-                                string *pExtValue = nullptr);
+                                std::string *pExtValue = nullptr);
 
       ~floatingPtInputWithRightLabel();
 
       // In addition do doing the per-key validation, this will update the
       //  right label.
-      string onKeypress();
+      std::string onKeypress();
 };
 
 #endif

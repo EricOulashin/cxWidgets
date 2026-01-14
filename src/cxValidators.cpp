@@ -3,6 +3,7 @@
 #include "cxValidators.h"
 #include "cxMultiLineInput.h"
 #include <cctype> // For isprint()
+using std::string;
 
 string cxValidators::intOnKeyValidator(void *theInput, void *clearOnSpace) {
    if (theInput == nullptr) {

@@ -4,7 +4,6 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include <string>
-using std::string;
 
 /** \class cxWidgetsException
  *  \brief Represents an exception in cxWidgets
@@ -27,7 +26,7 @@ class cxWidgetsException {
        *
        * @param pErrorMsg A string describing an error
        */
-      explicit cxWidgetsException(const string& pErrorMsg = "");
+      explicit cxWidgetsException(const std::string& pErrorMsg = "");
 
       virtual ~cxWidgetsException();
 
@@ -36,7 +35,7 @@ class cxWidgetsException {
        *
        * @return The error message
        */
-      const string& getErrorMsg() const;
+      const std::string& getErrorMsg() const;
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to
@@ -45,10 +44,10 @@ class cxWidgetsException {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    private:
-      string mErrorMsg;
+      std::string mErrorMsg;
 };
 
 #endif
