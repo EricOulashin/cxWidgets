@@ -49,8 +49,8 @@ class cxTimer {
 
    private:
       cxFunction4 mFunction; // The function to run after the delay
-      unsigned mDelay; // The delay in MS
-      int mPID; // The process ID of wait()
+      unsigned int mDelay;   // The delay in MS
+      int mPID = -1;         // The process ID of wait()
 
       // Waits a number of milliseconds equal to mDelay
       //  and then runs the function.

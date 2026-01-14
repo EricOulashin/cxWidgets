@@ -35,9 +35,7 @@ cxComboBox::cxComboBox(cxWindow *pParentWindow,
             (pHeight > 1 ? pHeight-1 : 1),
             (pBorderStyle == eBS_NOBORDER ? pWidth-(int)pLabel.length() :
                 pWidth-(int)pLabel.length()-2),
-            "", nullptr, nullptr, eBS_SINGLE_LINE),
-     mUseAltMenuItemText(false),
-     mRunValidatorFunction(true)
+            "", nullptr, nullptr, eBS_SINGLE_LINE)
 {
    // Bring the menu to the top, so that it (probably) won't have to be
    //  brought to the top when shown.

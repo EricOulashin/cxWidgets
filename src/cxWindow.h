@@ -2403,9 +2403,9 @@ class cxWindow : public cxObject {
    protected:
 
       /**
-       * \brief Everything in the window is written here
+       * \brief Everything in the window is written here; this is an nCurses window structure
        */
-      WINDOW *mWindow;  // Everything in the window is written here
+      WINDOW *mWindow = nullptr;
 
       /**
        * \brief Contains the text to be shown inside the window (note: the
@@ -2451,24 +2451,24 @@ class cxWindow : public cxObject {
       std::map<std::pair<int, int>, attr_t> mSpecialCharAttrs;
 
       // Colors for the various elements
-      short mMessageColorPair;
-      short mTitleColorPair;
-      short mStatusColorPair;
-      short mBorderColorPair;
+      short mMessageColorPair = eWHITE_BLUE;
+      short mTitleColorPair = eGRAY_BLUE;
+      short mStatusColorPair = eBROWN_BLUE;
+      short mBorderColorPair = eGRAY_BLUE;
 
-      eHPosition mHorizTitleAlignment;   // Horizontal title alignment
-      eHPosition mHorizMessageAlignment; // Horizontal message alignment
-      eHPosition mHorizStatusAlignment;  // Horizontal status alignment
+      eHPosition mHorizTitleAlignment = eHP_LEFT;   // Horizontal title alignment
+      eHPosition mHorizMessageAlignment = eHP_LEFT; // Horizontal message alignment
+      eHPosition mHorizStatusAlignment = eHP_LEFT;  // Horizontal status alignment
 
-      bool mDrawMessage; // Whether or not to draw the message
-      bool mDrawSpecialChars; // Whether or not to draw the "special" chars
+      bool mDrawMessage = true;      // Whether or not to draw the message
+      bool mDrawSpecialChars = true; // Whether or not to draw the "special" chars
 
-      cxFunction *mOnFocusFunction; // Function for when focus is gained
-      cxFunction *mOnLeaveFunction; // Function for when focus is lost
-      bool mIsModal;   // Whether or not the window is being shown modally
+      cxFunction *mOnFocusFunction = nullptr; // Function for when focus is gained
+      cxFunction *mOnLeaveFunction = nullptr; // Function for when focus is lost
+      bool mIsModal = false;   // Whether or not the window is being shown modally
       // mLeaveNow can be set true by exitNow() or quitNow() if an external
       //  function wants the window object to leave its input loop.
-      bool mLeaveNow;
+      bool mLeaveNow = false;
       // This map contains pointers to functions to be called for various
       //  keypresses.
       std::map<int, cxFunction*> mKeyFunctions;
@@ -2769,40 +2769,40 @@ class cxWindow : public cxObject {
       bool onLeaveFunctionIsSet() const;
 
    private:
-      PANEL *mPanel;              // For layered window management
-      cxWindow *mExtTitleWindow;  // Optionally used for the title instead of the title line.
-      cxWindow *mExtStatusWindow; // Optionally used for status instead
-                                  //  of the status line.
-      cxWindow *mTitleParent;     // Pointer to a window using me for its title
-      cxWindow *mStatusParent;    // Pointer to a window using me for its status
-      std::string mExtTitleTemp;       // Keeps track of old external title window text
-      std::string mExtStatusTemp;      // Keeps track of old external status window text
-      cxWindow *mParentWindow;    // Pointer to the parent window (can be nullptr for none)
-      cxWindowPtrContainer mSubWindows; // Contains subwindows for this window
-      bool mFocus;                 // Whether or not the window has focus
-      eBorderStyle mBorderStyle;   // Border style
-      bool mEnabled;               // Whether or not the window is enabled
-      bool mDisableCursorOnShow;   // Whether or not to disable the cursor in show()
-      int mLastKey;   // The last key typed by the user during an input loop
-      bool mChangeColorsOnFocus; // Whether or not to apply colors upon setting focus
-      bool mShowSubwinsForward;  // If true, the subwindows will be shown in
-                                 //  forward order; if false, they will be shown
-                                 //  in reverse order.
-      bool mShowSelfBeforeSubwins; // Whether or not to show this window before
-                                   //  showing the subwindows
-      long mReturnCode; // Keeps track of the return code set by showModal()
-      bool mRunOnFocus; // Whether or not to run the onFocus function
-      bool mRunOnLeave; // Whether or not to run the onLeave function
+      PANEL *mPanel = nullptr;            // For layered window management
+      cxWindow *mExtTitleWindow;          // Optionally used for the title instead of the title line.
+      cxWindow *mExtStatusWindow;         // Optionally used for status instead
+                                          //  of the status line.
+      cxWindow *mTitleParent = nullptr;   // Pointer to a window using me for its title
+      cxWindow *mStatusParent = nullptr;  // Pointer to a window using me for its status
+      std::string mExtTitleTemp;          // Keeps track of old external title window text
+      std::string mExtStatusTemp;         // Keeps track of old external status window text
+      cxWindow *mParentWindow;            // Pointer to the parent window (can be nullptr for none)
+      cxWindowPtrContainer mSubWindows;   // Contains subwindows for this window
+      bool mFocus = false;                // Whether or not the window has focus
+      eBorderStyle mBorderStyle;          // Border style
+      bool mEnabled = true;               // Whether or not the window is enabled
+      bool mDisableCursorOnShow = true;   // Whether or not to disable the cursor in show()
+      int mLastKey = NOKEY;               // The last key typed by the user during an input loop
+      bool mChangeColorsOnFocus = false;  // Whether or not to apply colors upon setting focus
+      bool mShowSubwinsForward = true;    // If true, the subwindows will be shown in
+                                          //  forward order; if false, they will be shown
+                                          //  in reverse order.
+      bool mShowSelfBeforeSubwins = true; // Whether or not to show this window before
+                                          //  showing the subwindows
+      long mReturnCode = cxID_EXIT;       // Keeps track of the return code set by showModal()
+      bool mRunOnFocus = true;            // Whether or not to run the onFocus function
+      bool mRunOnLeave = true;            // Whether or not to run the onLeave function
       // mTitleStrings and mStatusStrings keep track of horizontal positions
-      //  and strings to write for the title and status lines, respectively.
+      // and strings to write for the title and status lines, respectively.
       std::map<int, std::string> mTitleStrings;
       std::map<int, std::string> mStatusStrings;
       // mName provides an alternate way to identify a window.
       std::string mName;
-      bool mBorderTop;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderBottom; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderLeft;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderRight;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mBorderTop = true;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mBorderBottom = true; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mBorderLeft = true;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mBorderRight = true;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
 
       //// Helper functions
 

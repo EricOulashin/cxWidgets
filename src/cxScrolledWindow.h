@@ -391,17 +391,17 @@ class cxScrolledWindow : public cxWindow {
       int getSubWinWidth() const;
 
    private:
-      WINDOW *mSubWindow; // For scrolling
-      int mSubWinHeight;  // The height of the subwindow
-      int mSubWinWidth;   // The width of the subwindow
-      int mLineNumber;    // The topmost line# being shown from mMessageLines
-      int mHScrollOffset; // Horizontal scrolling offset
-      int mSearchKey;     // Key to use for searching
-      int mGoToKey;       // Key to use to go to a specific line#
-      int mAltPgUpKey;    // Alternate key for a pageUp
-      int mAltPgDownKey;   // Alternate key for a pageDown
-      std::string mSearchKeyword; // Previous keyword used for searching
-      bool mUseLastKeyword; // Whether or not to use mSearchKeyword for searching
+      WINDOW *mSubWindow = nullptr; // For scrolling
+      int mSubWinHeight = 0;        // The height of the subwindow
+      int mSubWinWidth = 0;         // The width of the subwindow
+      int mLineNumber = 0;          // The topmost line# being shown from mMessageLines
+      int mHScrollOffset = 0;       // Horizontal scrolling offset
+      int mSearchKey = DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY;        // Key to use for searching
+      int mGoToKey = DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY;            // Key to use to go to a specific line#
+      int mAltPgUpKey = DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY;     // Alternate key for a pageUp
+      int mAltPgDownKey = DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY; // Alternate key for a pageDown
+      std::string mSearchKeyword;   // Previous keyword used for searching
+      bool mUseLastKeyword = true;  // Whether or not to use mSearchKeyword for searching
 
       // Functions to be run at various points in the input loop
       cxFunction4 mLoopStartFunction; // At the start of each cycle

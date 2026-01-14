@@ -23,18 +23,11 @@ cxPanel::cxPanel(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
    : cxWindow(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, pMessage,
               pStatus, pBorderStyle, pExtTitleWindow, pExtStatusWindow,
               pMessageUnderlines),
-     mCycleWin(true),
-     mLastWindow(nullptr),
      // mWindowIter is initialized to mWindows.begin(), but it will be
      //  invalidated when a window is added to the panel.  mWindowIter is
      //  reset in appendWindowPtr() (which is called by append()) to make sure
      //  that it is still valid.
-     mWindowIter(mWindows.begin()),
-     mExitOnLeaveLast(false),
-     mExitOnLeaveFirst(false),
-     mAllowExit(true),
-     mAllowQuit(true),
-     mShowPanelWindow(true)
+     mWindowIter(mWindows.begin())
 {
 } // constructor
 
@@ -1418,7 +1411,6 @@ cxPanel::cxPanel(const cxPanel& pThatPanel)
      mExitOnLeaveFirst(pThatPanel.mExitOnLeaveFirst),
      mAllowExit(pThatPanel.mAllowExit),
      mAllowQuit(pThatPanel.mAllowQuit),
-     mQuitNow(pThatPanel.mQuitNow),
      mShowPanelWindow(pThatPanel.mShowPanelWindow)
 {
 }

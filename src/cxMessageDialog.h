@@ -142,8 +142,8 @@ class cxMessageDialog : public cxDialog {
       long doInputLoop();
 
    private:
-      cxButton *mOKBtn;          // OK/Yes button
-      cxButton *mCancelBtn;      // Cancel/No button
+      cxButton *mOKBtn = nullptr;     // OK/Yes button
+      cxButton *mCancelBtn = nullptr; // Cancel/No button
 
       // Dis-allow show() for this class
       inline long show(bool pBringToTop = true, bool pShowSubwindows = true);

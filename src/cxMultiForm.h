@@ -742,18 +742,16 @@ class cxMultiForm : public cxForm {
    private:
       typedef std::vector<cxForm*> formPtrContainer;
       formPtrContainer mForms; // Contains pointers to the subforms
-      int mCurrentForm;        // The index of the subform that currently has focus
-      bool mQuitNow;           // The input loop will quit when
-                               //  this is set to true.
-      bool mCycleForm;         // Whether or not to cycle to the next or
-                               //  previous form in the input loop (this
-                               //  is set to false when setCurrentSubform()
-                               //  is called)
+      int mCurrentForm = 0;    // The index of the subform that currently has focus
+      bool mCycleForm = true;  // Whether or not to cycle to the next or
+                               // previous form in the input loop (this
+                               // is set to false when setCurrentSubform()
+                               // is called)
       // If this is set true, then when focus is set to the multiForm and the
       //  cursor is on the last form, then the cursor on the last form will be
       //  set to the last input on that form (motion is assumed to be moving
       //  backwards).
-      bool mAssumeMovingBackwards;
+      bool mAssumeMovingBackwards = true;
 
       // Frees the memory used by the subforms and clears
       //  mForms.

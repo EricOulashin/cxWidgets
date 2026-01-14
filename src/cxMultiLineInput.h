@@ -2095,12 +2095,12 @@ class cxMultiLineInput : public cxWindow {
        * \brief This is the function to be run to validate
        * \brief the text bfore focus is lost.
        */
-      cxFunction *mValidatorFunction;
+      cxFunction *mValidatorFunction = nullptr;
 
       /**
        * \brief Whether or not to run the onFocus and onLeave functions.
        */
-      bool mRunFocusFunctions;
+      bool mRunFocusFunctions = true;
 
       /**
        * \brief Copies another cxMultiLineInput's member variables
@@ -2224,38 +2224,38 @@ class cxMultiLineInput : public cxWindow {
       typedef std::vector<cxInput*> cxInputPtrContainer;
       cxInputPtrContainer mInputs; // The collection of single-line inputs
       // mExtValue points to an "external" location to load/store the user's
-      //  input (basically, it will be used for user input storage as well as
-      //  mValue, but the value in this input will always be the what mExtValue
-      //  contains).  If nullptr, then it won't be used.
+      // input (basically, it will be used for user input storage as well as
+      // mValue, but the value in this input will always be the what mExtValue
+      // contains).  If nullptr, then it won't be used.
       std::string *mExtValue;
-      int mCurrentInputLine; // The index of the current single-line input
+      int mCurrentInputLine = 0; // The index of the current single-line input
       // If mEnterAlwaysExits is true, enter will exit the input loop if
-      //  the cursor is in the middle of one of the input lines; if
-      //  false, enter will go to the next input line and stay in
-      //  the input loop until the user presses enter on the last line.
-      bool mEnterAlwaysExits;
-      bool mReadOnlyOnLeave; // Make the input read-only when leaving showModal()?
-      bool mExitOnFull;      // Whether to exit automatically when full
-      bool mDoInputLoop;     // Whether to run the input loop on focus
-      bool mSkipIfReadOnly;  // Don't wait for input if read-only?
-      bool mRunValidatorFunction; // Controls whether or not the validator function should run
-      bool mUseClearKey;     // Use built-in clear key?
+      // the cursor is in the middle of one of the input lines; if
+      // false, enter will go to the next input line and stay in
+      // the input loop until the user presses enter on the last line.
+      bool mEnterAlwaysExits = true;
+      bool mReadOnlyOnLeave = false;     // Make the input read-only when leaving showModal()?
+      bool mExitOnFull = true;           // Whether to exit automatically when full
+      bool mDoInputLoop = true;          // Whether to run the input loop on focus
+      bool mSkipIfReadOnly = true;       // Don't wait for input if read-only?
+      bool mRunValidatorFunction = true; // Controls whether or not the validator function should run
+      bool mUseClearKey = true;          // Use built-in clear key?
 
       // Whether or not to run the validator function when the user is
       //  navigating in reverse (i.e., with the up arrow or shift-tab).
-      bool mValidateOnReverse;
+      bool mValidateOnReverse = true;
 
       // mParentForm is a pointer to a cxForm, in case the input appears on a
-      //  cxForm.  This can be nullptr.
-      cxForm *mParentForm;
+      //  cxForm.  This can be null.
+      cxForm *mParentForm = nullptr;
 
       // If mApplyAttrDefaults is true, some attributes will be applied to
       //  the input when its kind is set.
-      bool mApplyAttrDefaults;
+      bool mApplyAttrDefaults = true;
 
       // mRanFunctionAndShouldExit keeps track of whether the input ran a key
       //  function that was set up to have the input exit when it was done.
-      bool mRanFunctionAndShouldExit;
+      bool mRanFunctionAndShouldExit = false;
 
       // mSkipValidatorKeys keeps track of keys used with key functions where
       //  we don't want to run the validator function.
@@ -2285,35 +2285,35 @@ class cxMultiLineInput : public cxWindow {
       // mAutoGenerateExtendedHelp specifies whether or not the extended help
       //  should be auto-generated from the list of valid input strings and
       //  their help texts.
-      bool mAutoGenerateExtendedHelp;
+      bool mAutoGenerateExtendedHelp = false;
 
       // mRangeLowDouble and mRangeHighDouble define low & high numeric values
       //  for floating-point numeric range validation.  If both are 0, that
       //  means any number is valid.
-      long double mRangeLowDouble;
-      long double mRangeHighDouble;
+      long double mRangeLowDouble = 0.0;
+      long double mRangeHighDouble = 0.0;
       // mRagneLowInt and mRangeLowHigh define low & high numeric values for
       //  whole numeric range validation.  If both are 0, that means any number
       //  is valid.
-      long int mRangeLowInt;
-      long int mRangeHighInt;
+      long int mRangeLowInt = 0;
+      long int mRangeHighInt = 0;
 
       // This bool specifies whether or not the validator function should
       //  display a message box when the input is invalid.
-      bool mValidatorFuncMessageBox;
+      bool mValidatorFuncMessageBox = false;
 
-      bool mAllowBlank; // Allow a blank value?
+      bool mAllowBlank = true; // Allow a blank value?
 
       // mExtendedHelp can contain long or more verbose help text.  You can
       //  also set the color & attribute for the extended help text.
       std::string mExtendedHelp;
       e_cxColors mExtendedHelpColor;
-      attr_t mExtendedHelpAttribute;
+      attr_t mExtendedHelpAttribute = A_NORMAL;
       // mExtendedHelpKeys specifies keys that can be pressed to display the
       //  extended help.  mUseExtendedHelpKeys specifies whether or not to
       //  use them.
       std::set<int> mExtendedHelpKeys;
-      bool mUseExtendedHelpKeys;
+      bool mUseExtendedHelpKeys = true;
 
       // mRightLabel is a window that will display an additional label to
       //  the right of the input.  mRightLabelOffset is the distance between
@@ -2322,11 +2322,11 @@ class cxMultiLineInput : public cxWindow {
       int mRightLabelOffset;
       bool mShowRightLabel; // Whether or not to display the right label
 
-      int mMaxInputLength;  // The maximum length of input acceptable
+      int mMaxInputLength = 32000;  // The maximum length of input acceptable
 
       // mErrorState specifies a current error for the input (i.e., if
       //  validation failed).
-      eInputErrors mErrorState;
+      eInputErrors mErrorState = eNO_ERROR;
 
       // Disable the use of setHotkeyHighlighting from the
       //  outside.

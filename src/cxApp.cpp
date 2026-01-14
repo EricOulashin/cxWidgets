@@ -2,7 +2,6 @@
 // Note: This is not complete!
 
 cxApp::cxApp()
-   : mAppFrame(nullptr)
 {
 }
 

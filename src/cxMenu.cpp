@@ -37,30 +37,8 @@ cxMenu::cxMenu(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
                cxWindow *pExtStatusWindow, eBorderStyle pBorderStyle)
    : cxWindow(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, "", "",
               pBorderStyle, pExtTitleWindow, pExtStatusWindow),
-     mSubWindow(nullptr),
      mSubWinHeight((getBorderStyle() == eBS_NOBORDER) ? height() : height()-2),
-     mSubWinWidth((getBorderStyle() == eBS_NOBORDER) ? width() : width()-2),
-     mCurrentMenuItem(0),
-     mTopMenuItem(0),
-     mAltPgUpKey(DEFAULT_CXMENU_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXMENU_ALT_PGDOWN_KEY),
-     mSearchKey(DEFAULT_CXMENU_SEARCH_KEY),
-     mClearOnSearch(false),
-     mCaseSensitiveSearch(false),
-     mCustomStatus(false),
-     mAllowQuit(true),
-     mAllowExit(true),
-     mSelectableItemExists(false),
-     mWrap(false),
-     mWaitForInputIfEmpty(true),
-     mOnSelectItemFunction(nullptr),
-     mItemHotkeyIndex(0),
-     mLastItemHotkey(NOKEY),
-     mExitWhenLeaveFirst(false),
-     mExitWhenLeaveLast(false),
-     mRefreshItemsWhenModal(false),
-     mNumParentMenus(0),
-     mLastInputWasMouseEvent(false)
+     mSubWinWidth((getBorderStyle() == eBS_NOBORDER) ? width() : width()-2)
 {
    // Create the subwindow (for the list of items)
    if (getBorderStyle() == eBS_NOBORDER) {
@@ -101,7 +79,6 @@ cxMenu::cxMenu(const cxMenu& pThatMenu)
               pThatMenu.getBorderStyle(), pThatMenu.getExtTitleWindow(),
               pThatMenu.getExtStatusWindow()),
      mMenuSelectionAttrs(pThatMenu.mMenuSelectionAttrs),
-     mSubWindow(nullptr),
      mSubWinHeight(pThatMenu.mSubWinHeight),
      mSubWinWidth(pThatMenu.mSubWinWidth),
      mCurrentMenuItem(pThatMenu.mCurrentMenuItem),
@@ -124,7 +101,6 @@ cxMenu::cxMenu(const cxMenu& pThatMenu)
      mItemTypes(pThatMenu.mItemTypes),
      mAltItemText(pThatMenu.mAltItemText),
      mUnselectableItems(pThatMenu.mUnselectableItems),
-     mOnSelectItemFunction(nullptr),
      mItemHotkeyIndex(pThatMenu.mItemHotkeyIndex),
      mLastItemHotkey(pThatMenu.mLastItemHotkey),
      mExitWhenLeaveFirst(pThatMenu.mExitWhenLeaveFirst),
@@ -1556,8 +1532,7 @@ bool cxMenu::itemWasSelected() const {
                 (mItemTypes[menuItem] == cxITEM_POPUPMENU)) {
                // Since the item is a submenu, mSubMenus should have an entry
                //  for menuItem, but check anyway, just in case.
-               map<int, cxMenu*>::const_iterator iter =
-                                          mSubMenus.find(menuItem);
+               map<int, cxMenu*>::const_iterator iter = mSubMenus.find(menuItem);
                if (iter != mSubMenus.end()) {
                   retval = iter->second->itemWasSelected();
                }

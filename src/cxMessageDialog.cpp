@@ -11,9 +11,7 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
                    const string& pMessage,
                    long pStyle,
                    const string& pStatus)
-   : cxDialog(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus),
-     mOKBtn(nullptr),
-     mCancelBtn(nullptr)
+   : cxDialog(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus)
 {
    // Set variables for the starting column & row
    //  & total width of the buttons
@@ -134,9 +132,7 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, const string& pTitle, 
 cxMessageDialog::cxMessageDialog(const cxMessageDialog& pThatDialog)
    : cxDialog(pThatDialog.getParent(), pThatDialog.top(), pThatDialog.left(),
               pThatDialog.height(), pThatDialog.width(), pThatDialog.getTitle(),
-              pThatDialog.getMessage(), pThatDialog.getStatus()),
-     mOKBtn(nullptr),
-     mCancelBtn(nullptr)
+              pThatDialog.getMessage(), pThatDialog.getStatus())
 {
 
    // Copy the OK and Cancel buttons

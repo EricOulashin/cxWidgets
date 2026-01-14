@@ -424,13 +424,13 @@ class cxComboBox : public cxMultiLineInput {
 
    private:
       cxMenu mMenu;             // The drop-down menu
-      bool mUseAltMenuItemText; // Whether or not to use the alternate text for menu items
+      bool mUseAltMenuItemText = false; // Whether or not to use the alternate text for menu items
       set<int> mDropDownKeys;   // Keys that show the drop-down menu
       // mRunValidatorFunction controls whether or not the validator function
       //  should run.  Note that cxMultiLineInput has this same bool too;
       //  however, cxComboBox will disable that one because cxComboBox will
       //  run the validator.
-      bool mRunValidatorFunction;
+      bool mRunValidatorFunction = true;
 
       // This is a helper for doInputLoop().  This shows the drop-down menu if
       //  it's enabled.  This will return a return code to be used for the

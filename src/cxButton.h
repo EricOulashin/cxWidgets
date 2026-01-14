@@ -23,6 +23,7 @@
 #include "cxWindow.h"
 #include "cxFunction.h"
 #include <string>
+#include <memory>
 
 class cxButton : public cxWindow {
    public:
@@ -200,10 +201,7 @@ class cxButton : public cxWindow {
       // mOnClickFunction is a pointer to a function that should fire when
       //  the user presses the enter key (if the mouse was supported, this would
       //  also run when the user clicks the button).
-      cxFunction* mOnClickFunction;
-
-      // Frees the memory used by mOnClick function and sets it to nullptr.
-      void freeOnClickFunction();
+      std::shared_ptr<cxFunction> mOnClickFunction;
 
       // Copies the onClick function from another cxButton.  This is used by
       //  the copy constructor and the = operator.

@@ -919,56 +919,56 @@ class cxInput : public cxWindow {
               cxMultiLineInput *pParentMLInput);
 
       // The following member is set if this input is in a cxMultiLineInput.
-      cxMultiLineInput *mParentMLInput;
+      cxMultiLineInput *mParentMLInput = nullptr;
       std::string mValue; // Holds the user's input
       // mName is an alternative means of identifying the input (by name).
       std::string mName;
       // mExtValue points to an "external" location to load/store the user's input
-      //  (basically, it will be used for user input storage as well as mValue,
-      //  but the value in this input will always be the what mExtValue contains).
-      //  If nullptr, then it won't be used.
+      // (basically, it will be used for user input storage as well as mValue,
+      // but the value in this input will always be the what mExtValue contains).
+      // If nullptr, then it won't be used.
       std::string *mExtValue;
-      int mInputStartX;  // Starting X cursor position for text input
-      int mYPos;         // Y cursor position for input
-      int mInputLen;     // Valid length of input
-      int mRightMax;     // Rightmost input boundary
-      bool mExitOnFull;  // Whether the input loop should stop when the input is full
+      int mInputStartX = 0;                 // Starting X cursor position for text input
+      int mYPos = 0;                        // Y cursor position for input
+      int mInputLen = 0;                    // Valid length of input
+      int mRightMax = 0;                    // Rightmost input boundary
+      bool mExitOnFull;                     // Whether the input loop should stop when the input is full
       // mExitOnBackspaceAtFront specifies whether the input loop should stop when
       //  backspace is pressed in the first input position.
-      bool mExitOnBackspaceAtFront;
-      bool mMustFill;    // Whether or not the user must fill the entire field
-      bool mMasked;      // Whether or not the field is masked (i.e. for a password)
-      char mMaskChar;    // The character to display for character masking
-      cxTextValidator mValidator; // For use with text validation
-      eInputOptions mInputOption; // Specifies normal, read-only, etc.
-      bool mExitOnFunctionKey;    // Whether or not to exit on function key press.
-      bool mHasFocus;             // Whether or not focus is set
+      bool mExitOnBackspaceAtFront = false;
+      bool mMustFill = false;               // Whether or not the user must fill the entire field
+      bool mMasked = false;                 // Whether or not the field is masked (i.e. for a password)
+      char mMaskChar = '*';                 // The character to display for character masking
+      cxTextValidator mValidator;           // For use with text validation
+      eInputOptions mInputOption;           // Specifies normal, read-only, etc.
+      bool mExitOnFunctionKey = false;      // Whether or not to exit on function key press.
+      bool mHasFocus = false;               // Whether or not focus is set
       // mReadOnlyOnLeave stores whether or not the input should go read-only
       //  when setFocus() finishes.
-      bool mReadOnlyOnLeave;
-      bool mCanBeEditable; // Whether or not the input can be editable
-      bool mJustStartedFocus; // True immediately when focus is set
+      bool mReadOnlyOnLeave = false;
+      bool mCanBeEditable = true;           // Whether or not the input can be editable
+      bool mJustStartedFocus = false;       // True immediately when focus is set
       // If mTrapNonAssignedFKeys is true, function keys that aren't
       //  assigned to anything won't cause the input to exit its
       //  input loop.
-      bool mTrapNonAssignedFKeys;
-      bool mDoInputLoop; // Whether or not to run the input loop on focus
+      bool mTrapNonAssignedFKeys = false;
+      bool mDoInputLoop = true; // Whether or not to run the input loop on focus
       // mCursorAfterInput specifies whether to place the cursor after the
       //  input text when showing the input.
-      bool mCursorAfterInput;
+      bool mCursorAfterInput = true;
 
       // Function to be run when a key is pressed
-      cxFunction *mOnKeyFunction; // Function to be run when a key is pressed
-      bool mRunOnKeyFunction; // Whether or not to run the onKey function
+      cxFunction *mOnKeyFunction = nullptr; // Function to be run when a key is pressed
+      bool mRunOnKeyFunction = true;        // Whether or not to run the onKey function
       // Function to be run to validate the text before focus is lost
-      cxFunction *mValidatorFunction;
+      cxFunction *mValidatorFunction = nullptr;
       short mValueColorPair;
-      bool mShowCursor; // Whether or not to show the cursor
+      bool mShowCursor = true;              // Whether or not to show the cursor
       // Whether or not to run the validator function when the user is
       //  navigating in reverse (i.e., with the up arrow or shift-tab).
-      bool mValidateOnReverse;
-      bool mForceUpper;    // Convert letters to upper-case
-      int mMaxInputLength; // Maximum length of text input
+      bool mValidateOnReverse = true;
+      bool mForceUpper = false;             // Convert letters to upper-case
+      int mMaxInputLength = 0;              // Maximum length of text input
 
       // Returns the text entered in the window, from mInputStartX (inclusive)
       //  to a given horizontal position (exclusive), as a string.
@@ -1022,7 +1022,7 @@ class cxInput : public cxWindow {
       // mTimeout is the length of time (in seconds) for the input to be idle
       //  before exiting the input loop.  mTimeoutSigaction is a struct that
       //  specifies the timeout function to call.
-      int mTimeout;
+      int mTimeout = 0;
       struct sigaction mTimeoutSigaction;
 
       // This function will get called upon idle timeout.  (This function will

@@ -18,10 +18,7 @@ cxMultiForm::cxMultiForm(cxWindow *pParentWindow, int pRow,
                bool pStacked)
    : cxForm(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle,
             pBorderStyle, pExtTitleWindow, pExtStatusWindow,
-            pAutoExit, pStacked),
-     mCurrentForm(0),
-     mCycleForm(true),
-     mAssumeMovingBackwards(true)
+            pAutoExit, pStacked)
 {
    setExitOnLeaveFirst(true);
 }

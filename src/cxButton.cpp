@@ -3,6 +3,7 @@
 #include "cxButton.h"
 #include "cxKeyDefines.h"
 using std::string;
+using std::make_shared;
 
 cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
                    int pWidth, const string& pLabel, eBorderStyle pBorderStyle)
@@ -17,9 +18,9 @@ cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
                    funcPtr4 pFunction, void *p1, void *p2, void *p3, void *p4)
    : cxWindow(pParentWindowPtr, pRow, pCol, pHeight, pWidth, "", pLabel, "",
               pBorderStyle),
-     mOnClickFunction(new cxFunction4(pFunction, p1, p2, p3, p4, false, false,
-                                      false))
+     mOnClickFunction(nullptr)
 {
+	mOnClickFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false, false, false);
 } // constructor
 
 cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
@@ -29,6 +30,7 @@ cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
               pBorderStyle),
      mOnClickFunction(new cxFunction2(pFunction, p1, p2, false, false, false))
 {
+	mOnClickFunction = make_shared<cxFunction2>(pFunction, p1, p2, false, false, false);
 } // constructor
 
 cxButton::cxButton(const cxButton& pButton)
@@ -41,9 +43,6 @@ cxButton::cxButton(const cxButton& pButton)
 } // copy constructor
 
 cxButton::~cxButton() {
-   if (mOnClickFunction != nullptr) {
-      delete mOnClickFunction;
-   }
 } // destructor
 
 cxButton& cxButton::operator =(const cxButton& pButton) {
@@ -147,19 +146,19 @@ long cxButton::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows)
 
 void cxButton::setOnClickFunction(funcPtr4 pFunction, void *p1, void *p2,
                                   void *p3, void *p4) {
-   freeOnClickFunction();
-   mOnClickFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false, false,
+   mOnClickFunction.reset();
+   mOnClickFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false, false,
                                       false);
 } // setOnClickFunction
 
 void cxButton::setOnClickFunction(funcPtr2 pFunction, void *p1, void *p2) {
-   freeOnClickFunction();
-   mOnClickFunction = new cxFunction2(pFunction, p1, p2, false, false, false);
+   mOnClickFunction.reset();
+   mOnClickFunction = make_shared<cxFunction2>(pFunction, p1, p2, false, false, false);
 } // setOnClickFunction
 
 void cxButton::setOnClickFunction(funcPtr0 pFunction) {
-   freeOnClickFunction();
-   mOnClickFunction = new cxFunction0(pFunction, false, false, false);
+   mOnClickFunction.reset();
+   mOnClickFunction = make_shared<cxFunction0>(pFunction, false, false, false);
 } // setOnClickFunction
 
 string cxButton::runOnClickFunction() {
@@ -189,23 +188,16 @@ void cxButton::doMouseBehavior() {
 // Private functions //
 ///////////////////////
 
-void cxButton::freeOnClickFunction() {
-   if (mOnClickFunction != nullptr) {
-      delete mOnClickFunction;
-      mOnClickFunction = nullptr;
-   }
-} // freeOnClickFunction
-
 void cxButton::copyOnClickFunction(const cxButton& pButton) {
-   freeOnClickFunction();
-   cxFunction *func = pButton.mOnClickFunction;
-   if (func != nullptr) {
-      string funcType = func->cxTypeStr();
+   mOnClickFunction.reset();
+   const cxFunction *rawPtr = pButton.mOnClickFunction.get();
+   if (rawPtr != nullptr) {
+      const string funcType = pButton.mOnClickFunction->cxTypeStr();
       if (funcType == "cxFunction0") {
          try {
-            cxFunction0* func0 = dynamic_cast<cxFunction0*>(func);
+            const cxFunction0* func0 = dynamic_cast<const cxFunction0*>(rawPtr);
             if (func0 != nullptr) {
-               mOnClickFunction = new cxFunction0(func0->getFunction(),
+               mOnClickFunction = make_shared<cxFunction0>(func0->getFunction(),
                                               func0->getUseReturnVal(),
                                               func0->getExitAfterRun(),
                                               func0->getRunOnLeaveFunction());
@@ -214,11 +206,9 @@ void cxButton::copyOnClickFunction(const cxButton& pButton) {
          catch (...) {
          }
       }
-      // Check the parameters of the function - if any of them point to
-      //  pButton, have them point to this one instead.
       else if (funcType == "cxFunction2") {
          try {
-            cxFunction2* func2 = dynamic_cast<cxFunction2*>(func);
+            const cxFunction2* func2 = dynamic_cast<const cxFunction2*>(rawPtr);
             if (func2 != nullptr) {
                void* params[] = { func2->getParam1(), func2->getParam2() };
                for (int i = 0; i < 2; ++i) {
@@ -226,7 +216,7 @@ void cxButton::copyOnClickFunction(const cxButton& pButton) {
                      params[i] = (void*)this;
                   }
                }
-               mOnClickFunction = new cxFunction2(func2->getFunction(),
+               mOnClickFunction = make_shared<cxFunction2>(func2->getFunction(),
                                               params[0], params[1],
                                               func2->getUseReturnVal(),
                                               func2->getExitAfterRun(),
@@ -238,7 +228,7 @@ void cxButton::copyOnClickFunction(const cxButton& pButton) {
       }
       else if (funcType == "cxFunction4") {
          try {
-            cxFunction4* func4 = dynamic_cast<cxFunction4*>(func);
+            const cxFunction4* func4 = dynamic_cast<const cxFunction4*>(rawPtr);
             if (func4 != nullptr) {
                void* params[] = { func4->getParam1(), func4->getParam4(),
                                   func4->getParam3(), func4->getParam4() };
@@ -247,7 +237,7 @@ void cxButton::copyOnClickFunction(const cxButton& pButton) {
                      params[i] = (void*)this;
                   }
                }
-               mOnClickFunction = new cxFunction4(func4->getFunction(),
+               mOnClickFunction = make_shared<cxFunction4>(func4->getFunction(),
                                               params[0], params[1], params[2],
                                               params[3],
                                               func4->getUseReturnVal(),

@@ -2908,7 +2908,7 @@ when the user presses the 'n' key.
       typedef std::vector<cxMultiLineInput*> inputPtrContainer;
       // mInputs stores the pointers to the form's inputs.
       inputPtrContainer mInputs;
-      int mCurrentInput; // Keeps track of the current input w/ focus
+      int mCurrentInput = 0; // Keeps track of the current input w/ focus
 
       // mInputPositions stores the upper-left y and x
       //  coordinates of the inputs - this way, we can keep
@@ -2931,14 +2931,14 @@ when the user presses the 'n' key.
        * \brief assigned to anything won't cause the input to exit its
        * \brief input loop.
        */
-      bool mTrapNonAssignedFKeys;
+      bool mTrapNonAssignedFKeys = true;
 
       /**
        * \brief mStartAtFirstInput keeps track of whether or not the form
        * \brief should always start at the first editable input when
        * \brief showModal() is called.
        */
-      bool mStartAtFirstInput;
+      bool mStartAtFirstInput = false;
 
       /**
        * \brief Makes a copy of a cxForm's member variables
@@ -3010,84 +3010,84 @@ when the user presses the 'n' key.
       //  of all inputs, if the form were in "stacked" mode.  It
       //  represents the total height of all inputs as if they
       //  were all stretched out with each above the next.
-      unsigned mTotalInputHeight;
+      unsigned int mTotalInputHeight = 0;
 
       bool mAutoExit; // Whether or not to auto exit the form
                       //  if the user presses enter/tab/etc. on
                       //  the last field.
-      bool mApplyAttrDefaults; // Whether or not to apply attribute defaults
+      bool mApplyAttrDefaults = true; // Whether or not to apply attribute defaults
       // mCustomStatus will be true if the user explicitly called setStatus()
       //  on the form, in which case the status text from the inputs will
       //  not be used as the status text for the form.
-      bool mCustomStatus;
+      bool mCustomStatus = false;
       // mEditableInputsExist will be true if at least 1
       //  editable input exists on the form.
-      bool mEditableInputsExist;
+      bool mEditableInputsExist = false;
       // If the user has put an input along one of the
       //  borders, mInputsOnBorder will be true.  Then,
       //  during scrolling, etc., the form will behave
       //  accordingly.
       bool mInputsOnBorder;
       cxMenu mJumpMenu;  // Menu to choose which input to jump to
-      int mInputJumpKey; // Hotkey to use for jumping to another input
-      bool mAllowQuit;   // Whether or not to allow the user to quit
-      bool mAllowExit;   // Whether or not to allow the user to exit
-      bool mExitOnLeaveFirst; // Whether or not to exit when the user
-                              //  leaves the first input when going backwards.
-      bool mWaitForInputIfEmpty; // Whether or not to get input in showModal()
-                                 //  if there are no editable inputs
-      bool mDataChanged;  // Whether or not any data has changed
+      int mInputJumpKey = DEFAULT_CXFORM_JUMPMENU_KEY; // Hotkey to use for jumping to another input
+      bool mAllowQuit = true;           // Whether or not to allow the user to quit
+      bool mAllowExit = true;           // Whether or not to allow the user to exit
+      bool mExitOnLeaveFirst = false;   // Whether or not to exit when the user
+                                        //  leaves the first input when going backwards.
+      bool mWaitForInputIfEmpty = true; // Whether or not to get input in showModal()
+                                        //  if there are no editable inputs
+      bool mDataChanged = false;        // Whether or not any data has changed
 
       // Functions to be run at various points in the input loop
       cxFunction4 mLoopStartFunction; // At the start of each cycle
       cxFunction4 mLoopEndFunction;   // At the end of each cycle
 
       // mParentMultiForm is a pointer to a cxMultiForm, in
-      //  case the form appears on a cxMultiForm (it can be
-      //  nullptr if it isn't on a cxMultiForm).
-      cxMultiForm *mParentMultiForm;
+      // case the form appears on a cxMultiForm (it can be
+      // nullptr if it isn't on a cxMultiForm).
+      cxMultiForm *mParentMultiForm = nullptr;
 
-      bool mCycleInput; // Whether or not to cycle to the next/previous
-                        //  input in the input loop (this is set false
-                        //  in setCurrentInput()).
+      // Whether or not to cycle to the next/previous input in the input loop
+      // (this is set false in setCurrentInput()).
+      bool mCycleInput = true;
 
       // mUseInputStatus specifies whether or not to use the status text of
-      //  the inputs as the status text for the form (in the bottom border
-      //  This is useful for inputs with help messages.
-      bool mUseInputStatus;
+      // the inputs as the status text for the form (in the bottom border
+      // This is useful for inputs with help messages.
+      bool mUseInputStatus = true;
 
       // mHasBeenShown specifies whether or not the cxForm has been shown.
-      //  It is set true when show() is called.  mHasBeenShown is used in
-      //  the unhide() method; if the form has been shown before, then the
-      //  inputs on the form will be unhidden in addition to the form.  The
-      //  reason for this is that if the form hasn't been shown, then the
-      //  text in the inputs wouldn't have been drawn, so unhiding the inputs
-      //  may cause holes on the screen.
-      bool mHasBeenShown;
+      // It is set true when show() is called.  mHasBeenShown is used in
+      // the unhide() method; if the form has been shown before, then the
+      // inputs on the form will be unhidden in addition to the form.  The
+      // reason for this is that if the form hasn't been shown, then the
+      // text in the inputs wouldn't have been drawn, so unhiding the inputs
+      // may cause holes on the screen.
+      bool mHasBeenShown = false;
 
       // mExtendedHelpKeys specifies keys that can be pressed to display
-      //  extended help for the inputs.  mUseExtendedHelpKeys specifies whether
-      //  or not to use them.
+      // extended help for the inputs.  mUseExtendedHelpKeys specifies whether
+      // or not to use them.
       std::set<int> mExtendedHelpKeys;
-      bool mUseExtendedHelpKeys;
+      bool mUseExtendedHelpKeys = true;
 
       // mAllValidateOnJumpKey specifies whether or not the validator function
-      //  for each input should run when the user presses the form's input jump
-      //  key.  If this is set to false, then when an input is appended,
-      //  mInputJumpKey will be added to the input's list of keys that skip the
-      //  validator function, allowing the user to jump to another input
-      //  whether or not the text in the input is valid.  Otherwise, they could
-      //  only jump if the input is valid.
-      bool mAllValidateOnJumpKey;
+      // for each input should run when the user presses the form's input jump
+      // key.  If this is set to false, then when an input is appended,
+      // mInputJumpKey will be added to the input's list of keys that skip the
+      // validator function, allowing the user to jump to another input
+      // whether or not the text in the input is valid.  Otherwise, they could
+      // only jump if the input is valid.
+      bool mAllValidateOnJumpKey = true;
 
       // mInputShowBools contains a boolean for each input
-      //  that specifies whether it should be shown.  This
-      //  was added to aid in scrolling the inputs in
-      //  stacked mode.  It's possible to have an input
-      //  on a top/bottom border and still have it showing,
-      //  but when we're scrolling the inputs, we will want
-      //  to make sure that showAllInputs() doesn't show
-      //  certain inputs.
+      // that specifies whether it should be shown.  This
+      // was added to aid in scrolling the inputs in
+      // stacked mode.  It's possible to have an input
+      // on a top/bottom border and still have it showing,
+      // but when we're scrolling the inputs, we will want
+      // to make sure that showAllInputs() doesn't show
+      // certain inputs.
       std::vector<bool> mInputShowBools;
 
       // mInputJumpIndexes stores indexes for inputs to
@@ -3101,15 +3101,15 @@ when the user presses the 'n' key.
       void fitToInputs();
 
       // Copies the current menu item's help string to the
-      //  status string, and optionally updates the status.
+      // status string, and optionally updates the status.
       inline void useInputStatusAsFormStatus(bool refreshStatus = false);
 
       // Selects the next editable input.  Returns true if the current input
-      //  was the last input, or false otherwise.
+      // was the last input, or false otherwise.
       bool selectNextInput();
 
       // Selects the previous editable input.  Returns true if the current
-      //  input was the first input, or false otherwise.
+      // input was the first input, or false otherwise.
       bool selectPrevInput();
 
       // The following functions are helpers for selectNextInput().
@@ -3127,18 +3127,18 @@ when the user presses the 'n' key.
       inline int lowestTopSide() const;
 
       // Returns the index in mInputs that has the next lowest
-      //  top side of an input, or -1 if one isn't found.
+      // top side of an input, or -1 if one isn't found.
       inline int inputNextLowestTop(int topSide);
 
       // Returns the index in mInputs that has the next lowest
-      //  left side of an input, or -1 if one isn't found.
+      // left side of an input, or -1 if one isn't found.
       inline int inputNextLowestLeft(int leftSide);
 
       // Removes the last character in the current input if it
-      //  is a space.  (In testing, it was found that when
-      //  the user hits the TAB key to go to the next input, it
-      //  was getting an extra space for the current input.  This
-      //  is a kludge, but it works..)
+      // is a space.  (In testing, it was found that when
+      // the user hits the TAB key to go to the next input, it
+      // was getting an extra space for the current input.  This
+      // is a kludge, but it works..)
       inline void clearInputIfSpace();
 
       // Frees the memory used by the inputs
@@ -3148,28 +3148,28 @@ when the user presses the 'n' key.
       static std::string changeFocus(void *theForm, void *theIndex);
 
       // Scans a string for hotkeys and uses them for keys to press
-      //  to jump to a particular input.
+      // to jump to a particular input.
       // Parameters:
       //  pItemText: The text to scan for hotkeys
       //  pIndex: The index of the input to which to jump for the hotkeys
       void addJumpKeys(const std::string& pItemText, int pIndex);
 
       // Shows the input jump menu for the form and handles jumping
-      //  to another input upon the user's selection.
+      // to another input upon the user's selection.
       void showJumpMenu();
 
       // Returns the highest editable input index (or -1 if there are no inputs).
       int highestEditableInput() const;
 
       // Applies attribute defaults to an input.  This is meant for new inputs
-      //  being appended to the form (used in the append() methods).
+      // being appended to the form (used in the append() methods).
       //
       // Parameters:
       //  pInput: A pointer to an input to which to apply the attributes.
       void applyAttrDefaults(cxMultiLineInput *pInput);
 
       // Applies all the form's attributes to an input.  This meant for new
-      //  inputs being appended to the form (used in the append() methods).
+      // inputs being appended to the form (used in the append() methods).
       //
       // Parameters:
       //  pInput: A pointer to an input to which to apply the attributes.

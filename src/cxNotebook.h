@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 /** \class cxNotebook
  * \brief This class represents a notebook control, which manages multiple
@@ -690,19 +691,20 @@ class cxNotebook: public cxPanel {
       bool selectPrevWin();
 
    private:
-      std::vector<cxWindow*> mLabels; // These act as labels for the tabs
-      bool mLabelsOnTop;         // Can determine if the labels are on top or bottom
-      bool mLeftLabelSpace;      // Whether to have a space to the left of label text
-      bool mRightLabelSpace;     // Whether to have a space to the right of label text
-      int mCurrentPanelIndex;    // Index of the current panel
-      int mNextTabKey;           // The key to use to go to the next tab
-      int mPrevTabKey;           // The key to use to go to the previous tab
-      int mTabNavKey;            // The key to use to bring up a tab navigation menu
+      typedef std::vector<std::shared_ptr<cxWindow> > labelWinContainer;
+      labelWinContainer mLabels;      // These act as labels for the tabs
+      bool mLabelsOnTop;              // Can determine if the labels are on top or bottom
+      bool mLeftLabelSpace;           // Whether to have a space to the left of label text
+      bool mRightLabelSpace;          // Whether to have a space to the right of label text
+      int mCurrentPanelIndex = 0;     // Index of the current panel
+      int mNextTabKey = PAGE_DOWN;    // The key to use to go to the next tab
+      int mPrevTabKey = PAGE_UP;      // The key to use to go to the previous tab
+      int mTabNavKey;                 // The key to use to bring up a tab navigation menu
       std::string mAllDisabledMsg;    // Message to display when all windows are disabled
       std::string mNoWindowsMsg;      // Message to display when the notebook has no windows
       std::string mWindowDisabledMsg; // Message to display when a window is disabled
-      int mTabSpacing;           // # of spaces between the tabs
-      int mLastClickTabIndex;    // Index of the window that was clicked on
+      int mTabSpacing;                // # of spaces between the tabs
+      int mLastClickTabIndex = -1;    // Index of the window that was clicked on
       // mTabNavWrap controls whether "wrapping" occurs if user wants to
       //  navigate to the next/previous tab with the keyboard and they're
       //  on the last/first enabled tab.

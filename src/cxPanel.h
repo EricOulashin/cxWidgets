@@ -744,10 +744,10 @@ class cxPanel : public cxWindow {
    protected:
       typedef std::vector<cxWindow*> cxWindowPtrCollection;
       cxWindowPtrCollection mWindows; // The windows in the panel to cycle between
-      bool mCycleWin;          // Whether or not to cycle to the next/previous
+      bool mCycleWin = true;          // Whether or not to cycle to the next/previous
                                //  window in the input loop (this is set false
                                //  in setCurrentWindow()).
-      cxWindow *mLastWindow;   // The last window visited during the input loop
+      cxWindow *mLastWindow = nullptr;   // The last window visited during the input loop
 
       /**
        * \brief Returns whether any of the windows contained in mWindows are
@@ -786,22 +786,20 @@ class cxPanel : public cxWindow {
       friend class cxWindow;
 
       cxWindowPtrCollection::iterator mWindowIter; // To keep track of current window
-      bool mExitOnLeaveLast;   // Exit the input loop when leaving last window?
-      bool mExitOnLeaveFirst;  // Exit the input loop when leaving first window?
-      bool mAllowExit;         // Whether or not the user is allowed to exit
-      bool mAllowQuit;         // Whether or not the user is allowed to quit
-      // If mQuitNow is set to true while the panel is modal (via a hotkey
-      //  function, etc.), then the input loop will quit.
-      bool mQuitNow;
+      bool mExitOnLeaveLast = false;   // Exit the input loop when leaving last window?
+      bool mExitOnLeaveFirst = false;  // Exit the input loop when leaving first window?
+      bool mAllowExit = true;         // Whether or not the user is allowed to exit
+      bool mAllowQuit = true;         // Whether or not the user is allowed to quit
       // If mShowPanelWindow is true (default), the panel window
-      //  will be shown (in addition to the subwindows and the windows
-      //  in the panel).  If it is false, only the windows in the
-      //  panel will be shown.
-      bool mShowPanelWindow;
+      // will be shown (in addition to the subwindows and the windows
+      // in the panel).  If it is false, only the windows in the
+      // panel will be shown.
+      bool mShowPanelWindow = true;
 
       // Adds a cxWindow pointer to mWindows.  Also checks to see
-      //  if the cxWindow already has a cxPanel parent, and if so,
-      //  will remove the window from the other cxPanel.
+      // if the cxWindow already has a cxPanel parent, and if so,
+      // will remove the window from the other cxPanel.
+      //
       // Parameters:
       //  pWindow: A cxWindow pointer to be added to mWindows.
       //           This is assumed to be non-null.  A cxWindow pointer

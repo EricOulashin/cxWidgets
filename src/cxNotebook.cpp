@@ -14,6 +14,8 @@ using std::map;
 using cxStringUtils::TrimSpaces;
 using cxStringUtils::Find;
 using std::list;
+using std::shared_ptr;
+using std::make_shared;
 
 cxNotebook::cxNotebook(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
                        int pWidth, bool pLabelsOnTop, bool pLeftLabelSpace,
@@ -25,15 +27,11 @@ cxNotebook::cxNotebook(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
      mLabelsOnTop(pLabelsOnTop),
      mLeftLabelSpace(pLeftLabelSpace),
      mRightLabelSpace(pRightLabelSpace),
-     mCurrentPanelIndex(0),
-     mNextTabKey(PAGE_DOWN),
-     mPrevTabKey(PAGE_UP),
-     mTabNavKey(KEY_F(5)),
      mAllDisabledMsg("All windows in this notebook are disabled."),
      mNoWindowsMsg("This notebook has no windows."),
      mWindowDisabledMsg("That window is currently disabled."),
      mTabSpacing(pTabSpacing),
-     mLastClickTabIndex(-1),
+     mTabNavKey(KEY_F(5)),
      mTabNavWrap(pTabNavWrap)
 {
    // For a screen optimization, don't show the notebook's window when showing
@@ -42,11 +40,6 @@ cxNotebook::cxNotebook(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
 } // ctor
 
 cxNotebook::~cxNotebook() {
-   // Free the memory used by the label windows.
-   vector<cxWindow*>::iterator iter = mLabels.begin();
-   for (; iter != mLabels.end(); ++iter) {
-      delete(*iter);
-   }
 } // dtor
 
 void cxNotebook::setLabelsOnTop(bool pLabelsOnTop, bool pRefresh) {
@@ -70,35 +63,33 @@ void cxNotebook::setLabelsOnTop(bool pLabelsOnTop, bool pRefresh) {
       }
 
       // Move all the label windows into place.  Also, toggle their top/bottom
-      //  border options, and set up their special border characters so that
-      //  they all flow into each other.  Also, clear the panels' title &
-      //  status spaces.
-      cxWindow *iWindow = nullptr;
+      // border options, and set up their special border characters so that
+      // they all flow into each other.  Also, clear the panels' title &
+      // status spaces.
       // This loop uses the bracket operator with an index with mLabels, since
       //  we need an index for setLabelWinSpecialChars() anyway.
       unsigned numWins = mLabels.size();
       for (unsigned index = 0; index < numWins; ++index) {
-         iWindow = mLabels[index];
          // The cxWindow pointers shouldn't be nullptr, but check anyway, just to
          //  be sure.
-         if (iWindow != nullptr) {
+         if (mLabels[index] != nullptr) {
             // Move the window
-            iWindow->move(labelWinTop, iWindow->left(), false);
+            mLabels[index]->move(labelWinTop, mLabels[index]->left(), false);
             // Toggle its top/bottom border options
-            iWindow->toggleBorderTop(mLabelsOnTop);
-            iWindow->toggleBorderBottom(!mLabelsOnTop);
+            mLabels[index]->toggleBorderTop(mLabelsOnTop);
+            mLabels[index]->toggleBorderBottom(!mLabelsOnTop);
             // Set its special border characters
             setLabelWinSpecialChars(index);
             setupLabelBorder(index, true);
          }
       }
       // Move all the panel windows into place
-      vector<cxWindow*>::iterator winIter = mWindows.begin();
-      for (; winIter != mWindows.end(); ++winIter) {
+      for (cxWindow* window : mWindows)
+      {
          // The cxWindow pointers shouldn't be nullptr, but check anyway, just to
-         //  be sure.
-         if ((*winIter) != nullptr) {
-            (*winIter)->move(panelTop, (*winIter)->left(), false);
+         // be sure.
+         if (window != nullptr) {
+            window->move(panelTop, window->left(), false);
          }
       }
 
@@ -144,7 +135,7 @@ bool cxNotebook::setTabSpacing(int pTabSpacing, bool pRefresh) {
          //  are 0-based and 1 because the tab spacing is 0-based, i.e., a tab
          //  spacing of 0 means that the label windows share left & right
          //  borders).
-         vector<cxWindow*>::iterator iter = mLabels.begin();
+         labelWinContainer::iterator iter = mLabels.begin();
          rightmostEdge += (*iter)->width();
          ++iter;
          for (; iter != mLabels.end(); ++iter) {
@@ -204,7 +195,7 @@ long cxNotebook::show(bool pBringToTop, bool pShowSubwindows) {
       setupLabelBorder(mCurrentPanelIndex, false);
 
       // Show the label windows
-      vector<cxWindow*>::iterator labelIter = mLabels.begin();
+      labelWinContainer::iterator labelIter = mLabels.begin();
       for (; labelIter != mLabels.end(); ++labelIter) {
          // The cxWindow pointer shouldn't be nullptr, but check just in case.
          if ((*labelIter) != nullptr) {
@@ -279,7 +270,7 @@ void cxNotebook::hide(bool pHideSubwindows) {
    // Hide the panel
    cxPanel::hide(pHideSubwindows);
    // Hide the label windows
-   vector<cxWindow*>::iterator iter = mLabels.begin();
+   labelWinContainer::iterator iter = mLabels.begin();
    for (; iter != mLabels.end(); ++iter) {
       // The cxWindow pointers shouldn't be nullptr, but check just in case.
       if ((*iter) != nullptr) {
@@ -292,7 +283,7 @@ void cxNotebook::unhide(bool pUnhideSubwindows) {
    // Unhide the panel
    cxPanel::unhide(pUnhideSubwindows);
    // Unhide the label windows
-   vector<cxWindow*>::iterator iter = mLabels.begin();
+   labelWinContainer::iterator iter = mLabels.begin();
    for (; iter != mLabels.end(); ++iter) {
       // The cxWindow pointers shouldn't be nullptr, but check just in case.
       if ((*iter) != nullptr) {
@@ -352,89 +343,81 @@ cxPanel* cxNotebook::append(const string& pLabel, const string& pPanelName) {
       if (mLeftLabelSpace) { label = " "; }
       label += pLabel;
       if (mRightLabelSpace) { label += " "; }
-      // The 'new' operator may throw an exception or return a nullptr if it
-      //  can't allocate new memory.
-      cxWindow *labelWin = nullptr;
-      try {
-         labelWin = new cxWindow(nullptr, newLabelWinTop, newLabelWinLeft, 3,
-                                 labelWinWidth, "", label, "",
-                                 eBS_SINGLE_LINE);
-      }
-      catch (const std::bad_alloc& e) {
-         // Couldn't allocate memory for the new label window
-         labelWin = nullptr;
-      }
+      try
+      {
+         shared_ptr<cxWindow> labelWin = make_shared<cxWindow>(nullptr, newLabelWinTop, newLabelWinLeft, 3,
+                                                               labelWinWidth, "", label, "", eBS_SINGLE_LINE);
 
-      // If we were able to create the label window, then add it to mLabels
-      //  and create the panel.
-      if (labelWin != nullptr) {
-         // determine if we need to 'go topless' or 'go bottomless'!
-         if (mLabelsOnTop) {
-            labelWin->toggleBorderBottom(false);
-         }
-         else {
-            labelWin->toggleBorderTop(false);
-         }
-         // Add the label window to mLabels
-         mLabels.push_back(labelWin);
-         // Set up the special border characters for the label window so that
-         //  it blends in with the others
-         setLabelWinSpecialChars(mLabels.size()-1);
-
-         // Append a new panel
-         int panelRow = top();
-         int panelCol = left();
-         if (mLabelsOnTop) {
-            // The top row of the panel should be 2 rows down because the
-            //  bottom row of the label window windows will be on the same
-            //  row as the top row of the panels.
-            panelRow += 2;
-         }
-         try {
-            iPanel = new cxPanel(nullptr, panelRow, panelCol, height()-2, width(),
-                                 "", "", "", eBS_SINGLE_LINE);
-         }
-         catch (const std::bad_alloc& e) {
-            // Couldn't allocate memory for the new label window
-            iPanel = nullptr;
-         }
-
-         // If we were able to create the panel, we finally get to append it!
-         if (iPanel != nullptr) {
-            if (append(iPanel)) {
-               // Set pPanelName on the panel as well as the label window so that
-               //  we can identify it from either window.
-               iPanel->setName(pPanelName);
-               labelWin->setName(pPanelName);
-
-               // Set up mNextTabKey, mPrevTabkey, and mTabNavKey on the panel
-               //  as exit keys so that the keypress can bubble up to this
-               //  class.
-               iPanel->addExitKey(mNextTabKey, true, true);
-               iPanel->addExitKey(mPrevTabKey, true, true);
-               iPanel->addExitKey(mTabNavKey, true, true);
+         // If we were able to create the label window, then add it to mLabels
+         // and create the panel.
+         if (labelWin != nullptr) {
+            // determine if we need to 'go topless' or 'go bottomless'!
+            if (mLabelsOnTop) {
+               labelWin->toggleBorderBottom(false);
             }
             else {
-               // Uh oh, couldn't append the panel window..  Remove the label
-               //  window.
-               // Free the memory used by it
-               delete mLabels[mLabels.size()-1];
+               labelWin->toggleBorderTop(false);
+            }
+            // Add the label window to mLabels
+            mLabels.push_back(labelWin);
+            // Set up the special border characters for the label window so that
+            //  it blends in with the others
+            setLabelWinSpecialChars(mLabels.size()-1);
+
+            // Append a new panel
+            int panelRow = top();
+            int panelCol = left();
+            if (mLabelsOnTop) {
+               // The top row of the panel should be 2 rows down because the
+               //  bottom row of the label window windows will be on the same
+               //  row as the top row of the panels.
+               panelRow += 2;
+            }
+            try {
+               // TODO: Use shared_ptr for iPanel; refactor this function to return a shared_ptr
+               iPanel = new cxPanel(nullptr, panelRow, panelCol, height()-2, width(),
+                                    "", "", "", eBS_SINGLE_LINE);
+            }
+            catch (const std::bad_alloc& e) {
+               // Couldn't allocate memory for the new label window
+               iPanel = nullptr;
+            }
+
+            // If we were able to create the panel, we finally get to append it!
+            if (iPanel != nullptr) {
+               if (append(iPanel)) {
+                  // Set pPanelName on the panel as well as the label window so that
+                  //  we can identify it from either window.
+                  iPanel->setName(pPanelName);
+                  labelWin->setName(pPanelName);
+
+                  // Set up mNextTabKey, mPrevTabkey, and mTabNavKey on the panel
+                  //  as exit keys so that the keypress can bubble up to this
+                  //  class.
+                  iPanel->addExitKey(mNextTabKey, true, true);
+                  iPanel->addExitKey(mPrevTabKey, true, true);
+                  iPanel->addExitKey(mTabNavKey, true, true);
+               }
+               else {
+                  // Uh oh, couldn't append the panel window..  Remove the label
+                  // window.
+                  // Remove the cxWindow pointer from mLabels
+                  labelWinContainer::iterator iter = mLabels.end();
+                  --iter; // So it the iterator points to the last element
+                  mLabels.erase(iter, mLabels.end());
+               }
+            }
+            else {
+               // Uh-oh, iPanel is nullptr..  Remove the label window that we created
+               // for it.
                // Remove the cxWindow pointer from mLabels
-               vector<cxWindow*>::iterator iter = mLabels.end();
+               labelWinContainer::iterator iter = mLabels.end();
                --iter; // So it the iterator points to the last element
                mLabels.erase(iter, mLabels.end());
             }
          }
-         else {
-            // Uh-oh, iPanel is nullptr..  Remove the label window that we created
-            //  for it.
-            // Free the memory used by it
-            delete mLabels[mLabels.size()-1];
-            // Remove the cxWindow pointer from mLabels
-            vector<cxWindow*>::iterator iter = mLabels.end();
-            --iter; // So it the iterator points to the last element
-            mLabels.erase(iter, mLabels.end());
-         }
+      }
+      catch (...) {
       }
    }
 
@@ -679,7 +662,7 @@ string cxNotebook::getLabel(unsigned pIndex) const {
 string cxNotebook::getLabel(const string& pName) const {
    string label;
 
-   vector<cxWindow*>::const_iterator iter = mLabels.begin();
+   labelWinContainer::const_iterator iter = mLabels.begin();
    for (; iter != mLabels.end(); ++iter) {
       // The cxWindow pointers in mLabels shouldn't be nullptr, but check
       //  anyway, just to make sure..
@@ -724,8 +707,8 @@ bool cxNotebook::setLabel(unsigned pIndex, const string& pLabel, bool pRefresh) 
       // Add 2 to labelWinWidth to account for borders.
       labelWinWidth += 2;
       // Figure out what the new rightmost edge of all the label windows would
-      //  be - If it would be off the screen, then we don't want to change the
-      //  label.
+      // be - If it would be off the screen, then we don't want to change the
+      // label.
       int changeInWidth = labelWinWidth - mLabels[pIndex]->width();
       int rightmostEdge = mLabels[mLabels.size()-1]->right() + changeInWidth;
 
@@ -760,7 +743,7 @@ bool cxNotebook::setLabel(const string& pID, const string& pLabel,
 
    bool setIt = false;
    unsigned index = 0;
-   vector<cxWindow*>::iterator iter = mLabels.begin();
+   labelWinContainer::iterator iter = mLabels.begin();
    if (pIsLabel) {
       string winMessage;
       for (; iter != mLabels.end(); ++iter) {
@@ -807,7 +790,7 @@ void cxNotebook::setEnabled(bool pEnabled) {
    cxPanel::setEnabled(pEnabled);
    //  Call setEnabled() for all the label windows (which aren't in the
    //  notebook collection of windows).
-   vector<cxWindow*>::iterator iter = mLabels.begin();
+   labelWinContainer::iterator iter = mLabels.begin();
    for (; iter != mLabels.end(); ++iter) {
       // The cxWindow pointers in mLabels shouldn't be nullptr, but check anyway,
       //  just to be sure.
@@ -828,7 +811,7 @@ void cxNotebook::setEnabled(const string& pID, bool pEnabled, bool pIsTitle) {
 void cxNotebook::setNextTabKey(int pKey) {
    if (pKey != mNextTabKey) {
       // Remove the current next-tab key from all windows' lists of exit keys
-      vector<cxWindow*>::iterator iter = mWindows.begin();
+      cxWindowPtrCollection::iterator iter = mWindows.begin();
       for (; iter != mWindows.end(); ++iter) {
          (*iter)->removeExitKey(mNextTabKey);
       }
@@ -848,8 +831,8 @@ int cxNotebook::getNextTabKey() const {
 void cxNotebook::setPrevTabKey(int pKey) {
    if (pKey != mPrevTabKey) {
       // Remove the current previous-tab key from all windows' lists of exit
-      //  keys
-      vector<cxWindow*>::iterator iter = mWindows.begin();
+      // keys
+      cxWindowPtrCollection::iterator iter = mWindows.begin();
       for (; iter != mWindows.end(); ++iter) {
          (*iter)->removeExitKey(mPrevTabKey);
       }
@@ -869,7 +852,7 @@ int cxNotebook::getPrevTabKey() const {
 void cxNotebook::setTabNavKey(int pKey) {
    if (pKey != mTabNavKey) {
       // Remove the current tab nav key from all windows' lists of exit keys
-      vector<cxWindow*>::iterator iter = mWindows.begin();
+      cxWindowPtrCollection::iterator iter = mWindows.begin();
       for (; iter != mWindows.end(); ++iter) {
          (*iter)->removeExitKey(mTabNavKey);
       }
@@ -928,10 +911,8 @@ cxWindow* cxNotebook::removeWindow(unsigned pIndex) {
       // If the panel was removed (iWindow will not be nullptr), then remove the
       //  label window too.
       if (iWindow != nullptr) {
-         // Free the memory used by the label window
-         delete mLabels[pIndex];
          // Remove the label window pointer from mLabels
-         vector<cxWindow*>::iterator iter = mLabels.begin() + pIndex;
+         labelWinContainer::iterator iter = mLabels.begin() + pIndex;
          mLabels.erase(iter);
       }
 
@@ -1052,12 +1033,10 @@ bool cxNotebook::swap(int pWindow1Index, int pWindow2Index) {
        (pWindow1Index < (int)numWindows()) && (pWindow2Index >= 0) &&
        (pWindow2Index < (int)numWindows())) {
       // Call cxPanel's swap(), and if that succeeded, swap the label windows
-      //  too.
+      // too.
       retval = cxPanel::swap(pWindow1Index, pWindow2Index);
       if (retval) {
-         cxWindow* tmpWin = mLabels[pWindow1Index];
-         mLabels[pWindow1Index] = mLabels[pWindow2Index];
-         mLabels[pWindow2Index] = tmpWin;
+         mLabels[pWindow1Index].swap(mLabels[pWindow2Index]);
          // Move the label windows where they should be
          alignLabelWindows(false);
       }
@@ -1456,14 +1435,13 @@ void cxNotebook::showCurrentWindow(bool pApplyLabelAttr, bool pBringToTop) {
          // The window to show
          if (i == mCurrentPanelIndex) { 
             if (mWindows[mCurrentPanelIndex] != nullptr) {
-               cxWindow *labelWin = mLabels[mCurrentPanelIndex];
                // Make the label attribute be "different"
                if (pApplyLabelAttr) {
-                  labelWin->setAttr(eMESSAGE, labelHighlight);
+                  mLabels[mCurrentPanelIndex]->setAttr(eMESSAGE, labelHighlight);
                }
 
                // Show the label and the panel
-               labelWin->show(pBringToTop, false);
+               mLabels[mCurrentPanelIndex]->show(pBringToTop, false);
                mWindows[mCurrentPanelIndex]->show(pBringToTop, false);
             }
          }
@@ -1488,12 +1466,11 @@ void cxNotebook::showCurrentWindow(bool pApplyLabelAttr, bool pBringToTop) {
 
 void cxNotebook::setLabelWinSpecialChars(unsigned pIndex) {
    if ((pIndex >= 0) && (pIndex < mLabels.size())) {
-      cxWindow *labelWin = mLabels[pIndex];
       // The cxWindow pointers in mLabels shouldn't be nullptr, but check anyway
       //  just to be sure.
-      if (labelWin != nullptr) {
+      if (mLabels[pIndex] != nullptr) {
          // Clear the window's special characters
-         labelWin->clearSpecialChars();
+         mLabels[pIndex]->clearSpecialChars();
          // If the tabs tyle is having them together (sharing left & right
          //  borders), then add tee characters to the windows so that they
          //  flow together.
@@ -1509,14 +1486,14 @@ void cxNotebook::setLabelWinSpecialChars(unsigned pIndex) {
             if (pIndex < lastLabelWindowIndex) {
                // Add tee characters to the current window
                if (mLabelsOnTop) {
-                  labelWin->addSpecialChar(0, labelWin->width()-1, ACS_TTEE);
+                  mLabels[pIndex]->addSpecialChar(0, mLabels[pIndex]->width()-1, ACS_TTEE);
                }
                else {
-                  labelWin->addSpecialChar(labelWin->height()-1,
-                        labelWin->width()-1, ACS_BTEE);
+                  mLabels[pIndex]->addSpecialChar(mLabels[pIndex]->height()-1,
+                        mLabels[pIndex]->width()-1, ACS_BTEE);
                }
                // Add tee characters to the window on the right
-               cxWindow *rightLabelWin = mLabels[pIndex+1];
+               shared_ptr<cxWindow> rightLabelWin(mLabels[pIndex+1]);
                if (rightLabelWin != nullptr) {
                   if (mLabelsOnTop) {
                      rightLabelWin->addSpecialChar(0, 0, ACS_TTEE);
@@ -1533,13 +1510,13 @@ void cxNotebook::setLabelWinSpecialChars(unsigned pIndex) {
             //  mLabelsOnTop to see if it should go on the top or bottom.
             if (pIndex > 0) {
                if (mLabelsOnTop) {
-                  labelWin->addSpecialChar(0, 0, ACS_TTEE);
+                  mLabels[pIndex]->addSpecialChar(0, 0, ACS_TTEE);
                }
                else {
-                  labelWin->addSpecialChar(labelWin->height()-1, 0, ACS_BTEE);
+                  mLabels[pIndex]->addSpecialChar(mLabels[pIndex]->height()-1, 0, ACS_BTEE);
                }
                // Add tee characters to the window on the left
-               cxWindow *leftLabelWin = mLabels[pIndex-1];
+               shared_ptr<cxWindow> leftLabelWin(mLabels[pIndex-1]);
                if (leftLabelWin != nullptr) {
                   if (mLabelsOnTop) {
                      leftLabelWin->addSpecialChar(0, leftLabelWin->width()-1,
@@ -1588,7 +1565,6 @@ void cxNotebook::alignLabelWindows(bool pRefresh) {
    if (!mLabelsOnTop) {
       winRow = bottom() - 2;
    }
-   cxWindow *labelWin = nullptr;
    unsigned numLabels = mLabels.size();
    for (unsigned i = 0; i < numLabels; ++i) {
       // Set up the special border characters for the window.  (Note: It's
@@ -1597,13 +1573,12 @@ void cxNotebook::alignLabelWindows(bool pRefresh) {
       //  border characters, or none at all if it shouldn't have any.)
       setLabelWinSpecialChars(i);
       // Move the window (and optionally refresh the screen)
-      labelWin = mLabels[i];
       // The cxWindow pointers in mLabels shouldn't be nullptr, but check just
       //  in case.
-      if (labelWin != nullptr) {
-         labelWin->move(winRow, winCol, pRefresh);
+      if (mLabels[i] != nullptr) {
+         mLabels[i]->move(winRow, winCol, pRefresh);
          // Update winCol
-         winCol = labelWin->right() + mTabSpacing;
+         winCol = mLabels[i]->right() + mTabSpacing;
       }
    }
 

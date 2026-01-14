@@ -1027,34 +1027,34 @@ class cxMenu : public cxWindow {
       virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem);
 
    private:
-      WINDOW *mSubWindow;   // For scrolling
-      int mSubWinHeight;    // Height of the subwindow
-      int mSubWinWidth;     // Width of the subwindow
-      int mCurrentMenuItem; // Keeps track of the currently highlighted item
-      int mTopMenuItem;     // The index of the topmost menu item shown
-      int mAltPgUpKey;      // Alternate key for doing a pageUp
-      int mAltPgDownKey;    // Alternate key for doing a pageDown
-      int mSearchKey;       // Key to use for item searching
-      std::string mSearchText;        // For item searching
-      std::string mLastSearchText;    // For item searching
-      bool mClearOnSearch;       // Whether or not to clear the search text
-      bool mCaseSensitiveSearch; // Whether or not searches are case-sensitive
+      WINDOW *mSubWindow = nullptr;                      // For scrolling
+      int mSubWinHeight;                                 // Height of the subwindow
+      int mSubWinWidth;                                  // Width of the subwindow
+      int mCurrentMenuItem = 0;                          // Keeps track of the currently highlighted item
+      int mTopMenuItem = 0;                              // The index of the topmost menu item shown
+      int mAltPgUpKey = DEFAULT_CXMENU_ALT_PGUP_KEY;     // Alternate key for doing a pageUp
+      int mAltPgDownKey = DEFAULT_CXMENU_ALT_PGDOWN_KEY; // Alternate key for doing a pageDown
+      int mSearchKey = DEFAULT_CXMENU_SEARCH_KEY;        // Key to use for item searching
+      std::string mSearchText;                           // For item searching
+      std::string mLastSearchText;                       // For item searching
+      bool mClearOnSearch = false;                       // Whether or not to clear the search text
+      bool mCaseSensitiveSearch = false;                 // Whether or not searches are case-sensitive
       // mCustomStatus will be true if we're using custom
       //  status text (not the help text for the menu items)
-      bool mCustomStatus;
-      bool mAllowQuit;  // Whether or not to allow the user to quit
-      bool mAllowExit;  // Whether or not to allow the user to exit
-      bool mSelectableItemExists; // Whether or not a selectable item exists
-      bool mWrap;       // Whether or not to wrap around when scrolling
-      bool mWaitForInputIfEmpty; // Whether or not to get input in showModal()
-                                 //  if there are no menu items
-      std::vector<long> mReturnCodes;     // Return codes for the menu items
-      std::vector<std::string> mHelpStrings;   // Help strings for the menu items
-      std::vector<cxMenuItemType> mItemTypes; // Stores the type of each menu item
-      std::vector<std::string> mAltItemText;       // Alternate text for each item
+      bool mCustomStatus = false;
+      bool mAllowQuit = true;                            // Whether or not to allow the user to quit
+      bool mAllowExit = true;                            // Whether or not to allow the user to exit
+      bool mSelectableItemExists = false;                // Whether or not a selectable item exists
+      bool mWrap = true;                                 // Whether or not to wrap around when scrolling
+      bool mWaitForInputIfEmpty = true;                  // Whether or not to get input in showModal()
+                                                         // if there are no menu items
+      std::vector<long> mReturnCodes;                    // Return codes for the menu items
+      std::vector<std::string> mHelpStrings;             // Help strings for the menu items
+      std::vector<cxMenuItemType> mItemTypes;            // Stores the type of each menu item
+      std::vector<std::string> mAltItemText;             // Alternate text for each item
       // mSubMenus stores submenus for menu items.  The keys to this
-      //  map are the indexes in mMessageLines that the submenus belong
-      //  to.
+      // map are the indexes in mMessageLines that the submenus belong
+      // to.
       std::map<int, cxMenu*> mSubMenus;
       std::set<unsigned> mUnselectableItems; // Contains indexes of unselectable items
 
@@ -1063,8 +1063,8 @@ class cxMenu : public cxWindow {
       cxFunction4 mLoopEndFunction;   // At the end of each input loop iteration
 
       // mOnSelectItemFunction is a function that can be fired when the user
-      //  selects an item.
-      cxFunction* mOnSelectItemFunction;
+      // selects an item.
+      cxFunction* mOnSelectItemFunction = nullptr;
 
       // mItemHotkeys keeps track of which keys are mapped to which menu items.
       std::multimap<char, int> mItemHotkeys;
@@ -1075,25 +1075,25 @@ class cxMenu : public cxWindow {
       //  track of the "index" into mItemHotkeys of the current element with
       //  the hotkey that should be checked when the user presses a
       //  hotkey.
-      unsigned mItemHotkeyIndex;
-      int mLastItemHotkey; // Keeps track of the last hotkey that was pressed
-                       //  (If different, mItemHotkeyIndex will need to be reset
-                       //  to 0)
+      unsigned int mItemHotkeyIndex = 0;
+      // Keeps track of the last hotkey that was pressed If different,
+      // mItemHotkeyIndex will need to be reset to 0)
+      int mLastItemHotkey = NOKEY;
       // mExitWhenLeaveFirst and mExitWhenLeaveLast control whether the menu
       //  will exit the input loop when the user is scrolling through the menu
       //  items and leaves the first or  last menu item, respectively.
-      bool mExitWhenLeaveFirst;
-      bool mExitWhenLeaveLast;
+      bool mExitWhenLeaveFirst = false;
+      bool mExitWhenLeaveLast = false;
       // mRefreshItemsWhenModal controls whether or not the menu items will
       //  be refreshed when showModal() is called.
-      bool mRefreshItemsWhenModal;
+      bool mRefreshItemsWhenModal = false;
       // mNumParentMenus is incremented when a cxMenu is added to another menu
       //  as a pull-right or pop-up menu.  It is decremented when the menu is
       //  removed.
-      int mNumParentMenus;
+      int mNumParentMenus = 0;
       // mLastInputWasMouseEvent will be set true if the last input
       //  was a mouse event in the input loop.
-      bool mLastInputWasMouseEvent;
+      bool mLastInputWasMouseEvent = false;
 
       // Returns the index of the bottommost item to show in the subwindow.
       //  Note: If there are less items than will fill the menu, this returns
