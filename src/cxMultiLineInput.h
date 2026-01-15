@@ -31,6 +31,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <memory>
 
 enum eMLIF {
    eMLIF_COMMA_SEP = 0,
@@ -2095,7 +2096,7 @@ class cxMultiLineInput : public cxWindow {
        * \brief This is the function to be run to validate
        * \brief the text bfore focus is lost.
        */
-      cxFunction *mValidatorFunction = nullptr;
+      std::shared_ptr<cxFunction> mValidatorFunction;
 
       /**
        * \brief Whether or not to run the onFocus and onLeave functions.
@@ -2221,7 +2222,7 @@ class cxMultiLineInput : public cxWindow {
       friend class cxForm; // Because that class uses this class
       friend class cxInput;
 
-      typedef std::vector<cxInput*> cxInputPtrContainer;
+      typedef std::vector<std::shared_ptr<cxInput> > cxInputPtrContainer;
       cxInputPtrContainer mInputs; // The collection of single-line inputs
       // mExtValue points to an "external" location to load/store the user's
       // input (basically, it will be used for user input storage as well as

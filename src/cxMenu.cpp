@@ -24,6 +24,8 @@ using std::multimap;
 using std::make_pair;
 using std::set;
 using std::vector;
+using std::shared_ptr;
+using std::make_shared;
 using cxBase::stringWithoutHotkeyChars;
 using cxBase::messageBox;
 using cxStringUtils::Find;
@@ -119,9 +121,7 @@ cxMenu::~cxMenu() {
    //  used by the main window.)
    freeSubWindow();
    // Free the memory used by mOnSelectItemFunction
-   if (mOnSelectItemFunction != nullptr) {
-      delete mOnSelectItemFunction;
-   }
+   mOnSelectItemFunction.reset();
 }
 
 void cxMenu::append(const string& pDisplayText, long pReturnCode,
@@ -1603,7 +1603,7 @@ bool cxMenu::setOnSelectItemFunction(funcPtr4 pFunction, void *p1, void *p2,
    // Free the memory used by the current mOnSelectItemFunction, and then
    //  create it with the new options.
    freeOnSelectItemFunction();
-   mOnSelectItemFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
+   mOnSelectItemFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false,
                                            pExitAfterRun, pRunOnLeaveFunction);
    return(mOnSelectItemFunction != nullptr);
 } // setOnSelectItemFunction
@@ -1614,7 +1614,7 @@ bool cxMenu::setOnSelectItemFunction(funcPtr2 pFunction, void *p1, void *p2,
    // Free the memory used by the current mOnSelectItemFunction, and then
    //  create it with the new options.
    freeOnSelectItemFunction();
-   mOnSelectItemFunction = new cxFunction2(pFunction, p1, p2, false,
+   mOnSelectItemFunction = make_shared<cxFunction2>(pFunction, p1, p2, false,
                                            pExitAfterRun, pRunOnLeaveFunction);
    return(mOnSelectItemFunction != nullptr);
 } // setOnSelectItemFunction
@@ -1624,12 +1624,12 @@ bool cxMenu::setOnSelectItemFunction(funcPtr0 pFunction, bool pExitAfterRun,
    // Free the memory used by the current mOnSelectItemFunction, and then
    //  create it with the new options.
    freeOnSelectItemFunction();
-   mOnSelectItemFunction = new cxFunction0(pFunction, false, pExitAfterRun,
+   mOnSelectItemFunction = make_shared<cxFunction0>(pFunction, false, pExitAfterRun,
                                            pRunOnLeaveFunction);
    return(mOnSelectItemFunction != nullptr);
 } // setOnSelectItemFunction
 
-cxFunction* cxMenu::getOnSelectItemFunction() const {
+std::shared_ptr<cxFunction> cxMenu::getOnSelectItemFunction() const {
    return(mOnSelectItemFunction);
 } // getOnSelectItemFunction
 
@@ -3015,10 +3015,7 @@ void cxMenu::highlightItem(int pItemIndex) {
 } // highlightItem
 
 void cxMenu::freeOnSelectItemFunction() {
-   if (mOnSelectItemFunction != nullptr) {
-      delete mOnSelectItemFunction;
-      mOnSelectItemFunction = nullptr;
-   }
+   mOnSelectItemFunction.reset();
 } // freeOnSelectItemFunction
 
 void cxMenu::runOnSelectItemFunction(bool& pExitAfterRun,
@@ -3035,10 +3032,10 @@ void cxMenu::runOnSelectItemFunction(bool& pExitAfterRun,
 } // runOnSelectItemFunction
 
 void cxMenu::checkEventFunctionPointers(const cxMenu& pMenu) {
-   cxFunction *onSelectItemFunc = pMenu.mOnSelectItemFunction;
+   shared_ptr<cxFunction> onSelectItemFunc = pMenu.mOnSelectItemFunction;
    if (onSelectItemFunc != nullptr) {
       if (onSelectItemFunc->cxTypeStr() == "cxFunction0") {
-         cxFunction0* iFunc0 = dynamic_cast<cxFunction0*>(onSelectItemFunc);
+         const cxFunction0* iFunc0 = dynamic_cast<cxFunction0*>(onSelectItemFunc.get());
          if (iFunc0 != nullptr) {
             setOnSelectItemFunction(iFunc0->getFunction(),
                                     iFunc0->getExitAfterRun(),
@@ -3046,7 +3043,7 @@ void cxMenu::checkEventFunctionPointers(const cxMenu& pMenu) {
          }
       }
       else if (onSelectItemFunc->cxTypeStr() == "cxFunction2") {
-         cxFunction2* iFunc2 = dynamic_cast<cxFunction2*>(onSelectItemFunc);
+         const cxFunction2* iFunc2 = dynamic_cast<cxFunction2*>(onSelectItemFunc.get());
          if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
@@ -3060,7 +3057,7 @@ void cxMenu::checkEventFunctionPointers(const cxMenu& pMenu) {
          }
       }
       else if (onSelectItemFunc->cxTypeStr() == "cxFunction4") {
-         cxFunction4* iFunc4 = dynamic_cast<cxFunction4*>(onSelectItemFunc);
+         const cxFunction4* iFunc4 = dynamic_cast<cxFunction4*>(onSelectItemFunc.get());
          if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };

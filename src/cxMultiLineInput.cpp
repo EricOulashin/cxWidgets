@@ -12,6 +12,8 @@ using std::make_pair;
 using std::pair;
 using std::set;
 using std::map;
+using std::shared_ptr;
+using std::make_shared;
 using cxStringUtils::stringToLong;
 using cxStringUtils::stringToLongDouble;
 using cxStringUtils::toString;
@@ -53,8 +55,8 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
       int row = pRow+1; // Row # for the single-line inputs
       // Create the first input line (the label will be displayed
       //  with this one)
-      cxInput *input = new cxInput(nullptr, row, pCol+1, pWidth-2, pLabel,
-                                   eBS_NOBORDER, pInputOption, true, nullptr);
+      shared_ptr<cxInput> input = make_shared<cxInput>(nullptr, row, pCol+1, pWidth-2, pLabel,
+                                                       eBS_NOBORDER, pInputOption, true, nullptr);
       input->mParentMLInput = this;
       // The input should exit when a function key is pressed so that
       //  this multi-line input can catch it.
@@ -63,8 +65,7 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
 
       // Create the rest of the inputs (with blank labels)
       for (row = pRow+2; row < pRow+pHeight-1; ++row) {
-         cxInput *input = new cxInput(nullptr, row, pCol+1, pWidth-2, "",
-                                      eBS_NOBORDER, pInputOption, true, nullptr);
+         input = make_shared<cxInput>(nullptr, row, pCol+1, pWidth-2, "", eBS_NOBORDER, pInputOption, true, nullptr);
          input->mParentMLInput = this;
          // The input should exit when a function key is pressed so that
          //  this multi-line input can catch it.
@@ -86,16 +87,14 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
       int row = pRow; // Row # for the single-line inputs
       // Create the first input line (the label will be displayed
       //  with this one)
-      cxInput *input = new cxInput(nullptr, row, pCol, pWidth, pLabel,
-                                   eBS_NOBORDER, pInputOption, true, nullptr);
+      shared_ptr<cxInput> input = make_shared<cxInput>(nullptr, row, pCol, pWidth, pLabel, eBS_NOBORDER, pInputOption, true, nullptr);
       input->mParentMLInput = this;
       input->setExitOnFKey(true);
       mInputs.push_back(input);
 
       // Create the rest of the inputs (with blank labels)
       for (row = pRow+1; row < pRow+pHeight; ++row) {
-         cxInput *input = new cxInput(nullptr, row, pCol, pWidth, "",
-                                      eBS_NOBORDER, pInputOption, true, nullptr);
+         input = make_shared<cxInput>(nullptr, row, pCol, pWidth, "", eBS_NOBORDER, pInputOption, true, nullptr);
          input->mParentMLInput = this;
          input->setExitOnFKey(true);
          // The input should exit when the user presses backspace at the first
@@ -183,16 +182,20 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
      mErrorState(pThatInput.mErrorState)
 {
    // Copy the other input's single-line inputs
-   cxInput *myInput = nullptr;
+   shared_ptr<cxInput> myInput;
    cxInputPtrContainer::const_iterator iter = pThatInput.mInputs.begin();
    for(; iter != pThatInput.mInputs.end(); ++iter) {
-      myInput = new cxInput(**iter);
+      myInput = make_shared<cxInput>(**iter);
       myInput->mParentMLInput = this;
       if (mUseExtendedHelpKeys) {
+         for (int helpKey : mExtendedHelpKeys)
+            myInput->addExitKey(helpKey, false, true);
+         /*
          set<int>::iterator iter = mExtendedHelpKeys.begin();
          for (; iter != mExtendedHelpKeys.end(); ++iter) {
             myInput->addExitKey(*iter, false, true);
          }
+         */
       }
       mInputs.push_back(myInput);
    }
@@ -213,10 +216,6 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
 cxMultiLineInput::~cxMultiLineInput() {
    // Free the memory used by the cxInput pointers in mInputs
    freeInputs();
-   // Free the memory used by mValidatorFunction
-   if (mValidatorFunction != nullptr) {
-      delete mValidatorFunction;
-   }
 } // Destructor
 
 cxMultiLineInput& cxMultiLineInput::operator =(const cxMultiLineInput& pThatInput) {
@@ -964,8 +963,8 @@ void cxMultiLineInput::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
          eInputOptions inputKind = (eInputOptions)mInputs[0]->getInputOption();
 
          for (int i = oldHeight; i < pNewHeight; ++i) {
-            cxInput *input = new cxInput(nullptr, row, col, inputWidth, "",
-                                 eBS_NOBORDER, inputKind, true, nullptr);
+            shared_ptr<cxInput> input = make_shared<cxInput>(nullptr, row, col, inputWidth, "",
+                                                            eBS_NOBORDER, inputKind, true, nullptr);
             // Set the input's parent multi-line input to this input
             input->mParentMLInput = this;
             // Apply the attributes from the first input to the new input
@@ -1003,7 +1002,7 @@ void cxMultiLineInput::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
          int startIndex = numInputs - numInputsToRemove;
          // Free the memory used by the input pointers
          for (int i = startIndex; i < numInputs; ++i) {
-            delete mInputs[i];
+            mInputs[i].reset();
          }
 
          // Remove the input pointers from mInputs
@@ -1252,8 +1251,7 @@ bool cxMultiLineInput::setValidatorFunction(funcPtr4 pFunction, void *p1, void *
    //  given parameters.
    clearValidatorFunction();
    if (pFunction != nullptr) {
-      mValidatorFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
-                                           false, true);
+      mValidatorFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false, false, true);
       setIt = (mValidatorFunction != nullptr);
    }
    else {
@@ -1276,8 +1274,7 @@ bool cxMultiLineInput::setValidatorFunction(funcPtr2 pFunction, void *p1, void *
    //  given parameters.
    clearValidatorFunction();
    if (pFunction != nullptr) {
-      mValidatorFunction = new cxFunction2(pFunction, p1, p2, false, false,
-                                           true);
+      mValidatorFunction = make_shared<cxFunction2>(pFunction, p1, p2, false, false, true);
       setIt = (mValidatorFunction != nullptr);
    }
    else {
@@ -1300,7 +1297,7 @@ bool cxMultiLineInput::setValidatorFunction(funcPtr0 pFunction) {
    //  given parameters.
    clearValidatorFunction();
    if (pFunction != nullptr) {
-      mValidatorFunction = new cxFunction0(pFunction, false, false, true);
+      mValidatorFunction = make_shared<cxFunction0>(pFunction, false, false, true);
       setIt = (mValidatorFunction != nullptr);
    }
    else {
@@ -1318,10 +1315,7 @@ bool cxMultiLineInput::setValidatorFunction(funcPtr0 pFunction) {
 } // setValidatorFunction
 
 void cxMultiLineInput::clearValidatorFunction() {
-   if (mValidatorFunction != nullptr) {
-      delete mValidatorFunction;
-      mValidatorFunction = nullptr;
-   }
+   mValidatorFunction.reset();
 } // clearValidatorFunction
 
 bool cxMultiLineInput::isFull() const {
@@ -1911,10 +1905,14 @@ void cxMultiLineInput::getNavKeys(set<int>& pNavKeys) const {
 } // getNavKeys
 
 void cxMultiLineInput::setTimeout(int pTimeout) {
-   vector<cxInput*>::iterator iter = mInputs.begin();
+   for (std::shared_ptr<cxInput> input : mInputs)
+      input->setTimeout(pTimeout);
+   /*
+   cxInputPtrContainer::iterator iter = mInputs.begin();
    for (; iter != mInputs.end(); ++iter) {
       (*iter)->setTimeout(pTimeout);
    }
+   */
 } // setTimeout
 
 int cxMultiLineInput::getTimeout() const {
@@ -2116,7 +2114,7 @@ bool cxMultiLineInput::usingBuiltInValidator() const {
    if (mValidatorFunction != nullptr) {
       if (mValidatorFunction->cxTypeStr() == "cxFunction2") {
          try {
-            cxFunction2 *function2 = dynamic_cast<cxFunction2*>(mValidatorFunction);
+            const cxFunction2 *function2 = dynamic_cast<cxFunction2*>(mValidatorFunction.get());
             if (function2 != nullptr) {
                builtInValidator = (function2->getFunction() ==
                                    cxMultiLineInput::inputValidatorStatic);
@@ -2138,15 +2136,14 @@ bool cxMultiLineInput::usingBuiltInOnKeyFunction() const {
    bool builtInOnKeypress = false;
 
    // Look at the first input's mOnKeyFunction (it should be the same for all
-   //  inputs)
-   cxFunction *onKeyFunc = mInputs[0]->mOnKeyFunction;
+   // inputs)
+   std::shared_ptr<cxFunction> onKeyFunc = mInputs[0]->mOnKeyFunction;
    if (onKeyFunc != nullptr) {
       if (onKeyFunc->cxTypeStr() == "cxFunction2") {
          try {
-            cxFunction2 *function2 = dynamic_cast<cxFunction2*>(onKeyFunc);
+            const cxFunction2 *function2 = dynamic_cast<cxFunction2*>(onKeyFunc.get());
             if (function2 != nullptr) {
-               builtInOnKeypress = (function2->getFunction() ==
-                                    cxMultiLineInput::onKeypressStatic);
+               builtInOnKeypress = (function2->getFunction() == cxMultiLineInput::onKeypressStatic);
             }
          }
          catch (...) {
@@ -2713,15 +2710,11 @@ void cxMultiLineInput::copyCxMultiLineInputStuff(const cxMultiLineInput *pThatIn
       mRightLabel.setEnabled(pThatInput->mRightLabel.isEnabled());
 
       // Copy the other input's single-line inputs
-      cxInput *myInput = nullptr;
-      set<int>::iterator setIter;
-      cxInputPtrContainer::const_iterator iter = pThatInput->mInputs.begin();
-      for(; iter != pThatInput->mInputs.end(); ++iter) {
-         myInput = new cxInput(**iter, this);
+      for (std::shared_ptr<cxInput> input : mInputs) {
+         shared_ptr<cxInput> myInput = make_shared<cxInput>(*input, this);
          if (mUseExtendedHelpKeys) {
-            for (setIter = mExtendedHelpKeys.begin();
-                 setIter != mExtendedHelpKeys.end(); ++setIter) {
-               myInput->addExitKey(*setIter, false, true);
+            for (int helpKey : mExtendedHelpKeys) {
+               myInput->addExitKey(helpKey, false, true);
             }
          }
          mInputs.push_back(myInput);
@@ -3055,12 +3048,8 @@ bool cxMultiLineInput::searchParentFormsForFKey(int pKey,
 } // searchParentFormsForFKey
 
 void cxMultiLineInput::freeInputs() {
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      if (*iter != nullptr) {
-         delete (*iter);
-      }
-   }
+   for (std::shared_ptr<cxInput> input : mInputs)
+      input.reset();
    mInputs.clear();
 } // freeInputs
 
@@ -3256,27 +3245,23 @@ bool cxMultiLineInput::scrDiff() {
 } // scrDiff
 
 void cxMultiLineInput::copyValidatorFunction(const cxMultiLineInput& pThatInput) {
-   // If mValidatorFunction is not nullptr, then free the memory used by it.
-   if (mValidatorFunction != nullptr) {
-      delete mValidatorFunction;
-      mValidatorFunction = nullptr;
-   }
+   mValidatorFunction.reset();
 
    // Copy the other input's mValidatorFunction.
-   if (pThatInput.mValidatorFunction != nullptr) {
+   if (pThatInput.mValidatorFunction.get() != nullptr) {
       // We'll need to check what type of cxFunction it is so we can
       //  create it properly.
       if (pThatInput.mValidatorFunction->cxTypeStr() == "cxFunction0") {
-         cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pThatInput.mValidatorFunction);
+         const cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pThatInput.mValidatorFunction.get());
          if (iFunc0 != nullptr) {
-            mValidatorFunction = new cxFunction0(iFunc0->getFunction(),
+            mValidatorFunction = make_shared<cxFunction0>(iFunc0->getFunction(),
                                           iFunc0->getUseReturnVal(),
                                           iFunc0->getExitAfterRun(),
                                           iFunc0->getRunOnLeaveFunction());
          }
       }
       else if (pThatInput.mValidatorFunction->cxTypeStr() == "cxFunction2") {
-         cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pThatInput.mValidatorFunction);
+         const cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pThatInput.mValidatorFunction.get());
          if (iFunc2 != nullptr) {
             // When creating mOnKeyFunction, if any of its parameters point to
             //  pThatInput, have them point to this one instead.  Or if they
@@ -3288,14 +3273,14 @@ void cxMultiLineInput::copyValidatorFunction(const cxMultiLineInput& pThatInput)
                   params[i] = this;
                }
             }
-            mValidatorFunction = new cxFunction2(iFunc2->getFunction(), params[0],
+            mValidatorFunction = make_shared<cxFunction2>(iFunc2->getFunction(), params[0],
                                           params[1], iFunc2->getUseReturnVal(),
                                           iFunc2->getExitAfterRun(),
                                           iFunc2->getRunOnLeaveFunction());
          }
       }
       else if (pThatInput.mValidatorFunction->cxTypeStr() == "cxFunction4") {
-         cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pThatInput.mValidatorFunction);
+         const cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pThatInput.mValidatorFunction.get());
          if (iFunc4 != nullptr) {
             // When creating mOnKeyFunction, if any of its parameters point to
             //  pThatInput, have them point to this one instead.  Or if they
@@ -3308,7 +3293,7 @@ void cxMultiLineInput::copyValidatorFunction(const cxMultiLineInput& pThatInput)
                   params[i] = this;
                }
             }
-            mValidatorFunction = new cxFunction4(iFunc4->getFunction(), params[0],
+            mValidatorFunction = make_shared<cxFunction4>(iFunc4->getFunction(), params[0],
                                              params[1], params[2], params[3],
                                              iFunc4->getUseReturnVal(),
                                              iFunc4->getExitAfterRun(),
@@ -3327,7 +3312,7 @@ bool cxMultiLineInput::usingOnKeyNumericValidator() const {
    if (mInputs.size() > 0) {
       if (mInputs[0]->mOnKeyFunction != nullptr) {
          if (mInputs[0]->mOnKeyFunction->cxTypeStr() == "cxFunction2") {
-            cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(mInputs[0]->mOnKeyFunction);
+            const cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(mInputs[0]->mOnKeyFunction.get());
             if (iFunc2 != nullptr) {
                funcPtr2 funcPtr = iFunc2->getFunction();
                if ((funcPtr == cxValidators::intOnKeyValidator) ||

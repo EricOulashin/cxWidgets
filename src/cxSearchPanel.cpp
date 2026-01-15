@@ -1,8 +1,10 @@
 // Copyright (c) 2006-2007 Michael H. Kinney
 
 #include "cxSearchPanel.h"
+#include <memory>
 using std::string;
 using std::map;
+using std::shared_ptr;
 
 cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
                  int pHeight, int pWidth, const string& pFormTitle,
@@ -680,9 +682,9 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    }
 
    // Same with the menu's onSelectMenuItem function
-   cxFunction *onSelectItemFunc = mMenu->getOnSelectItemFunction();
+   shared_ptr<cxFunction> onSelectItemFunc = mMenu->getOnSelectItemFunction();
    if (onSelectItemFunc->cxTypeStr() == "cxFunction2") {
-      cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onSelectItemFunc);
+      const cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onSelectItemFunc.get());
       if (iFunc2 != nullptr) {
          void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
          for (int i = 0; i < 2; ++i) {
@@ -696,7 +698,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
       }
    }
    else if (onSelectItemFunc->cxTypeStr() == "cxFunction2") {
-      cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onSelectItemFunc);
+      const cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onSelectItemFunc.get());
       if (iFunc4 != nullptr) {
          void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                             iFunc4->getParam3(), iFunc4->getParam4() };

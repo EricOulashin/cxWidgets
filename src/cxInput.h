@@ -17,6 +17,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <memory>
 
 // Forward declaration
 class cxMultiLineInput;
@@ -132,6 +133,17 @@ class cxInput : public cxWindow {
        * @param pThatInput Another cxInput object to be copied
        */
       cxInput(const cxInput& pThatInput);
+      
+      /**
+       * \brief Copy constructor that will be used by cxMultiLineInput when
+       * \brief copying a cxMultiLineInput.  This was originally meant to be
+       * \brief private (with cxMultiLineInput as a friend class), but when
+       * \brief updating the code to use shared_ptr instead of raw
+       * \brief dynamically-allocated pointers, it looked like make_shared()
+       * \brief has trouble accessing private constructors.
+       * @param pThatInput Another cxInput object to be copied
+       */
+      cxInput(const cxInput& pThatInput, cxMultiLineInput *pParentMLInput);
 
       /**
        * \brief Destructor
@@ -837,7 +849,7 @@ class cxInput : public cxWindow {
        * \brief inputClearKey is a default key to be used to clear inputs.
        */
       static int inputClearKey;
-
+      
    protected:
       // Attributes for various element (in addition to the ones provided
       //  in cxWindow)
@@ -910,14 +922,6 @@ class cxInput : public cxWindow {
    private:
       friend class cxMultiLineInput;  // Because that class uses this class
 
-      // This is a copy constructor that will be used by cxMultiLineInput when
-      //  copying a cxMultiLineInput.
-      // Parameters:
-      //  pThatInput: Another cxInput object to be copied
-      //  pParentMLInput: A pointer to the parent multi-line input.
-      cxInput(const cxInput& pThatInput,
-              cxMultiLineInput *pParentMLInput);
-
       // The following member is set if this input is in a cxMultiLineInput.
       cxMultiLineInput *mParentMLInput = nullptr;
       std::string mValue; // Holds the user's input
@@ -958,10 +962,10 @@ class cxInput : public cxWindow {
       bool mCursorAfterInput = true;
 
       // Function to be run when a key is pressed
-      cxFunction *mOnKeyFunction = nullptr; // Function to be run when a key is pressed
-      bool mRunOnKeyFunction = true;        // Whether or not to run the onKey function
+      std::shared_ptr<cxFunction> mOnKeyFunction; // Function to be run when a key is pressed
+      bool mRunOnKeyFunction = true;              // Whether or not to run the onKey function
       // Function to be run to validate the text before focus is lost
-      cxFunction *mValidatorFunction = nullptr;
+      std::shared_ptr<cxFunction> mValidatorFunction;
       short mValueColorPair;
       bool mShowCursor = true;              // Whether or not to show the cursor
       // Whether or not to run the validator function when the user is
@@ -1051,8 +1055,8 @@ class cxInput : public cxWindow {
       //
       // An example function call:
       //  copyCxFunction(pThatInput, mOnKeyFunction, pThatInput.mOnKeyFunction);
-      void copyCxFunction(const cxInput& pThatInput, cxFunction* &pDestFunc,
-                          cxFunction* pSrcFunc);
+      void copyCxFunction(const cxInput& pThatInput, /*OUT*/std::shared_ptr<cxFunction>& pDestFunc,
+                          /*IN*/const std::shared_ptr<cxFunction>& pSrcFunc);
 
       // Returns whether or not the validator function is set (if
       //  mValidatorFunction is not nullptr and if its function pointer is set)

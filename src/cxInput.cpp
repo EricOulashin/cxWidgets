@@ -12,8 +12,9 @@ using std::string;
 using std::set;
 using cxStringUtils::indexOfLastCap;
 using cxStringUtils::isPrintable;
-using cxBase::visualStrLen;
 using std::isupper;
+using std::make_shared;
+using cxBase::visualStrLen;
 
 // Default the input clear key to F10
 int cxInput::inputClearKey = KEY_F(10);
@@ -201,13 +202,6 @@ cxInput::cxInput(const cxInput& pThatInput, cxMultiLineInput *pParentMLInput)
 } // Second copy constructor
 
 cxInput::~cxInput() {
-   // Free the memory used by mOnKeyFunction and mValidatorFunction
-   if (mOnKeyFunction != nullptr) {
-      delete mOnKeyFunction;
-   }
-   if (mValidatorFunction != nullptr) {
-      delete mValidatorFunction;
-   }
 }
 
 long cxInput::show(bool pBringToTop, bool pShowSubwindows) {
@@ -828,8 +822,7 @@ bool cxInput::setValidatorFunction(funcPtr4 pFunction, void *p1, void *p2,
    //  given parameters.
    clearValidatorFunction();
    if (pFunction != nullptr) {
-      mValidatorFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
-                                           false, true);
+      mValidatorFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false, false, true);
       setIt = (mValidatorFunction != nullptr);
    }
    else {
@@ -845,8 +838,7 @@ bool cxInput::setValidatorFunction(funcPtr2 pFunction, void *p1, void *p2) {
    //  given parameters.
    clearValidatorFunction();
    if (pFunction != nullptr) {
-      mValidatorFunction = new cxFunction2(pFunction, p1, p2, false, false,
-                                           true);
+      mValidatorFunction = make_shared<cxFunction2>(pFunction, p1, p2, false, false, true);
       setIt = (mValidatorFunction != nullptr);
    }
    else {
@@ -862,7 +854,7 @@ bool cxInput::setValidatorFunction(funcPtr0 pFunction) {
    //  given parameters.
    clearValidatorFunction();
    if (pFunction != nullptr) {
-      mValidatorFunction = new cxFunction0(pFunction, false, false, true);
+      mValidatorFunction = make_shared<cxFunction0>(pFunction, false, false, true);
       setIt = (mValidatorFunction != nullptr);
    }
    else {
@@ -873,10 +865,7 @@ bool cxInput::setValidatorFunction(funcPtr0 pFunction) {
 } // setValidatorFunction
 
 void cxInput::clearValidatorFunction() {
-   if (mValidatorFunction != nullptr) {
-      delete mValidatorFunction;
-      mValidatorFunction = nullptr;
-   }
+   mValidatorFunction.reset();
 } // clearValidatorFunction
 
 bool cxInput::setOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2,
@@ -886,8 +875,7 @@ bool cxInput::setOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2,
    //  given parameters.
    clearOnKeyFunction();
    if (pFunction != nullptr) {
-      mOnKeyFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
-                                       false, true);
+      mOnKeyFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false, false, true);
       setIt = (mOnKeyFunction != nullptr);
    }
 
@@ -900,7 +888,7 @@ bool cxInput::setOnKeyFunction(funcPtr2 pFunction, void *p1, void *p2) {
    //  given parameters.
    clearOnKeyFunction();
    if (pFunction != nullptr) {
-      mOnKeyFunction = new cxFunction2(pFunction, p1, p2, false, false, true);
+      mOnKeyFunction = make_shared<cxFunction2>(pFunction, p1, p2, false, false, true);
       setIt = (mOnKeyFunction != nullptr);
    }
 
@@ -913,7 +901,7 @@ bool cxInput::setOnKeyFunction(funcPtr0 pFunction) {
    //  given parameters.
    clearOnKeyFunction();
    if (pFunction != nullptr) {
-      mOnKeyFunction = new cxFunction0(pFunction, false, false, true);
+      mOnKeyFunction = make_shared<cxFunction0>(pFunction, false, false, true);
       setIt = (mOnKeyFunction != nullptr);
    }
 
@@ -925,10 +913,7 @@ void cxInput::toggleOnKeyFunction(bool pRunOnKeyFunction) {
 } // toggleOnKeyFunction
 
 void cxInput::clearOnKeyFunction() {
-   if (mOnKeyFunction != nullptr) {
-      delete mOnKeyFunction;
-      mOnKeyFunction = nullptr;
-   }
+   mOnKeyFunction.reset();
 } // clearOnKeyFunction
 
 bool cxInput::onKeyFunctionEnabled() const {
@@ -2311,36 +2296,35 @@ string cxInput::runOnKeyFunction() const {
    return(retval);
 } // runOnKeyFunction
 
-void cxInput::copyCxFunction(const cxInput& pThatInput, cxFunction* &pDestFunc,
-                             cxFunction* pSrcFunc) {
+void cxInput::copyCxFunction(const cxInput& pThatInput, /*OUT*/std::shared_ptr<cxFunction>& pDestFunc,
+                             /*IN*/const std::shared_ptr<cxFunction>& pSrcFunc) {
    // This function is for copying cxInput objects and is intended for use with
    //  mOnKeyFunction and mValidatorFunction.
    // If pDestFunc is not nullptr, then free the memory used by it.
    if (pDestFunc != nullptr) {
-      delete pDestFunc;
-      pDestFunc = nullptr;
+      pDestFunc.reset();
    }
 
    // Copy the other cxFunction pointer.
-   if (pSrcFunc != nullptr) {
+   if (pSrcFunc.get() != nullptr) {
       // We'll need to check what type of cxFunction it is so we can
-      //  create it properly.
+      // create it properly.
       if (pSrcFunc->cxTypeStr() == "cxFunction0") {
-         cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pSrcFunc);
+         const cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pSrcFunc.get());
          if (iFunc0 != nullptr) {
-            pDestFunc = new cxFunction0(iFunc0->getFunction(),
+            pDestFunc = make_shared<cxFunction0>(iFunc0->getFunction(),
                                         iFunc0->getUseReturnVal(),
                                         iFunc0->getExitAfterRun(),
                                         iFunc0->getRunOnLeaveFunction());
          }
       }
       else if (pSrcFunc->cxTypeStr() == "cxFunction2") {
-         cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pSrcFunc);
+         const cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pSrcFunc.get());
          if (iFunc2 != nullptr) {
             // When creating mOnKeyFunction, if any of its parameters point to
-            //  pThatInput, have them point to this one instead.  Or if they
-            //  point to the other input's parent multi-line input, have them
-            //  point to this one's parent multi-line input instead.
+            // pThatInput, have them point to this one instead.  Or if they
+            // point to the other input's parent multi-line input, have them
+            // point to this one's parent multi-line input instead.
             void* params[2] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
                if (params[i] == &pThatInput) {
@@ -2354,19 +2338,19 @@ void cxInput::copyCxFunction(const cxInput& pThatInput, cxFunction* &pDestFunc,
                   }
                }
             }
-            pDestFunc = new cxFunction2(iFunc2->getFunction(), params[0],
+            pDestFunc = make_shared<cxFunction2>(iFunc2->getFunction(), params[0],
                                         params[1], iFunc2->getUseReturnVal(),
                                         iFunc2->getExitAfterRun(),
                                         iFunc2->getRunOnLeaveFunction());
          }
       }
       else if (pSrcFunc->cxTypeStr() == "cxFunction4") {
-         cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pSrcFunc);
+         const cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pSrcFunc.get());
          if (iFunc4 != nullptr) {
             // When creating mOnKeyFunction, if any of its parameters point to
-            //  pThatInput, have them point to this one instead.  Or if they
-            //  point to the other input's parent multi-line input, have them
-            //  point to this one's parent multi-line input instead.
+            // pThatInput, have them point to this one instead.  Or if they
+            // point to the other input's parent multi-line input, have them
+            // point to this one's parent multi-line input instead.
             void* params[4] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                 iFunc4->getParam3(), iFunc4->getParam4()  };
             for (int i = 0; i < 4; ++i) {
@@ -2381,7 +2365,7 @@ void cxInput::copyCxFunction(const cxInput& pThatInput, cxFunction* &pDestFunc,
                   }
                }
             }
-            pDestFunc = new cxFunction4(iFunc4->getFunction(), params[0],
+            pDestFunc = make_shared<cxFunction4>(iFunc4->getFunction(), params[0],
                                         params[1], params[2], params[3],
                                         iFunc4->getUseReturnVal(),
                                         iFunc4->getExitAfterRun(),

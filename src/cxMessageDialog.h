@@ -7,6 +7,7 @@
 #include "cxButton.h"
 #include "cxMessageDialogStyles.h"
 #include <string>
+#include <memory>
 
 #define OKBTN_HEIGHT 3
 #define OKBTN_WIDTH 4
@@ -112,20 +113,20 @@ class cxMessageDialog : public cxDialog {
        * @brief get a pointer to the the OK/Yes button
        * @return cxButton pointer
        */
-      cxButton* getOKButton() { return(mOKBtn); }
+      virtual std::shared_ptr<cxButton> getOKButton() const { return(mOKBtn); }
 
       /** 
        * @brief get a pointer to the the Cancel/NO button
        * @return cxButton pointer
        */
-      cxButton* getCancelButton() { return(mCancelBtn); }
+      virtual std::shared_ptr<cxButton> getCancelButton() const { return(mCancelBtn); }
 
       /** 
        * @brief set the focus the the cxButton
        * @param pButton the button to set the focus to
        * @param pShow show the buttons
        */
-      void setFocus(cxButton* pButton, bool pShow=true);
+      void setFocus(const std::shared_ptr<cxButton>& pButton, bool pShow=true);
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to
@@ -142,8 +143,10 @@ class cxMessageDialog : public cxDialog {
       long doInputLoop();
 
    private:
-      cxButton *mOKBtn = nullptr;     // OK/Yes button
-      cxButton *mCancelBtn = nullptr; // Cancel/No button
+      //cxButton *mOKBtn = nullptr;         // OK/Yes button
+      //cxButton *mCancelBtn = nullptr;     // Cancel/No button
+      std::shared_ptr<cxButton> mOKBtn;     // OK/Yes button
+      std::shared_ptr<cxButton> mCancelBtn; // Cancel/No button
 
       // Dis-allow show() for this class
       inline long show(bool pBringToTop = true, bool pShowSubwindows = true);

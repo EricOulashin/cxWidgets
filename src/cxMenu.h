@@ -15,6 +15,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <memory>
 
 #define DEFAULT_CXMENU_SEARCH_KEY '/'     // Default search key
 #define DEFAULT_CXMENU_ALT_PGUP_KEY '.'   // Default alternate PgUp key
@@ -960,7 +961,7 @@ class cxMenu : public cxWindow {
        *
        * @return The pointer to the onSelectMenuItem function
        */
-      cxFunction* getOnSelectItemFunction() const;
+      std::shared_ptr<cxFunction> getOnSelectItemFunction() const;
 
    protected:
       /**
@@ -1064,7 +1065,7 @@ class cxMenu : public cxWindow {
 
       // mOnSelectItemFunction is a function that can be fired when the user
       // selects an item.
-      cxFunction* mOnSelectItemFunction = nullptr;
+      std::shared_ptr<cxFunction> mOnSelectItemFunction;
 
       // mItemHotkeys keeps track of which keys are mapped to which menu items.
       std::multimap<char, int> mItemHotkeys;
