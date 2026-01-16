@@ -5,15 +5,14 @@
 using std::string;
 using std::map;
 using std::shared_ptr;
+using std::make_shared;
 
 cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
                  int pHeight, int pWidth, const string& pFormTitle,
                  const string& pMenuTitle, eBorderStyle pFormBorderStyle,
                  eBorderStyle pMenuBorderStyle)
    : cxPanel(pParentWindow, pRow, pCol, pHeight, pWidth, "", "", "",
-             eBS_NOBORDER, nullptr, nullptr, false),
-     mForm(nullptr),
-     mMenu(nullptr)
+             eBS_NOBORDER, nullptr, nullptr, false)
 {
    // As a screen optimization, don't show the panel window when showing the
    //  panel, since the cxForm and cxMenu will completely cover the panel
@@ -33,8 +32,8 @@ cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
       winHeight = 1;
    }
    int winWidth = width();
-   mForm = new cxForm(nullptr, 0, 0, winHeight, winWidth, pFormTitle,
-                      pFormBorderStyle, nullptr, nullptr, true, false);
+   mForm = make_shared<cxForm>(nullptr, 0, 0, winHeight, winWidth, pFormTitle,
+                               pFormBorderStyle, nullptr, nullptr, true, false);
    // Have the enter key exit the form (to go onto the menu).
    mForm->addExitKey(ENTER, true, true);
    mForm->addExitKey(KEY_ENTER, true, true);
@@ -48,8 +47,8 @@ cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
    // Create the cxMenu with the remaining height of the panel, and append it
    //  below the form
    winHeight = height() - winHeight;
-   mMenu = new cxMenu(nullptr, 0, 0, winHeight, winWidth, pMenuTitle, nullptr, nullptr,
-                      pMenuBorderStyle);
+   mMenu = make_shared<cxMenu>(nullptr, 0, 0, winHeight, winWidth, pMenuTitle, nullptr, nullptr,
+                               pMenuBorderStyle);
    mMenu->setOnSelectItemFunction(cxSearchPanel::menuOnSelect, this, nullptr, true,
                                   true);
    // Have the menu refresh its item list when it gets focus.
@@ -72,10 +71,11 @@ cxSearchPanel::cxSearchPanel(const cxSearchPanel& pPanel)
              pPanel.width(), pPanel.getTitle(), pPanel.getMessage(),
              pPanel.getStatus(), pPanel.getBorderStyle(),
              pPanel.getExtTitleWindow(), pPanel.getExtStatusWindow(),
-             pPanel.getHotkeyHighlighting()),
-     mForm(new cxForm(*(pPanel.mForm))),
-     mMenu(new cxMenu(*(pPanel.mMenu)))
+             pPanel.getHotkeyHighlighting())
 {
+   mForm = make_shared<cxForm>(*(pPanel.mForm));
+   mMenu = make_shared<cxMenu>(*(pPanel.mMenu));
+
    // Set up formReverseNavigation() for the form and append the form
    mForm->setKeyFunction(KEY_UP, cxSearchPanel::formReverseNavigation, this, nullptr, false,
                          false, true);
@@ -104,15 +104,15 @@ cxSearchPanel::cxSearchPanel(const cxSearchPanel& pPanel)
 cxSearchPanel::~cxSearchPanel() {
 } // destructor
 
-cxForm* cxSearchPanel::getForm() const {
+const std::shared_ptr<cxForm>& cxSearchPanel::getForm() const {
    return(mForm);
 } // getForm
 
-cxMenu* cxSearchPanel::getMenu() const {
+const std::shared_ptr<cxMenu>& cxSearchPanel::getMenu() const {
    return(mMenu);
 } // getMenu
 
-cxMultiLineInput* cxSearchPanel::appendToForm(int pRow, int pCol, int pHeight,
+shared_ptr<cxMultiLineInput> cxSearchPanel::appendToForm(int pRow, int pCol, int pHeight,
         int pWidth, const string& pLabel, const string& pValidator,
         const string& pHelpString, eInputOptions pInputKind, const string& pName,
         string *pExtValue) {
@@ -120,7 +120,7 @@ cxMultiLineInput* cxSearchPanel::appendToForm(int pRow, int pCol, int pHeight,
                         pHelpString, pInputKind, pName, pExtValue));
 } // appendToForm
 
-cxComboBox* cxSearchPanel::appendComboBoxToForm(int pRow, int pCol, int pHeight,
+shared_ptr<cxComboBox> cxSearchPanel::appendComboBoxToForm(int pRow, int pCol, int pHeight,
         int pWidth, const string& pLabel, const string& pValidator,
         const string& pHelpString, eInputOptions pInputKind, const string& pName,
         string *pExtValue) {
@@ -785,7 +785,7 @@ string cxSearchPanel::formReverseNavigation(void *theSearchPanel, void *unused) 
    if (theSearchPanel == nullptr) { return(""); }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   cxForm *mForm = pSearchPanel->mForm;
+   shared_ptr<cxForm> mForm = pSearchPanel->mForm;
    if (mForm->numInputs() > 0) {
       // If they're on the first input, go to the last input.  Otherwise, go to
       //  the previous input.
@@ -805,8 +805,8 @@ string cxSearchPanel::menuOnESC(void *theSearchPanel, void *unused) {
    if (theSearchPanel == nullptr) { return(""); }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   cxForm *mForm = pSearchPanel->mForm;
-   cxMenu *mMenu= pSearchPanel->mMenu;
+   shared_ptr<cxForm> mForm = pSearchPanel->mForm;
+   shared_ptr<cxMenu> mMenu = pSearchPanel->mMenu;
 
    // clear form fields
    mForm->clearInputs(true);

@@ -243,10 +243,10 @@ class cxNotebook: public cxPanel {
        *  identification later.  This is optional and defaults to a blank
        *  string.
        *
-       * @return A pointer to the cxPanel that was added, or nullptr if it
-       *  couldn't be added
+       * @return A smart pointer to the cxPanel that was added. If it couldn't be
+       * added, the smart pointer's pointer will be null.
        */
-      virtual cxPanel* append(const std::string& pLabel, const std::string& pPanelName = "");
+      virtual std::shared_ptr<cxPanel> append(const std::string& pLabel, const std::string& pPanelName = "");
 
       /**
        * \brief Returns a pointer to one of the panels in the notebook (by
@@ -255,9 +255,9 @@ class cxNotebook: public cxPanel {
        * @param pIndex The index of the panel to retrieve
        *
        * @return A pointer to the panel with the given index.  If there is
-       *  no panel for the given index, this will return nullptr.
+       * no panel for the given index, this will return nullptr.
        */
-      virtual cxPanel* getPanel(unsigned pIndex) const;
+      virtual cxPanel* getPanel(unsigned int pIndex) const;
 
       /**
        * \brief Returns a pointer to one of the panels in the notebook (by
@@ -302,7 +302,7 @@ class cxNotebook: public cxPanel {
        * @param pShowPanelWindow Whether or not the panel should show its
        *  window when it gets focus.
        */
-      virtual void setShowPanelWindow(unsigned pIndex, bool pShowPanelWindow);
+      virtual void setShowPanelWindow(unsigned int pIndex, bool pShowPanelWindow);
 
       /**
        * \brief Sets whether one of the panels in the notebook should show
@@ -327,7 +327,7 @@ class cxNotebook: public cxPanel {
        * @return Whether or not the panel in the notebook will show its window
        *  when it gets focus.
        */
-      virtual bool getShowPanelWindow(unsigned pIndex) const;
+      virtual bool getShowPanelWindow(unsigned int pIndex) const;
 
       /**
        * \brief Returns whether or not one of the panels in the notebook will
@@ -366,7 +366,7 @@ class cxNotebook: public cxPanel {
        * @return The label of the panel.  If pIndex is out of bounds, this will
        *  return a blank string.
        */
-      virtual std::string getLabel(unsigned pIndex) const;
+      virtual std::string getLabel(unsigned int pIndex) const;
 
       /**
        * \brief Returns the label forone of the panels (by panel name).
@@ -389,7 +389,7 @@ class cxNotebook: public cxPanel {
        *
        * @return true if the label was set, or false if not.
        */
-      virtual bool setLabel(unsigned pIndex, const std::string& pLabel, bool pRefresh = false);
+      virtual bool setLabel(unsigned int pIndex, const std::string& pLabel, bool pRefresh = false);
 
       /**
        * \brief Sets the label for one of the panels (by label/name).  If the
@@ -423,7 +423,7 @@ class cxNotebook: public cxPanel {
        * @param pEnabled Boolean: If true, the window will be enabled, and if
        *  false, the window will be disabled.
        */
-      virtual void setEnabled(unsigned pIndex, bool pEnabled);
+      virtual void setEnabled(unsigned int pIndex, bool pEnabled);
 
       /**
        * \brief Enables or disables a window in the panel (by title/name).
@@ -543,19 +543,16 @@ class cxNotebook: public cxPanel {
       virtual bool mouseEvtWasInTitle() const;
 
       /**
-       * \brief Removes a panel from the notebook, without freeing its memory
-       * \brief so that it may be used elsewhere.  Note: If you don't want to
-       * \brief re-use the window, use delWindow() instead, as this frees up
-       * \brief the window's memory using delete.  This returns a cxWindow*
-       * \brief rather than a cxPanel* so that this method will override the
-       * \brief version from cxPanel.
+       * \brief Removes a panel from the notebook.  This returns a cxWindow
+       * \brief pointer rather than a cxPanel pointer so that this method
+       * \brief will override the version from cxPanel.
        *
        * @param pIndex The index of the window in the panel to remove
        *
        * @return A pointer to the panel removed.  If pIndex is not a valid
-       *  index, the return value will be nullptr.
+       * index, the smart pointer returned will have a null value for its pointer.
        */
-      virtual cxWindow* removeWindow(unsigned pIndex);
+      virtual std::shared_ptr<cxWindow> removeWindow(unsigned int pIndex);
 
       /**
        * \brief Removes a panel from the notebook, without freeing its memory
@@ -577,7 +574,7 @@ class cxNotebook: public cxPanel {
        *
        * @param pIndex The index of the panel to remove from the notebook
        */
-      virtual void delWindow(unsigned pIndex);
+      virtual void delWindow(unsigned int pIndex);
 
       /**
        * \brief Removes a panel from the notebook (by pointer).  Does nothing
@@ -597,7 +594,7 @@ class cxNotebook: public cxPanel {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindow(unsigned pIndex);
+      virtual bool setCurrentWindow(unsigned int pIndex);
 
       /**
        * \brief Sets which panel will get focus in the next call to
@@ -670,6 +667,7 @@ class cxNotebook: public cxPanel {
        *
        * @return Whether or not the windows got swapped
        */
+      virtual bool swap(std::shared_ptr<cxWindow>& pWindow1, std::shared_ptr<cxWindow>& pWindow2);
       virtual bool swap(cxWindow *pWindow1, cxWindow *pWindow2);
 
       /**
@@ -734,7 +732,7 @@ class cxNotebook: public cxPanel {
       //  pIndex: The index of the label window.  The label windows to the left
       //   and to the right of the window will also have their border characters
       //   set.
-      void setLabelWinSpecialChars(unsigned pIndex);
+      void setLabelWinSpecialChars(unsigned int pIndex);
 
       // Sets the special border characters for all label windows
       inline void setAllLabelWinSpecialChars();
@@ -753,8 +751,8 @@ class cxNotebook: public cxPanel {
       bool getExitOnLeaveFirst() const;
       void setExitOnLeaveFirst(bool pExitOnLeaveFirst);
       bool windowIsInPanel(cxWindow *pWindow) const;
-      bool append(cxWindow *pWindow);
-      bool append(cxWindow *pWindow, int pRow, int pCol, bool pRefresh = false);
+      bool append(const std::shared_ptr<cxWindow>& pWindow);
+      bool append(const std::shared_ptr<cxWindow>& pWindow, int pRow, int pCol, bool pRefresh = false);
       void setShowPanelWindow(bool pShowPanelWindow);
 
       // Don't allow copy construction or assignment

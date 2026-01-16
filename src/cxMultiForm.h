@@ -25,6 +25,7 @@
 #include "cxFunction.h"
 #include <string>
 #include <vector>
+#include <memory>
 
 /** \class cxMultiForm
  * \brief Represents a form that can
@@ -105,7 +106,7 @@ class cxMultiForm : public cxForm {
        *
        * @return A pointer to the subform
        */
-      virtual cxForm* appendForm(int pRow, int pCol, int pHeight,
+      virtual std::shared_ptr<cxForm> appendForm(int pRow, int pCol, int pHeight,
                           int pWidth, const std::string& pTitle = "",
                           eBorderStyle pBorderStyle = eBS_NOBORDER,
                           bool pStacked = false);
@@ -129,7 +130,7 @@ class cxMultiForm : public cxForm {
        *
        * @return Whether or not the subform got appended (true/false)
        */
-      virtual bool appendForm(cxForm* pForm, int pRow, int pCol, bool* pMoved = nullptr);
+      virtual bool appendForm(std::shared_ptr<cxForm>& pForm, int pRow, int pCol, bool* pMoved = nullptr);
 
       /**
        * \brief Appends a subform to the form via a pointer (without
@@ -143,7 +144,7 @@ class cxMultiForm : public cxForm {
        *
        * @return Whether or not the subform got appended (true/false)
        */
-      virtual bool appendForm(cxForm* pForm);
+      virtual bool appendForm(std::shared_ptr<cxForm>& pForm);
 
       /**
        * \brief Returns a pointer to one of the subforms (by index), or
@@ -155,7 +156,7 @@ class cxMultiForm : public cxForm {
        *  The return value should always be checked against nullptr before it's
        *  used.
        */
-      virtual cxForm* getForm(unsigned pIndex) const;
+      virtual std::shared_ptr<cxForm> getForm(unsigned pIndex) const;
 
       /**
        * \brief Returns a pointer to one of the subforms (by title), or
@@ -167,7 +168,7 @@ class cxMultiForm : public cxForm {
        *  the given title.  The return value should always be checked against
        *  nullptr before it's used.
        */
-      virtual cxForm* getForm(const std::string& pTitle) const;
+      virtual std::shared_ptr<cxForm> getForm(const std::string& pTitle) const;
 
       /**
        * Shows the form
@@ -519,6 +520,7 @@ class cxMultiForm : public cxForm {
        *
        * @return True if successful or false if not
        */
+      virtual bool setCurrentSubformByPtr(const std::shared_ptr<cxForm>& pForm);
       virtual bool setCurrentSubformByPtr(cxForm *pForm);
 
       /**
@@ -538,6 +540,7 @@ class cxMultiForm : public cxForm {
        *  the given cxForm pointer isn't a subform on
        *  this form.
        */
+      virtual int getSubformIndex(const std::shared_ptr<cxForm>& pForm) const;
       virtual int getSubformIndex(cxForm *pForm) const;
 
       /**
@@ -740,7 +743,7 @@ class cxMultiForm : public cxForm {
       int lowestSubformRow(unsigned pIndex = 0) const;
 
    private:
-      typedef std::vector<cxForm*> formPtrContainer;
+      typedef std::vector<std::shared_ptr<cxForm> > formPtrContainer;
       formPtrContainer mForms; // Contains pointers to the subforms
       int mCurrentForm = 0;    // The index of the subform that currently has focus
       bool mCycleForm = true;  // Whether or not to cycle to the next or
@@ -783,15 +786,15 @@ class cxMultiForm : public cxForm {
       bool selectPrevForm();
 
       // Adds this multiForm's function keys to a subform.
-      void addFormFunctionKeysToSubform(cxForm *pForm);
+      void addFormFunctionKeysToSubform(std::shared_ptr<cxForm>& pForm);
 
       // Adds this multiForm's quit keys and exit keys to a subform.
-      void addQuitAndExitKeysToSubform(cxForm *pForm);
+      void addQuitAndExitKeysToSubform(std::shared_ptr<cxForm>& pForm);
 
       // Returns whether a subform is enabled and editable (by index).
       //  Note that no bounds checking is done (for optimal
       //  efficiency).
-      inline bool subformIsEnabledAndEditable(unsigned pIndex);
+      inline bool subformIsEnabledAndEditable(unsigned int pIndex);
 };
 
 #endif

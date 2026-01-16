@@ -21,6 +21,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <memory>
 
 #define DEFAULT_CXFORM_JUMPMENU_KEY KEY_F(4)  // Default hotkey for input jumping
 
@@ -34,8 +35,8 @@ enum eInputType {
 class cxMultiForm; // Pre-declaration to avoid a circular reference
 
 // These typedefs are for appendPair() and appendComboBoxPair().
-typedef std::pair<cxMultiLineInput*, cxMultiLineInput*> cxMLInputPtrPair;
-typedef std::pair<cxComboBox*, cxComboBox*> cxComboBoxPtrPair;
+typedef std::pair<std::shared_ptr<cxMultiLineInput>, std::shared_ptr<cxMultiLineInput> > cxMLInputPtrPair;
+typedef std::pair<std::shared_ptr<cxComboBox>, std::shared_ptr<cxComboBox> > cxComboBoxPtrPair;
 
 /** \class cxForm
  * \brief Represents a form that contains text inputs.
@@ -156,18 +157,18 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxMultiLineInput* append(int pRow, int pCol, int pHeight,
-                                     int pWidth, const std::string& pLabel,
-                                     const std::string& pValidator = "",
-                                     const std::string& pHelpString = "",
-                                     eInputOptions pInputOption = eINPUT_EDITABLE,
-                                     const std::string& pName = "",
-                                     std::string *pExtValue = nullptr,
-                                     int pRightLabelOffset = 0,
-                                     int pRightLabelHeight = 1,
-                                     int pRightLabelWidth = 7,
-                                     bool pShowRightLabel = false,
-                                     eInputType pInputType = eIT_CXMULTILINEINPUT);
+      virtual std::shared_ptr<cxMultiLineInput> append(int pRow, int pCol, int pHeight,
+                                                       int pWidth, const std::string& pLabel,
+                                                       const std::string& pValidator = "",
+                                                       const std::string& pHelpString = "",
+                                                       eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                       const std::string& pName = "",
+                                                       std::string *pExtValue = nullptr,
+                                                       int pRightLabelOffset = 0,
+                                                       int pRightLabelHeight = 1,
+                                                       int pRightLabelWidth = 7,
+                                                       bool pShowRightLabel = false,
+                                                       eInputType pInputType = eIT_CXMULTILINEINPUT);
 
       /**
        * \brief Adds a combo box to the form.  Applies the A_STANDOUT attribute
@@ -199,17 +200,17 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxComboBox* appendComboBox(int pRow, int pCol, int pHeight,
-                                     int pWidth, const std::string& pLabel,
-                                     const std::string& pValidator = "",
-                                     const std::string& pHelpString = "",
-                                     eInputOptions pInputOption = eINPUT_EDITABLE,
-                                     const std::string& pName = "",
-                                     std::string *pExtValue = nullptr,
-                                     int pRightLabelOffset = 0,
-                                     int pRightLabelHeight = 1,
-                                     int pRightLabelWidth = 7,
-                                     bool pShowRightLabel = false);
+      virtual std::shared_ptr<cxComboBox> appendComboBox(int pRow, int pCol, int pHeight,
+                                                         int pWidth, const std::string& pLabel,
+                                                         const std::string& pValidator = "",
+                                                         const std::string& pHelpString = "",
+                                                         eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                         const std::string& pName = "",
+                                                         std::string *pExtValue = nullptr,
+                                                         int pRightLabelOffset = 0,
+                                                         int pRightLabelHeight = 1,
+                                                         int pRightLabelWidth = 7,
+                                                         bool pShowRightLabel = false);
 
       /**
        * \brief Appends a pair of inputs to a form, one to the right of the
@@ -384,9 +385,9 @@ class cxForm : public cxWindow {
        * @param pName If this is non-blank, then this will be used for the
        *  input names.
        */
-      virtual void appendPair(cxMultiLineInput* pInput1,
-                              cxMultiLineInput* pInput2, int pRow, int pCol,
-                              const std::string& pName = "");
+      virtual void appendPair(std::shared_ptr<cxMultiLineInput>& pInput1,
+                              std::shared_ptr<cxMultiLineInput>& pInput2,
+                              int pRow, int pCol, const std::string& pName = "");
 
       /**
        * \brief Appends an input to the form below the last item currently in
@@ -423,17 +424,17 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxMultiLineInput* append(int pHeight, int pWidth, const std::string& pLabel,
-                               const std::string& pValidator = "",
-                               const std::string& pHelpString = "",
-                               eInputOptions pInputOption = eINPUT_EDITABLE,
-                               const std::string& pName = "",
-                               std::string *pExtValue = nullptr,
-                               int pRightLabelOffset = 0,
-                               int pRightLabelHeight = 1,
-                               int pRightLabelWidth = 7,
-                               bool pShowRightLabel = false,
-                               eInputType pInputType = eIT_CXMULTILINEINPUT);
+      virtual std::shared_ptr<cxMultiLineInput> append(int pHeight, int pWidth, const std::string& pLabel,
+                                                       const std::string& pValidator = "",
+                                                       const std::string& pHelpString = "",
+                                                       eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                       const std::string& pName = "",
+                                                       std::string *pExtValue = nullptr,
+                                                       int pRightLabelOffset = 0,
+                                                       int pRightLabelHeight = 1,
+                                                       int pRightLabelWidth = 7,
+                                                       bool pShowRightLabel = false,
+                                                       eInputType pInputType = eIT_CXMULTILINEINPUT);
 
       /**
        * \brief Appends a combo box to the form below the last
@@ -464,23 +465,23 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxComboBox* appendComboBox(int pHeight, int pWidth, const std::string& pLabel,
-                               const std::string& pValidator = "",
-                               const std::string& pHelpString = "",
-                               eInputOptions pInputOption = eINPUT_EDITABLE,
-                               const std::string& pName = "",
-                               std::string *pExtValue = nullptr,
-                               int pRightLabelOffset = 0,
-                               int pRightLabelHeight = 1,
-                               int pRightLabelWidth = 7,
-                               bool pShowRightLabel = false);
+      virtual std::shared_ptr<cxComboBox> appendComboBox(int pHeight, int pWidth, const std::string& pLabel,
+                                                         const std::string& pValidator = "",
+                                                         const std::string& pHelpString = "",
+                                                         eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                         const std::string& pName = "",
+                                                         std::string *pExtValue = nullptr,
+                                                         int pRightLabelOffset = 0,
+                                                         int pRightLabelHeight = 1,
+                                                         int pRightLabelWidth = 7,
+                                                         bool pShowRightLabel = false);
 
       /**
        * \brief Appends a copy of an input to a form.
        *
        * @param pInput A cxMultiLineInput object to be added to the form.
        */
-      virtual cxMultiLineInput* append(const cxMultiLineInput& pInput);
+      virtual std::shared_ptr<cxMultiLineInput> append(const cxMultiLineInput& pInput);
 
       /**
        * \brief Appends a cxMultiLineInput to the form via a pointer.
@@ -501,13 +502,13 @@ class cxForm : public cxWindow {
        *  to be moved.
        *
        */
-      virtual void append(cxMultiLineInput* pInput, int pRow, int pCol, bool* pMoved = nullptr);
+      virtual void append(std::shared_ptr<cxMultiLineInput>& pInput, int pRow, int pCol, bool* pMoved = nullptr);
 
       /**
        * Removes an input from the form (by index)
        * @param pIndex The index of the input to be deleted
        */
-      virtual void remove(unsigned pIndex);
+      virtual void remove(unsigned int pIndex);
 
      /**
        * Removes an input from the form (by label or name)
@@ -521,6 +522,7 @@ class cxForm : public cxWindow {
        * Removes an input from the form (by pointer)
        * @param pInput Pointer to the cxMultiLineInput object to remove
        */
+      virtual void remove(const std::shared_ptr<cxMultiLineInput>& pInput);
       virtual void remove(cxMultiLineInput *pInput);
 
       /**
@@ -1019,6 +1021,7 @@ class cxForm : public cxWindow {
        * @return True if succeeded or false if not (i.e., will return false if
        *  the input is not on the form).
        */
+      virtual bool setCurrentInputByPtr(const std::shared_ptr<cxMultiLineInput>& pInput);
       virtual bool setCurrentInputByPtr(const cxMultiLineInput* const pInput);
 
       /**
@@ -1588,7 +1591,7 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the input at pIndex, or nullptr if the input is not valid
        */
-      cxMultiLineInput* getInput(int pIndex) const;
+      const std::shared_ptr<cxMultiLineInput>& getInput(int pIndex) const;
 
       /**
        * \brief Returns a pointer to an input with a given label/name, or
@@ -1605,7 +1608,7 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the input with the given label/name, or nullptr if none is found
        */
-      cxMultiLineInput* getInput(const std::string& pLabel, bool pIsLabel = true) const;
+      const std::shared_ptr<cxMultiLineInput>& getInput(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns a pointer to the current input.  If there are no inputs
@@ -1615,7 +1618,7 @@ class cxForm : public cxWindow {
        * @return A pointer to the current input on the form, or nullptr if there
        *  are no inputs or if there is an error.
        */
-      cxMultiLineInput* getCurrentInput() const;
+      const std::shared_ptr<cxMultiLineInput>& getCurrentInput() const;
 
       /**
        * \brief Returns the editability option for an input (by index).
@@ -2012,6 +2015,7 @@ when the user presses the 'n' key.
        * @return The index of the input on the form, or -1 if the input is
        *  not in the form.
        */
+      int getInputIndex(const std::shared_ptr<cxMultiLineInput>& pInput) const;
       int getInputIndex(const cxMultiLineInput *pInput) const;
 
       /**
@@ -2898,14 +2902,14 @@ when the user presses the 'n' key.
        *
        * @return Whether or not the inputs got swapped
        */
-      virtual bool swap(cxWindow *pInput1, cxWindow *pInput2);
+      virtual bool swap(std::shared_ptr<cxWindow>& pInput1, std::shared_ptr<cxWindow>& pInput2);
 
       // We still want to inherit versions of some functions from cxWindow
       using cxWindow::getName;
       using cxWindow::getStatus;
 
    protected:
-      typedef std::vector<cxMultiLineInput*> inputPtrContainer;
+      typedef std::vector<std::shared_ptr<cxMultiLineInput> > inputPtrContainer;
       // mInputs stores the pointers to the form's inputs.
       inputPtrContainer mInputs;
       int mCurrentInput = 0; // Keeps track of the current input w/ focus
@@ -3166,14 +3170,14 @@ when the user presses the 'n' key.
       //
       // Parameters:
       //  pInput: A pointer to an input to which to apply the attributes.
-      void applyAttrDefaults(cxMultiLineInput *pInput);
+      void applyAttrDefaults(std::shared_ptr<cxMultiLineInput>& pInput);
 
       // Applies all the form's attributes to an input.  This meant for new
       // inputs being appended to the form (used in the append() methods).
       //
       // Parameters:
       //  pInput: A pointer to an input to which to apply the attributes.
-      void applyWinAttributes(cxMultiLineInput *pInput);
+      void applyWinAttributes(std::shared_ptr<cxMultiLineInput>& pInput);
 
       friend class cxMultiLineInput;
       friend class cxMultiForm;

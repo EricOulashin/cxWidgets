@@ -10,6 +10,7 @@
 #include "cxForm.h"
 #include "cxMenu.h"
 #include <string>
+#include <memory>
 
 /**
   * \brief This class is based on cxPanel, and it contains a cxForm at the top
@@ -55,14 +56,14 @@ class cxSearchPanel : public cxPanel {
        *
        * @return A pointer to the cxForm on the panel
        */
-      cxForm* getForm() const;
+      const std::shared_ptr<cxForm>& getForm() const;
 
       /**
        * \brief Returns a pointer to the cxMenu on the panel.
        *
        * @return A pointer to the cxMenu on the panel
        */
-      cxMenu* getMenu() const;
+      const std::shared_ptr<cxMenu>& getMenu() const;
 
       /**
        * \brief Adds an input to the form and returns a pointer to the new
@@ -86,7 +87,7 @@ class cxSearchPanel : public cxPanel {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxMultiLineInput* appendToForm(int pRow, int pCol, int pHeight,
+      virtual std::shared_ptr<cxMultiLineInput> appendToForm(int pRow, int pCol, int pHeight,
                                      int pWidth, const std::string& pLabel,
                                      const std::string& pValidator = "",
                                      const std::string& pHelpString = "",
@@ -114,7 +115,7 @@ class cxSearchPanel : public cxPanel {
        *  value.  Defaults to nullptr for none.
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxComboBox* appendComboBoxToForm(int pRow, int pCol, int pHeight,
+      virtual std::shared_ptr<cxComboBox> appendComboBoxToForm(int pRow, int pCol, int pHeight,
                                      int pWidth, const std::string& pLabel,
                                      const std::string& pValidator = "",
                                      const std::string& pHelpString = "",
@@ -712,8 +713,8 @@ class cxSearchPanel : public cxPanel {
       void copyCxSearchPanelStuff(const cxSearchPanel* pThatPanel);
 
    private:
-      cxForm *mForm;   // Pointer to the form on the panel
-      cxMenu *mMenu;   // Pointer to the menu on the panel
+      std::shared_ptr<cxForm> mForm; // Pointer to the form on the panel
+      std::shared_ptr<cxMenu> mMenu; // Pointer to the menu on the panel
 
       // This function is used when copying another cxSearchPanel.  It checks
       //  event function pointers (onFocus, onLeave, mFormOnEnterFunction) to

@@ -6,6 +6,7 @@
 #include "cxWindow.h"
 #include <string>
 #include <vector>
+#include <memory>
 
 /** 
  * \brief cxPanel is a window that contains other windows.  When showModal()
@@ -146,7 +147,7 @@ class cxPanel : public cxWindow {
        *
        * @return The number of windows contained by the panel
        */
-      virtual unsigned numWindows() const;
+      virtual unsigned int numWindows() const;
 
       /**
        * \brief Gets a pointer to one of the subwindows (by index).
@@ -159,7 +160,7 @@ class cxPanel : public cxWindow {
        * @return A pointer to one of the subwindows, or nullptr
        *  if pIndex is out of bounds.
        */
-      virtual cxWindow* getWindow(unsigned pIndex) const;
+      virtual const std::shared_ptr<cxWindow>& getWindow(unsigned pIndex) const;
 
       /**
        * \brief Adds a window to the panel.  Note: The cxWindow
@@ -174,7 +175,7 @@ class cxPanel : public cxWindow {
        *
        * @return true if the window was appended, or false if not
        */
-      virtual bool append(cxWindow *pWindow);
+      virtual bool append(const std::shared_ptr<cxWindow>& pWindow);
 
       /**
        * \brief Adds a window to the panel with relative coordinates.
@@ -197,7 +198,7 @@ class cxPanel : public cxWindow {
        *
        * @return true if the window was appended, or false if not
        */
-      virtual bool append(cxWindow *pWindow, int pRow, int pCol, bool pRefresh = false);
+      virtual bool append(const std::shared_ptr<cxWindow>& pWindow, int pRow, int pCol, bool pRefresh = false);
 
       /**
        * \brief Removes a window from the panel (by index) and frees the memory
@@ -217,7 +218,7 @@ class cxPanel : public cxWindow {
        *
        * @param pWindow A pointer to a window to remove from the panel
        */
-      virtual void delWindow(cxWindow *pWindow);
+      virtual void delWindow(const std::shared_ptr<cxWindow>& pWindow);
 
       /**
        * \brief Removes all windows from the panel.  Also frees the memory used
@@ -238,7 +239,7 @@ class cxPanel : public cxWindow {
        * @return A pointer to the window removed.  If pIndex is not a valid
        *  index, the return value will be nullptr.
        */
-      virtual cxWindow* removeWindow(unsigned pIndex);
+      virtual std::shared_ptr<cxWindow> removeWindow(unsigned int pIndex);
 
       /**
        * \brief Removes a window from the panel, without freeing its memory
@@ -248,6 +249,7 @@ class cxPanel : public cxWindow {
        *
        * @param pWindow A pointer to a window to be removed from the panel
        */
+      virtual void removeWindow(const std::shared_ptr<cxWindow>& pWindow);
       virtual void removeWindow(cxWindow *pWindow);
 
       /**
@@ -259,6 +261,7 @@ class cxPanel : public cxWindow {
        * @return Whether or not the cxWindow is contained in
        *  the panel
        */
+      virtual bool windowIsInPanel(const std::shared_ptr<cxWindow>& pWindow) const;
       virtual bool windowIsInPanel(cxWindow *pWindow) const;
 
       /**
@@ -306,6 +309,7 @@ class cxPanel : public cxWindow {
        *  in the panel, it will then be the current window).
        * @return True if successful or false if not
        */
+      virtual bool setCurrentWindowByPtr(const std::shared_ptr<cxWindow>& pWindow);
       virtual bool setCurrentWindowByPtr(cxWindow *pWindow);
 
       /**
@@ -429,6 +433,7 @@ class cxPanel : public cxWindow {
        * @return The index of the window, or -1 if the window is not in the
        *  panel.
        */
+      virtual int getWindowIndex(const std::shared_ptr<cxWindow>& pWindow) const;
       virtual int getWindowIndex(cxWindow *pWindow) const;
 
       /**
@@ -438,7 +443,7 @@ class cxPanel : public cxWindow {
        *
        * @return A pointer to the current window
        */
-      virtual cxWindow* getCurrentWindowPtr() const;
+      virtual const std::shared_ptr<cxWindow>& getCurrentWindowPtr() const;
 
       /**
        * \brief Shows the panel.  If setShowPanelWindow(false) has been
@@ -655,6 +660,7 @@ class cxPanel : public cxWindow {
        * @return Whether or not the windows got swapped
        */
       virtual bool swap(cxWindow *pWindow1, cxWindow *pWindow2);
+      virtual bool swap(const std::shared_ptr<cxWindow>& pWindow1, const std::shared_ptr<cxWindow>& pWindow2);
 
       /**
        * \brief Sets the color of one of the window items.
@@ -699,7 +705,7 @@ class cxPanel : public cxWindow {
        * @return A pointer to the last window visited during the input loop,
        *  or nullptr if there was no last window visited.
        */
-      cxWindow* getLastWindow() const;
+      const std::shared_ptr<cxWindow>& getLastWindow() const;
 
       /**
        * \brief Sets the name of one of the windows in the panel (by index).
@@ -742,12 +748,12 @@ class cxPanel : public cxWindow {
       virtual int bottom() const;
 
    protected:
-      typedef std::vector<cxWindow*> cxWindowPtrCollection;
-      cxWindowPtrCollection mWindows; // The windows in the panel to cycle between
-      bool mCycleWin = true;          // Whether or not to cycle to the next/previous
-                               //  window in the input loop (this is set false
-                               //  in setCurrentWindow()).
-      cxWindow *mLastWindow = nullptr;   // The last window visited during the input loop
+      typedef std::vector<std::shared_ptr<cxWindow> > cxWindowPtrCollection;
+      cxWindowPtrCollection mWindows;        // The windows in the panel to cycle between
+      bool mCycleWin = true;                 // Whether or not to cycle to the next/previous
+                                             //  window in the input loop (this is set false
+                                             //  in setCurrentWindow()).
+      std::shared_ptr<cxWindow> mLastWindow; // The last window visited during the input loop
 
       /**
        * \brief Returns whether any of the windows contained in mWindows are
@@ -802,11 +808,9 @@ class cxPanel : public cxWindow {
       //
       // Parameters:
       //  pWindow: A cxWindow pointer to be added to mWindows.
-      //           This is assumed to be non-null.  A cxWindow pointer
-      //           should be nullptr-checked before calling this method.
       //
       // Return: true if the window was added, or false if not.
-      bool addWindowPtr(cxWindow* pWindow);
+      bool addWindowPtr(const std::shared_ptr<cxWindow>& pWindow);
 
       // Does the input loop.  Returns the return code
       //  according to the user's input.
@@ -832,7 +836,7 @@ class cxPanel : public cxWindow {
       //
       // Note: This is inline for speed (this function will get called
       //  inside of a loop).
-      inline void addExitKeyToWindow(cxWindow *pWindow, int pKey,
+      inline void addExitKeyToWindow(std::shared_ptr<cxWindow>& pWindow, int pKey,
                               bool pRunOnLeaveFunction, bool pOverride);
 
       // This adds a quit key to one of the windows in the panel.  If the
@@ -850,7 +854,7 @@ class cxPanel : public cxWindow {
       //
       // Note: This is inline for speed (this function will get called
       //  inside of a loop).
-      inline void addQuitKeyToWindow(cxWindow *pWindow, int pKey,
+      inline void addQuitKeyToWindow(std::shared_ptr<cxWindow>& pWindow, int pKey,
                               bool pRunOnLeaveFunction, bool pOverride);
 
       // Don't allow copy construction or assignment
