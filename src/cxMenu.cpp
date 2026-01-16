@@ -18,6 +18,14 @@
 #include <set>
 #include <stdexcept> // For std::out_of_range exception
 #include <cstdlib>   // For tolower()
+using std::string;
+using std::map;
+using std::multimap;
+using std::make_pair;
+using std::set;
+using std::vector;
+using std::shared_ptr;
+using std::make_shared;
 using cxBase::stringWithoutHotkeyChars;
 using cxBase::messageBox;
 using cxStringUtils::Find;
@@ -31,36 +39,14 @@ cxMenu::cxMenu(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
                cxWindow *pExtStatusWindow, eBorderStyle pBorderStyle)
    : cxWindow(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, "", "",
               pBorderStyle, pExtTitleWindow, pExtStatusWindow),
-     mSubWindow(NULL),
      mSubWinHeight((getBorderStyle() == eBS_NOBORDER) ? height() : height()-2),
-     mSubWinWidth((getBorderStyle() == eBS_NOBORDER) ? width() : width()-2),
-     mCurrentMenuItem(0),
-     mTopMenuItem(0),
-     mAltPgUpKey(DEFAULT_CXMENU_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXMENU_ALT_PGDOWN_KEY),
-     mSearchKey(DEFAULT_CXMENU_SEARCH_KEY),
-     mClearOnSearch(false),
-     mCaseSensitiveSearch(false),
-     mCustomStatus(false),
-     mAllowQuit(true),
-     mAllowExit(true),
-     mSelectableItemExists(false),
-     mWrap(false),
-     mWaitForInputIfEmpty(true),
-     mOnSelectItemFunction(NULL),
-     mItemHotkeyIndex(0),
-     mLastItemHotkey(NOKEY),
-     mExitWhenLeaveFirst(false),
-     mExitWhenLeaveLast(false),
-     mRefreshItemsWhenModal(false),
-     mNumParentMenus(0),
-     mLastInputWasMouseEvent(false)
+     mSubWinWidth((getBorderStyle() == eBS_NOBORDER) ? width() : width()-2)
 {
    // Create the subwindow (for the list of items)
    if (getBorderStyle() == eBS_NOBORDER) {
       mSubWindow = derwin(mWindow, mSubWinHeight, mSubWinWidth, 0, 0);
-      // If mSubWindow is NULL, that means derwin() had an error..
-      if (mSubWindow == NULL) {
+      // If mSubWindow is nullptr, that means derwin() had an error..
+      if (mSubWindow == nullptr) {
          // Free up the other memory used
          cxWindow::freeWindow();
          throw(cxWidgetsException("Couldn't create a new ncurses subwindow (constructing a new cxMenu)."));
@@ -68,8 +54,8 @@ cxMenu::cxMenu(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
    }
    else {
       mSubWindow = derwin(mWindow, mSubWinHeight, mSubWinWidth, 1, 1);
-      // If mSubWindow is NULL, that means derwin() had an error..
-      if (mSubWindow == NULL) {
+      // If mSubWindow is nullptr, that means derwin() had an error..
+      if (mSubWindow == nullptr) {
          // Free up the other memory used
          cxWindow::freeWindow();
          throw(cxWidgetsException("Couldn't create a new ncurses subwindow (constructing a new cxMenu)."));
@@ -89,13 +75,12 @@ cxMenu::cxMenu(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
 
 // Copy constructor
 cxMenu::cxMenu(const cxMenu& pThatMenu)
-   : cxWindow(NULL, pThatMenu.top(), pThatMenu.left(),
+   : cxWindow(nullptr, pThatMenu.top(), pThatMenu.left(),
               pThatMenu.height(), pThatMenu.width(), pThatMenu.getTitle(),
               pThatMenu.getMessage(), pThatMenu.getStatus(),
               pThatMenu.getBorderStyle(), pThatMenu.getExtTitleWindow(),
               pThatMenu.getExtStatusWindow()),
      mMenuSelectionAttrs(pThatMenu.mMenuSelectionAttrs),
-     mSubWindow(NULL),
      mSubWinHeight(pThatMenu.mSubWinHeight),
      mSubWinWidth(pThatMenu.mSubWinWidth),
      mCurrentMenuItem(pThatMenu.mCurrentMenuItem),
@@ -118,7 +103,6 @@ cxMenu::cxMenu(const cxMenu& pThatMenu)
      mItemTypes(pThatMenu.mItemTypes),
      mAltItemText(pThatMenu.mAltItemText),
      mUnselectableItems(pThatMenu.mUnselectableItems),
-     mOnSelectItemFunction(NULL),
      mItemHotkeyIndex(pThatMenu.mItemHotkeyIndex),
      mLastItemHotkey(pThatMenu.mLastItemHotkey),
      mExitWhenLeaveFirst(pThatMenu.mExitWhenLeaveFirst),
@@ -137,9 +121,7 @@ cxMenu::~cxMenu() {
    //  used by the main window.)
    freeSubWindow();
    // Free the memory used by mOnSelectItemFunction
-   if (mOnSelectItemFunction != NULL) {
-      delete mOnSelectItemFunction;
-   }
+   mOnSelectItemFunction.reset();
 }
 
 void cxMenu::append(const string& pDisplayText, long pReturnCode,
@@ -209,7 +191,7 @@ void cxMenu::append(const string& pDisplayText, long pReturnCode,
 
 void cxMenu::appendWithPullRight(const string& pDisplayText, cxMenu *pSubMenu,
                                  const string& pHelpString, bool pResize) {
-   if (pSubMenu != NULL) {
+   if (pSubMenu != nullptr) {
       // Add the item text to the menu
       append(pDisplayText, -1, pHelpString, cxITEM_SUBMENU, pResize, "");
       // Add the submenu pointer to mSubMenus.
@@ -221,7 +203,7 @@ void cxMenu::appendWithPullRight(const string& pDisplayText, cxMenu *pSubMenu,
 
 void cxMenu::appendWithPopUp(const string& pDisplayText, cxMenu *pSubMenu,
                              const string& pHelpString, bool pResize) {
-   if (pSubMenu != NULL) {
+   if (pSubMenu != nullptr) {
       // Add the item text to the menu
       append(pDisplayText, -1, pHelpString, cxITEM_POPUPMENU, pResize, "");
       // Add the submenu pointer to mSubMenus.
@@ -674,7 +656,7 @@ void cxMenu::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
             freeWindow();
             // Re-create mWindow
             mWindow = newwin(pNewHeight, pNewWidth, topSide, leftSide);
-            if (mWindow != NULL) {
+            if (mWindow != nullptr) {
                keypad(mWindow, TRUE);
                // Re-create the subwindow
                reCreateSubWindow();
@@ -684,7 +666,7 @@ void cxMenu::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
                fitItemsToWidth();
             }
             else {
-               // Uh oh, mWindow is NULL..
+               // Uh oh, mWindow is nullptr..
                throw(cxWidgetsException("Couldn't re-create the curses window (cxMenu::resize()).  Height: " + toString(pNewHeight) + ", width: " + toString(pNewWidth) + ", row: " + toString(topSide) + ", col: " + toString(leftSide)));
             }
          }
@@ -697,10 +679,10 @@ void cxMenu::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
 } // resize
 
 void cxMenu::drawMessage() {
-   if (mSubWindow != NULL) {
+   if (mSubWindow != nullptr) {
       // Enable the message attributes
       enableAttrs(mSubWindow, eMESSAGE);
-      wcolor_set(mSubWindow, mMessageColorPair, NULL);
+      wcolor_set(mSubWindow, mMessageColorPair, nullptr);
 
       int currentSubWinRow = 0;
       int minHeight = 0;
@@ -733,7 +715,7 @@ void cxMenu::drawMessage() {
 
       // Disable the message attributes
       disableAttrs(mSubWindow, eMESSAGE);
-      wcolor_set(mSubWindow, 0, NULL);
+      wcolor_set(mSubWindow, 0, nullptr);
    }
 } // drawMessage
 
@@ -756,7 +738,7 @@ long cxMenu::show(bool pBringToTop, bool pShowSubwindows) {
 
 void cxMenu::erase() {
    cxWindow::erase();
-   if (mSubWindow != NULL) {
+   if (mSubWindow != nullptr) {
       werase(mSubWindow);
       wrefresh(mSubWindow);
    }
@@ -859,7 +841,7 @@ void cxMenu::drawBorder() {
       // Enable the border attributes
       enableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, mBorderColorPair, NULL);
+         wcolor_set(mWindow, mBorderColorPair, nullptr);
       }
 
       mvwaddch(mWindow, 1, width()-1, ACS_UARROW);          // Up arrow
@@ -868,7 +850,7 @@ void cxMenu::drawBorder() {
       // Disable the border attributes
       disableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
    }
 } // drawBorder
@@ -1246,7 +1228,7 @@ void cxMenu::addAttr(e_WidgetItems pItem, attr_t pAttr) {
    else {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
       switch(pItem) {
          case eMENU_SELECTION: // Menu selection
             attrSet = &mMenuSelectionAttrs;
@@ -1265,7 +1247,7 @@ void cxMenu::addAttr(e_WidgetItems pItem, attr_t pAttr) {
       }
 
       // Insert the attribute, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          attrSet->insert(pAttr);
       }
    }
@@ -1281,7 +1263,7 @@ void cxMenu::setAttr(e_WidgetItems pItem, attr_t pAttr) {
    else {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
       switch(pItem) {
          case eMENU_SELECTION: // Menu selection
             attrSet = &mMenuSelectionAttrs;
@@ -1300,7 +1282,7 @@ void cxMenu::setAttr(e_WidgetItems pItem, attr_t pAttr) {
       }
 
       // Set the attribute, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          attrSet->clear();
          attrSet->insert(pAttr);
       }
@@ -1317,7 +1299,7 @@ void cxMenu::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
    else {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
       switch(pItem) {
          case eMENU_SELECTION: // Menu selection
             attrSet = &mMenuSelectionAttrs;
@@ -1336,7 +1318,7 @@ void cxMenu::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
       }
 
       // Remove the attribute, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          attrSet->erase(pAttr);
       }
    }
@@ -1351,7 +1333,7 @@ void cxMenu::removeAttrs(e_WidgetItems pItem) {
    else {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
       switch(pItem) {
          case eMENU_SELECTION: // Menu selection
             attrSet = &mMenuSelectionAttrs;
@@ -1370,7 +1352,7 @@ void cxMenu::removeAttrs(e_WidgetItems pItem) {
       }
 
       // Remove the attributes, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          attrSet->clear();
       }
    }
@@ -1550,8 +1532,7 @@ bool cxMenu::itemWasSelected() const {
                 (mItemTypes[menuItem] == cxITEM_POPUPMENU)) {
                // Since the item is a submenu, mSubMenus should have an entry
                //  for menuItem, but check anyway, just in case.
-               map<int, cxMenu*>::const_iterator iter =
-                                          mSubMenus.find(menuItem);
+               map<int, cxMenu*>::const_iterator iter = mSubMenus.find(menuItem);
                if (iter != mSubMenus.end()) {
                   retval = iter->second->itemWasSelected();
                }
@@ -1622,9 +1603,9 @@ bool cxMenu::setOnSelectItemFunction(funcPtr4 pFunction, void *p1, void *p2,
    // Free the memory used by the current mOnSelectItemFunction, and then
    //  create it with the new options.
    freeOnSelectItemFunction();
-   mOnSelectItemFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
+   mOnSelectItemFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false,
                                            pExitAfterRun, pRunOnLeaveFunction);
-   return(mOnSelectItemFunction != NULL);
+   return(mOnSelectItemFunction != nullptr);
 } // setOnSelectItemFunction
 
 bool cxMenu::setOnSelectItemFunction(funcPtr2 pFunction, void *p1, void *p2,
@@ -1633,9 +1614,9 @@ bool cxMenu::setOnSelectItemFunction(funcPtr2 pFunction, void *p1, void *p2,
    // Free the memory used by the current mOnSelectItemFunction, and then
    //  create it with the new options.
    freeOnSelectItemFunction();
-   mOnSelectItemFunction = new cxFunction2(pFunction, p1, p2, false,
+   mOnSelectItemFunction = make_shared<cxFunction2>(pFunction, p1, p2, false,
                                            pExitAfterRun, pRunOnLeaveFunction);
-   return(mOnSelectItemFunction != NULL);
+   return(mOnSelectItemFunction != nullptr);
 } // setOnSelectItemFunction
 
 bool cxMenu::setOnSelectItemFunction(funcPtr0 pFunction, bool pExitAfterRun,
@@ -1643,19 +1624,19 @@ bool cxMenu::setOnSelectItemFunction(funcPtr0 pFunction, bool pExitAfterRun,
    // Free the memory used by the current mOnSelectItemFunction, and then
    //  create it with the new options.
    freeOnSelectItemFunction();
-   mOnSelectItemFunction = new cxFunction0(pFunction, false, pExitAfterRun,
+   mOnSelectItemFunction = make_shared<cxFunction0>(pFunction, false, pExitAfterRun,
                                            pRunOnLeaveFunction);
-   return(mOnSelectItemFunction != NULL);
+   return(mOnSelectItemFunction != nullptr);
 } // setOnSelectItemFunction
 
-cxFunction* cxMenu::getOnSelectItemFunction() const {
+std::shared_ptr<cxFunction> cxMenu::getOnSelectItemFunction() const {
    return(mOnSelectItemFunction);
 } // getOnSelectItemFunction
 
 //// Protected functions
 
 void cxMenu::copyCxMenuStuff(const cxMenu* pThatMenu) {
-   if ((pThatMenu != NULL) && (pThatMenu != this)) {
+   if ((pThatMenu != nullptr) && (pThatMenu != this)) {
       freeSubWindow();
       // Copy the cxWindow stuff inherited from the parent, then copy
       //  this class' stuff
@@ -2245,7 +2226,7 @@ long cxMenu::doInputLoop(bool& pRunOnLeaveFunction) {
       // There are no items in the menu, but at least show something and pause
       //  for user input.
       if (mWaitForInputIfEmpty) {
-         cxWindow messageWindow(NULL, top()+2, left()+2,
+         cxWindow messageWindow(nullptr, top()+2, left()+2,
                      "Message", "This menu contains no items.", "");
          messageWindow.show();
          int lastKey = wgetch(mWindow);
@@ -2258,7 +2239,7 @@ long cxMenu::doInputLoop(bool& pRunOnLeaveFunction) {
             mLastInputWasMouseEvent = true;
             if (getmouse(&mMouse) == OK) {
                // Run a function that may exist for the mouse state.
-               handleFunctionForLastMouseState(NULL, &pRunOnLeaveFunction);
+               handleFunctionForLastMouseState(nullptr, &pRunOnLeaveFunction);
             }
          }
 #else
@@ -2292,7 +2273,7 @@ void cxMenu::enableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    else {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
       switch(pItem) {
          case eMENU_SELECTION: // Menu selection
             attrSet = &mMenuSelectionAttrs;
@@ -2311,7 +2292,7 @@ void cxMenu::enableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
       }
 
       // Enable the attributes, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          if (attrSet->size() > 0) {
             set<attr_t>::const_iterator iter = attrSet->begin();
             for (; iter != attrSet->end(); ++iter) {
@@ -2337,7 +2318,7 @@ void cxMenu::disableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    else {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
       switch(pItem) {
          case eMENU_SELECTION: // Menu selection
             attrSet = &mMenuSelectionAttrs;
@@ -2356,7 +2337,7 @@ void cxMenu::disableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
       }
 
       // Enable the attributes, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          if (attrSet->size() > 0) {
             set<attr_t>::const_iterator iter = attrSet->begin();
             for (; iter != attrSet->end(); ++iter) {
@@ -2392,7 +2373,7 @@ inline int cxMenu::getBottomItemIndex() {
 //  current menu item isn't a submenu type.
 inline long cxMenu::doSubmenu() {
    long returnCode = cxID_QUIT;
-   cxMenu *subMenu = NULL;
+   cxMenu *subMenu = nullptr;
 
    if ((unsigned)mCurrentMenuItem < mItemTypes.size()) {
       // If a menu exists for this menu item, then check if
@@ -2409,7 +2390,7 @@ inline long cxMenu::doSubmenu() {
             int itemRow = mCurrentMenuItem - mTopMenuItem + 1;
 
             subMenu = mSubMenus[mCurrentMenuItem];
-            if (subMenu != NULL) {
+            if (subMenu != nullptr) {
                subMenu->move(itemRow, right()+1, false);
             }
          }
@@ -2423,7 +2404,7 @@ inline long cxMenu::doSubmenu() {
 
    // If we got a submenu for this item, show it and get
    //  its return code, etc.
-   if (subMenu != NULL) {
+   if (subMenu != nullptr) {
       returnCode = subMenu->showModal(true, true, true);
       subMenu->hide();
 
@@ -2464,7 +2445,7 @@ void cxMenu::drawMenuItem(int pItemIndex, int pSubWinRow, bool pRefreshSubwindow
       itemStr.assign(mSubWinWidth, ' ');
    }
 
-   wcolor_set(mSubWindow, mMessageColorPair, NULL);
+   wcolor_set(mSubWindow, mMessageColorPair, nullptr);
    scrollok(mSubWindow, false);
    // If highlighting is to be used, enable the menu selection attributes (i.e., A_REVERSE)
    e_WidgetItems item = eMESSAGE;
@@ -2654,7 +2635,7 @@ void cxMenu::doSearch() {
    // Set up a key for the input to clear the keyword.  This uses the return
    //  value of cxBase::noOp(), which does nothing and returns a blank string.
    searchInput.setKeyFunction(cxBase::getMenuClearKeywordKey(), cxBase::noOp,
-                              NULL, NULL, true, false, true);
+                              nullptr, nullptr, true, false, true);
 
    if (searchInput.showModal() != ESC) {
       mSearchText = searchInput.getValue();
@@ -2852,9 +2833,9 @@ inline void cxMenu::reCreateSubWindow() {
       leftCol = 1;
    }
    // Re-create the subwindow.  If derwin() can't create it, it will return
-   //  NULL, and we have a problem.
+   //  nullptr, and we have a problem.
    mSubWindow = derwin(mWindow, mSubWinHeight, mSubWinWidth, topRow, leftCol);
-   if (mSubWindow == NULL) {
+   if (mSubWindow == nullptr) {
       // Free up the other memory used
       cxWindow::freeWindow();
       throw(cxWidgetsException("Couldn't re-create the ncurses subwindow (cxMenu::reCreateSubWindow()).  Subwindow height & width: " + toString(mSubWinHeight) + ", " + toString(mSubWinWidth) + "; menu height & width: " + toString(menuHeight) + ", " + toString(menuWidth) + "; begin X & Y: " + toString(topRow) + ", " + toString(leftCol)));
@@ -2865,9 +2846,9 @@ inline void cxMenu::reCreateSubWindow() {
 } // reCreateSubWindow
 
 inline void cxMenu::freeSubWindow() {
-   if (mSubWindow != NULL) {
+   if (mSubWindow != nullptr) {
       delwin(mSubWindow);
-      mSubWindow = NULL;
+      mSubWindow = nullptr;
    }
 } // freeSubWindow
 
@@ -3034,10 +3015,7 @@ void cxMenu::highlightItem(int pItemIndex) {
 } // highlightItem
 
 void cxMenu::freeOnSelectItemFunction() {
-   if (mOnSelectItemFunction != NULL) {
-      delete mOnSelectItemFunction;
-      mOnSelectItemFunction = NULL;
-   }
+   mOnSelectItemFunction.reset();
 } // freeOnSelectItemFunction
 
 void cxMenu::runOnSelectItemFunction(bool& pExitAfterRun,
@@ -3045,8 +3023,8 @@ void cxMenu::runOnSelectItemFunction(bool& pExitAfterRun,
    pExitAfterRun = false;
    pRunOnLeaveFunction = true;
 
-   // If mOnSelectItemFunction is not NULL, then run it.
-   if (mOnSelectItemFunction != NULL) {
+   // If mOnSelectItemFunction is not nullptr, then run it.
+   if (mOnSelectItemFunction != nullptr) {
       mOnSelectItemFunction->runFunction();
       pExitAfterRun = mOnSelectItemFunction->getExitAfterRun();
       pRunOnLeaveFunction = mOnSelectItemFunction->getRunOnLeaveFunction();
@@ -3054,19 +3032,19 @@ void cxMenu::runOnSelectItemFunction(bool& pExitAfterRun,
 } // runOnSelectItemFunction
 
 void cxMenu::checkEventFunctionPointers(const cxMenu& pMenu) {
-   cxFunction *onSelectItemFunc = pMenu.mOnSelectItemFunction;
-   if (onSelectItemFunc != NULL) {
+   shared_ptr<cxFunction> onSelectItemFunc = pMenu.mOnSelectItemFunction;
+   if (onSelectItemFunc != nullptr) {
       if (onSelectItemFunc->cxTypeStr() == "cxFunction0") {
-         cxFunction0* iFunc0 = dynamic_cast<cxFunction0*>(onSelectItemFunc);
-         if (iFunc0 != NULL) {
+         const cxFunction0* iFunc0 = dynamic_cast<cxFunction0*>(onSelectItemFunc.get());
+         if (iFunc0 != nullptr) {
             setOnSelectItemFunction(iFunc0->getFunction(),
                                     iFunc0->getExitAfterRun(),
                                     iFunc0->getRunOnLeaveFunction());
          }
       }
       else if (onSelectItemFunc->cxTypeStr() == "cxFunction2") {
-         cxFunction2* iFunc2 = dynamic_cast<cxFunction2*>(onSelectItemFunc);
-         if (iFunc2 != NULL) {
+         const cxFunction2* iFunc2 = dynamic_cast<cxFunction2*>(onSelectItemFunc.get());
+         if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
                if (params[i] == (void*)(&pMenu)) {
@@ -3079,8 +3057,8 @@ void cxMenu::checkEventFunctionPointers(const cxMenu& pMenu) {
          }
       }
       else if (onSelectItemFunc->cxTypeStr() == "cxFunction4") {
-         cxFunction4* iFunc4 = dynamic_cast<cxFunction4*>(onSelectItemFunc);
-         if (iFunc4 != NULL) {
+         const cxFunction4* iFunc4 = dynamic_cast<cxFunction4*>(onSelectItemFunc.get());
+         if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
             for (int i = 0; i < 4; ++i) {

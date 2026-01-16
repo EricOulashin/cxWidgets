@@ -1,4 +1,5 @@
 #include "floatingPtInputWithRightLabel.h"
+using std::string;
 
 floatingPtInputWithRightLabel::floatingPtInputWithRightLabel(cxWindow *pParentWindow,
                                 int pRow, int pCol, int pHeight, int pWidth,

@@ -2,6 +2,7 @@
 //
 
 #include "cxFunction.h"
+using std::string;
 
 //// cxFunction class methods
 
@@ -52,7 +53,7 @@ cxFunction0::~cxFunction0() {
 }
 
 bool cxFunction0::functionIsSet() const {
-   return(mFunction != NULL);
+   return(mFunction != nullptr);
 }
 
 void cxFunction0::setFunction(funcPtr0 pFuncPtr) {
@@ -65,7 +66,7 @@ funcPtr0 cxFunction0::getFunction() const {
 
 // Runs the function.
 string cxFunction0::runFunction() const {
-   if (mFunction != NULL) {
+   if (mFunction != nullptr) {
       return(mFunction());
    }
    else {
@@ -93,7 +94,7 @@ cxFunction2::~cxFunction2() {
 }
 
 bool cxFunction2::functionIsSet() const {
-   return(mFunction != NULL);
+   return(mFunction != nullptr);
 }
 
 void cxFunction2::setFunction(funcPtr2 pFuncPtr) {
@@ -130,7 +131,7 @@ void* cxFunction2::getParam2() const {
 
 // Runs the function.
 string cxFunction2::runFunction() const {
-   if (mFunction != NULL) {
+   if (mFunction != nullptr) {
       return(mFunction(mParam1, mParam2));
    }
    else {
@@ -160,7 +161,7 @@ cxFunction4::~cxFunction4() {
 }
 
 bool cxFunction4::functionIsSet() const {
-   return(mFunction != NULL);
+   return(mFunction != nullptr);
 }
 
 void cxFunction4::setFunction(funcPtr4 pFuncPtr) {
@@ -217,7 +218,7 @@ void* cxFunction4::getParam4() const {
 
 // Runs the function.
 string cxFunction4::runFunction() const {
-   if (mFunction != NULL) {
+   if (mFunction != nullptr) {
       return(mFunction(mParam1, mParam2, mParam3, mParam4));
    }
    else {

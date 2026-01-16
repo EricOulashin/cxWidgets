@@ -12,10 +12,6 @@
 #include <vector>
 #include <list>
 #include <sstream>
-using std::string;
-using std::vector;
-using std::list;
-using std::ostringstream;
 
 #include "cxReturnCodes.h"
 #include "cxKeyDefines.h"
@@ -37,8 +33,8 @@ namespace cxStringUtils {
     * @param regex Regular expression used to split string
     * @param resultContainer Conainer for strings split off from input
     */
-   void SplitStringRegex(const string& input, const string& regex,
-          vector<string>& resultContainer);
+   void SplitStringRegex(const std::string& input, const std::string& regex,
+          std::vector<std::string>& resultContainer);
 
    /**
     * Performs a regular expression search on a string.
@@ -51,7 +47,7 @@ namespace cxStringUtils {
     *  are used).
     * @return Indicates whether expression found
     */
-   bool Find(const string& input, const string& regex, bool useBasicRegex = false);
+   bool Find(const std::string& input, const std::string& regex, bool useBasicRegex = false);
 
    /**
     * Performs a regular expression search on a string and copies the resulting string into output.
@@ -59,7 +55,7 @@ namespace cxStringUtils {
     * @param regex Regular expression to search for
     * @param output Result string copied here
     */
-   void Find(const string& input, const string& regex, string& output);
+   void Find(const std::string& input, const std::string& regex, std::string& output);
 
    /**
     * Performs a search & replace basd on a regular expression
@@ -72,7 +68,7 @@ namespace cxStringUtils {
     * @param replacementStr String to replace target with
     * @return Indicates whether regular expression found
     */
-   bool Replace(string& srcStr, const string& regexStr, const string& replacementStr);
+   bool Replace(std::string& srcStr, const std::string& regexStr, const std::string& replacementStr);
 
    /** \brief Replaces substrings of a string with another string.
      * @param input The string to be modified
@@ -80,19 +76,19 @@ namespace cxStringUtils {
      * @param replace The string to replace the search string
      * @return The resulting string with replacements done
      */
-   string replace(const string& input, const string& search, const string& replace);
+   std::string replace(const std::string& input, const std::string& search, const std::string& replace);
 
    /**
     * \brief Converts a string to another type.  
     * @param s A string to be converted.
     * @return The value of the string converted to the given type
     */
-   int stringTo(const string& s);
-   long stringToLong(const string& s);
-   unsigned stringToUnsigned(const string& s);
-   double stringToDouble(const string& s);
-   long double stringToLongDouble(const string& s);
-   string stringToString(const string& s);
+   int stringTo(const std::string& s);
+   long stringToLong(const std::string& s);
+   unsigned stringToUnsigned(const std::string& s);
+   double stringToDouble(const std::string& s);
+   long double stringToLongDouble(const std::string& s);
+   std::string stringToString(const std::string& s);
 
    void test_stringTo();
 
@@ -107,16 +103,16 @@ namespace cxStringUtils {
     *
     * @return The string representation of the object
     */
-   string toString(const int& x);
-   string toString(const long& x);
-   string toString(const double& x);
-   string toString(const long double& x);
-   string toString(const unsigned& x);
-   string toString(const unsigned long& x);
-   string toString(const eReturnCode& x);
-   string toString(const eInputOptions& x);
-   string toString(const eBorderStyle& x);
-   string toString(const void* x);
+   std::string toString(const int& x);
+   std::string toString(const long& x);
+   std::string toString(const double& x);
+   std::string toString(const long double& x);
+   std::string toString(const unsigned& x);
+   std::string toString(const unsigned long& x);
+   std::string toString(const eReturnCode& x);
+   std::string toString(const eInputOptions& x);
+   std::string toString(const eBorderStyle& x);
+   std::string toString(const void* x);
 
    void test_toString();
 
@@ -125,7 +121,7 @@ namespace cxStringUtils {
     * @param pStr The string to test
     * @return Whether or not the string starts with a number
     */
-   bool startsWithNumber(const string& pStr);
+   bool startsWithNumber(const std::string& pStr);
 
    /**
     * \brief Returns whether or not a key is printable.  This should be used
@@ -146,14 +142,14 @@ namespace cxStringUtils {
     *
     * @return The index of the last capital letter in pStr, or -1 if there isn't one.
     */
-   int indexOfLastCap(const string& pStr);
+   int indexOfLastCap(const std::string& pStr);
 
    /**
     * \brief Converts a string to upper-case
     *
     * @param theString The string to be converted
     */
-   void toUpper(string& theString);
+   void toUpper(std::string& theString);
 
    /**
     * \brief Strips newlines characters from a string and returns
@@ -163,7 +159,7 @@ namespace cxStringUtils {
     *
     * @return A version of pStr without newline characters
     */
-   string stripNewlines(const string& pStr);
+   std::string stripNewlines(const std::string& pStr);
 
    /**
     * \brief Replaces newlines in a string with another character.
@@ -173,7 +169,7 @@ namespace cxStringUtils {
     *
     * @return A copy of pStr with newlines replaced with pChar.
     */
-   string replaceNewlines(const string& pStr, const char& pChar);
+   std::string replaceNewlines(const std::string& pStr, const char& pChar);
 
    /**
     * \brief Inserts an underline character into
@@ -186,7 +182,7 @@ namespace cxStringUtils {
     * @param pAll Whether or not to underline all occurances
     *  of the character in the string (defaults to false)
     */
-   void insertUnderline(string& pStr, char pChar, bool pAll = false);
+   void insertUnderline(std::string& pStr, char pChar, bool pAll = false);
 
    /**
     * \brief Removes a character from a string.
@@ -196,7 +192,7 @@ namespace cxStringUtils {
     *
     * @return The new string with the character removed
     */
-   string removeChar(const string& pString, const int pPos);
+   std::string removeChar(const std::string& pString, const int pPos);
 
    /** 
     * @brief conver the string to upper case
@@ -205,7 +201,7 @@ namespace cxStringUtils {
     * 
     * @return the converted string
     */
-   string strToUpper(const string& theString);
+   std::string strToUpper(const std::string& theString);
 
    /** 
     * @brief conver the string to lower case
@@ -214,7 +210,7 @@ namespace cxStringUtils {
     * 
     * @return the converted string
     */
-   string strToLower(const string& theString);
+   std::string strToLower(const std::string& theString);
 
    /**
     * \brief Trims leading & trailing spaces from a string.
@@ -222,7 +218,7 @@ namespace cxStringUtils {
     * @param str (INOUT) This string will get its leading & trailing spaces
     *  trimmed.
     */
-   void TrimSpaces(string& str);
+   void TrimSpaces(std::string& str);
 
    /**
     * \brief Splits a string on newlines.
@@ -230,7 +226,7 @@ namespace cxStringUtils {
     * @param pStr The string to split
     * @param pStrings (OUT) This will contain the resulting lines
     */
-   void splitStringOnNewlines(const string& pStr, list<string>& pStrings);
+   void splitStringOnNewlines(const std::string& pStr, std::list<std::string>& pStrings);
 
 } // End of stringUtils namespace
 

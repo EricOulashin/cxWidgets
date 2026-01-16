@@ -8,8 +8,7 @@
 
 cxTimer::cxTimer(funcPtr4 pFuncPtr, void* p1, void* p2, void* p3, void* p4, unsigned pDelayMS)
    : mFunction(pFuncPtr, p1, p2, p3, p4, false, false, false),
-     mDelay(pDelayMS),
-     mPID(-1)
+     mDelay(pDelayMS)
 {
    mFunction.setParams(p1, p2, p3, p4);
    start();
@@ -25,14 +24,14 @@ void cxTimer::start() {
 void cxTimer::stop() {
 }
 
-string cxTimer::cxTypeStr() const {
+std::string cxTimer::cxTypeStr() const {
    return("cxTimer");
 } // cxTypeStr
 
 void cxTimer::wait() {
    // Figure out the number of clocks per millisecond,
-   //  the current time, and the time we need to stop
-   //  waiting.
+   // the current time, and the time we need to stop
+   // waiting.
    const unsigned long clocksPerMS = CLOCKS_PER_SEC / 1000;
    clock_t now = clock();
    const clock_t endTime = now + (mDelay * clocksPerMS);

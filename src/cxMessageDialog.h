@@ -6,6 +6,8 @@
 #include "cxDialog.h"
 #include "cxButton.h"
 #include "cxMessageDialogStyles.h"
+#include <string>
+#include <memory>
 
 #define OKBTN_HEIGHT 3
 #define OKBTN_WIDTH 4
@@ -29,7 +31,7 @@ class cxMessageDialog : public cxDialog {
    public:
       /**
        * Default constructor
-       * @param pParentWindow Pointer to parent window; defaults to NULL
+       * @param pParentWindow Pointer to parent window; defaults to nullptr
        * @param pRow Y location of upper-left corner of dialog; defaults to 0
        * @param pCol X location of upper-left corner of dialog; defaults to 0
        * @param pHeight Height of dialog; defaults to 24
@@ -39,13 +41,13 @@ class cxMessageDialog : public cxDialog {
        * @param pStyle Type of dialog from eMessageDialogStyles enumeration; defaults to cxOK|cxCancel
        * @param pStatus The status to display at the bottom of the window
        */
-      explicit cxMessageDialog(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxMessageDialog(cxWindow *pParentWindow = nullptr, int pRow = 0,
                                int pCol = 0, int pHeight = DEFAULT_HEIGHT,
                                int pWidth = DEFAULT_WIDTH,
-                               const string& pTitle = "",
-                               const string& pMessage = "",
+                               const std::string& pTitle = "",
+                               const std::string& pMessage = "",
                                long pStyle = cxOK|cxCANCEL,
-                               const string& pStatus = "");
+                               const std::string& pStatus = "");
 
       /**
        * Simplified constructor - Displays a message dialog centered in the screen with a message and an OK button.
@@ -54,7 +56,7 @@ class cxMessageDialog : public cxDialog {
        * @param pMessage The message to be displayed in the dialog
        * @return 
        */
-      cxMessageDialog(cxWindow *pParentWindow, const string& pTitle, const string& pMessage);
+      cxMessageDialog(cxWindow *pParentWindow, const std::string& pTitle, const std::string& pMessage);
 
       /**
        * Copy constructor
@@ -111,20 +113,20 @@ class cxMessageDialog : public cxDialog {
        * @brief get a pointer to the the OK/Yes button
        * @return cxButton pointer
        */
-      cxButton* getOKButton() { return(mOKBtn); }
+      virtual std::shared_ptr<cxButton> getOKButton() const { return(mOKBtn); }
 
       /** 
        * @brief get a pointer to the the Cancel/NO button
        * @return cxButton pointer
        */
-      cxButton* getCancelButton() { return(mCancelBtn); }
+      virtual std::shared_ptr<cxButton> getCancelButton() const { return(mCancelBtn); }
 
       /** 
        * @brief set the focus the the cxButton
        * @param pButton the button to set the focus to
        * @param pShow show the buttons
        */
-      void setFocus(cxButton* pButton, bool pShow=true);
+      void setFocus(const std::shared_ptr<cxButton>& pButton, bool pShow=true);
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to
@@ -133,7 +135,7 @@ class cxMessageDialog : public cxDialog {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    protected:
       // Handles the input loop.  Returns the return code as a result of
@@ -141,8 +143,10 @@ class cxMessageDialog : public cxDialog {
       long doInputLoop();
 
    private:
-      cxButton *mOKBtn;          // OK/Yes button
-      cxButton *mCancelBtn;      // Cancel/No button
+      //cxButton *mOKBtn = nullptr;         // OK/Yes button
+      //cxButton *mCancelBtn = nullptr;     // Cancel/No button
+      std::shared_ptr<cxButton> mOKBtn;     // OK/Yes button
+      std::shared_ptr<cxButton> mCancelBtn; // Cancel/No button
 
       // Dis-allow show() for this class
       inline long show(bool pBringToTop = true, bool pShowSubwindows = true);

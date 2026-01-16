@@ -23,7 +23,7 @@
 #include "cxWindow.h"
 #include "cxFunction.h"
 #include <string>
-using std::string;
+#include <memory>
 
 class cxButton : public cxWindow {
    public:
@@ -40,9 +40,9 @@ class cxButton : public cxWindow {
        *  a single-line border or eBS_NOBORDER for no border.  Defaults to
        *  eBS_SINGLE_LINE.
        */
-      explicit cxButton(cxWindow *pParentWindowPtr = NULL, int pRow = 0,
+      explicit cxButton(cxWindow *pParentWindowPtr = nullptr, int pRow = 0,
                         int pCol = 0, int pHeight = 3, int pWidth = 5,
-                        const string& pLabel = "",
+                        const std::string& pLabel = "",
                         eBorderStyle pBorderStyle = eBS_SINGLE_LINE);
 
       /**
@@ -61,18 +61,18 @@ class cxButton : public cxWindow {
        *  presses the enter key on the button.  Must have this signature:
        *  string func(void*, void*, void*, void*)
        * @param p1 Pointer to the first parameter for the onClick function.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param p2 Pointer to the second parameter for the onClick function.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param p3 Pointer to the 3rd parameter for the onClick function.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param p4 Pointer to the 4th parameter for the onClick function.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        */
       cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
-               int pWidth, const string& pLabel, eBorderStyle pBorderStyle,
-               funcPtr4 pFunction, void *p1 = NULL, void *p2 = NULL,
-               void *p3 = NULL, void *p4 = NULL);
+               int pWidth, const std::string& pLabel, eBorderStyle pBorderStyle,
+               funcPtr4 pFunction, void *p1 = nullptr, void *p2 = nullptr,
+               void *p3 = nullptr, void *p4 = nullptr);
 
       /**
        * \brief Constructor that sets up the button with a 2-parameter function.
@@ -90,13 +90,13 @@ class cxButton : public cxWindow {
        *  presses the enter key on the button.  Must have this signature:
        *  string func(void*, void*)
        * @param p1 Pointer to the first parameter for the onClick function.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param p2 Pointer to the second parameter for the onClick function.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        */
       cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
-               int pWidth, const string& pLabel, eBorderStyle pBorderStyle,
-               funcPtr2 pFunction, void *p1 = NULL, void *p2 = NULL);
+               int pWidth, const std::string& pLabel, eBorderStyle pBorderStyle,
+               funcPtr2 pFunction, void *p1 = nullptr, void *p2 = nullptr);
 
       /**
        * \brief Copy constructor
@@ -126,7 +126,7 @@ class cxButton : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Shows the button and waits for input.  Fires the button's set
@@ -187,7 +187,7 @@ class cxButton : public cxWindow {
        *
        * @return The return value of the onClick function
        */
-      virtual string runOnClickFunction();
+      virtual std::string runOnClickFunction();
 
       /**
        * \brief If the last mouse event occurred in the button, this will run
@@ -201,10 +201,7 @@ class cxButton : public cxWindow {
       // mOnClickFunction is a pointer to a function that should fire when
       //  the user presses the enter key (if the mouse was supported, this would
       //  also run when the user clicks the button).
-      cxFunction* mOnClickFunction;
-
-      // Frees the memory used by mOnClick function and sets it to NULL.
-      void freeOnClickFunction();
+      std::shared_ptr<cxFunction> mOnClickFunction;
 
       // Copies the onClick function from another cxButton.  This is used by
       //  the copy constructor and the = operator.

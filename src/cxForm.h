@@ -17,10 +17,11 @@
 #include "cxMultiLineInput.h"
 #include "cxComboBox.h"
 #include "cxMenu.h"
+#include <string>
+#include <vector>
 #include <set>
 #include <map>
-using std::set;
-using std::map;
+#include <memory>
 
 #define DEFAULT_CXFORM_JUMPMENU_KEY KEY_F(4)  // Default hotkey for input jumping
 
@@ -34,8 +35,8 @@ enum eInputType {
 class cxMultiForm; // Pre-declaration to avoid a circular reference
 
 // These typedefs are for appendPair() and appendComboBoxPair().
-typedef pair<cxMultiLineInput*, cxMultiLineInput*> cxMLInputPtrPair;
-typedef pair<cxComboBox*, cxComboBox*> cxComboBoxPtrPair;
+typedef std::pair<std::shared_ptr<cxMultiLineInput>, std::shared_ptr<cxMultiLineInput> > cxMLInputPtrPair;
+typedef std::pair<std::shared_ptr<cxComboBox>, std::shared_ptr<cxComboBox> > cxComboBoxPtrPair;
 
 /** \class cxForm
  * \brief Represents a form that contains text inputs.
@@ -83,7 +84,7 @@ class cxForm : public cxWindow {
    public:
       /**
        * Default constructor.  All parameters have default values.
-       * @param pParentWindow Pointer to parent window; default NULL
+       * @param pParentWindow Pointer to parent window; default nullptr
        * @param pRow Y location of form; default 0
        * @param pCol X location of form; default 0
        * @param pHeight Height of form, in lines; defaults to 24
@@ -100,12 +101,12 @@ class cxForm : public cxWindow {
        * @param pStacked If true, the form will behave assuming each input is on its
        *  own line.
        */
-      explicit cxForm(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxForm(cxWindow *pParentWindow = nullptr, int pRow = 0,
                       int pCol = 0, int pHeight = DEFAULT_HEIGHT,
-                      int pWidth = DEFAULT_WIDTH, const string& pTitle = "",
+                      int pWidth = DEFAULT_WIDTH, const std::string& pTitle = "",
                       eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                      cxWindow *pExtTitleWindow = NULL,
-                      cxWindow *pExtStatusWindow = NULL,
+                      cxWindow *pExtTitleWindow = nullptr,
+                      cxWindow *pExtStatusWindow = nullptr,
                       bool pAutoExit = false, bool pStacked = false);
 
       /**
@@ -137,7 +138,7 @@ class cxForm : public cxWindow {
        * @param pName A name for the input (can be used as an alternative way to
        *  identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for its
-       *  value.  Defaults to NULL for none.
+       *  value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -156,18 +157,18 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxMultiLineInput* append(int pRow, int pCol, int pHeight,
-                                     int pWidth, const string& pLabel,
-                                     const string& pValidator = "",
-                                     const string& pHelpString = "",
-                                     eInputOptions pInputOption = eINPUT_EDITABLE,
-                                     const string& pName = "",
-                                     string *pExtValue = NULL,
-                                     int pRightLabelOffset = 0,
-                                     int pRightLabelHeight = 1,
-                                     int pRightLabelWidth = 7,
-                                     bool pShowRightLabel = false,
-                                     eInputType pInputType = eIT_CXMULTILINEINPUT);
+      virtual std::shared_ptr<cxMultiLineInput> append(int pRow, int pCol, int pHeight,
+                                                       int pWidth, const std::string& pLabel,
+                                                       const std::string& pValidator = "",
+                                                       const std::string& pHelpString = "",
+                                                       eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                       const std::string& pName = "",
+                                                       std::string *pExtValue = nullptr,
+                                                       int pRightLabelOffset = 0,
+                                                       int pRightLabelHeight = 1,
+                                                       int pRightLabelWidth = 7,
+                                                       bool pShowRightLabel = false,
+                                                       eInputType pInputType = eIT_CXMULTILINEINPUT);
 
       /**
        * \brief Adds a combo box to the form.  Applies the A_STANDOUT attribute
@@ -187,7 +188,7 @@ class cxForm : public cxWindow {
        * @param pName A name for the input (can be used as an alternative way to
        *  identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for its
-       *  value.  Defaults to NULL for none.
+       *  value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -199,17 +200,17 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxComboBox* appendComboBox(int pRow, int pCol, int pHeight,
-                                     int pWidth, const string& pLabel,
-                                     const string& pValidator = "",
-                                     const string& pHelpString = "",
-                                     eInputOptions pInputOption = eINPUT_EDITABLE,
-                                     const string& pName = "",
-                                     string *pExtValue = NULL,
-                                     int pRightLabelOffset = 0,
-                                     int pRightLabelHeight = 1,
-                                     int pRightLabelWidth = 7,
-                                     bool pShowRightLabel = false);
+      virtual std::shared_ptr<cxComboBox> appendComboBox(int pRow, int pCol, int pHeight,
+                                                         int pWidth, const std::string& pLabel,
+                                                         const std::string& pValidator = "",
+                                                         const std::string& pHelpString = "",
+                                                         eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                         const std::string& pName = "",
+                                                         std::string *pExtValue = nullptr,
+                                                         int pRightLabelOffset = 0,
+                                                         int pRightLabelHeight = 1,
+                                                         int pRightLabelWidth = 7,
+                                                         bool pShowRightLabel = false);
 
       /**
        * \brief Appends a pair of inputs to a form, one to the right of the
@@ -236,9 +237,9 @@ class cxForm : public cxWindow {
        *  be appended to the input names, referring to the first and second
        *  inputs, respectively.
        * @param pExtValue1 A pointer to a string to be linked to the first
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pExtValue2 A pointer to a string to be linked to the second
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pRightlabel1Offset The distance between the right edge of the
        *  first input and its right label.  Defaults to 0.
        * @param pRightLabel1Height The height of the first input's right label
@@ -275,13 +276,13 @@ class cxForm : public cxWindow {
        * @return A pair of pointers to the inputs appended to the form
        */
       virtual cxMLInputPtrPair appendPair(int pRow, int pCol, int pHeight, int pWidth,
-                              const string& pLabel,
-                              const string& pValidator = "",
-                              const string& pHelpString = "",
+                              const std::string& pLabel,
+                              const std::string& pValidator = "",
+                              const std::string& pHelpString = "",
                               eInputOptions pInputOption = eINPUT_EDITABLE,
-                              const string& pName = "",
-                              string *pExtValue1 = NULL,
-                              string *pExtValue2 = NULL,
+                              const std::string& pName = "",
+                              std::string *pExtValue1 = nullptr,
+                              std::string *pExtValue2 = nullptr,
                               int pRightLabel1Offset = 0,
                               int pRightLabel1Height = 1,
                               int pRightLabel1Width = 7,
@@ -318,9 +319,9 @@ class cxForm : public cxWindow {
        *  be appended to the input names, referring to the first and second
        *  inputs, respectively.
        * @param pExtValue1 A pointer to a string to be linked to the first
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pExtValue2 A pointer to a string to be linked to the second
-       *  input and used for its value.  Defaults to NULL for none.
+       *  input and used for its value.  Defaults to nullptr for none.
        * @param pRightlabel1Offset The distance between the right edge of the
        *  first input and its right label.  Defaults to 0.
        * @param pRightLabel1Height The height of the first input's right label
@@ -353,13 +354,13 @@ class cxForm : public cxWindow {
        */
       virtual cxComboBoxPtrPair appendComboBoxPair(int pRow, int pCol, int pHeight,
                                      int pWidth,
-                                     const string& pLabel,
-                                     const string& pValidator = "",
-                                     const string& pHelpString = "",
+                                     const std::string& pLabel,
+                                     const std::string& pValidator = "",
+                                     const std::string& pHelpString = "",
                                      eInputOptions pInputOption = eINPUT_EDITABLE,
-                                     const string& pName = "",
-                                     string *pExtValue1 = NULL,
-                                     string *pExtValue2 = NULL,
+                                     const std::string& pName = "",
+                                     std::string *pExtValue1 = nullptr,
+                                     std::string *pExtValue2 = nullptr,
                                      int pRightLabel1Offset = 0,
                                      int pRightLabel1Height = 1,
                                      int pRightLabel1Width = 7,
@@ -384,9 +385,9 @@ class cxForm : public cxWindow {
        * @param pName If this is non-blank, then this will be used for the
        *  input names.
        */
-      virtual void appendPair(cxMultiLineInput* pInput1,
-                              cxMultiLineInput* pInput2, int pRow, int pCol,
-                              const string& pName = "");
+      virtual void appendPair(std::shared_ptr<cxMultiLineInput>& pInput1,
+                              std::shared_ptr<cxMultiLineInput>& pInput2,
+                              int pRow, int pCol, const std::string& pName = "");
 
       /**
        * \brief Appends an input to the form below the last item currently in
@@ -404,7 +405,7 @@ class cxForm : public cxWindow {
        *  from eInputOptions enumeration in cxInput.h
        * @param pName A name for the input (can be used as an alternative way to identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for
-       *  its value.  Defaults to NULL for none.
+       *  its value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -423,17 +424,17 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxMultiLineInput* append(int pHeight, int pWidth, const string& pLabel,
-                               const string& pValidator = "",
-                               const string& pHelpString = "",
-                               eInputOptions pInputOption = eINPUT_EDITABLE,
-                               const string& pName = "",
-                               string *pExtValue = NULL,
-                               int pRightLabelOffset = 0,
-                               int pRightLabelHeight = 1,
-                               int pRightLabelWidth = 7,
-                               bool pShowRightLabel = false,
-                               eInputType pInputType = eIT_CXMULTILINEINPUT);
+      virtual std::shared_ptr<cxMultiLineInput> append(int pHeight, int pWidth, const std::string& pLabel,
+                                                       const std::string& pValidator = "",
+                                                       const std::string& pHelpString = "",
+                                                       eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                       const std::string& pName = "",
+                                                       std::string *pExtValue = nullptr,
+                                                       int pRightLabelOffset = 0,
+                                                       int pRightLabelHeight = 1,
+                                                       int pRightLabelWidth = 7,
+                                                       bool pShowRightLabel = false,
+                                                       eInputType pInputType = eIT_CXMULTILINEINPUT);
 
       /**
        * \brief Appends a combo box to the form below the last
@@ -451,7 +452,7 @@ class cxForm : public cxWindow {
        *  from eInputOptions enumeration in cxInput.h
        * @param pName A name for the input (can be used as an alternative way to identify the input)
        * @param pExtValue A pointer to a string to be linked to this input and used for
-       *  its value.  Defaults to NULL for none.
+       *  its value.  Defaults to nullptr for none.
        * @param pRightlabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -464,23 +465,23 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the new cxMultiLineInput object that is created.
        */
-      virtual cxComboBox* appendComboBox(int pHeight, int pWidth, const string& pLabel,
-                               const string& pValidator = "",
-                               const string& pHelpString = "",
-                               eInputOptions pInputOption = eINPUT_EDITABLE,
-                               const string& pName = "",
-                               string *pExtValue = NULL,
-                               int pRightLabelOffset = 0,
-                               int pRightLabelHeight = 1,
-                               int pRightLabelWidth = 7,
-                               bool pShowRightLabel = false);
+      virtual std::shared_ptr<cxComboBox> appendComboBox(int pHeight, int pWidth, const std::string& pLabel,
+                                                         const std::string& pValidator = "",
+                                                         const std::string& pHelpString = "",
+                                                         eInputOptions pInputOption = eINPUT_EDITABLE,
+                                                         const std::string& pName = "",
+                                                         std::string *pExtValue = nullptr,
+                                                         int pRightLabelOffset = 0,
+                                                         int pRightLabelHeight = 1,
+                                                         int pRightLabelWidth = 7,
+                                                         bool pShowRightLabel = false);
 
       /**
        * \brief Appends a copy of an input to a form.
        *
        * @param pInput A cxMultiLineInput object to be added to the form.
        */
-      virtual cxMultiLineInput* append(const cxMultiLineInput& pInput);
+      virtual std::shared_ptr<cxMultiLineInput> append(const cxMultiLineInput& pInput);
 
       /**
        * \brief Appends a cxMultiLineInput to the form via a pointer.
@@ -496,18 +497,18 @@ class cxForm : public cxWindow {
        *  be located
        * @param pCol The column on the form where you want the input to
        *  be located
-       * @param pMoved If non-NULL, the boolean pointed to by this
+       * @param pMoved If non-null, the boolean pointed to by this
        *  variable will store whether or not the input was able
        *  to be moved.
        *
        */
-      virtual void append(cxMultiLineInput* pInput, int pRow, int pCol, bool* pMoved = NULL);
+      virtual void append(std::shared_ptr<cxMultiLineInput>& pInput, int pRow, int pCol, bool* pMoved = nullptr);
 
       /**
        * Removes an input from the form (by index)
        * @param pIndex The index of the input to be deleted
        */
-      virtual void remove(unsigned pIndex);
+      virtual void remove(unsigned int pIndex);
 
      /**
        * Removes an input from the form (by label or name)
@@ -515,12 +516,13 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      virtual void remove(const string& pLabel, bool pIsLabel = true);
+      virtual void remove(const std::string& pLabel, bool pIsLabel = true);
 
      /**
        * Removes an input from the form (by pointer)
        * @param pInput Pointer to the cxMultiLineInput object to remove
        */
+      virtual void remove(const std::shared_ptr<cxMultiLineInput>& pInput);
       virtual void remove(cxMultiLineInput *pInput);
 
       /**
@@ -545,7 +547,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setFieldKeyFunction(const string& pLabel, int pFunctionKey,
+      void setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
                             funcPtr4 pFieldFunction, void *p1, void *p2,
                             void *p3, void *p4, bool pUseVal,
                             bool pExitAfterRun = false,
@@ -584,7 +586,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setFieldKeyFunction(const string& pLabel, int pFunctionKey,
+      void setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
                             funcPtr2 pFieldFunction, void *p1, void *p2,
                             bool pUseVal, bool pExitAfterRun = false,
                             bool pIsLabel = true);
@@ -619,7 +621,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      virtual void setOnFocusFunction(const string& pLabel, funcPtr4 pFunction,
+      virtual void setOnFocusFunction(const std::string& pLabel, funcPtr4 pFunction,
                            void *p1, void *p2, void *p3, void *p4, bool pUseVal,
                            bool pIsLabel = true);
 
@@ -649,7 +651,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      virtual void setOnLeaveFunction(const string& pLabel, funcPtr4 pFunction,
+      virtual void setOnLeaveFunction(const std::string& pLabel, funcPtr4 pFunction,
                               void *p1, void *p2, void *p3, void *p4,
                               bool pIsLabel = true);
 
@@ -671,28 +673,28 @@ class cxForm : public cxWindow {
        * @param pIndex The index of the field
        * @param pLabel The label to be set in the field
        */
-      void setFieldLabel(unsigned pIndex, const string& pLabel);
+      void setFieldLabel(unsigned pIndex, const std::string& pLabel);
 
       /**
        * Sets a field label (by name)
        * @param pName The name of the field
        * @param pLabel The label to be set in the field
        */
-      void setFieldLabel(const string& pName, const string& pLabel);
+      void setFieldLabel(const std::string& pName, const std::string& pLabel);
 
       /**
        * Sets a field name (by index)
        * @param pIndex The index of the field
        * @param pName The name to be set in the field
        */
-      void setFieldName(unsigned pIndex, const string& pName);
+      void setFieldName(unsigned pIndex, const std::string& pName);
 
       /**
        * \brief Sets a field name (by label)
        * @param pLabel The label of the field
        * @param pName The name to be set in the field
        */
-      virtual void setFieldName(const string& pLabel, const string& pName);
+      virtual void setFieldName(const std::string& pLabel, const std::string& pName);
 
       /**
        * \brief Enables or disables the input loop for one of the
@@ -707,7 +709,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      virtual void enableInputLoop(const string& pLabel, bool pDoInputLoop, bool pIsLabel = true);
+      virtual void enableInputLoop(const std::string& pLabel, bool pDoInputLoop, bool pIsLabel = true);
 
       /**
        * \brief Enables or disables the input loop for one of the
@@ -838,7 +840,7 @@ class cxForm : public cxWindow {
        * @param pIndex The index of the input
        * @return The string at that index
        */
-      virtual string getValue(int pIndex) const;
+      virtual std::string getValue(int pIndex) const;
 
       /**
        * Returns the value associated with a particular input (by label or name).
@@ -846,7 +848,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel Whether pStr is a label or a name (true = label, false = name)
        * @return The input (string) associated with that label
        */
-      virtual string getValue(const string& pStr, bool pIsLabel = true) const;
+      virtual std::string getValue(const std::string& pStr, bool pIsLabel = true) const;
 
       /**
        * \brief Returns the label of one of the inputs (by index).
@@ -855,7 +857,7 @@ class cxForm : public cxWindow {
        *
        * @return The label of the input, or a blank string if pIndex is out of bounds.
        */
-      virtual string getLabel(int pIndex) const;
+      virtual std::string getLabel(int pIndex) const;
 
       /**
        * \brief Returns the name of one of the inputs (by index).
@@ -864,7 +866,7 @@ class cxForm : public cxWindow {
        *
        * @return The name of the input, or a blank string if pIndex is out of bounds.
        */
-      virtual string getName(int pIndex) const;
+      virtual std::string getName(int pIndex) const;
 
       /**
        * \brief Returns the name of one of the inputs (by label).
@@ -873,7 +875,7 @@ class cxForm : public cxWindow {
        *
        * @return The name of the input, or a blank string if there is no input with the given label.
        */
-      virtual string getName(const string& pLabel) const;
+      virtual std::string getName(const std::string& pLabel) const;
 
       /**
        * \brief Returns the status text of one of the inputs (by index).
@@ -883,7 +885,7 @@ class cxForm : public cxWindow {
        * @return The status text of the input, or a blank
        *  string if the given index is out of range.
        */
-      virtual string getStatus(int pIndex) const;
+      virtual std::string getStatus(int pIndex) const;
 
       /**
        * \brief Returns the status text of one of the inputs (by label/name).
@@ -895,7 +897,7 @@ class cxForm : public cxWindow {
        * @return The status text of the input, or a blank
        *  string if there is no input with the given label/name.
        */
-      virtual string getStatus(const string& pLabel, bool pIsLabel = true) const;
+      virtual std::string getStatus(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * Sets the value of an input (by index).
@@ -904,7 +906,7 @@ class cxForm : public cxWindow {
        * @param pRefresh Whether or not to refresh the input (defaults to false)
        * @return True if successful or false if not
        */
-      virtual bool setValue(int pIndex, const string& pValue, bool pRefresh = false);
+      virtual bool setValue(int pIndex, const std::string& pValue, bool pRefresh = false);
 
       /**
        * Sets the value of an input (by label/name).
@@ -915,7 +917,7 @@ class cxForm : public cxWindow {
        * @param pRefresh Whether or not to refresh the input (defaults to false)
        * @return True if successful or false if not
        */
-      virtual bool setValue(const string& pLabel, const string& pValue,
+      virtual bool setValue(const std::string& pLabel, const std::string& pValue,
                             bool pIsLabel = true, bool pRefresh = false);
 
       /**
@@ -931,7 +933,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true, pStr specifies the input label.  If false, pStr specifies the input name.
        * @return The return value of the input's show() method (0)
        */
-      virtual int refreshInput(const string& pStr, bool pIsLabel = true);
+      virtual int refreshInput(const std::string& pStr, bool pIsLabel = true);
 
       /**
        * Sets the masking character for an input (by index).
@@ -950,7 +952,7 @@ class cxForm : public cxWindow {
        *
        * @return True if successful or false if not
        */
-      bool setMaskChar(const string& pLabel, char pMaskChar, bool pIsLabel = true);
+      bool setMaskChar(const std::string& pLabel, char pMaskChar, bool pIsLabel = true);
 
       /**
        * Returns whether or not an input is masked (by index).
@@ -967,7 +969,7 @@ class cxForm : public cxWindow {
        *
        * @return Whether or not the input is masked
        */
-      bool getMasked(const string& pLabel, bool pIsLabel = true);
+      bool getMasked(const std::string& pLabel, bool pIsLabel = true);
 
       /**
        * Enables/disables masking for an input (by index).
@@ -986,7 +988,7 @@ class cxForm : public cxWindow {
        *
        * @return True if successul or false if not
        */
-      virtual bool toggleMasking(const string& pLabel, bool pMasking, bool pIsLabel = true);
+      virtual bool toggleMasking(const std::string& pLabel, bool pMasking, bool pIsLabel = true);
 
       /**
        * \brief Changes which input on the form should have focus (by index).
@@ -1008,7 +1010,7 @@ class cxForm : public cxWindow {
        *
        * @return True if successful or false if not.
        */
-      virtual bool setCurrentInput(const string& pLabel, bool pIsLabel = true);
+      virtual bool setCurrentInput(const std::string& pLabel, bool pIsLabel = true);
 
       /**
        * \brief Changes which input on the form should have focus (by pointer).
@@ -1019,6 +1021,7 @@ class cxForm : public cxWindow {
        * @return True if succeeded or false if not (i.e., will return false if
        *  the input is not on the form).
        */
+      virtual bool setCurrentInputByPtr(const std::shared_ptr<cxMultiLineInput>& pInput);
       virtual bool setCurrentInputByPtr(const cxMultiLineInput* const pInput);
 
       /**
@@ -1155,7 +1158,7 @@ class cxForm : public cxWindow {
        *
        * @return True if the key & function was added or false if not
        */
-      virtual bool setKeyFunction(const string& pLabel, int pKey,
+      virtual bool setKeyFunction(const std::string& pLabel, int pKey,
                                   funcPtr4 pFunction, void *p1, void *p2,
                                   void *p3, void *p4, bool pUseVal,
                                   bool pExitAfterRun, bool pRunOnLeaveFunction,
@@ -1214,7 +1217,7 @@ class cxForm : public cxWindow {
        *
        * @return True if the key & function was added or false if not
        */
-      virtual bool setKeyFunction(const string& pLabel, int pKey,
+      virtual bool setKeyFunction(const std::string& pLabel, int pKey,
                                   funcPtr2 pFunction, void *p1, void *p2,
                                   bool pUseVal, bool pExitAfterRun,
                                   bool pRunOnLeaveFunction, bool pRunValidator,
@@ -1268,7 +1271,7 @@ class cxForm : public cxWindow {
        *
        * @return True if the key & function was added or false if not
        */
-      virtual bool setKeyFunction(const string& pLabel, int pKey,
+      virtual bool setKeyFunction(const std::string& pLabel, int pKey,
                                   funcPtr0 pFunction, bool pUseVal,
                                   bool pExitAfterRun, bool pRunOnLeaveFunction,
                                   bool pRunValidator, bool pIsLabel = true);
@@ -1294,7 +1297,7 @@ class cxForm : public cxWindow {
        * @param pColor The color to set
        * @param pIsLabel If true (default), pLabel is the input's label.  If false, pLabel is the input's name.
        */
-      void setLabelColor(const string& pLabel, e_cxColors pColor, bool pIsLabel = true);
+      void setLabelColor(const std::string& pLabel, e_cxColors pColor, bool pIsLabel = true);
 
       /**
        * \brief Sets the color of the labels on all inputs.
@@ -1320,7 +1323,7 @@ class cxForm : public cxWindow {
        *
        * @return The label color of the input at pIndex, or eDEFAULT if not found.
        */
-      int getLabelColor(const string& pLabel, bool pIsLabel = true) const;
+      int getLabelColor(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Sets the color of the value section of one of the inputs (by index)
@@ -1337,7 +1340,7 @@ class cxForm : public cxWindow {
        * @param pColor The color to set
        * @param pIsLabel If true (default), pLabel is the input's label.  If false, pLabel is the input's name.
        */
-      void setValueColor(const string& pLabel, e_cxColors pColor, bool pIsLabel = true);
+      void setValueColor(const std::string& pLabel, e_cxColors pColor, bool pIsLabel = true);
 
       /**
        * \brief Sets the color of the value section of all inputs on the form.
@@ -1363,7 +1366,7 @@ class cxForm : public cxWindow {
        *
        * @return The color of the value section of the input at pIndex, or A_NORMAL if not found.
        */
-      int getValueColor(const string& pLabel, bool pIsLabel = true) const;
+      int getValueColor(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Sets the label & value colors of all inputs on the form.
@@ -1405,7 +1408,7 @@ class cxForm : public cxWindow {
        *
        * @return The top row of the input, or -1 if there is no input with the given label.
        */
-      int inputTopRow(const string& pLabel, bool pIslabel = true) const;
+      int inputTopRow(const std::string& pLabel, bool pIslabel = true) const;
 
       /**
        * \brief Returns the left column of an input (by index), or -1 if the given
@@ -1427,7 +1430,7 @@ class cxForm : public cxWindow {
        *
        * @return The left column of the input, or -1 if there is no input with the given label.
        */
-      int inputLeftCol(const string& pLabel, bool pIsLabel = true) const;
+      int inputLeftCol(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns the height of an input (by index), or -1 if the given index
@@ -1449,7 +1452,7 @@ class cxForm : public cxWindow {
        *
        * @return The height of the input, or -1 if there is no input with the given label.
        */
-      int inputHeight(const string& pLabel, bool pIsLabel = true) const;
+      int inputHeight(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns the width of an input (by index), or -1 if the given index
@@ -1471,7 +1474,7 @@ class cxForm : public cxWindow {
        *
        * @return The width of the input, or -1 if there is no input with the given label.
        */
-      int inputWidth(const string& pLabel, bool pIsLabel = true) const;
+      int inputWidth(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns the maximum length of input accepted by an input (by index),
@@ -1495,7 +1498,7 @@ class cxForm : public cxWindow {
        * @return The maximum length of input accepted by the input, or 0 if there is
        *  no input with the given label/name.
        */
-      int maxInputLen(const string& pLabel, bool pIsLabel = true) const;
+      int maxInputLen(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns the label of an input at a given index.
@@ -1505,7 +1508,7 @@ class cxForm : public cxWindow {
        * @return The label of the input at the given index, or a blank string if the
        *         index is out of bounds.
        */
-      string inputLabel(int pIndex) const;
+      std::string inputLabel(int pIndex) const;
 
       /**
        * \brief Returns the label of an input.
@@ -1515,7 +1518,7 @@ class cxForm : public cxWindow {
        * @return The input's label, or a blank string if there is no input with the given
        *         name.
        */
-      string inputLabel(const string& pName) const;
+      std::string inputLabel(const std::string& pName) const;
 
       /**
        * \brief Returns the name of an input at a given index.
@@ -1525,7 +1528,7 @@ class cxForm : public cxWindow {
        * @return The name of the input at the given index, or a blank string if the
        *         index is out of bounds.
        */
-      string inputName(int pIndex) const;
+      std::string inputName(int pIndex) const;
 
       /**
        * \brief Returns the name of an input.
@@ -1535,7 +1538,7 @@ class cxForm : public cxWindow {
        * @return The input's name, or a blank string if there is no input with the given
        *         name.
        */
-      string inputName(const string& pLabel) const;
+      std::string inputName(const std::string& pLabel) const;
 
       /**
        * \brief Scrolls (moves) the inputs in the window
@@ -1566,7 +1569,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true, pLabel specifies the label; if false, pLabel
        * specifies the name of the input.
        */
-      virtual void toggleCursor(const string& pLabel, bool pShowCursor, bool pIsLabel = true);
+      virtual void toggleCursor(const std::string& pLabel, bool pShowCursor, bool pIsLabel = true);
 
       /**
        * \brief Toggles the display of the cursor on all inputs.
@@ -1576,7 +1579,7 @@ class cxForm : public cxWindow {
       virtual void toggleCursor(bool pShowCursor);
 
       /**
-       * \brief Returns a pointer to an input at a given index, or NULL if the index
+       * \brief Returns a pointer to an input at a given index, or nullptr if the index
        * \brief is not valid.  Note that inputs are dynamically allocated when
        * \brief they're appended to a cxForm, and the memory is freed in the cxForm
        * \brief destructor.  Therefore, it is vital that if the return value of this
@@ -1586,13 +1589,13 @@ class cxForm : public cxWindow {
        *
        * @param pIndex The index of the input
        *
-       * @return A pointer to the input at pIndex, or NULL if the input is not valid
+       * @return A pointer to the input at pIndex, or nullptr if the input is not valid
        */
-      cxMultiLineInput* getInput(int pIndex) const;
+      const std::shared_ptr<cxMultiLineInput>& getInput(int pIndex) const;
 
       /**
        * \brief Returns a pointer to an input with a given label/name, or
-       * \brief NULL if no input is found with the given label/name.  Note
+       * \brief nullptr if no input is found with the given label/name.  Note
        * \brief that inputs are dynamically allocated when they're appended
        * \brief to a cxForm, and the memory is freed in the cxForm
        * \brief destructor.  Therefore, it is vital that if the return value
@@ -1603,19 +1606,19 @@ class cxForm : public cxWindow {
        * @param pLabel The label/name of the input
        * @param pIsLabel True if pLabel specifies the label (default), or false if it specifies the name
        *
-       * @return A pointer to the input with the given label/name, or NULL if none is found
+       * @return A pointer to the input with the given label/name, or nullptr if none is found
        */
-      cxMultiLineInput* getInput(const string& pLabel, bool pIsLabel = true) const;
+      const std::shared_ptr<cxMultiLineInput>& getInput(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns a pointer to the current input.  If there are no inputs
        * \brief on the form or there is some other error, this method will
-       * \brief return NULL.
+       * \brief return nullptr.
        *
-       * @return A pointer to the current input on the form, or NULL if there
+       * @return A pointer to the current input on the form, or nullptr if there
        *  are no inputs or if there is an error.
        */
-      cxMultiLineInput* getCurrentInput() const;
+      const std::shared_ptr<cxMultiLineInput>& getCurrentInput() const;
 
       /**
        * \brief Returns the editability option for an input (by index).
@@ -1639,7 +1642,7 @@ class cxForm : public cxWindow {
        *    cxInput.h.  Returns eINPUT_READONLY if no matching input
        *    is found.
        */
-      virtual int getInputOption(const string& pLabel, bool pIsLabel = true) const;
+      virtual int getInputOption(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Sets the input kind for one of the inputs (by index).
@@ -1661,7 +1664,7 @@ class cxForm : public cxWindow {
        * @param pRefresh Whether or not to refresh the input on the screen,
        *  since its visual attributes will be changed.  Defaults to true.
        */
-      virtual void setInputOption(const string& pLabel, eInputOptions pInputOption,
+      virtual void setInputOption(const std::string& pLabel, eInputOptions pInputOption,
                            bool pIsLabel = true, bool pRefresh = true);
 
       /**
@@ -1680,7 +1683,7 @@ class cxForm : public cxWindow {
        * @param pStatus The new status message for window
        * @param pRefreshStatus Whether or not to refresh the status area (defaults to true)
        */
-      virtual void setStatus(const string& pStatus, bool pRefreshStatus = true);
+      virtual void setStatus(const std::string& pStatus, bool pRefreshStatus = true);
 
       /**
        * \brief Turns off the custom status text set with setStatus.
@@ -1718,7 +1721,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setValidatorFunction(const string& pLabel, funcPtr4 pFunction,
+      void setValidatorFunction(const std::string& pLabel, funcPtr4 pFunction,
                                 void *p1, void *p2, void *p3, void *p4,
                                 bool pIsLabel = true);
 
@@ -1759,7 +1762,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setOnKeyFunction(const string& pLabel, funcPtr4 pFunction, void *p1,
+      void setOnKeyFunction(const std::string& pLabel, funcPtr4 pFunction, void *p1,
                             void *p2, void *p3, void *p4, bool pIsLabel = true);
 
       /**
@@ -1785,7 +1788,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setOnKeyFunction(const string& pLabel, funcPtr2 pFunction, void *p1,
+      void setOnKeyFunction(const std::string& pLabel, funcPtr2 pFunction, void *p1,
                             void *p2, bool pIsLabel = true);
 
       /**
@@ -1809,7 +1812,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setOnKeyFunction(const string& pLabel, funcPtr0 pFunction,
+      void setOnKeyFunction(const std::string& pLabel, funcPtr0 pFunction,
                             bool pIsLabel = true);
 
       /**
@@ -1867,7 +1870,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *  If false, pLabel specifies the name of the input.
        */
-      void toggleOnKeyFunction(const string& pLabel, bool pRunOnKeyFunction,
+      void toggleOnKeyFunction(const std::string& pLabel, bool pRunOnKeyFunction,
                                bool pIsLabel = true);
 
       /**
@@ -1905,7 +1908,7 @@ class cxForm : public cxWindow {
        *  If there is no input with the given label/name, this function will
        *  return false.
        */
-      bool onKeyFunctionEnabled(const string& pLabel, bool pIsLabel = true) const;
+      bool onKeyFunctionEnabled(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Assignment operator
@@ -1920,7 +1923,7 @@ class cxForm : public cxWindow {
        * \brief Adds a hotkey for the form that will cause the
        * \brief focus to jump to another input during showModal().
        * \verbatim For example:
-         cxForm iForm(NULL, 1, 0, 12, 65, "Test form");
+         cxForm iForm(nullptr, 1, 0, 12, 65, "Test form");
          iForm.append(1, 1, 1, 25, "Input 1:");
          iForm.append(1, 27, 1, 25, "Input 2:");
          iForm.append(2, 1, 1, 25, "Input 3:");
@@ -1946,7 +1949,7 @@ when the user presses the 'n' key.
        * \brief Adds a hotkey for the form that will cause the
        * \brief focus to jump to another input during showModal().
        * \verbatim For example:
-         cxForm iForm(NULL, 1, 0, 12, 65, "Test form");
+         cxForm iForm(nullptr, 1, 0, 12, 65, "Test form");
          iForm.append(1, 1, 1, 25, "Input 1:");
          iForm.append(1, 27, 1, 25, "Input 2:");
          iForm.append(2, 1, 1, 25, "Input 3:");
@@ -1956,8 +1959,8 @@ when the user presses the 'n' key.
          iForm.setAutoExit(true);
          iForm.addInputJumpKey('n', "Input 6:");
          iForm.showModal();
-This will cause the form to jump to the input with the label "Input 6:"
-when the user presses the 'n' key.
+         This will cause the form to jump to the input with the label "Input 6:"
+         when the user presses the 'n' key.
        \endverbatim
        *
        * @param pKey The key to use as the hotkey
@@ -1968,7 +1971,7 @@ when the user presses the 'n' key.
        * @return True if successful, or false if not (i.e., if
        *    that hotkey is already set up for a form function, etc.)
        */
-      virtual bool addInputJumpKey(int pKey, const string& pLabel, bool pIsLabel = true);
+      virtual bool addInputJumpKey(int pKey, const std::string& pLabel, bool pIsLabel = true);
 
       /**
        * \brief Returns the index of the input that currently has focus.
@@ -1982,14 +1985,14 @@ when the user presses the 'n' key.
        *
        * @return The label of the input taht currently has focus
        */
-      string getCurrentInputLabel() const;
+      std::string getCurrentInputLabel() const;
 
       /**
        * \brief Returns the name of the input that currently has focus.
        *
        * @return The name of the input taht currently has focus
        */
-      string getCurrentInputName() const;
+      std::string getCurrentInputName() const;
 
       /**
        * \brief Returns the index of an input, based on its label or name.
@@ -2001,7 +2004,7 @@ when the user presses the 'n' key.
        * @return The index of the input, or -1 if there was no input with the
        *         given label/name.
        */
-      int getInputIndex(const string& pLabel, bool pIsLabel = true) const;
+      int getInputIndex(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns the index of an input based on a pointer.  May
@@ -2012,6 +2015,7 @@ when the user presses the 'n' key.
        * @return The index of the input on the form, or -1 if the input is
        *  not in the form.
        */
+      int getInputIndex(const std::shared_ptr<cxMultiLineInput>& pInput) const;
       int getInputIndex(const cxMultiLineInput *pInput) const;
 
       /**
@@ -2053,7 +2057,7 @@ when the user presses the 'n' key.
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setCanBeEditable(const string& pLabel, bool pCanBeEditable, bool pIsLabel = true);
+      void setCanBeEditable(const std::string& pLabel, bool pCanBeEditable, bool pIsLabel = true);
 
       /**
        * \brief Sets the ability of all inputs to be able to be editable.
@@ -2081,7 +2085,7 @@ when the user presses the 'n' key.
        *
        * @return Whether or not the input can be set editable
        */
-      bool canBeEditable(const string& pLabel, bool pIsLabel = true) const;
+      bool canBeEditable(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns whether any input on the form (at least 1) can be set editable.
@@ -2417,7 +2421,7 @@ when the user presses the 'n' key.
        * \brief Sets the parent cxMultiForm that this cxForm is associated with
        *
        * @param pParentMultiForm A pointer to the form's parent cxMultiForm
-       *  (or NULL if there is no parent cxMultiForm)
+       *  (or nullptr if there is no parent cxMultiForm)
        */
       void setParentMultiForm(cxMultiForm *pParentMultiForm);
 
@@ -2457,7 +2461,7 @@ when the user presses the 'n' key.
        *
        * @return The maximum length of the value that may be set.
        */
-      virtual int maxValueLen(const string& pLabel, bool pIsLabel = true);
+      virtual int maxValueLen(const std::string& pLabel, bool pIsLabel = true);
 
       /**
        * \brief Returns whether one of the inputs on
@@ -2479,7 +2483,7 @@ when the user presses the 'n' key.
        *
        * @return Whether or not the input is editable
        */
-      virtual bool isEditable(const string& pLabel, bool pIsLabel = true) const;
+      virtual bool isEditable(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Sets whether the window should disable the cursor
@@ -2531,7 +2535,7 @@ when the user presses the 'n' key.
        * @param pSkipBlankIDs If true, then inputs with a blank label/name
        *  will not be added to the map.  This defaults to false.
        */
-      virtual void getValues(map<string, string>& pValues,
+      virtual void getValues(std::map<std::string, std::string>& pValues,
                              bool pUseLabels = true,
                              bool pSkipBlankIDs = false) const;
 
@@ -2550,7 +2554,7 @@ when the user presses the 'n' key.
        *  This can be useful if you want to set the values to some defaults,
        *  but the default values would normally be considered invalid.
        */
-      virtual void setValues(const map<string, string>& pValues,
+      virtual void setValues(const std::map<std::string, std::string>& pValues,
                              bool pUseLabels = true, bool pRefresh = false,
                              bool pDisableValidatorFunctions = false);
 
@@ -2585,7 +2589,7 @@ when the user presses the 'n' key.
        * @return true if the form has an input with the given label/name;
        *  false if not.
        */
-      virtual bool hasInput(const string& pStr, bool pIsLabel = true) const;
+      virtual bool hasInput(const std::string& pStr, bool pIsLabel = true) const;
 
       /**
        * \brief Returns a pointer to the parent window.  If the cxForm
@@ -2673,7 +2677,7 @@ when the user presses the 'n' key.
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
 
       /**
        * \brief Gathers a set of keys considered to be "navigational" keys from
@@ -2684,7 +2688,7 @@ when the user presses the 'n' key.
        * @param pNavKeys This will contain the navigational keys gathered from
        *  all inputs on the form.
        */
-      virtual void getNavKeys(set<int>& pNavKeys) const;
+      virtual void getNavKeys(std::set<int>& pNavKeys) const;
 
       /**
        * \brief Creates a set of string representations of keys considered to
@@ -2693,7 +2697,7 @@ when the user presses the 'n' key.
        * @param pNavKeyStrings This will contain string representations of the
        *  navigational keys, gathered from all inputs on the form.
        */
-      virtual void getNavKeyStrings(set<string>& pNavKeyStrings) const;
+      virtual void getNavKeyStrings(std::set<std::string>& pNavKeyStrings) const;
 
       /**
        * \brief Returns whether at least one of the inputs on the form has
@@ -2710,7 +2714,7 @@ when the user presses the 'n' key.
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Sets the last keypress
@@ -2755,7 +2759,7 @@ when the user presses the 'n' key.
        *
        * @return The keys used to display extended help for the inputs
        */
-      virtual set<int> getExtendedHelpKeys() const;
+      virtual std::set<int> getExtendedHelpKeys() const;
 
       /**
        * \brief Returns a comma-separated list of strings representing the
@@ -2766,7 +2770,7 @@ when the user presses the 'n' key.
        * @return A comma-separated list of strings representing the extended
        *  help keys for the input.
        */
-      string getExtendedHelpKeyStrings() const;
+      std::string getExtendedHelpKeyStrings() const;
 
       /**
        * \brief Removes all extended help keys.
@@ -2798,7 +2802,7 @@ when the user presses the 'n' key.
        * @return The extended help for the input, or a blank string if pIndex
        *  is out of bounds.
        */
-      virtual string getExtendedHelp(int pIndex) const;
+      virtual std::string getExtendedHelp(int pIndex) const;
 
       /**
        * \brief Returns the extended help string from one of the inputs (by
@@ -2812,7 +2816,7 @@ when the user presses the 'n' key.
        * @return The extended help for the input, or a blank string if the
        *  input is not found.
        */
-      virtual string getExtendedHelp(const string& pIDStr, bool pIsLabel = true) const;
+      virtual std::string getExtendedHelp(const std::string& pIDStr, bool pIsLabel = true) const;
 
       /**
        * \brief Sets the extended help for one of the inputs (by index).
@@ -2820,7 +2824,7 @@ when the user presses the 'n' key.
        * @param pIndex The index of the input
        * @param pExtendedHelp The extended help text to set in the input
        */
-      virtual void setExtendedHelp(int pIndex, const string& pExtendedHelp);
+      virtual void setExtendedHelp(int pIndex, const std::string& pExtendedHelp);
 
       /**
        * \brief Sets the extended help for one of the inputs (by label/name).
@@ -2830,7 +2834,7 @@ when the user presses the 'n' key.
        * @param pIsLabel If true (default), then pIDStr will specify the label
        *  of the input.  Otherwise, pIDStr will specify the name of the input.
        */
-      virtual void setExtendedHelp(const string& pIDStr, const string& pExtendedHelp,
+      virtual void setExtendedHelp(const std::string& pIDStr, const std::string& pExtendedHelp,
                                      bool pIsLabel = true);
 
       /**
@@ -2861,7 +2865,7 @@ when the user presses the 'n' key.
        * @param pIsLabel If true (default), then pID specifies the input label.
        *  If false, then pID specifies the input name.
        */
-      virtual void validateOnJumpKey(const string& pID, bool pValidate, bool pIsLabel = true);
+      virtual void validateOnJumpKey(const std::string& pID, bool pValidate, bool pIsLabel = true);
 
       /**
        * \brief Sets whether or not the validator function should run for all
@@ -2898,17 +2902,17 @@ when the user presses the 'n' key.
        *
        * @return Whether or not the inputs got swapped
        */
-      virtual bool swap(cxWindow *pInput1, cxWindow *pInput2);
+      virtual bool swap(std::shared_ptr<cxWindow>& pInput1, std::shared_ptr<cxWindow>& pInput2);
 
       // We still want to inherit versions of some functions from cxWindow
       using cxWindow::getName;
       using cxWindow::getStatus;
 
    protected:
-      typedef vector<cxMultiLineInput*> inputPtrContainer;
+      typedef std::vector<std::shared_ptr<cxMultiLineInput> > inputPtrContainer;
       // mInputs stores the pointers to the form's inputs.
       inputPtrContainer mInputs;
-      int mCurrentInput; // Keeps track of the current input w/ focus
+      int mCurrentInput = 0; // Keeps track of the current input w/ focus
 
       // mInputPositions stores the upper-left y and x
       //  coordinates of the inputs - this way, we can keep
@@ -2924,21 +2928,21 @@ when the user presses the 'n' key.
       //  scrolling, it will check mInputPositions so
       //  that the inputs maintain their relative position
       //  to each other.
-      vector<pair<int, int> > mInputPositions;
+      std::vector<std::pair<int, int> > mInputPositions;
 
       /**
        * \brief If mTrapNonAssignedFKeys is true, function keys that aren't
        * \brief assigned to anything won't cause the input to exit its
        * \brief input loop.
        */
-      bool mTrapNonAssignedFKeys;
+      bool mTrapNonAssignedFKeys = true;
 
       /**
        * \brief mStartAtFirstInput keeps track of whether or not the form
        * \brief should always start at the first editable input when
        * \brief showModal() is called.
        */
-      bool mStartAtFirstInput;
+      bool mStartAtFirstInput = false;
 
       /**
        * \brief Makes a copy of a cxForm's member variables
@@ -3010,106 +3014,106 @@ when the user presses the 'n' key.
       //  of all inputs, if the form were in "stacked" mode.  It
       //  represents the total height of all inputs as if they
       //  were all stretched out with each above the next.
-      unsigned mTotalInputHeight;
+      unsigned int mTotalInputHeight = 0;
 
       bool mAutoExit; // Whether or not to auto exit the form
                       //  if the user presses enter/tab/etc. on
                       //  the last field.
-      bool mApplyAttrDefaults; // Whether or not to apply attribute defaults
+      bool mApplyAttrDefaults = true; // Whether or not to apply attribute defaults
       // mCustomStatus will be true if the user explicitly called setStatus()
       //  on the form, in which case the status text from the inputs will
       //  not be used as the status text for the form.
-      bool mCustomStatus;
+      bool mCustomStatus = false;
       // mEditableInputsExist will be true if at least 1
       //  editable input exists on the form.
-      bool mEditableInputsExist;
+      bool mEditableInputsExist = false;
       // If the user has put an input along one of the
       //  borders, mInputsOnBorder will be true.  Then,
       //  during scrolling, etc., the form will behave
       //  accordingly.
       bool mInputsOnBorder;
       cxMenu mJumpMenu;  // Menu to choose which input to jump to
-      int mInputJumpKey; // Hotkey to use for jumping to another input
-      bool mAllowQuit;   // Whether or not to allow the user to quit
-      bool mAllowExit;   // Whether or not to allow the user to exit
-      bool mExitOnLeaveFirst; // Whether or not to exit when the user
-                              //  leaves the first input when going backwards.
-      bool mWaitForInputIfEmpty; // Whether or not to get input in showModal()
-                                 //  if there are no editable inputs
-      bool mDataChanged;  // Whether or not any data has changed
+      int mInputJumpKey = DEFAULT_CXFORM_JUMPMENU_KEY; // Hotkey to use for jumping to another input
+      bool mAllowQuit = true;           // Whether or not to allow the user to quit
+      bool mAllowExit = true;           // Whether or not to allow the user to exit
+      bool mExitOnLeaveFirst = false;   // Whether or not to exit when the user
+                                        //  leaves the first input when going backwards.
+      bool mWaitForInputIfEmpty = true; // Whether or not to get input in showModal()
+                                        //  if there are no editable inputs
+      bool mDataChanged = false;        // Whether or not any data has changed
 
       // Functions to be run at various points in the input loop
       cxFunction4 mLoopStartFunction; // At the start of each cycle
       cxFunction4 mLoopEndFunction;   // At the end of each cycle
 
       // mParentMultiForm is a pointer to a cxMultiForm, in
-      //  case the form appears on a cxMultiForm (it can be
-      //  NULL if it isn't on a cxMultiForm).
-      cxMultiForm *mParentMultiForm;
+      // case the form appears on a cxMultiForm (it can be
+      // nullptr if it isn't on a cxMultiForm).
+      cxMultiForm *mParentMultiForm = nullptr;
 
-      bool mCycleInput; // Whether or not to cycle to the next/previous
-                        //  input in the input loop (this is set false
-                        //  in setCurrentInput()).
+      // Whether or not to cycle to the next/previous input in the input loop
+      // (this is set false in setCurrentInput()).
+      bool mCycleInput = true;
 
       // mUseInputStatus specifies whether or not to use the status text of
-      //  the inputs as the status text for the form (in the bottom border
-      //  This is useful for inputs with help messages.
-      bool mUseInputStatus;
+      // the inputs as the status text for the form (in the bottom border
+      // This is useful for inputs with help messages.
+      bool mUseInputStatus = true;
 
       // mHasBeenShown specifies whether or not the cxForm has been shown.
-      //  It is set true when show() is called.  mHasBeenShown is used in
-      //  the unhide() method; if the form has been shown before, then the
-      //  inputs on the form will be unhidden in addition to the form.  The
-      //  reason for this is that if the form hasn't been shown, then the
-      //  text in the inputs wouldn't have been drawn, so unhiding the inputs
-      //  may cause holes on the screen.
-      bool mHasBeenShown;
+      // It is set true when show() is called.  mHasBeenShown is used in
+      // the unhide() method; if the form has been shown before, then the
+      // inputs on the form will be unhidden in addition to the form.  The
+      // reason for this is that if the form hasn't been shown, then the
+      // text in the inputs wouldn't have been drawn, so unhiding the inputs
+      // may cause holes on the screen.
+      bool mHasBeenShown = false;
 
       // mExtendedHelpKeys specifies keys that can be pressed to display
-      //  extended help for the inputs.  mUseExtendedHelpKeys specifies whether
-      //  or not to use them.
-      set<int> mExtendedHelpKeys;
-      bool mUseExtendedHelpKeys;
+      // extended help for the inputs.  mUseExtendedHelpKeys specifies whether
+      // or not to use them.
+      std::set<int> mExtendedHelpKeys;
+      bool mUseExtendedHelpKeys = true;
 
       // mAllValidateOnJumpKey specifies whether or not the validator function
-      //  for each input should run when the user presses the form's input jump
-      //  key.  If this is set to false, then when an input is appended,
-      //  mInputJumpKey will be added to the input's list of keys that skip the
-      //  validator function, allowing the user to jump to another input
-      //  whether or not the text in the input is valid.  Otherwise, they could
-      //  only jump if the input is valid.
-      bool mAllValidateOnJumpKey;
+      // for each input should run when the user presses the form's input jump
+      // key.  If this is set to false, then when an input is appended,
+      // mInputJumpKey will be added to the input's list of keys that skip the
+      // validator function, allowing the user to jump to another input
+      // whether or not the text in the input is valid.  Otherwise, they could
+      // only jump if the input is valid.
+      bool mAllValidateOnJumpKey = true;
 
       // mInputShowBools contains a boolean for each input
-      //  that specifies whether it should be shown.  This
-      //  was added to aid in scrolling the inputs in
-      //  stacked mode.  It's possible to have an input
-      //  on a top/bottom border and still have it showing,
-      //  but when we're scrolling the inputs, we will want
-      //  to make sure that showAllInputs() doesn't show
-      //  certain inputs.
-      vector<bool> mInputShowBools;
+      // that specifies whether it should be shown.  This
+      // was added to aid in scrolling the inputs in
+      // stacked mode.  It's possible to have an input
+      // on a top/bottom border and still have it showing,
+      // but when we're scrolling the inputs, we will want
+      // to make sure that showAllInputs() doesn't show
+      // certain inputs.
+      std::vector<bool> mInputShowBools;
 
       // mInputJumpIndexes stores indexes for inputs to
       //  which to set focus.  Indexes are appended to
       //  this container when the user calls addInputJumpKey(),
       //  and the indexes in this container are used by
       //  changeFocus().
-      vector<int> mInputJumpIndexes;
+      std::vector<int> mInputJumpIndexes;
 
       // Makes sure this window is exactly the size needed to surround the inputs.
       void fitToInputs();
 
       // Copies the current menu item's help string to the
-      //  status string, and optionally updates the status.
+      // status string, and optionally updates the status.
       inline void useInputStatusAsFormStatus(bool refreshStatus = false);
 
       // Selects the next editable input.  Returns true if the current input
-      //  was the last input, or false otherwise.
+      // was the last input, or false otherwise.
       bool selectNextInput();
 
       // Selects the previous editable input.  Returns true if the current
-      //  input was the first input, or false otherwise.
+      // input was the first input, or false otherwise.
       bool selectPrevInput();
 
       // The following functions are helpers for selectNextInput().
@@ -3127,53 +3131,53 @@ when the user presses the 'n' key.
       inline int lowestTopSide() const;
 
       // Returns the index in mInputs that has the next lowest
-      //  top side of an input, or -1 if one isn't found.
+      // top side of an input, or -1 if one isn't found.
       inline int inputNextLowestTop(int topSide);
 
       // Returns the index in mInputs that has the next lowest
-      //  left side of an input, or -1 if one isn't found.
+      // left side of an input, or -1 if one isn't found.
       inline int inputNextLowestLeft(int leftSide);
 
       // Removes the last character in the current input if it
-      //  is a space.  (In testing, it was found that when
-      //  the user hits the TAB key to go to the next input, it
-      //  was getting an extra space for the current input.  This
-      //  is a kludge, but it works..)
+      // is a space.  (In testing, it was found that when
+      // the user hits the TAB key to go to the next input, it
+      // was getting an extra space for the current input.  This
+      // is a kludge, but it works..)
       inline void clearInputIfSpace();
 
       // Frees the memory used by the inputs
       inline void freeInputs();
 
       // Sets the current input for focus for a form.
-      static string changeFocus(void *theForm, void *theIndex);
+      static std::string changeFocus(void *theForm, void *theIndex);
 
       // Scans a string for hotkeys and uses them for keys to press
-      //  to jump to a particular input.
+      // to jump to a particular input.
       // Parameters:
       //  pItemText: The text to scan for hotkeys
       //  pIndex: The index of the input to which to jump for the hotkeys
-      void addJumpKeys(const string& pItemText, int pIndex);
+      void addJumpKeys(const std::string& pItemText, int pIndex);
 
       // Shows the input jump menu for the form and handles jumping
-      //  to another input upon the user's selection.
+      // to another input upon the user's selection.
       void showJumpMenu();
 
       // Returns the highest editable input index (or -1 if there are no inputs).
       int highestEditableInput() const;
 
       // Applies attribute defaults to an input.  This is meant for new inputs
-      //  being appended to the form (used in the append() methods).
+      // being appended to the form (used in the append() methods).
       //
       // Parameters:
       //  pInput: A pointer to an input to which to apply the attributes.
-      void applyAttrDefaults(cxMultiLineInput *pInput);
+      void applyAttrDefaults(std::shared_ptr<cxMultiLineInput>& pInput);
 
       // Applies all the form's attributes to an input.  This meant for new
-      //  inputs being appended to the form (used in the append() methods).
+      // inputs being appended to the form (used in the append() methods).
       //
       // Parameters:
       //  pInput: A pointer to an input to which to apply the attributes.
-      void applyWinAttributes(cxMultiLineInput *pInput);
+      void applyWinAttributes(std::shared_ptr<cxMultiLineInput>& pInput);
 
       friend class cxMultiLineInput;
       friend class cxMultiForm;

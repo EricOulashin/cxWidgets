@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
 
    { 
       // test 0 based
-      cxWindow w(NULL, 0, 0, 10, 20, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 10, 20, "Test", "Test", "Test");
       assert(w.top()==0);
       assert(w.left()==0);
       assert(w.height()==10);
@@ -203,7 +203,7 @@ int main(int argc, char* argv[]) {
 
    { 
       // test with offsets to row/col 
-      cxWindow w(NULL, 1, 2, 10, 20, "Test", "Test", "Test");
+      cxWindow w(nullptr, 1, 2, 10, 20, "Test", "Test", "Test");
       assert(w.top()==1);
       assert(w.left()==2);
       assert(w.height()==10);
@@ -216,7 +216,7 @@ int main(int argc, char* argv[]) {
 
    { 
       // test auto centered
-      cxWindow w(NULL, 0, 0, 24, 80, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 24, 80, "Test", "Test", "Test");
       assert(w.top()==0);
       assert(w.left()==0);
       assert(w.height()==24);
@@ -240,7 +240,7 @@ int main(int argc, char* argv[]) {
 
    {
       // test if auto centered subwindow 
-      cxWindow w(NULL, 0, 0, 24, 80, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 24, 80, "Test", "Test", "Test");
       cxWindow w3(&w, "XXX", "X", "X");
       assert(w3.top()==10);
       assert(w3.left()==37);
@@ -254,7 +254,7 @@ int main(int argc, char* argv[]) {
 
    {
       // test if auto centered subwindow
-      cxWindow w(NULL, 0, 0, 24, 80, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 24, 80, "Test", "Test", "Test");
       cxWindow w4(&w, "X", "XXX", "X");
       assert(w4.top()==10);
       assert(w4.left()==37);
@@ -268,7 +268,7 @@ int main(int argc, char* argv[]) {
       
    {
       // test if auto centered subwindow 
-      cxWindow w(NULL, 0, 0, 24, 80, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 24, 80, "Test", "Test", "Test");
       cxWindow w5(&w, "X", "X", "XXX");
       assert(w5.top()==10);
       assert(w5.left()==37);
@@ -282,7 +282,7 @@ int main(int argc, char* argv[]) {
 
    { 
       // test with too small window for title
-      cxWindow w(NULL, 0, 0, 1, 1, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 1, 1, "Test", "Test", "Test");
       assert(w.top()==0);
       assert(w.left()==0);
       assert(w.height()==3);
@@ -295,7 +295,7 @@ int main(int argc, char* argv[]) {
 
    {
       // test LEFT alignment
-      cxWindow w(NULL, 0, 0, 24, 80, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 24, 80, "Test", "Test", "Test");
       cxWindow w2(&w, eHP_LEFT, "XXX", "XXX", "XXX");
       assert(w2.top()==10);
       assert(w2.left()==0);
@@ -309,7 +309,7 @@ int main(int argc, char* argv[]) {
 
    {
       // test RIGHT alignment
-      cxWindow w(NULL, 0, 0, 24, 80, "Test", "Test", "Test");
+      cxWindow w(nullptr, 0, 0, 24, 80, "Test", "Test", "Test");
       cxWindow w2(&w, eHP_RIGHT, "XXX", "XXX", "XXX");
       assert(w2.top()==10);
       assert(w2.left()==75);
@@ -323,7 +323,7 @@ int main(int argc, char* argv[]) {
 
    {
       // test the screen positions... 
-      cxWindow w(NULL, 0, 0, 8, 8, "ABCD", "EFGH", "IJKL");
+      cxWindow w(nullptr, 0, 0, 8, 8, "ABCD", "EFGH", "IJKL");
       remove("trace");
       //trace(TRACE_UPDATE);
       w.show();
@@ -334,7 +334,7 @@ int main(int argc, char* argv[]) {
    {
       // Test cxWindow constructor with all options and make
       //  sure they are set correctly
-      cxWindow w(NULL, 0, 0, 10, 20, "Title", "Message", "Status", eBS_SINGLE_LINE);
+      cxWindow w(nullptr, 0, 0, 10, 20, "Title", "Message", "Status", eBS_SINGLE_LINE);
       assert(w.top()==0);
       assert(w.left()==0);
       assert(w.height()==10);
@@ -358,7 +358,7 @@ int main(int argc, char* argv[]) {
    {
       // Test cxWindow constructor with all options and make
       //  sure they are set correctly
-      cxWindow w(NULL, 2, 2, 12, 23, "Title", "Message", "Status", eBS_NOBORDER);
+      cxWindow w(nullptr, 2, 2, 12, 23, "Title", "Message", "Status", eBS_NOBORDER);
       assert(w.top()==2);
       assert(w.left()==2);
       assert(w.height()==12);
@@ -405,7 +405,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test cxWindow's 2nd constructor
-      cxWindow w(NULL, 2, 2, "Title", "Message", "Status");
+      cxWindow w(nullptr, 2, 2, "Title", "Message", "Status");
       assert(w.top()==2);
       assert(w.left()==2);
       assert(w.height()==3);
@@ -428,7 +428,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test cxWindow's 3rd constructor
-      cxWindow w(NULL, "Title", "Message", "Status");
+      cxWindow w(nullptr, "Title", "Message", "Status");
       assert(w.top()==((bottom()-top())/2)-1);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -451,7 +451,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test cxWindow's 4th constructor
-      cxWindow w(NULL, "Message", "Status");
+      cxWindow w(nullptr, "Message", "Status");
       assert(w.top()==((bottom()-top())/2)-1);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -474,7 +474,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test cxWindow's 5th constructor
-      cxWindow w(NULL, "Message");
+      cxWindow w(nullptr, "Message");
       assert(w.top()==((bottom()-top())/2)-1);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -497,7 +497,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test cxWindow's 6th constructor
-      cxWindow w(NULL, eHP_LEFT, "Title", "Message", "Status");
+      cxWindow w(nullptr, eHP_LEFT, "Title", "Message", "Status");
       assert(w.top()==((bottom()-top())/2)-1);
       assert(w.left()==0);
       assert(w.height()==3);
@@ -520,7 +520,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test cxWindow's 6th constructor
-      cxWindow w(NULL, eHP_CENTER, "Title", "Message", "Status");
+      cxWindow w(nullptr, eHP_CENTER, "Title", "Message", "Status");
       assert(w.top()==((bottom()-top())/2)-1);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -543,7 +543,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test cxWindow's 6th constructor
-      cxWindow w(NULL, eHP_RIGHT, "Title", "Message", "Status");
+      cxWindow w(nullptr, eHP_RIGHT, "Title", "Message", "Status");
       assert(w.top()==((bottom()-top())/2)-1);
       assert(w.left()==cxBase::right()-9+1);  // It has a width of 9
       assert(w.height()==3);
@@ -567,7 +567,7 @@ int main(int argc, char* argv[]) {
    {
       // Test cxInput's setValue to make sure it truncates
       //  long values.
-      cxInput input1(NULL, 0, 0, 10, "Name:");
+      cxInput input1(nullptr, 0, 0, 10, "Name:");
       input1.setValue("This is a very long string.");
       assert(input1.getValue(false, false) == "This ");
    }
@@ -575,7 +575,7 @@ int main(int argc, char* argv[]) {
    /*
    {
       // Test setting the validator in a cxInput
-      cxInput input(NULL, 0, 0, 10, "Name:");
+      cxInput input(nullptr, 0, 0, 10, "Name:");
       input.setValidatorStr("pppppppppp");
       assert(input.getValidatorStr() == "pppppppppp");
    }
@@ -583,7 +583,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setting the validator in a cxInput
       //  (w/ capital last letter)
-      cxInput input(NULL, 0, 0, 10, "Name:");
+      cxInput input(nullptr, 0, 0, 10, "Name:");
       input.setValidatorStr("pppppppppP");
       assert(input.getValidatorStr() == "PPPPPPPPPP");
    }
@@ -591,14 +591,14 @@ int main(int argc, char* argv[]) {
    {
       // Test setting the validator in a cxInput
       //  (w/ capital in the middle)
-      cxInput input(NULL, 0, 0, 10, "Name:");
+      cxInput input(nullptr, 0, 0, 10, "Name:");
       input.setValidatorStr("ppppPppppp");
       assert(input.getValidatorStr() == "PPPPPppppp");
    }
 
    {
       // Test validation for cxInput
-      cxInput input(NULL, 0, 0, 30, "");
+      cxInput input(nullptr, 0, 0, 30, "");
       // An empty validator says anything is OK
       input.setValidatorStr("");
       input.setValue("This is a value.");
@@ -673,7 +673,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test setValue()/getValue() for cxMultiLineInput
-      cxMultiLineInput input1(NULL, 0, 0, 5, 15, "Name:");
+      cxMultiLineInput input1(nullptr, 0, 0, 5, 15, "Name:");
       input1.setValue("This is a string test.");
       assert(input1.getValue() == "This is a string test.");
    }
@@ -681,7 +681,7 @@ int main(int argc, char* argv[]) {
    {
       // Test the cxForm constructor with defaults.
       cxForm aForm;
-      assert(aForm.getParent() == NULL);
+      assert(aForm.getParent() == nullptr);
       assert(aForm.top() == 0);
       assert(aForm.left() == 0);
       assert(aForm.height() == DEFAULT_HEIGHT);
@@ -705,7 +705,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test numInputs in cxForm (and append).
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       assert(aForm.numInputs() == 2);
@@ -713,7 +713,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test remove() in cxForm.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       aForm.remove("Name:");
@@ -723,7 +723,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test move() in cxForm.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       aForm.move(2, 2);
@@ -745,7 +745,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test setValue (by label) in cxForm.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       assert(aForm.setValue("Name:", "Glen") == true);
@@ -754,7 +754,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test getValue (by label) in cxForm with a blank label.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       aForm.setValue("Name:", "Glen");
@@ -763,7 +763,7 @@ int main(int argc, char* argv[]) {
 
    {
       // Test getValue (by index) in cxForm.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       aForm.setValue("Name:", "Glen");
@@ -773,7 +773,7 @@ int main(int argc, char* argv[]) {
    {
       // Test getValue (by index) in cxForm with an
       //  out-of-bounds index.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       aForm.setValue("Name:", "Glen");
@@ -783,7 +783,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setValue (by label) in cxForm with a
       //  label of an input that doesn't exist.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       assert(aForm.setValue("Age:", "30") == false);
@@ -792,7 +792,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setValue (by index) in cxForm with
       //  an out-of-bounds index.
-      cxForm aForm(NULL, 0, 0, 10, 50, "Title");
+      cxForm aForm(nullptr, 0, 0, 10, 50, "Title");
       aForm.append(1, 1, 1, 20, "Name:");
       aForm.append(2, 1, 1, 40, "City:");
       assert(aForm.setValue(9, "30") == false);
@@ -1134,7 +1134,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setValidatorStr()/getValidatorStr() for cxMultiLineInput
       //  (with a long input & short validator)
-      cxMultiLineInput iInput(NULL, 0, 0, 1, 23);
+      cxMultiLineInput iInput(nullptr, 0, 0, 1, 23);
       iInput.setValidatorStr("dddd");
       assert(iInput.getValidatorStr() == "dddd");
    }
@@ -1142,7 +1142,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setValidatorStr()/getValidatorStr() for cxMultiLineInput
       //  (with a 2-line input & short validator)
-      cxMultiLineInput iInput(NULL, 0, 0, 2, 23);
+      cxMultiLineInput iInput(nullptr, 0, 0, 2, 23);
       iInput.setValidatorStr("dddd");
       assert(iInput.getValidatorStr() == "dddd");
    }
@@ -1150,7 +1150,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setValidatorStr()/getValidatorStr() for cxMultiLineInput
       //  (with a 2-line input & short validator)
-      cxMultiLineInput iInput(NULL, 0, 0, 2, 23);
+      cxMultiLineInput iInput(nullptr, 0, 0, 2, 23);
       iInput.setValidatorStr("dddd");
       assert(iInput.getValidatorStr() == "dddd");
    }
@@ -1158,7 +1158,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setValidatorStr()/getValidatorStr() for cxMultiLineInput
       //  (with a 2-line input & short validator)
-      cxMultiLineInput iInput(NULL, 0, 0, 2, 23);
+      cxMultiLineInput iInput(nullptr, 0, 0, 2, 23);
       iInput.setValidatorStr("dddd");
       assert(iInput.getValidatorStr() == "dddd");
    }
@@ -1166,7 +1166,7 @@ int main(int argc, char* argv[]) {
    {
       // Test setValidatorStr()/getValidatorStr() for cxMultiLineInput
       //  (with a 3-line input & long validator)
-      cxMultiLineInput iInput(NULL, 0, 0, 3, 5);
+      cxMultiLineInput iInput(nullptr, 0, 0, 3, 5);
       iInput.setValidatorStr("ddddddddd");
       assert(iInput.getValidatorStr() == "ddddddddd");
    }
@@ -1174,7 +1174,7 @@ int main(int argc, char* argv[]) {
    {
       // Test cxInput::getValue() with removal of
       //  leading & trailing spaces
-      cxInput input1(NULL, 0, 0, 50, "");
+      cxInput input1(nullptr, 0, 0, 50, "");
       input1.setValue("   This is a test.");
       assert(input1.getValue(true) == "This is a test.");
       input1.setValue("This is a test.   ");

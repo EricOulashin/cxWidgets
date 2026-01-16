@@ -23,8 +23,9 @@
 
 #include "cxForm.h"
 #include "cxFunction.h"
+#include <string>
 #include <vector>
-using std::vector;
+#include <memory>
 
 /** \class cxMultiForm
  * \brief Represents a form that can
@@ -45,7 +46,7 @@ class cxMultiForm : public cxForm {
    public:
       /**
        * Default constructor.  All parameters have default values.
-       * @param pParentWindow Pointer to parent window; default NULL
+       * @param pParentWindow Pointer to parent window; default nullptr
        * @param pRow Y location of form; default 0
        * @param pCol X location of form; default 0
        * @param pHeight Height of form, in lines; defaults to 24
@@ -64,12 +65,12 @@ class cxMultiForm : public cxForm {
        * @param pStacked If true, the form will behave assuming each
        *  input is on its own line.
        */
-      explicit cxMultiForm(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxMultiForm(cxWindow *pParentWindow = nullptr, int pRow = 0,
                          int pCol = 0, int pHeight = DEFAULT_HEIGHT,
-                         int pWidth = DEFAULT_WIDTH, const string& pTitle = "",
+                         int pWidth = DEFAULT_WIDTH, const std::string& pTitle = "",
                          eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                         cxWindow *pExtTitleWindow = NULL,
-                         cxWindow *pExtStatusWindow = NULL,
+                         cxWindow *pExtTitleWindow = nullptr,
+                         cxWindow *pExtStatusWindow = nullptr,
                          bool pAutoExit = false, bool pStacked = false);
 
       /**
@@ -105,8 +106,8 @@ class cxMultiForm : public cxForm {
        *
        * @return A pointer to the subform
        */
-      virtual cxForm* appendForm(int pRow, int pCol, int pHeight,
-                          int pWidth, const string& pTitle = "",
+      virtual std::shared_ptr<cxForm> appendForm(int pRow, int pCol, int pHeight,
+                          int pWidth, const std::string& pTitle = "",
                           eBorderStyle pBorderStyle = eBS_NOBORDER,
                           bool pStacked = false);
 
@@ -123,13 +124,13 @@ class cxMultiForm : public cxForm {
        *  to be located
        * @param pCol The column on the form where you want the subform
        *  to be located
-       * @param pMoved If non-NULL, the boolean pointed to by this
+       * @param pMoved If non-null, the boolean pointed to by this
        *  variable will store whether or not the subform was able
        *  to be moved.
        *
        * @return Whether or not the subform got appended (true/false)
        */
-      virtual bool appendForm(cxForm* pForm, int pRow, int pCol, bool* pMoved = NULL);
+      virtual bool appendForm(std::shared_ptr<cxForm>& pForm, int pRow, int pCol, bool* pMoved = nullptr);
 
       /**
        * \brief Appends a subform to the form via a pointer (without
@@ -143,31 +144,31 @@ class cxMultiForm : public cxForm {
        *
        * @return Whether or not the subform got appended (true/false)
        */
-      virtual bool appendForm(cxForm* pForm);
+      virtual bool appendForm(std::shared_ptr<cxForm>& pForm);
 
       /**
        * \brief Returns a pointer to one of the subforms (by index), or
-       * \brief NULL if the index is out of bounds.
+       * \brief nullptr if the index is out of bounds.
        *
        * @param pIndex The index of the subform
        *
-       * @return A pointer to the subform, or NULL if pIndex is out of bounds.
-       *  The return value should always be checked against NULL before it's
+       * @return A pointer to the subform, or nullptr if pIndex is out of bounds.
+       *  The return value should always be checked against nullptr before it's
        *  used.
        */
-      virtual cxForm* getForm(unsigned pIndex) const;
+      virtual std::shared_ptr<cxForm> getForm(unsigned pIndex) const;
 
       /**
        * \brief Returns a pointer to one of the subforms (by title), or
-       * \brief NULL if there is no subform with the given title.
+       * \brief nullptr if there is no subform with the given title.
        *
        * @param pTitle The title of the subform
        *
-       * @return A pointer to the subform, or NULL if there is no subform with
+       * @return A pointer to the subform, or nullptr if there is no subform with
        *  the given title.  The return value should always be checked against
-       *  NULL before it's used.
+       *  nullptr before it's used.
        */
-      virtual cxForm* getForm(const string& pTitle) const;
+      virtual std::shared_ptr<cxForm> getForm(const std::string& pTitle) const;
 
       /**
        * Shows the form
@@ -225,7 +226,7 @@ class cxMultiForm : public cxForm {
        * @return True if the remove succeeded, or false if not (i.e., if
        *  there were no subforms with the given title).
        */
-      virtual bool removeSubform(const string& pTitle);
+      virtual bool removeSubform(const std::string& pTitle);
 
       /**
        * \brief Gets the value of an input on one of the subforms (by indexes)
@@ -236,7 +237,7 @@ class cxMultiForm : public cxForm {
        * @return The value stored in the input, or a blank string if
        *  the indexes are out of bounds.
        */
-      virtual string getValue(unsigned pFormIndex, int pInputIndex) const;
+      virtual std::string getValue(unsigned pFormIndex, int pInputIndex) const;
 
       /**
        * \brief Gets the value of an input on one of the subforms (by
@@ -252,7 +253,7 @@ class cxMultiForm : public cxForm {
        *  pFormIndex is out of bounds or there is no input on the subform
        *  with the given label/name.
        */
-      virtual string getValue(unsigned pFormIndex, const string& pLabel,
+      virtual std::string getValue(unsigned pFormIndex, const std::string& pLabel,
                               bool pIsLabel = true) const;
 
       /**
@@ -266,7 +267,7 @@ class cxMultiForm : public cxForm {
        *  if there is no subform with the given title or pInputIndex
        *  is out of bounds.
        */
-      virtual string getValue(const string& pTitle, int pInputIndex) const;
+      virtual std::string getValue(const std::string& pTitle, int pInputIndex) const;
 
       /**
        * \brief Gets the value of an input on one of the subforms (by
@@ -281,7 +282,7 @@ class cxMultiForm : public cxForm {
        *  there is no subform with the given title or if there is no
        *  input on the subform with the given label/name.
        */
-      virtual string getValue(const string& pTitle, const string& pLabel,
+      virtual std::string getValue(const std::string& pTitle, const std::string& pLabel,
                               bool pIsLabel = true) const;
 
       /**
@@ -295,7 +296,7 @@ class cxMultiForm : public cxForm {
        *
        * @return true if successful or false if not
        */
-      virtual bool setValue(unsigned pFormIndex, int pInputIndex, const string& pValue,
+      virtual bool setValue(unsigned pFormIndex, int pInputIndex, const std::string& pValue,
                             bool pRefresh = false);
 
 
@@ -311,8 +312,8 @@ class cxMultiForm : public cxForm {
        *
        * @return true if successful or false if not
        */
-      virtual bool setValue(unsigned pFormIndex, const string& pLabel,
-                            const string& pValue, bool pIsLabel = true,
+      virtual bool setValue(unsigned pFormIndex, const std::string& pLabel,
+                            const std::string& pValue, bool pIsLabel = true,
                             bool pRefresh = false);
 
       /**
@@ -326,8 +327,8 @@ class cxMultiForm : public cxForm {
        *
        * @return true if successful or false if not
        */
-      virtual bool setValue(const string& pTitle, int pInputIndex,
-                            const string& pValue, bool pRefresh = false);
+      virtual bool setValue(const std::string& pTitle, int pInputIndex,
+                            const std::string& pValue, bool pRefresh = false);
 
       /**
        * \brief Sets a value of an input on one of the subforms.
@@ -341,8 +342,8 @@ class cxMultiForm : public cxForm {
        *
        * @return true if successful or false if not
        */
-      virtual bool setValue(const string& pTitle, const string& pLabel,
-                            const string& pValue, bool pIsLabel = true,
+      virtual bool setValue(const std::string& pTitle, const std::string& pLabel,
+                            const std::string& pValue, bool pIsLabel = true,
                             bool pRefresh = false);
 
       /**
@@ -352,7 +353,7 @@ class cxMultiForm : public cxForm {
        * @param pRefresh Whether or not to refresh the input (defaults to false)
        * @return True if successful or false if not
        */
-      virtual bool setValue(int pIndex, const string& pValue, bool pRefresh = false);
+      virtual bool setValue(int pIndex, const std::string& pValue, bool pRefresh = false);
 
       /**
        * Sets the value of one of the inputs on the form (by label/name).
@@ -363,7 +364,7 @@ class cxMultiForm : public cxForm {
        * @param pRefresh Whether or not to refresh the input (defaults to false)
        * @return True if successful or false if not
        */
-      virtual bool setValue(const string& pLabel, const string& pValue, bool pIsLabel = true, bool pRefresh = false);
+      virtual bool setValue(const std::string& pLabel, const std::string& pValue, bool pIsLabel = true, bool pRefresh = false);
 
       /**
        * \brief Returns the number of subforms on the form.
@@ -507,7 +508,7 @@ class cxMultiForm : public cxForm {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentSubform(const string& pTitle);
+      virtual bool setCurrentSubform(const std::string& pTitle);
 
       /**
        * \brief Changes which subform is to have the focus (by pointer).
@@ -519,6 +520,7 @@ class cxMultiForm : public cxForm {
        *
        * @return True if successful or false if not
        */
+      virtual bool setCurrentSubformByPtr(const std::shared_ptr<cxForm>& pForm);
       virtual bool setCurrentSubformByPtr(cxForm *pForm);
 
       /**
@@ -538,6 +540,7 @@ class cxMultiForm : public cxForm {
        *  the given cxForm pointer isn't a subform on
        *  this form.
        */
+      virtual int getSubformIndex(const std::shared_ptr<cxForm>& pForm) const;
       virtual int getSubformIndex(cxForm *pForm) const;
 
       /**
@@ -572,7 +575,7 @@ class cxMultiForm : public cxForm {
        * @param pTitle The title of the subform
        * @param pEnabled Whether the subform should be enabled or not (true/false)
        */
-      virtual void setSubformEnabled(const string& pTitle, bool pEnabled);
+      virtual void setSubformEnabled(const std::string& pTitle, bool pEnabled);
 
       /**
        * \brief Returns whether one of the subforms is
@@ -594,7 +597,7 @@ class cxMultiForm : public cxForm {
        * @return Whether the subform is enabled or not (true/false).
        *  Returns false if there is no subform with the given title.
        */
-      virtual bool subformIsEnabled(const string& pTitle) const;
+      virtual bool subformIsEnabled(const std::string& pTitle) const;
 
       /**
        * \brief Adds a key that will cause the form to quit and
@@ -703,7 +706,7 @@ class cxMultiForm : public cxForm {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    protected:
       /**
@@ -740,20 +743,18 @@ class cxMultiForm : public cxForm {
       int lowestSubformRow(unsigned pIndex = 0) const;
 
    private:
-      typedef vector<cxForm*> formPtrContainer;
+      typedef std::vector<std::shared_ptr<cxForm> > formPtrContainer;
       formPtrContainer mForms; // Contains pointers to the subforms
-      int mCurrentForm;        // The index of the subform that currently has focus
-      bool mQuitNow;           // The input loop will quit when
-                               //  this is set to true.
-      bool mCycleForm;         // Whether or not to cycle to the next or
-                               //  previous form in the input loop (this
-                               //  is set to false when setCurrentSubform()
-                               //  is called)
+      int mCurrentForm = 0;    // The index of the subform that currently has focus
+      bool mCycleForm = true;  // Whether or not to cycle to the next or
+                               // previous form in the input loop (this
+                               // is set to false when setCurrentSubform()
+                               // is called)
       // If this is set true, then when focus is set to the multiForm and the
       //  cursor is on the last form, then the cursor on the last form will be
       //  set to the last input on that form (motion is assumed to be moving
       //  backwards).
-      bool mAssumeMovingBackwards;
+      bool mAssumeMovingBackwards = true;
 
       // Frees the memory used by the subforms and clears
       //  mForms.
@@ -785,15 +786,15 @@ class cxMultiForm : public cxForm {
       bool selectPrevForm();
 
       // Adds this multiForm's function keys to a subform.
-      void addFormFunctionKeysToSubform(cxForm *pForm);
+      void addFormFunctionKeysToSubform(std::shared_ptr<cxForm>& pForm);
 
       // Adds this multiForm's quit keys and exit keys to a subform.
-      void addQuitAndExitKeysToSubform(cxForm *pForm);
+      void addQuitAndExitKeysToSubform(std::shared_ptr<cxForm>& pForm);
 
       // Returns whether a subform is enabled and editable (by index).
       //  Note that no bounds checking is done (for optimal
       //  efficiency).
-      inline bool subformIsEnabledAndEditable(unsigned pIndex);
+      inline bool subformIsEnabledAndEditable(unsigned int pIndex);
 };
 
 #endif

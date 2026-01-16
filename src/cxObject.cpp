@@ -24,6 +24,6 @@ void cxObject::beep() {
    }
 } // beep
 
-string cxObject::cxTypeStr() const {
+std::string cxObject::cxTypeStr() const {
    return("cxObject");
 } // cxTypeStr

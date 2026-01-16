@@ -5,6 +5,7 @@
 
 #include "cxBase.h"
 #include "cxWindow.h"
+#include <string>
 
 /** \class cxDialog
  * \brief Represents a dialog window on the screen (i.e., something to be shown
@@ -28,12 +29,12 @@ class cxDialog : public cxWindow {
        * @param pMessage The message to appear with the dialog
        * @param pStatus The status (appears in the bottom border).
        */
-      explicit cxDialog(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxDialog(cxWindow *pParentWindow = nullptr, int pRow = 0,
                         int pCol = 0, int pHeight = DEFAULT_HEIGHT,
                         int pWidth = DEFAULT_WIDTH,
-                        const string& pTitle = "",
-                        const string& pMessage = "",
-                        const string& pStatus = "");
+                        const std::string& pTitle = "",
+                        const std::string& pMessage = "",
+                        const std::string& pStatus = "");
 
       /**
        * Constructor overload
@@ -45,8 +46,8 @@ class cxDialog : public cxWindow {
        * @param pStatus The status to display at the bottom of the window
        */
       cxDialog(cxWindow *pParentWindow,
-               int pRow, int pCol, const string& pTitle,
-               const string& pMessage, const string& pStatus);
+               int pRow, int pCol, const std::string& pTitle,
+               const std::string& pMessage, const std::string& pStatus);
       /**
        * Constructor overload
        * @param pParentWindow Pointer to parent window
@@ -55,8 +56,8 @@ class cxDialog : public cxWindow {
        * @param pStatus The status to display at the bottom of the window
        */
       cxDialog(cxWindow *pParentWindow,
-               const string& pTitle, const string& pMessage,
-               const string& pStatus);
+               const std::string& pTitle, const std::string& pMessage,
+               const std::string& pStatus);
       /**
        * Constructor overload
        * @param pParentWindow Pointer to parent window
@@ -64,13 +65,13 @@ class cxDialog : public cxWindow {
        * @param pStatus The status to display at the bottom of the window
        */
       cxDialog(cxWindow *pParentWindow,
-               const string& pMessage, const string& pStatus);
+               const std::string& pMessage, const std::string& pStatus);
       /**
        * Constructor overload
        * @param pParentWindow Pointer to parent window
        * @param pMessage The message to appear with the dialog
        */
-      cxDialog(cxWindow *pParentWindow, const string& pMessage);
+      cxDialog(cxWindow *pParentWindow, const std::string& pMessage);
 
       /**
        * Destructor
@@ -100,7 +101,7 @@ class cxDialog : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    private:
 };

@@ -11,6 +11,7 @@
 #include "cxBase.h"
 #include "cxValidators.h"
 using cxStringUtils::strToLower;
+using std::string;
 
 cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
              int pRow, int pCol, int pHeight, int pWidth,
@@ -21,18 +22,8 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
    : cxWindow(pParentWindow, pRow, pCol, pHeight, pWidth,
               pTitle, pMessage, pStatus, pBorderStyle,
               pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting),
-     mSubWindow(NULL),
-     mSubWinHeight(0),
-     mSubWinWidth(0),
-     mLineNumber(0),
-     mHScrollOffset(0),
-     mSearchKey(DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY),
-     mGoToKey(DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY),
-     mAltPgUpKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY),
-     mUseLastKeyword(true),
-     mLoopStartFunction(NULL, NULL, NULL, NULL, NULL, false, false, false),
-     mLoopEndFunction(NULL, NULL, NULL, NULL, NULL, false, false, false)
+     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
+     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
 {
    // Note: cxWindow may change the height and width if they
    //  are <= 0..
@@ -57,18 +48,8 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
    : cxWindow(pParentWindow, pRow, pCol, pTitle, pMessage,
               pStatus, pExtTitleWindow, pExtStatusWindow,
               pHotkeyHighlighting),
-     mSubWindow(NULL),
-     mSubWinHeight(0),
-     mSubWinWidth(0),
-     mLineNumber(0),
-     mHScrollOffset(0),
-     mSearchKey(DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY),
-     mGoToKey(DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY),
-     mAltPgUpKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY),
-     mUseLastKeyword(true),
-     mLoopStartFunction(NULL, NULL, NULL, NULL, NULL, false, false, false),
-     mLoopEndFunction(NULL, NULL, NULL, NULL, NULL, false, false, false)
+     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
+     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
 {
    // Note: For some reason, this class' overridden init() doesn't
    //  get called by cxWindow, even though it's virtual in cxWindow,
@@ -87,18 +68,8 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
                bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pTitle, pMessage, pStatus,
               pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting),
-     mSubWindow(NULL),
-     mSubWinHeight(0),
-     mSubWinWidth(0),
-     mLineNumber(0),
-     mHScrollOffset(0),
-     mSearchKey(DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY),
-     mGoToKey(DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY),
-     mAltPgUpKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY),
-     mUseLastKeyword(true),
-     mLoopStartFunction(NULL, NULL, NULL, NULL, NULL, false, false, false),
-     mLoopEndFunction(NULL, NULL, NULL, NULL, NULL, false, false, false)
+     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
+     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
 {
    init(0, 0, 0, 0, pTitle, pMessage, pStatus);
    center();
@@ -112,18 +83,8 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
                bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pMessage, pStatus, pExtTitleWindow,
               pExtStatusWindow, pHotkeyHighlighting),
-     mSubWindow(NULL),
-     mSubWinHeight(0),
-     mSubWinWidth(0),
-     mLineNumber(0),
-     mHScrollOffset(0),
-     mSearchKey(DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY),
-     mGoToKey(DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY),
-     mAltPgUpKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY),
-     mUseLastKeyword(true),
-     mLoopStartFunction(NULL, NULL, NULL, NULL, NULL, false, false, false),
-     mLoopEndFunction(NULL, NULL, NULL, NULL, NULL, false, false, false)
+     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
+     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
 {
    init(0, 0, 0, 0, "", pMessage, pStatus);
    center();
@@ -135,18 +96,8 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
                cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pMessage, pExtTitleWindow, pExtStatusWindow,
               pHotkeyHighlighting),
-     mSubWindow(NULL),
-     mSubWinHeight(0),
-     mSubWinWidth(0),
-     mLineNumber(0),
-     mHScrollOffset(0),
-     mSearchKey(DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY),
-     mGoToKey(DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY),
-     mAltPgUpKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY),
-     mUseLastKeyword(true),
-     mLoopStartFunction(NULL, NULL, NULL, NULL, NULL, false, false, false),
-     mLoopEndFunction(NULL, NULL, NULL, NULL, NULL, false, false, false)
+     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
+     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
 {
    init(0, 0, 0, 0, "", pMessage, "");
    center();
@@ -159,18 +110,8 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow, eHPosition pHPositio
                cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pHPosition, pTitle, pMessage,
               pStatus, pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting),
-     mSubWindow(NULL),
-     mSubWinHeight(0),
-     mSubWinWidth(0),
-     mLineNumber(0),
-     mHScrollOffset(0),
-     mSearchKey(DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY),
-     mGoToKey(DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY),
-     mAltPgUpKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY),
-     mUseLastKeyword(true),
-     mLoopStartFunction(NULL, NULL, NULL, NULL, NULL, false, false, false),
-     mLoopEndFunction(NULL, NULL, NULL, NULL, NULL, false, false, false)
+     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
+     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
 {
    int newRow, newCol;
 
@@ -186,18 +127,8 @@ cxScrolledWindow::cxScrolledWindow(const cxScrolledWindow& pThatWindow)
               "", pThatWindow.getStatus(), pThatWindow.getBorderStyle(),
               pThatWindow.getExtTitleWindow(), pThatWindow.getExtStatusWindow(),
               pThatWindow.getHotkeyHighlighting()),
-     mSubWindow(NULL),
-     mSubWinHeight(0),
-     mSubWinWidth(0),
-     mLineNumber(0),
-     mHScrollOffset(0),
-     mSearchKey(DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY),
-     mGoToKey(DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY),
-     mAltPgUpKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY),
-     mAltPgDownKey(DEFAULT_CXSCROLLEDWINDOW_ALT_PGDOWN_KEY),
-     mUseLastKeyword(pThatWindow.mUseLastKeyword),
-     mLoopStartFunction(NULL, NULL, NULL, NULL, NULL, false, false, false),
-     mLoopEndFunction(NULL, NULL, NULL, NULL, NULL, false, false, false)
+     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
+     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
 {
    init(pThatWindow.top(), pThatWindow.left(), pThatWindow.height(),
         pThatWindow.width(), pThatWindow.getTitle(), pThatWindow.getMessage(),
@@ -206,9 +137,9 @@ cxScrolledWindow::cxScrolledWindow(const cxScrolledWindow& pThatWindow)
 }
 
 cxScrolledWindow::~cxScrolledWindow() {
-   if (mSubWindow != NULL) {
+   if (mSubWindow != nullptr) {
       delwin(mSubWindow);
-      mSubWindow = NULL;
+      mSubWindow = nullptr;
    }
 }
 
@@ -327,7 +258,7 @@ void cxScrolledWindow::drawMessage() {
       // Enable the message attributes and message color.
       enableAttrs(mSubWindow, eMESSAGE);
       if (useColors) {
-         wcolor_set(mSubWindow, mMessageColorPair, NULL);
+         wcolor_set(mSubWindow, mMessageColorPair, nullptr);
       }
 
       // Note: In order for this to display the lines properly,
@@ -361,7 +292,7 @@ void cxScrolledWindow::drawMessage() {
       // Disable the message attributes and message color.
       disableAttrs(mSubWindow, eMESSAGE);
       if (useColors) {
-         wcolor_set(mSubWindow, 0, NULL);
+         wcolor_set(mSubWindow, 0, nullptr);
       }
    }
 } // drawMessage
@@ -407,7 +338,7 @@ void cxScrolledWindow::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
    cxWindow::resize(pNewHeight, pNewWidth, pRefresh);
 
    init(top(), left(), pNewHeight, pNewWidth, getTitle(), getMessage(),
-        getStatus(), NULL, false);
+        getStatus(), nullptr, false);
 
    // Re-create mSubWindow
    reCreateSubWindow();
@@ -478,7 +409,7 @@ void cxScrolledWindow::drawBorder() {
       // Enable the border attributes
       enableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, mBorderColorPair, NULL);
+         wcolor_set(mWindow, mBorderColorPair, nullptr);
       }
 
       mvwaddch(mWindow, 1, width()-1, ACS_UARROW);          // Up arrow
@@ -487,7 +418,7 @@ void cxScrolledWindow::drawBorder() {
       // Disable the border attributes
       disableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
    }
 } // drawBorder
@@ -495,19 +426,19 @@ void cxScrolledWindow::drawBorder() {
 //// Protected functions
 
 void cxScrolledWindow::reCreateSubWindow() {
-   if (mSubWindow != NULL) {
+   if (mSubWindow != nullptr) {
       //werase(mSubWindow);
       //wclear(mSubWindow);
       delwin(mSubWindow);
-      mSubWindow = NULL;
+      mSubWindow = nullptr;
    }
 
    mSubWinHeight = height();
    mSubWinWidth = width();
    if (getBorderStyle() == eBS_NOBORDER) {
       mSubWindow = derwin(mWindow, mSubWinHeight, mSubWinWidth, 0, 0);
-      // If mSubWindow is NULL, that means derwin() had an error..
-      if (mSubWindow == NULL) {
+      // If mSubWindow is nullptr, that means derwin() had an error..
+      if (mSubWindow == nullptr) {
          // Free up the other memory used
          cxWindow::freeWindow();
          throw(cxWidgetsException("Couldn't re-create the ncurses subwindow (cxMenu)."));
@@ -517,7 +448,7 @@ void cxScrolledWindow::reCreateSubWindow() {
       mSubWinHeight -= 2;
       mSubWinWidth -= 2;
       mSubWindow = derwin(mWindow, mSubWinHeight, mSubWinWidth, 1, 1);
-      if (mSubWindow == NULL) {
+      if (mSubWindow == nullptr) {
          // Free up the other memory used
          cxWindow::freeWindow();
          throw(cxWidgetsException("Couldn't re-create the ncurses subwindow (cxMenu)."));
@@ -536,10 +467,10 @@ void cxScrolledWindow::init(int pRow, int pCol, int pHeight, int pWidth,
 } // init
 
 void cxScrolledWindow::copyCxScrolledWindowStuff(const cxScrolledWindow* pThatWindow) {
-   if ((pThatWindow != NULL) && (pThatWindow != this)) {
-      if (mSubWindow != NULL) {
+   if ((pThatWindow != nullptr) && (pThatWindow != this)) {
+      if (mSubWindow != nullptr) {
          delwin(mSubWindow);
-         mSubWindow = NULL;
+         mSubWindow = nullptr;
       }
 
       // Copy the parent cxWindow stuff, then the stuff for this class.
@@ -560,8 +491,8 @@ void cxScrolledWindow::copyCxScrolledWindowStuff(const cxScrolledWindow* pThatWi
       mSubWinWidth = pThatWindow->mSubWinWidth;
       if (getBorderStyle() == eBS_NOBORDER) {
          mSubWindow = derwin(mWindow, mSubWinHeight, mSubWinWidth, 0, 0);
-         // If mSubWindow is NULL, that means derwin() had an error..
-         if (mSubWindow == NULL) {
+         // If mSubWindow is nullptr, that means derwin() had an error..
+         if (mSubWindow == nullptr) {
             // Free up the other memory used
             cxWindow::freeWindow();
             throw(cxWidgetsException("Couldn't re-create the ncurses subwindow (cxMenu)."));
@@ -569,7 +500,7 @@ void cxScrolledWindow::copyCxScrolledWindowStuff(const cxScrolledWindow* pThatWi
       }
       else {
          mSubWindow = derwin(mWindow, mSubWinHeight, mSubWinWidth, 1, 1);
-         if (mSubWindow == NULL) {
+         if (mSubWindow == nullptr) {
             // Free up the other memory used
             cxWindow::freeWindow();
             throw(cxWidgetsException("Couldn't re-create the ncurses subwindow (cxMenu)."));
@@ -889,7 +820,7 @@ void cxScrolledWindow::doGoToLine() {
    goToInput.setBorderColor(eYELLOW_BLUE);
    goToInput.setLabelColor(eBRTCYAN_BLUE);
    // Ensure that the user can only type integers.
-   goToInput.setOnKeyFunction(cxValidators::intOnKeyValidator, &goToInput, NULL);
+   goToInput.setOnKeyFunction(cxValidators::intOnKeyValidator, &goToInput, nullptr);
    if (goToInput.showModal() != ESC) {
       // Subtract 1 from the user's line# (because the index to
       //  mMessageLines is 0-based).
@@ -959,7 +890,7 @@ void cxScrolledWindow::drawHorizontalScrollArrows() {
       // Enable the border attributes
       enableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, mBorderColorPair, NULL);
+         wcolor_set(mWindow, mBorderColorPair, nullptr);
       }
 
       mvwaddch(mWindow, height()-1, 1, ACS_LARROW);         // Left arrow
@@ -968,7 +899,7 @@ void cxScrolledWindow::drawHorizontalScrollArrows() {
       // Disable the border attributes
       disableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
    }
 } // drawHorizontalScrollArrows

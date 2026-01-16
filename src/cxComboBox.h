@@ -3,6 +3,7 @@
 
 #include "cxMultiLineInput.h"
 #include "cxMenu.h"
+#include <string>
 
 /** \class cxComboBox
  *
@@ -61,7 +62,7 @@ class cxComboBox : public cxMultiLineInput {
        *  cxInputOptions.h.
        * @param pInputType Specifies the type of input (text, numeric floating
        *  point, or numeric whole).  This defaults to eINPUT_TYPE_TEXT.
-       * @param pExtValue Pointer to external input value; defaults to NULL
+       * @param pExtValue Pointer to external input value; defaults to nullptr
        * @param pMenuEnabled Whether or not the menu should be enabled (defaults
        *  to true)
        * @param pRightlabelOffset The distance between the right edge of the
@@ -73,15 +74,15 @@ class cxComboBox : public cxMultiLineInput {
        * @param pShowRightLabel Whether or not to show the right label.
        *  Defaults to false.
        */
-      explicit cxComboBox(cxWindow *pParentWindow = NULL,
+      explicit cxComboBox(cxWindow *pParentWindow = nullptr,
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
-                       const string& pLabel = "",
+                       const std::string& pLabel = "",
                        eBorderStyle pBorderStyle = eBS_NOBORDER,
                        eInputOptions pInputOption = eINPUT_EDITABLE,
                        eInputTypes pInputType = eINPUT_TYPE_TEXT,
-                       string *pExtValue = NULL, bool pMenuEnabled = true,
+                       std::string *pExtValue = nullptr, bool pMenuEnabled = true,
                        int pRightLabelOffset = 0, 
                        int pRightLabelHeight = 1,
                        int pRightLabelWidth = 5,
@@ -163,8 +164,8 @@ class cxComboBox : public cxMultiLineInput {
        * @param pBringToTop Whether or not to bring the menu to the top if
        *  it's being shown (defaults to false).
        */
-      virtual void appendToMenu(const string& pDisplayText,
-                                const string& pItemText = "",
+      virtual void appendToMenu(const std::string& pDisplayText,
+                                const std::string& pItemText = "",
                                 bool pRefresh = false, bool pBringToTop = false);
 
       /**
@@ -188,7 +189,7 @@ class cxComboBox : public cxMultiLineInput {
        *
        * @return True if the item was deleted; false if not.
        */
-      virtual bool removeFromMenu(const string& pItemText,
+      virtual bool removeFromMenu(const std::string& pItemText,
                                   bool pDisplayText = true,
                                   bool pRefresh = false);
 
@@ -222,7 +223,7 @@ class cxComboBox : public cxMultiLineInput {
        * @param pIndex The index of the menu item
        * @return The menu item text at the specified index, or a blank string if the index is out of bounds.
        */
-      virtual string getItemText(int pIndex) const;
+      virtual std::string getItemText(int pIndex) const;
 
       /**
        * \brief Returns the total height of the combo box, including
@@ -304,7 +305,7 @@ class cxComboBox : public cxMultiLineInput {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Returns a pointer to the drop-down menu.
@@ -423,13 +424,13 @@ class cxComboBox : public cxMultiLineInput {
 
    private:
       cxMenu mMenu;             // The drop-down menu
-      bool mUseAltMenuItemText; // Whether or not to use the alternate text for menu items
+      bool mUseAltMenuItemText = false; // Whether or not to use the alternate text for menu items
       set<int> mDropDownKeys;   // Keys that show the drop-down menu
       // mRunValidatorFunction controls whether or not the validator function
       //  should run.  Note that cxMultiLineInput has this same bool too;
       //  however, cxComboBox will disable that one because cxComboBox will
       //  run the validator.
-      bool mRunValidatorFunction;
+      bool mRunValidatorFunction = true;
 
       // This is a helper for doInputLoop().  This shows the drop-down menu if
       //  it's enabled.  This will return a return code to be used for the

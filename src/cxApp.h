@@ -61,7 +61,7 @@ class cxApp : public cxObject {
       virtual long onExit();
 
    private:
-      cxFrame *mAppFrame; // The application's frame
+      cxFrame *mAppFrame = nullptr; // The application's frame
 };
 
 #endif

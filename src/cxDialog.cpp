@@ -1,6 +1,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxDialog.h"
+using std::string;
 
 cxDialog::cxDialog(cxWindow *pParentWindow, int pRow,
                    int pCol, int pHeight,

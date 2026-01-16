@@ -31,20 +31,9 @@
 #include <list>
 #include <deque>
 #include <utility>
-using std::cout;
-using std::endl;
-using std::vector;
-using std::set;
-using std::list;
-using std::deque;
-using std::map;
-using std::ofstream;
-using std::ios;
-using std::flush;
-using std::pair;
 
 class cxWindow;
-typedef vector<cxWindow*> cxWindowPtrContainer;
+typedef std::vector<cxWindow*> cxWindowPtrContainer;
 
 // If the version of ncurses on the current machine doesn't support the mouse,
 //  then define some of ncurses' mouse event macros so that code using them
@@ -75,7 +64,7 @@ typedef vector<cxWindow*> cxWindowPtrContainer;
 #define DEFAULT_HEIGHT 24
 #define DEFAULT_WIDTH  80
 
-typedef deque<string> messageLineContainer;
+typedef std::deque<std::string> messageLineContainer;
 
 /** \class cxWindow
  *  \brief Represents a text-based window on the screen.
@@ -159,7 +148,7 @@ typedef deque<string> messageLineContainer;
  *  cxTypeStr(), as folows:
 \verbatim
    cxWindow *parent = getParent();
-   if (parent != NULL) {
+   if (parent != nullptr) {
       if (parent->cxTypeStr() == "cxPanel") {
          // The parent is a cxPanel
       }
@@ -224,16 +213,16 @@ class cxWindow : public cxObject {
        * @param pHotkeyHighlighting Whether or not to recognize & use
        *  underline characters when displaying the message text.
        */
-      explicit cxWindow(cxWindow *pParentWindow = NULL,
+      explicit cxWindow(cxWindow *pParentWindow = nullptr,
                         int pRow = 0, int pCol = 0,
                         int pHeight = DEFAULT_HEIGHT,
                         int pWidth = DEFAULT_WIDTH,
-                        const string& pTitle = "",
-                        const string& pMessage = "",
-                        const string& pStatus = "",
+                        const std::string& pTitle = "",
+                        const std::string& pMessage = "",
+                        const std::string& pStatus = "",
                         eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                        cxWindow *pExtTitleWindow = NULL,
-                        cxWindow *pExtStatusWindow = NULL,
+                        cxWindow *pExtTitleWindow = nullptr,
+                        cxWindow *pExtStatusWindow = nullptr,
                         bool pHotkeyHighlighting = false);
 
       /**
@@ -250,10 +239,10 @@ class cxWindow : public cxObject {
        *  displaying the message text.
        */
       cxWindow(cxWindow *pParentWindow,
-               int pRow, int pCol, const string& pTitle,
-               const string& pMessage, const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               int pRow, int pCol, const std::string& pTitle,
+               const std::string& pMessage, const std::string& pStatus,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Centers the window in the middle of the screen.
@@ -267,10 +256,10 @@ class cxWindow : public cxObject {
        *  displaying the message text.
        */
       cxWindow(cxWindow *pParentWindow,
-               const string& pTitle, const string& pMessage,
-               const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               const std::string& pTitle, const std::string& pMessage,
+               const std::string& pStatus,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Centers the window in the middle of the screen.
@@ -283,9 +272,9 @@ class cxWindow : public cxObject {
        *  displaying the message text.
        */
       cxWindow(cxWindow *pParentWindow,
-               const string& pMessage, const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               const std::string& pMessage, const std::string& pStatus,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Centers the window in the middle of the screen.
@@ -296,9 +285,9 @@ class cxWindow : public cxObject {
        * @param pHotkeyHighlighting Whether or not to recognize & use underline characters when
        *  displaying the message text.
        */
-      cxWindow(cxWindow *pParentWindow, const string& pMessage,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+      cxWindow(cxWindow *pParentWindow, const std::string& pMessage,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
        * \brief Overridden constructor - Lets you specify the horizontal position
@@ -313,10 +302,10 @@ class cxWindow : public cxObject {
        *  displaying the message text.
        */
       cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
-               const string& pTitle, const string& pMessage,
-               const string& pStatus,
-               cxWindow *pExtTitleWindow = NULL,
-               cxWindow *pExtStatusWindow = NULL,
+               const std::string& pTitle, const std::string& pMessage,
+               const std::string& pStatus,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
 
       /**
@@ -368,7 +357,7 @@ class cxWindow : public cxObject {
        *
        * @return The first string in the set of title strings
        */
-      virtual string getTitle() const;
+      virtual std::string getTitle() const;
 
       /**
        * \brief Setter for the title text - This sets the first string in the
@@ -377,32 +366,32 @@ class cxWindow : public cxObject {
        * @param pTitle The new title for the window
        * @param pRefreshTitle Whether or not to refresh the title area (defaults to true)
        */
-      virtual void setTitle(const string& pTitle, bool pRefreshTitle = true);
+      virtual void setTitle(const std::string& pTitle, bool pRefreshTitle = true);
 
       /**
        * \brief Accessor for the status line text
        * @return The status line from the bottom row of window
        */
-      string getStatus() const;
+      std::string getStatus() const;
 
       /**
        * \brief Mutator for the status line text
        * @param pStatus The new status message for window
        * @param pRefreshStatus Whether or not to refresh the status area (defaults to true)
        */
-      virtual void setStatus(const string& pStatus, bool pRefreshStatus = true);
+      virtual void setStatus(const std::string& pStatus, bool pRefreshStatus = true);
 
       /**
        * \brief Returns the message that appears in the window, concatenating all message lines together
        * @return The message that appears in the window.
        */
-      string getMessage() const;
+      std::string getMessage() const;
 
       /**
        * \brief Sets the text that appears within the window.
        @param pMessage The new message for the window.
        */
-      virtual void setMessage(const string &pMessage);
+      virtual void setMessage(const std::string &pMessage);
 
       /**
        * \brief Adds a line to the message to be displayed in the window,
@@ -410,28 +399,28 @@ class cxWindow : public cxObject {
        *
        * @param pLine The line to add
        */
-      virtual void addMessageLineBelow(const string &pLine);
+      virtual void addMessageLineBelow(const std::string &pLine);
 
       /**
        * \brief Adds lines to the message below the current message text.
        *
        * @param pLines The lines to add
        */
-      virtual void addMessageLinesBelow(const vector<string>& pLines);
+      virtual void addMessageLinesBelow(const std::vector<std::string>& pLines);
 
       /**
        * \brief Adds lines to the message below the current message text.
        *
        * @param pLines The lines to add
        */
-      virtual void addMessageLinesBelow(const list<string>& pLines);
+      virtual void addMessageLinesBelow(const std::list<std::string>& pLines);
 
       /**
        * \brief Adds lines to the message below the current message text.
        *
        * @param pLines The lines to add
        */
-      virtual void addMessageLinesBelow(const deque<string>& pLines);
+      virtual void addMessageLinesBelow(const std::deque<std::string>& pLines);
 
       /**
        * \brief Adds a line to the message to be displayed in the window,
@@ -439,49 +428,49 @@ class cxWindow : public cxObject {
        *
        * @param pLine The line to add
        */
-      virtual void addMessageLineAbove(const string& pLine);
+      virtual void addMessageLineAbove(const std::string& pLine);
 
       /**
        * \brief Adds lines to the message above the current message text.
        *
        * @param pLines The lines to add
        */
-      virtual void addMessageLinesAbove(const vector<string>& pLines);
+      virtual void addMessageLinesAbove(const std::vector<std::string>& pLines);
 
       /**
        * \brief Adds lines to the message above the current message text.
        *
        * @param pLines The lines to add
        */
-      virtual void addMessageLinesAbove(const list<string>& pLines);
+      virtual void addMessageLinesAbove(const std::list<std::string>& pLines);
 
       /**
        * \brief Adds lines to the message above the current message text.
        *
        * @param pLines The lines to add
        */
-      virtual void addMessageLinesAbove(const deque<string>& pLines);
+      virtual void addMessageLinesAbove(const std::deque<std::string>& pLines);
 
       /**
        * \brief Sets the message lines in the window
        *
        * @param pLines A collection of message lines
        */
-      virtual void setMessageLines(const vector<string>& pLines);
+      virtual void setMessageLines(const std::vector<std::string>& pLines);
 
       /**
        * \brief Sets the message lines in the window
        *
        * @param pLines A collection of message lines
        */
-      virtual void setMessageLines(const list<string>& pLines);
+      virtual void setMessageLines(const std::list<std::string>& pLines);
 
       /**
        * \brief Sets the message lines in the window
        *
        * @param pLines A collection of message lines
        */
-      virtual void setMessageLines(const deque<string>& pLines);
+      virtual void setMessageLines(const std::deque<std::string>& pLines);
 
       /**
        * \brief Removes a line from the text inside the window (by index).
@@ -496,7 +485,7 @@ class cxWindow : public cxObject {
        * @param pIndex The index of the line
        * @param pLine The new line text
        */
-      virtual void setMessageLine(unsigned pIndex, const string& pLine);
+      virtual void setMessageLine(unsigned pIndex, const std::string& pLine);
 
       /**
        * \brief Sets the horizontal alignment of the title text.
@@ -876,7 +865,7 @@ class cxWindow : public cxObject {
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
 
       /**
        * \brief Changes the window's width and height.  The window's upper-left
@@ -923,14 +912,14 @@ class cxWindow : public cxObject {
        * @param pIndex The index of the subwindow
        * @param pMessage The new message to set in the subwindow
        */
-      void setSubWinMessage(unsigned pIndex, const string& pMessage);
+      void setSubWinMessage(unsigned pIndex, const std::string& pMessage);
 
       /**
        * \brief Sets the message of one of the subwindows (by title).
        * @param pTitle The title of the subwindow
        * @param pMessage The new message to set in the subwindow
        */
-      void setSubWinMessage(const string& pTitle, const string& pMessage);
+      void setSubWinMessage(const std::string& pTitle, const std::string& pMessage);
 
       /**
        * \brief Returns true if window has focus, false otherwise
@@ -984,7 +973,7 @@ class cxWindow : public cxObject {
        * @param pResult This string will contain all characters contained in
        *  the window.
        */
-      virtual void dump(string& pResult);
+      virtual void dump(std::string& pResult);
 
       /**
        * \brief Shows the subwindows for the window.
@@ -1015,7 +1004,7 @@ class cxWindow : public cxObject {
        * @param pCol The column in the window at which to write the text
        * @param pText The text to write in the window
        */
-      virtual void writeText(int pRow, int pCol, const string& pText);
+      virtual void writeText(int pRow, int pCol, const std::string& pText);
 
       /**
        * \brief Enables/disables the use of hotkey attributes when writing the message.
@@ -1212,30 +1201,30 @@ class cxWindow : public cxObject {
       /**
        * \brief Runs the onFocus function, if it's set.
        *
-       * @param pFunctionRetval If not NULL, the string that this points to
+       * @param pFunctionRetval If not nullptr, the string that this points to
        *  will contain the return value of the onFocus function.  Defaults to
-       *  NULL.
+       *  nullptr.
        *
        * @return Whether the input loop should exit (returns the value of
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(string *pFunctionRetval = NULL);
+      virtual bool runOnFocusFunction(std::string *pFunctionRetval = nullptr);
 
       /**
        * \brief Runs the onLeave function, if it's set.  However, if the last
        * \brief keypress is in mExitKeys or mQuitKeys and the boolean for that
        * \brief key is false, the onLeave function won't be run.
        *
-       * @param pFunctionRetval If not NULL, the string that this points to
+       * @param pFunctionRetval If not nullptr, the string that this points to
        *  will contain the return value of the onLeave function.  Defaults to
-       *  NULL.
+       *  nullptr.
        *
        * @return Whether the input loop should exit (returns the value of
        *  the onLeave function's mExitAfterRun, or false if the onLeave
        *  function isn't set).
        */
-      virtual bool runOnLeaveFunction(string *pFunctionRetval = NULL);
+      virtual bool runOnLeaveFunction(std::string *pFunctionRetval = nullptr);
 
       /**
        * \brief Sets whether or not the onFocus function should run.
@@ -1586,7 +1575,7 @@ class cxWindow : public cxObject {
        *
        * @return A begin iterator to the map of key functions
        */
-      map<int, cxFunction*>::iterator keyFunctions_begin();
+      std::map<int, cxFunction*>::iterator keyFunctions_begin();
 
       /**
        * \brief Returns an end iterator to the map of cxFunction pointers.
@@ -1597,7 +1586,7 @@ class cxWindow : public cxObject {
        *
        * @return An end iterator to the map of key functions
        */
-      map<int, cxFunction*>::iterator keyFunctions_end();
+      std::map<int, cxFunction*>::iterator keyFunctions_end();
 
       /**
        * \brief Populates a collection of strings representing the keys
@@ -1607,7 +1596,7 @@ class cxWindow : public cxObject {
        *  keys that are associated with functions (i.e., F1-F12 for function
        *  keys, individual characters representing different keys, etc.).
        */
-      virtual void getFunctionKeyStrings(vector<string>& pKeys) const;
+      virtual void getFunctionKeyStrings(std::vector<std::string>& pKeys) const;
 
       /**
        * \brief Populates a collection with integers representing the keys
@@ -1616,7 +1605,7 @@ class cxWindow : public cxObject {
        * @param pKeys A collection that will contain integers representing the
        *  keys that are associated with functions.
        */
-      virtual void getFunctionKeys(vector<int>& pKeys) const;
+      virtual void getFunctionKeys(std::vector<int>& pKeys) const;
 
       /**
        * \brief Toggles the order in which subwindows will be shown.
@@ -1681,7 +1670,7 @@ class cxWindow : public cxObject {
        *
        * @return True if pStr was added or false if not.
        */
-      virtual bool addTitleString(int pHPos, const string& pStr,
+      virtual bool addTitleString(int pHPos, const std::string& pStr,
                                   bool pRefreshTitle = false);
 
       /**
@@ -1696,7 +1685,7 @@ class cxWindow : public cxObject {
        * @return The title string at that position, or a blank string if there
        *  is no string there.
        */
-      virtual string getTitleString(int pHPos) const;
+      virtual std::string getTitleString(int pHPos) const;
 
       /**
        * \brief Returns the map of title strings for the window.
@@ -1705,7 +1694,7 @@ class cxWindow : public cxObject {
        *
        * @return The map of title strings for the window
        */
-      virtual map<int, string> getTitleStrings() const;
+      virtual std::map<int, std::string> getTitleStrings() const;
 
       /**
        * \brief Returns the map of title strings for the window (using an
@@ -1715,7 +1704,7 @@ class cxWindow : public cxObject {
        *
        * @param pTitleStrings (OUT) This will contain the title strings.
        */
-      virtual void getTitleStrings(map<int, string>& pTitleStrings) const;
+      virtual void getTitleStrings(std::map<int, std::string>& pTitleStrings) const;
 
       /**
        * \brief Sets all the title strings via a map of horizontal
@@ -1724,7 +1713,7 @@ class cxWindow : public cxObject {
        * @param pTitleStrings A map containing the title strings with
        *  the horizontal position as the key.
        */
-      virtual void setTitleStrings(const map<int, string>& pTitleStrings);
+      virtual void setTitleStrings(const std::map<int, std::string>& pTitleStrings);
 
       /**
        * \brief Removes a title string at a given horizontal position.
@@ -1754,7 +1743,7 @@ class cxWindow : public cxObject {
        *
        * @return True if pStr was added or false if not.
        */
-      virtual bool addStatusString(int pHPos, const string& pStr,
+      virtual bool addStatusString(int pHPos, const std::string& pStr,
                                    bool pRefreshStatus = false);
 
       /**
@@ -1769,7 +1758,7 @@ class cxWindow : public cxObject {
        * @return The status string at that position, or a blank string if there
        *  is no string there.
        */
-      virtual string getStatusString(int pHPos) const;
+      virtual std::string getStatusString(int pHPos) const;
 
       /**
        * \brief Returns the map of status strings for the window.
@@ -1778,7 +1767,7 @@ class cxWindow : public cxObject {
        *
        * @return The map of status strings for the window
        */
-      virtual map<int, string> getStatusStrings() const;
+      virtual std::map<int, std::string> getStatusStrings() const;
 
       /**
        * \brief Returns the map of status strings for the window (using an
@@ -1788,7 +1777,7 @@ class cxWindow : public cxObject {
        *
        * @param pStatusStrings (OUT) This will contain the status strings.
        */
-      virtual void getStatusStrings(map<int, string>& pStatusStrings) const;
+      virtual void getStatusStrings(std::map<int, std::string>& pStatusStrings) const;
 
       /**
        * \brief Sets all the status strings via a map of horizontal
@@ -1797,7 +1786,7 @@ class cxWindow : public cxObject {
        * @param pStatusStrings A map containing the status strings with
        *  the horizontal position as the key.
        */
-      virtual void setStatusStrings(const map<int, string>& pStatusStrings);
+      virtual void setStatusStrings(const std::map<int, std::string>& pStatusStrings);
 
       /**
        * \brief Removes a status string at a given horizontal position.
@@ -1918,7 +1907,7 @@ class cxWindow : public cxObject {
        * @param pKeys A collection that will contain strings representing the
        *  keys that will make the window quit its input loop
        */
-      virtual void getQuitKeyStrings(vector<string>& pKeys) const;
+      virtual void getQuitKeyStrings(std::vector<std::string>& pKeys) const;
 
       /**
        * \brief Returns a string containing a comma-separated list of the
@@ -1927,7 +1916,7 @@ class cxWindow : public cxObject {
        * @return A string containing a comma-separated list of the quit keys
        *  for the window.
        */
-      virtual string getQuitKeyListString() const;
+      virtual std::string getQuitKeyListString() const;
 
       /**
        * \brief Populates a collection of strings representing the keys
@@ -1936,7 +1925,7 @@ class cxWindow : public cxObject {
        * @param pKeys A collection that will contain strings representing the
        *  keys that will make the window quit its input loop
        */
-      virtual void getExitKeyStrings(vector<string>& pKeys) const;
+      virtual void getExitKeyStrings(std::vector<std::string>& pKeys) const;
 
       /**
        * \brief Returns a string containing a comma-separated list of the
@@ -1945,7 +1934,7 @@ class cxWindow : public cxObject {
        * @return A string containing a comma-separated list of the exit keys
        *  for the window.
        */
-      virtual string getExitKeyListString() const;
+      virtual std::string getExitKeyListString() const;
 
       /**
        * \brief Returns the keys that will make the window quit its input
@@ -1955,7 +1944,7 @@ class cxWindow : public cxObject {
        *  its input loop.  The boolean for each key specifies whether the
        *  onLeave function will be run for that key.
        */
-      virtual map<int, bool> getQuitKeys() const;
+      virtual std::map<int, bool> getQuitKeys() const;
 
       /**
        * \brief Returns the keys that will make the window exit is input
@@ -1965,7 +1954,7 @@ class cxWindow : public cxObject {
        *  its input loop.  The boolean for each key specifies whether the
        *  onLeave function will be run for that key.
        */
-      virtual map<int, bool> getExitKeys() const;
+      virtual std::map<int, bool> getExitKeys() const;
 
       /**
        * \brief Sets whether or not to draw the message area (the area within
@@ -2081,7 +2070,7 @@ class cxWindow : public cxObject {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Returns whether or not something told the window to leave now.
@@ -2096,7 +2085,7 @@ class cxWindow : public cxObject {
        * Accessor for the name for this input
        * @return The alternate label for this input
        */
-      string getName() const;
+      std::string getName() const;
 
       /**
        * \brief Sets the name of the window.  The name is an alternative means
@@ -2104,7 +2093,7 @@ class cxWindow : public cxObject {
        *
        * @param pName The new name for the window
        */
-      virtual void setName(const string& pName);
+      virtual void setName(const std::string& pName);
 
       /**
        * \brief Returns whether the current mouse information stored in the
@@ -2151,11 +2140,11 @@ class cxWindow : public cxObject {
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction0
        * \brief pointer.  If the key does not exist in mKeyFunctions, or if the
        * \brief pointer is not a cxFunction2 pointer (i.e., its cxTypeStr()
-       * \brief doesn't return "cxFunction2"),, this will return NULL.
+       * \brief doesn't return "cxFunction2"),, this will return nullptr.
        *
        * @param pKey The key to look for in mKeyFunctions
        *
-       * @return A cxFunction2 pointer for the key, or NULL if there is no
+       * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
       cxFunction0* getKeyFunction0(int pKey) const;
@@ -2164,11 +2153,11 @@ class cxWindow : public cxObject {
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction2
        * \brief pointer.  If the key does not exist in mKeyFunctions, or if the
        * \brief pointer is not a cxFunction2 pointer (i.e., its cxTypeStr()
-       * \brief doesn't return "cxFunction2"),, this will return NULL.
+       * \brief doesn't return "cxFunction2"),, this will return nullptr.
        *
        * @param pKey The key to look for in mKeyFunctions
        *
-       * @return A cxFunction2 pointer for the key, or NULL if there is no
+       * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
       cxFunction2* getKeyFunction2(int pKey) const;
@@ -2177,11 +2166,11 @@ class cxWindow : public cxObject {
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction4
        * \brief pointer.  If the key does not exist in mKeyFunctions, or if the
        * \brief pointer is not a cxFunction4 pointer (i.e., its cxTypeStr()
-       * \brief doesn't return "cxFunction4"),, this will return NULL.
+       * \brief doesn't return "cxFunction4"),, this will return nullptr.
        *
        * @param pKey The key to look for in mKeyFunctions
        *
-       * @return A cxFunction4 pointer for the key, or NULL if there is no
+       * @return A cxFunction4 pointer for the key, or nullptr if there is no
        *  cxFunction4 for the key.
        */
       cxFunction4* getKeyFunction4(int pKey) const;
@@ -2305,7 +2294,7 @@ class cxWindow : public cxObject {
        * 
        * @return the "string" value of the 
        */
-      string getString(int pRow, int pCol, int pNumber);
+      std::string getString(int pRow, int pCol, int pNumber);
 
       /** 
        * @brief Display information about a window (for debugging/testing)
@@ -2398,7 +2387,7 @@ class cxWindow : public cxObject {
        * @return A string version of the mouse state last captured by the
        *  window
        */
-      string getMouseStateStr() const;
+      std::string getMouseStateStr() const;
 
       /**
        * \brief Returns the color of one of the items in a window.
@@ -2414,9 +2403,9 @@ class cxWindow : public cxObject {
    protected:
 
       /**
-       * \brief Everything in the window is written here
+       * \brief Everything in the window is written here; this is an nCurses window structure
        */
-      WINDOW *mWindow;  // Everything in the window is written here
+      WINDOW *mWindow = nullptr;
 
       /**
        * \brief Contains the text to be shown inside the window (note: the
@@ -2431,67 +2420,67 @@ class cxWindow : public cxObject {
        * \brief integers for the location (Y, X), and the value is the
        * \brief character to add at that location.
        */
-      map<pair<int, int>, chtype> mSpecialChars;
+      std::map<std::pair<int, int>, chtype> mSpecialChars;
 
       /**
        * \brief Message attributes
        */
-      set<attr_t> mMessageAttrs;
+      std::set<attr_t> mMessageAttrs;
       /**
        * \brief Title attributes
        */
-      set<attr_t> mTitleAttrs;
+      std::set<attr_t> mTitleAttrs;
       /**
        * \brief Status attributes
        */
-      set<attr_t> mStatusAttrs;
+      std::set<attr_t> mStatusAttrs;
       /**
        * \brief Border attributes
        */
-      set<attr_t> mBorderAttrs;
+      std::set<attr_t> mBorderAttrs;
       /**
        * \brief Hotkey attributes
        */
-      set<attr_t> mHotkeyAttrs;
+      std::set<attr_t> mHotkeyAttrs;
       /**
        * \brief Attributes for the "special" characters (which are added to
        * \brief the window after all other stuff is added).  The key is a pair
        * \brief of integers for the location (Y, X), and the value is the
        * \brief attribute to apply for the special character.
        */
-      map<pair<int, int>, attr_t> mSpecialCharAttrs;
+      std::map<std::pair<int, int>, attr_t> mSpecialCharAttrs;
 
       // Colors for the various elements
-      short mMessageColorPair;
-      short mTitleColorPair;
-      short mStatusColorPair;
-      short mBorderColorPair;
+      short mMessageColorPair = eWHITE_BLUE;
+      short mTitleColorPair = eGRAY_BLUE;
+      short mStatusColorPair = eBROWN_BLUE;
+      short mBorderColorPair = eGRAY_BLUE;
 
-      eHPosition mHorizTitleAlignment;   // Horizontal title alignment
-      eHPosition mHorizMessageAlignment; // Horizontal message alignment
-      eHPosition mHorizStatusAlignment;  // Horizontal status alignment
+      eHPosition mHorizTitleAlignment = eHP_LEFT;   // Horizontal title alignment
+      eHPosition mHorizMessageAlignment = eHP_LEFT; // Horizontal message alignment
+      eHPosition mHorizStatusAlignment = eHP_LEFT;  // Horizontal status alignment
 
-      bool mDrawMessage; // Whether or not to draw the message
-      bool mDrawSpecialChars; // Whether or not to draw the "special" chars
+      bool mDrawMessage = true;      // Whether or not to draw the message
+      bool mDrawSpecialChars = true; // Whether or not to draw the "special" chars
 
-      cxFunction *mOnFocusFunction; // Function for when focus is gained
-      cxFunction *mOnLeaveFunction; // Function for when focus is lost
-      bool mIsModal;   // Whether or not the window is being shown modally
+      cxFunction *mOnFocusFunction = nullptr; // Function for when focus is gained
+      cxFunction *mOnLeaveFunction = nullptr; // Function for when focus is lost
+      bool mIsModal = false;   // Whether or not the window is being shown modally
       // mLeaveNow can be set true by exitNow() or quitNow() if an external
       //  function wants the window object to leave its input loop.
-      bool mLeaveNow;
+      bool mLeaveNow = false;
       // This map contains pointers to functions to be called for various
       //  keypresses.
-      map<int, cxFunction*> mKeyFunctions;
+      std::map<int, cxFunction*> mKeyFunctions;
       // This map contains pointers to functions to be called for various
       //  mouse states.
-      map<int, cxFunction*> mMouseFunctions;
+      std::map<int, cxFunction*> mMouseFunctions;
       // mQuitKeys and mExitKeys contain additional keys to cause the window
       //  to quit the input loop & return cxID_QUIT and cxID_EXIT,
       //  respectively.  The key to the maps is the keypress, and the boolean
       //  tells whether or not to run the onLeave function before leaving.
-      map<int, bool> mQuitKeys;
-      map<int, bool> mExitKeys;
+      std::map<int, bool> mQuitKeys;
+      std::map<int, bool> mExitKeys;
       // mHotkeyHighlighting specifies whether or not to use hotkey
       //  attributes in the message.
       bool mHotkeyHighlighting;
@@ -2526,13 +2515,13 @@ class cxWindow : public cxObject {
        * @param pTitle The title to use for the window
        * @param pMessage The message to display inside the window
        * @param pStatus The status text to use
-       * @param pParentWindow A pointer to the parent cxWindow (defaults to NULL)
+       * @param pParentWindow A pointer to the parent cxWindow (defaults to nullptr)
        * @param pResizeVertically Whether or not to resize vertically so that
        *  all the message text shows (defaults to true).
        */
       virtual void init(int pRow, int pCol, int pHeight, int pWidth,
-                        string pTitle, string pMessage, string pStatus,
-                        cxWindow *pParentWindow = NULL,
+                        std::string pTitle, std::string pMessage,
+                        std::string pStatus, cxWindow *pParentWindow = nullptr,
                         bool pResizeVertically = true);
 
       /**
@@ -2608,7 +2597,7 @@ class cxWindow : public cxObject {
        *  text).  In that case, the attribute would be disabled for normal text
        *  when it shouldn't.
        */
-      virtual void writeWithHighlighting(WINDOW* pWindow, const string& pText,
+      virtual void writeWithHighlighting(WINDOW* pWindow, const std::string& pText,
                         const int& pY, const int& pStartX, const int& pEndX,
                         int pNormalTextItem = -1);
 
@@ -2633,40 +2622,40 @@ class cxWindow : public cxObject {
        * @param pCol The leftmost column
        */
       virtual void getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
-                            const string& pTitle, const string& pStatus,
-                            const string& pMessage, int& pRow, int& pCol);
+                            const std::string& pTitle, const std::string& pStatus,
+                            const std::string& pMessage, int& pRow, int& pCol);
 
       /**
        * \brief Looks for a function tied to the last keypress and
        * \brief runs it, if one exists.
        *
-       * @param pFunctionExists A pointer to a bool: If non-NULL, it will
+       * @param pFunctionExists A pointer to a bool: If non-null, it will
        *  store whether or not a function existed for the last keypress.
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param pRunOnLeaveFunction A pointer to a bool: If non-NUL, it will
        *  store whether or not to run the onLeave function when the window
        *  exits (this is an option for cxFunction).
        *
        * @return Whether or not the input loop should continue
        */
-      virtual bool handleFunctionForLastKey(bool *pFunctionExists = NULL,
-                                            bool *pRunOnLeaveFunction = NULL);
+      virtual bool handleFunctionForLastKey(bool *pFunctionExists = nullptr,
+                                            bool *pRunOnLeaveFunction = nullptr);
 
       /**
        * \brief Looks for a function tied to the last mouse state captured
        * \brief by the window and runs it, if one exists.
        *
-       * @param pFunctionExists A pointer to a bool: If non-NULL,
+       * @param pFunctionExists A pointer to a bool: If non-null,
        *  it will store whether or not a function existed for the last mouse
-       *  event.  Defaults to NULL.
+       *  event.  Defaults to nullptr.
        * @param pRunOnLeaveFunction A pointer to a bool: If non-NUL, it will
        *  store whether or not to run the onLeave function when the window
        *  exits (this is an option for cxFunction).
        *
        * @return Whether or not the input loop should continue
        */
-      virtual bool handleFunctionForLastMouseState(bool *pFunctionExists = NULL,
-                                            bool *pRunOnLeaveFunction = NULL);
+      virtual bool handleFunctionForLastMouseState(bool *pFunctionExists = nullptr,
+                                            bool *pRunOnLeaveFunction = nullptr);
 
       /**
        * \brief Fills the member ncurses window structure with the current
@@ -2763,7 +2752,7 @@ class cxWindow : public cxObject {
 
       /**
        * \brief Returns whether or not the onFocus function is set (if
-       * \brief mOnFocusFunction is not NULL and if its function pointer is
+       * \brief mOnFocusFunction is not nullptr and if its function pointer is
        * \brief set)
        *
        * @return true if the onFocus function is set, or false if not
@@ -2772,7 +2761,7 @@ class cxWindow : public cxObject {
 
       /**
        * \brief Returns whether or not the onLeave function is set (if
-       * \brief mOnLeaveFunction is not NULL and if its function pointer is
+       * \brief mOnLeaveFunction is not nullptr and if its function pointer is
        * \brief set)
        *
        * @return true if the onLeave function is set, or false if not
@@ -2780,52 +2769,52 @@ class cxWindow : public cxObject {
       bool onLeaveFunctionIsSet() const;
 
    private:
-      PANEL *mPanel;              // For layered window management
-      cxWindow *mExtTitleWindow;  // Optionally used for the title instead of the title line.
-      cxWindow *mExtStatusWindow; // Optionally used for status instead
-                                  //  of the status line.
-      cxWindow *mTitleParent;     // Pointer to a window using me for its title
-      cxWindow *mStatusParent;    // Pointer to a window using me for its status
-      string mExtTitleTemp;       // Keeps track of old external title window text
-      string mExtStatusTemp;      // Keeps track of old external status window text
-      cxWindow *mParentWindow;    // Pointer to the parent window (can be NULL for none)
-      cxWindowPtrContainer mSubWindows; // Contains subwindows for this window
-      bool mFocus;                 // Whether or not the window has focus
-      eBorderStyle mBorderStyle;   // Border style
-      bool mEnabled;               // Whether or not the window is enabled
-      bool mDisableCursorOnShow;   // Whether or not to disable the cursor in show()
-      int mLastKey;   // The last key typed by the user during an input loop
-      bool mChangeColorsOnFocus; // Whether or not to apply colors upon setting focus
-      bool mShowSubwinsForward;  // If true, the subwindows will be shown in
-                                 //  forward order; if false, they will be shown
-                                 //  in reverse order.
-      bool mShowSelfBeforeSubwins; // Whether or not to show this window before
-                                   //  showing the subwindows
-      long mReturnCode; // Keeps track of the return code set by showModal()
-      bool mRunOnFocus; // Whether or not to run the onFocus function
-      bool mRunOnLeave; // Whether or not to run the onLeave function
+      PANEL *mPanel = nullptr;            // For layered window management
+      cxWindow *mExtTitleWindow;          // Optionally used for the title instead of the title line.
+      cxWindow *mExtStatusWindow;         // Optionally used for status instead
+                                          //  of the status line.
+      cxWindow *mTitleParent = nullptr;   // Pointer to a window using me for its title
+      cxWindow *mStatusParent = nullptr;  // Pointer to a window using me for its status
+      std::string mExtTitleTemp;          // Keeps track of old external title window text
+      std::string mExtStatusTemp;         // Keeps track of old external status window text
+      cxWindow *mParentWindow;            // Pointer to the parent window (can be nullptr for none)
+      cxWindowPtrContainer mSubWindows;   // Contains subwindows for this window
+      bool mFocus = false;                // Whether or not the window has focus
+      eBorderStyle mBorderStyle;          // Border style
+      bool mEnabled = true;               // Whether or not the window is enabled
+      bool mDisableCursorOnShow = true;   // Whether or not to disable the cursor in show()
+      int mLastKey = NOKEY;               // The last key typed by the user during an input loop
+      bool mChangeColorsOnFocus = false;  // Whether or not to apply colors upon setting focus
+      bool mShowSubwinsForward = true;    // If true, the subwindows will be shown in
+                                          //  forward order; if false, they will be shown
+                                          //  in reverse order.
+      bool mShowSelfBeforeSubwins = true; // Whether or not to show this window before
+                                          //  showing the subwindows
+      long mReturnCode = cxID_EXIT;       // Keeps track of the return code set by showModal()
+      bool mRunOnFocus = true;            // Whether or not to run the onFocus function
+      bool mRunOnLeave = true;            // Whether or not to run the onLeave function
       // mTitleStrings and mStatusStrings keep track of horizontal positions
-      //  and strings to write for the title and status lines, respectively.
-      map<int, string> mTitleStrings;
-      map<int, string> mStatusStrings;
+      // and strings to write for the title and status lines, respectively.
+      std::map<int, std::string> mTitleStrings;
+      std::map<int, std::string> mStatusStrings;
       // mName provides an alternate way to identify a window.
-      string mName;
-      bool mBorderTop;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderBottom; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderLeft;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderRight;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+      std::string mName;
+      bool mBorderTop = true;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mBorderBottom = true; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mBorderLeft = true;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mBorderRight = true;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
 
       //// Helper functions
 
       // Writes text at a row & column
-      void drawLabel(int pRow, int pCol, const string& pLabel);
+      void drawLabel(int pRow, int pCol, const std::string& pLabel);
 
       // Returns the largest subwindow height (or 0 if there are none).
       inline int maxSubwindowHeight() const;
 
       // Combines all the messages lines into one
       //  string.
-      void combineMessageLines(string& message);
+      void combineMessageLines(std::string& message);
 
       // Returns whether or not a cxWindow exists in mSubWindows.
       // Parameters:
@@ -2848,7 +2837,7 @@ class cxWindow : public cxObject {
       //         the top or bottom border position).
       //  pItem: The item type of the text, for applying the attributes.
       //  pTextColorPair: The color to apply to the text
-      void writeBorderStrings(const map<int, string>& pStrings, int pVPos,
+      void writeBorderStrings(const std::map<int, std::string>& pStrings, int pVPos,
                               e_WidgetItems pItem, short pTextColorPair);
 
       // This is a helper for the destructor - It returns whether or not any

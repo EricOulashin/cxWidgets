@@ -5,7 +5,9 @@
 
 #include "cxPanel.h"
 #include <string>
-using std::string;
+#include <vector>
+#include <map>
+#include <memory>
 
 /** \class cxNotebook
  * \brief This class represents a notebook control, which manages multiple
@@ -35,7 +37,7 @@ class cxNotebook: public cxPanel {
       /** 
        * \brief Constructor
        *
-       * @param pParentWindow A pointer to the parent window.  Can be NULL.
+       * @param pParentWindow A pointer to the parent window.  Can be nullptr.
        * @param pRow The row of the upper-left corner.
        * @param pCol The column of the upper-left corner.
        * @param pHeight The height of the window.
@@ -59,7 +61,7 @@ class cxNotebook: public cxPanel {
        *  the first and last enabled tabs using the navigation keys.  Defaults
        *  to true.
        */
-      explicit cxNotebook(cxWindow *pParentWindow = NULL,
+      explicit cxNotebook(cxWindow *pParentWindow = nullptr,
                           int pRow = 0, int pCol = 0,
                           int pHeight = DEFAULT_HEIGHT,
                           int pWidth = DEFAULT_WIDTH,
@@ -67,8 +69,8 @@ class cxNotebook: public cxPanel {
                           bool pLeftLabelSpace = true,
                           bool pRightLabelSpace = true,
                           int pTabSpacing = 0,
-                          cxWindow *pExtTitleWindow = NULL,
-                          cxWindow *pExtStatusWindow = NULL,
+                          cxWindow *pExtTitleWindow = nullptr,
+                          cxWindow *pExtStatusWindow = nullptr,
                           bool pTabNavWrap = true);
 
       virtual ~cxNotebook();
@@ -218,7 +220,7 @@ class cxNotebook: public cxPanel {
        *
        * @return The class type as a string ("cxNotebook")
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Returns whether a window exists in the notebook.
@@ -234,17 +236,17 @@ class cxNotebook: public cxPanel {
        * \brief to the cxPanel that was added.  If the panel can't be added
        * \brief (i.e., if the label is too long for the tab to fit on the
        * \brief screen), this won't create the panel, and this will return
-       * \brief NULL.
+       * \brief nullptr.
        *
        * @param pLabel The label for the panel
        * @param pPanelName This can specify a name for the panel to allow
        *  identification later.  This is optional and defaults to a blank
        *  string.
        *
-       * @return A pointer to the cxPanel that was added, or NULL if it
-       *  couldn't be added
+       * @return A smart pointer to the cxPanel that was added. If it couldn't be
+       * added, the smart pointer's pointer will be null.
        */
-      virtual cxPanel* append(const string& pLabel, const string& pPanelName = "");
+      virtual std::shared_ptr<cxPanel> append(const std::string& pLabel, const std::string& pPanelName = "");
 
       /**
        * \brief Returns a pointer to one of the panels in the notebook (by
@@ -253,9 +255,9 @@ class cxNotebook: public cxPanel {
        * @param pIndex The index of the panel to retrieve
        *
        * @return A pointer to the panel with the given index.  If there is
-       *  no panel for the given index, this will return NULL.
+       * no panel for the given index, this will return nullptr.
        */
-      virtual cxPanel* getPanel(unsigned pIndex) const;
+      virtual cxPanel* getPanel(unsigned int pIndex) const;
 
       /**
        * \brief Returns a pointer to one of the panels in the notebook (by
@@ -266,16 +268,16 @@ class cxNotebook: public cxPanel {
        *  this will treat pID as a name for a panel.  This defaults to true.
        *
        * @return A pointer to the panel with the given label/name.  If there is
-       *  no panel for the given label/name, this will return NULL.
+       *  no panel for the given label/name, this will return nullptr.
        */
-      virtual cxPanel* getPanel(const string& pID, bool pIsLabel = true) const;
+      virtual cxPanel* getPanel(const std::string& pID, bool pIsLabel = true) const;
 
       /**
-       * \brief Returns a pointer to the current panel, or NULL if there is
+       * \brief Returns a pointer to the current panel, or nullptr if there is
        * \brief no current panel for some reason (i.e., if the notebook has
        * \brief no panels).
        *
-       * @return A pointer to the current panel, or NULL if there is none
+       * @return A pointer to the current panel, or nullptr if there is none
        */
       virtual cxPanel* getCurrentPanelPtr() const;
 
@@ -300,7 +302,7 @@ class cxNotebook: public cxPanel {
        * @param pShowPanelWindow Whether or not the panel should show its
        *  window when it gets focus.
        */
-      virtual void setShowPanelWindow(unsigned pIndex, bool pShowPanelWindow);
+      virtual void setShowPanelWindow(unsigned int pIndex, bool pShowPanelWindow);
 
       /**
        * \brief Sets whether one of the panels in the notebook should show
@@ -313,7 +315,7 @@ class cxNotebook: public cxPanel {
        * @param pIsLabel If true, this will treat pID as a label.  If false,
        *  this will treat pID as a name for a panel.  This defaults to true.
        */
-      virtual void setShowPanelWindow(const string& pID, bool pShowPanelWindow,
+      virtual void setShowPanelWindow(const std::string& pID, bool pShowPanelWindow,
                                       bool pIsLabel = true);
 
       /**
@@ -325,7 +327,7 @@ class cxNotebook: public cxPanel {
        * @return Whether or not the panel in the notebook will show its window
        *  when it gets focus.
        */
-      virtual bool getShowPanelWindow(unsigned pIndex) const;
+      virtual bool getShowPanelWindow(unsigned int pIndex) const;
 
       /**
        * \brief Returns whether or not one of the panels in the notebook will
@@ -340,7 +342,7 @@ class cxNotebook: public cxPanel {
        * @return Whether or not the panel in the notebook will show its window
        *  when it gets focus.
        */
-      virtual bool getShowPanelWindow(const string& pID, bool pIsLabel = true) const;
+      virtual bool getShowPanelWindow(const std::string& pID, bool pIsLabel = true) const;
 
       /**
        * \brief Shows the subwindows for the notebook.  This is overidden here
@@ -364,7 +366,7 @@ class cxNotebook: public cxPanel {
        * @return The label of the panel.  If pIndex is out of bounds, this will
        *  return a blank string.
        */
-      virtual string getLabel(unsigned pIndex) const;
+      virtual std::string getLabel(unsigned int pIndex) const;
 
       /**
        * \brief Returns the label forone of the panels (by panel name).
@@ -374,7 +376,7 @@ class cxNotebook: public cxPanel {
        * @return The label of the panel.  If there is no panel with the given
        *  name, this will return a blank string.
        */
-      virtual string getLabel(const string& pName) const;
+      virtual std::string getLabel(const std::string& pName) const;
 
       /**
        * \brief Sets the label for one of the panels (by index).  If the new
@@ -387,7 +389,7 @@ class cxNotebook: public cxPanel {
        *
        * @return true if the label was set, or false if not.
        */
-      virtual bool setLabel(unsigned pIndex, const string& pLabel, bool pRefresh = false);
+      virtual bool setLabel(unsigned int pIndex, const std::string& pLabel, bool pRefresh = false);
 
       /**
        * \brief Sets the label for one of the panels (by label/name).  If the
@@ -402,7 +404,7 @@ class cxNotebook: public cxPanel {
        *
        * @return true if the label was set, or false if not.
        */
-      virtual bool setLabel(const string& pID, const string& pLabel,
+      virtual bool setLabel(const std::string& pID, const std::string& pLabel,
                             bool pIsLabel = true, bool pRefresh = false);
 
       /**
@@ -421,7 +423,7 @@ class cxNotebook: public cxPanel {
        * @param pEnabled Boolean: If true, the window will be enabled, and if
        *  false, the window will be disabled.
        */
-      virtual void setEnabled(unsigned pIndex, bool pEnabled);
+      virtual void setEnabled(unsigned int pIndex, bool pEnabled);
 
       /**
        * \brief Enables or disables a window in the panel (by title/name).
@@ -436,7 +438,7 @@ class cxNotebook: public cxPanel {
        *  window's title.  If this is false, then pID will refer to the
        *  window's name.
        */
-      virtual void setEnabled(const string& pID, bool pEnabled, bool pIsTitle = true);
+      virtual void setEnabled(const std::string& pID, bool pEnabled, bool pIsTitle = true);
 
       /**
        * \brief Sets the key to be used for navigation to the next tab
@@ -487,7 +489,7 @@ class cxNotebook: public cxPanel {
        *
        * @param pAllDisabledMsg A new message to display
        */
-      void setAllDisabledMsg(const string& pAllDisabledMsg);
+      void setAllDisabledMsg(const std::string& pAllDisabledMsg);
 
       /**
        * \brief Returns the message that is displayed when all the panels in
@@ -496,7 +498,7 @@ class cxNotebook: public cxPanel {
        * @return The message that is displayed when all the panels in the
        *  notebook are disabled
        */
-      const string& getAllDisabledMsg() const;
+      const std::string& getAllDisabledMsg() const;
 
       /**
        * \brief Sets the message to be displayed when there are no panels in
@@ -504,7 +506,7 @@ class cxNotebook: public cxPanel {
        *
        * @param pNoWindowsMsg A new message to display
        */
-      void setNoWindowsMsg(const string& pNoWindowsMsg);
+      void setNoWindowsMsg(const std::string& pNoWindowsMsg);
 
       /**
        * \brief Returns the message that is displayed when one of the panels in
@@ -513,14 +515,14 @@ class cxNotebook: public cxPanel {
        * @return The message that is displayed when one of the panels in the
        *  notebook is disabled.
        */
-      const string& getWindowDisabledMsg() const;
+      const std::string& getWindowDisabledMsg() const;
 
       /**
        * \brief Sets the message to be displayed when a window is disabled.
        *
        * @param pMsg A new message
        */
-      void setWindowDisabledMsg(const string& pMsg);
+      void setWindowDisabledMsg(const std::string& pMsg);
 
       /**
        * \brief Returns the message that is displayed when there are no panels
@@ -529,7 +531,7 @@ class cxNotebook: public cxPanel {
        * @return The message that is displayed when there are no panels in the
        *  notebook
        */
-      const string& getNoWindowsMsg() const;
+      const std::string& getNoWindowsMsg() const;
 
       /**
        * \brief Returns whether the current mouse information's coordinates
@@ -541,19 +543,16 @@ class cxNotebook: public cxPanel {
       virtual bool mouseEvtWasInTitle() const;
 
       /**
-       * \brief Removes a panel from the notebook, without freeing its memory
-       * \brief so that it may be used elsewhere.  Note: If you don't want to
-       * \brief re-use the window, use delWindow() instead, as this frees up
-       * \brief the window's memory using delete.  This returns a cxWindow*
-       * \brief rather than a cxPanel* so that this method will override the
-       * \brief version from cxPanel.
+       * \brief Removes a panel from the notebook.  This returns a cxWindow
+       * \brief pointer rather than a cxPanel pointer so that this method
+       * \brief will override the version from cxPanel.
        *
        * @param pIndex The index of the window in the panel to remove
        *
        * @return A pointer to the panel removed.  If pIndex is not a valid
-       *  index, the return value will be NULL.
+       * index, the smart pointer returned will have a null value for its pointer.
        */
-      virtual cxWindow* removeWindow(unsigned pIndex);
+      virtual std::shared_ptr<cxWindow> removeWindow(unsigned int pIndex);
 
       /**
        * \brief Removes a panel from the notebook, without freeing its memory
@@ -575,7 +574,7 @@ class cxNotebook: public cxPanel {
        *
        * @param pIndex The index of the panel to remove from the notebook
        */
-      virtual void delWindow(unsigned pIndex);
+      virtual void delWindow(unsigned int pIndex);
 
       /**
        * \brief Removes a panel from the notebook (by pointer).  Does nothing
@@ -595,7 +594,7 @@ class cxNotebook: public cxPanel {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindow(unsigned pIndex);
+      virtual bool setCurrentWindow(unsigned int pIndex);
 
       /**
        * \brief Sets which panel will get focus in the next call to
@@ -606,7 +605,7 @@ class cxNotebook: public cxPanel {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindow(const string& pTitle);
+      virtual bool setCurrentWindow(const std::string& pTitle);
 
       /**
        * \brief Sets which window will get focus in the next call to
@@ -620,7 +619,7 @@ class cxNotebook: public cxPanel {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindow(const string& pID, bool pIsLabel);
+      virtual bool setCurrentWindow(const std::string& pID, bool pIsLabel);
 
       /**
        * \brief Sets which window will get focus in the next
@@ -668,6 +667,7 @@ class cxNotebook: public cxPanel {
        *
        * @return Whether or not the windows got swapped
        */
+      virtual bool swap(std::shared_ptr<cxWindow>& pWindow1, std::shared_ptr<cxWindow>& pWindow2);
       virtual bool swap(cxWindow *pWindow1, cxWindow *pWindow2);
 
       /**
@@ -689,19 +689,20 @@ class cxNotebook: public cxPanel {
       bool selectPrevWin();
 
    private:
-      vector<cxWindow*> mLabels; // These act as labels for the tabs
-      bool mLabelsOnTop;         // Can determine if the labels are on top or bottom
-      bool mLeftLabelSpace;      // Whether to have a space to the left of label text
-      bool mRightLabelSpace;     // Whether to have a space to the right of label text
-      int mCurrentPanelIndex;    // Index of the current panel
-      int mNextTabKey;           // The key to use to go to the next tab
-      int mPrevTabKey;           // The key to use to go to the previous tab
-      int mTabNavKey;            // The key to use to bring up a tab navigation menu
-      string mAllDisabledMsg;    // Message to display when all windows are disabled
-      string mNoWindowsMsg;      // Message to display when the notebook has no windows
-      string mWindowDisabledMsg; // Message to display when a window is disabled
-      int mTabSpacing;           // # of spaces between the tabs
-      int mLastClickTabIndex;    // Index of the window that was clicked on
+      typedef std::vector<std::shared_ptr<cxWindow> > labelWinContainer;
+      labelWinContainer mLabels;      // These act as labels for the tabs
+      bool mLabelsOnTop;              // Can determine if the labels are on top or bottom
+      bool mLeftLabelSpace;           // Whether to have a space to the left of label text
+      bool mRightLabelSpace;          // Whether to have a space to the right of label text
+      int mCurrentPanelIndex = 0;     // Index of the current panel
+      int mNextTabKey = PAGE_DOWN;    // The key to use to go to the next tab
+      int mPrevTabKey = PAGE_UP;      // The key to use to go to the previous tab
+      int mTabNavKey;                 // The key to use to bring up a tab navigation menu
+      std::string mAllDisabledMsg;    // Message to display when all windows are disabled
+      std::string mNoWindowsMsg;      // Message to display when the notebook has no windows
+      std::string mWindowDisabledMsg; // Message to display when a window is disabled
+      int mTabSpacing;                // # of spaces between the tabs
+      int mLastClickTabIndex = -1;    // Index of the window that was clicked on
       // mTabNavWrap controls whether "wrapping" occurs if user wants to
       //  navigate to the next/previous tab with the keyboard and they're
       //  on the last/first enabled tab.
@@ -731,7 +732,7 @@ class cxNotebook: public cxPanel {
       //  pIndex: The index of the label window.  The label windows to the left
       //   and to the right of the window will also have their border characters
       //   set.
-      void setLabelWinSpecialChars(unsigned pIndex);
+      void setLabelWinSpecialChars(unsigned int pIndex);
 
       // Sets the special border characters for all label windows
       inline void setAllLabelWinSpecialChars();
@@ -750,8 +751,8 @@ class cxNotebook: public cxPanel {
       bool getExitOnLeaveFirst() const;
       void setExitOnLeaveFirst(bool pExitOnLeaveFirst);
       bool windowIsInPanel(cxWindow *pWindow) const;
-      bool append(cxWindow *pWindow);
-      bool append(cxWindow *pWindow, int pRow, int pCol, bool pRefresh = false);
+      bool append(const std::shared_ptr<cxWindow>& pWindow);
+      bool append(const std::shared_ptr<cxWindow>& pWindow, int pRow, int pCol, bool pRefresh = false);
       void setShowPanelWindow(bool pShowPanelWindow);
 
       // Don't allow copy construction or assignment
@@ -772,7 +773,7 @@ class cxNotebook: public cxPanel {
 
       // This is a helper for setupLabelBorder().  It removes all strings from
       //  a title/status map that are all spaces.
-      static void removeSpaceStrings(map<int, string>& pStringMap);
+      static void removeSpaceStrings(std::map<int, std::string>& pStringMap);
 
       // Shows a tab navigation menu, allowing the user to choose another tab
       //  to go to.

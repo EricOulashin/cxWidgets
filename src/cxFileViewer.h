@@ -7,6 +7,7 @@
 // displays it in that window.
 
 #include "cxScrolledWindow.h"
+#include <string>
 
 /** \class cxFileViewer
  * \brief Represents a window that displays a file.
@@ -37,7 +38,7 @@ class cxFileViewer : public cxScrolledWindow {
        * @param pHeight Height of display window
        * @param pWidth Width of display window
        */
-      explicit cxFileViewer(cxWindow *pParentWindow, const string& pFilename,
+      explicit cxFileViewer(cxWindow *pParentWindow, const std::string& pFilename,
                             int pRow = 0, int pCol = 0,
                             int pHeight = DEFAULT_HEIGHT,
                             int pWidth = DEFAULT_WIDTH);
@@ -84,7 +85,7 @@ class cxFileViewer : public cxScrolledWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    protected:
       /**
@@ -95,7 +96,7 @@ class cxFileViewer : public cxScrolledWindow {
       void copyCxFileViewerStuff(const cxFileViewer* pThatFileViewer);
 
    private:
-      string mFilename;
+      std::string mFilename;
 
       // Displays the line numbers in the bottom border
       void displayLineNumbers();
@@ -104,7 +105,7 @@ class cxFileViewer : public cxScrolledWindow {
       //  function is to be used as the 'loop function' to be
       //  run at the end of each cycle through the input loop
       //  in the parent class.
-      static string updateLineNumbers(void *theFileViewer, void *unused,
+      static std::string updateLineNumbers(void *theFileViewer, void *unused,
                              void *unused2, void *unused3);
 
       // Disable the use of setLoopEndFunction from the outside

@@ -11,12 +11,11 @@
 #include "cxMenuItemType.h"
 #include "cxFunction.h"
 
+#include <string>
 #include <map>
 #include <set>
-using std::map;
-using std::multimap;
-using std::make_pair;
-using std::set;
+#include <vector>
+#include <memory>
 
 #define DEFAULT_CXMENU_SEARCH_KEY '/'     // Default search key
 #define DEFAULT_CXMENU_ALT_PGUP_KEY '.'   // Default alternate PgUp key
@@ -63,7 +62,7 @@ class cxMenu : public cxWindow {
    public:
       /**
        * Default constructor
-       * @param pParentWindow Pointer to parent window; defaults to NULL
+       * @param pParentWindow Pointer to parent window; defaults to nullptr
        * @param pRow The y location of the upper-left corner of menu;
        *  defaults to 0
        * @param pCol the x location of the upper-left corner of menu;
@@ -79,10 +78,10 @@ class cxMenu : public cxWindow {
        *  eBS_SINGLE_LINE for a single-line border or eBS_NOBORDER for
        *  no border.
        */
-      explicit cxMenu(cxWindow *pParentWindow = NULL, int pRow = 0, int pCol = 0,
+      explicit cxMenu(cxWindow *pParentWindow = nullptr, int pRow = 0, int pCol = 0,
                       int pHeight = DEFAULT_HEIGHT, int pWidth = DEFAULT_WIDTH,
-                      const string& pTitle = "", cxWindow *pExtTitleWindow = NULL,
-                      cxWindow *pExtStatusWindow = NULL,
+                      const std::string& pTitle = "", cxWindow *pExtTitleWindow = nullptr,
+                      cxWindow *pExtStatusWindow = nullptr,
                       eBorderStyle pBorderStyle = eBS_SINGLE_LINE);
 
       /**
@@ -111,10 +110,10 @@ class cxMenu : public cxWindow {
        *  show all the items.  Defaults to false.
        * @param pItemText Alternate text to use for the item
        */
-      virtual void append(const string& pDisplayText, long pReturnCode,
-                          const string& pHelpString = "",
+      virtual void append(const std::string& pDisplayText, long pReturnCode,
+                          const std::string& pHelpString = "",
                           cxMenuItemType pType = cxITEM_NORMAL,
-                          bool pResize = false, const string& pItemText = "");
+                          bool pResize = false, const std::string& pItemText = "");
 
       /**
        * Adds an item with a pull-right submenu
@@ -124,8 +123,8 @@ class cxMenu : public cxWindow {
        * when the item is highlighted
        * @param pResize If true, the menu will resize itself so that it can show all the items.
        */
-      virtual void appendWithPullRight(const string& pDisplayText, cxMenu *pSubMenu,
-                                       const string& pHelpString = "",
+      virtual void appendWithPullRight(const std::string& pDisplayText, cxMenu *pSubMenu,
+                                       const std::string& pHelpString = "",
                                        bool pResize = false);
 
        /**
@@ -136,8 +135,8 @@ class cxMenu : public cxWindow {
        * window when the item is highlighted
        * @param pResize If true, the menu will resize itself so that it can show all the items.
        */
-      virtual void appendWithPopUp(const string& pDisplayText, cxMenu *pSubMenu,
-                                   const string& pHelpString = "", bool pResize = false);
+      virtual void appendWithPopUp(const std::string& pDisplayText, cxMenu *pSubMenu,
+                                   const std::string& pHelpString = "", bool pResize = false);
 
       /**
        * \brief Removes a menu item from the menu.  If the item has a submenu,
@@ -166,7 +165,7 @@ class cxMenu : public cxWindow {
        *
        * @return True if the item was deleted; false if not.
        */
-      virtual bool remove(const string& pItemText, bool pUseDisplayText = true,
+      virtual bool remove(const std::string& pItemText, bool pUseDisplayText = true,
                           bool pResize = false, bool pRefresh = false);
 
       /**
@@ -267,7 +266,7 @@ class cxMenu : public cxWindow {
        * @param pItemtext The text of the item
        * @param pRefresh Whether or not to refresh the menu (defaults to false).
        */
-      virtual void setTopItem(const string& pItemText, bool pRefresh = false);
+      virtual void setTopItem(const std::string& pItemText, bool pRefresh = false);
 
       /**
        * \brief Sets the item to appear at the bottom of the menu (by index).
@@ -365,7 +364,7 @@ class cxMenu : public cxWindow {
        * @return The item's return code (if index is within range).  If
        *  no item with the given text is not found, -1 is returned.
        */
-      virtual long getReturnCode(const string& pItemText, bool pUseDisplayText = true) const;
+      virtual long getReturnCode(const std::string& pItemText, bool pUseDisplayText = true) const;
 
       /**
        * \brief Returns the return code of the currently-highlited item.
@@ -384,7 +383,7 @@ class cxMenu : public cxWindow {
        * @return The text at the specified index, or a blank string if the
        *  index is out of bounds.
        */
-      virtual string getItemText(int pIndex, bool pGetDisplayText = true) const;
+      virtual std::string getItemText(int pIndex, bool pGetDisplayText = true) const;
 
       /**
        * \brief Returns the text of the current selected menu item.  Could
@@ -398,7 +397,7 @@ class cxMenu : public cxWindow {
        * @return The text of the current selected menu item, or a blank string
        *  if there is no current selected menu item.
        */
-      virtual string getCurrentItemText(bool pGetDisplayText = true) const;
+      virtual std::string getCurrentItemText(bool pGetDisplayText = true) const;
 
       /**
        * \brief Draws a border around the menu
@@ -426,7 +425,7 @@ class cxMenu : public cxWindow {
        * true, the item will be selectable.  If false, the item
        * will not be selectable.
        */
-      void toggleSelectability(const string& pItemText, bool pSelectable);
+      void toggleSelectability(const std::string& pItemText, bool pSelectable);
 
       /**
        * \brief Sets whether or not to clear the search text
@@ -489,7 +488,7 @@ class cxMenu : public cxWindow {
        * @param pStatus The new status message for window
        * @param pRefreshStatus Whether or not to refresh the status area (defaults to true)
        */
-      virtual void setStatus(const string& pStatus, bool pRefreshStatus = true);
+      virtual void setStatus(const std::string& pStatus, bool pRefreshStatus = true);
 
       /**
        * \brief Turns off the custom status text set with setStatus.
@@ -528,7 +527,7 @@ class cxMenu : public cxWindow {
        * @return If true, the set was successful; if false, the set was unsuccessful
        *   (i.e., if there are no items with the given return code, etc.)
        */
-      virtual bool setItemTextByReturnCode(long pReturnCode, const string& pItemText,
+      virtual bool setItemTextByReturnCode(long pReturnCode, const std::string& pItemText,
                                  bool pSetAll = false, bool pRefresh = false);
 
       /**
@@ -541,7 +540,7 @@ class cxMenu : public cxWindow {
        * @return If true, the set was successful; if false, the set was unsuccessful
        *   (i.e., if pIndex is an invalid index, etc.)
        */
-      virtual bool setItemTextByIndex(int pIndex, const string& pItemText,
+      virtual bool setItemTextByIndex(int pIndex, const std::string& pItemText,
                                  bool pRefresh = false);
 
       /**
@@ -561,7 +560,7 @@ class cxMenu : public cxWindow {
        *
        * @return Whether or not the item exists in the menu
        */
-      virtual bool itemExists(const string& pItemText, bool pUseDisplayText = true) const;
+      virtual bool itemExists(const std::string& pItemText, bool pUseDisplayText = true) const;
 
       /**
        * \brief Sets whether the form should allow the user to quit.
@@ -614,7 +613,7 @@ class cxMenu : public cxWindow {
        * @return The item text for the given return code, or a blank string
        *  if there is no item with the given return code.
        */
-      string getItemTextByReturnCode(long pReturnCode, bool pGetDisplayText = true);
+      std::string getItemTextByReturnCode(long pReturnCode, bool pGetDisplayText = true);
 
       /**
        * \brief Sets a function to be run at the start of each
@@ -685,7 +684,7 @@ class cxMenu : public cxWindow {
        *
        * @return The type of the menu item
        */
-      cxMenuItemType getItemType(const string& pItemText) const;
+      cxMenuItemType getItemType(const std::string& pItemText) const;
 
       /**
        * \brief Enables or disables wrapping when trying to scroll beyond
@@ -837,7 +836,7 @@ class cxMenu : public cxWindow {
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
 
       /**
        * \brief Enables/disables the use of hotkey attributes.
@@ -856,7 +855,7 @@ class cxMenu : public cxWindow {
        *
        * @return The name of the cxWidgets class ("cxMenu").
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Sorts the menu items by their return code.  Note: If the same
@@ -962,13 +961,13 @@ class cxMenu : public cxWindow {
        *
        * @return The pointer to the onSelectMenuItem function
        */
-      cxFunction* getOnSelectItemFunction() const;
+      std::shared_ptr<cxFunction> getOnSelectItemFunction() const;
 
    protected:
       /**
        * \brief Menu selection attributes
        */
-      set<attr_t> mMenuSelectionAttrs;
+      std::set<attr_t> mMenuSelectionAttrs;
 
       /**
        * \brief Makes a copy of a cxMenu's member variables
@@ -1029,47 +1028,47 @@ class cxMenu : public cxWindow {
       virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem);
 
    private:
-      WINDOW *mSubWindow;   // For scrolling
-      int mSubWinHeight;    // Height of the subwindow
-      int mSubWinWidth;     // Width of the subwindow
-      int mCurrentMenuItem; // Keeps track of the currently highlighted item
-      int mTopMenuItem;     // The index of the topmost menu item shown
-      int mAltPgUpKey;      // Alternate key for doing a pageUp
-      int mAltPgDownKey;    // Alternate key for doing a pageDown
-      int mSearchKey;       // Key to use for item searching
-      string mSearchText;        // For item searching
-      string mLastSearchText;    // For item searching
-      bool mClearOnSearch;       // Whether or not to clear the search text
-      bool mCaseSensitiveSearch; // Whether or not searches are case-sensitive
+      WINDOW *mSubWindow = nullptr;                      // For scrolling
+      int mSubWinHeight;                                 // Height of the subwindow
+      int mSubWinWidth;                                  // Width of the subwindow
+      int mCurrentMenuItem = 0;                          // Keeps track of the currently highlighted item
+      int mTopMenuItem = 0;                              // The index of the topmost menu item shown
+      int mAltPgUpKey = DEFAULT_CXMENU_ALT_PGUP_KEY;     // Alternate key for doing a pageUp
+      int mAltPgDownKey = DEFAULT_CXMENU_ALT_PGDOWN_KEY; // Alternate key for doing a pageDown
+      int mSearchKey = DEFAULT_CXMENU_SEARCH_KEY;        // Key to use for item searching
+      std::string mSearchText;                           // For item searching
+      std::string mLastSearchText;                       // For item searching
+      bool mClearOnSearch = false;                       // Whether or not to clear the search text
+      bool mCaseSensitiveSearch = false;                 // Whether or not searches are case-sensitive
       // mCustomStatus will be true if we're using custom
       //  status text (not the help text for the menu items)
-      bool mCustomStatus;
-      bool mAllowQuit;  // Whether or not to allow the user to quit
-      bool mAllowExit;  // Whether or not to allow the user to exit
-      bool mSelectableItemExists; // Whether or not a selectable item exists
-      bool mWrap;       // Whether or not to wrap around when scrolling
-      bool mWaitForInputIfEmpty; // Whether or not to get input in showModal()
-                                 //  if there are no menu items
-      vector<long> mReturnCodes;     // Return codes for the menu items
-      vector<string> mHelpStrings;   // Help strings for the menu items
-      vector<cxMenuItemType> mItemTypes; // Stores the type of each menu item
-      vector<string> mAltItemText;       // Alternate text for each item
+      bool mCustomStatus = false;
+      bool mAllowQuit = true;                            // Whether or not to allow the user to quit
+      bool mAllowExit = true;                            // Whether or not to allow the user to exit
+      bool mSelectableItemExists = false;                // Whether or not a selectable item exists
+      bool mWrap = true;                                 // Whether or not to wrap around when scrolling
+      bool mWaitForInputIfEmpty = true;                  // Whether or not to get input in showModal()
+                                                         // if there are no menu items
+      std::vector<long> mReturnCodes;                    // Return codes for the menu items
+      std::vector<std::string> mHelpStrings;             // Help strings for the menu items
+      std::vector<cxMenuItemType> mItemTypes;            // Stores the type of each menu item
+      std::vector<std::string> mAltItemText;             // Alternate text for each item
       // mSubMenus stores submenus for menu items.  The keys to this
-      //  map are the indexes in mMessageLines that the submenus belong
-      //  to.
-      map<int, cxMenu*> mSubMenus;
-      set<unsigned> mUnselectableItems; // Contains indexes of unselectable items
+      // map are the indexes in mMessageLines that the submenus belong
+      // to.
+      std::map<int, cxMenu*> mSubMenus;
+      std::set<unsigned> mUnselectableItems; // Contains indexes of unselectable items
 
       // Functions to be run at various points in the input loop
       cxFunction4 mLoopStartFunction; // At the start of each input loop iteration
       cxFunction4 mLoopEndFunction;   // At the end of each input loop iteration
 
       // mOnSelectItemFunction is a function that can be fired when the user
-      //  selects an item.
-      cxFunction* mOnSelectItemFunction;
+      // selects an item.
+      std::shared_ptr<cxFunction> mOnSelectItemFunction;
 
       // mItemHotkeys keeps track of which keys are mapped to which menu items.
-      multimap<char, int> mItemHotkeys;
+      std::multimap<char, int> mItemHotkeys;
       // If there is a hotkey that goes to more than 1 menu item, we
       //  want the user to be able to continue pressing the hotkey to
       //  go to the next item, rather than automatically selecting the
@@ -1077,25 +1076,25 @@ class cxMenu : public cxWindow {
       //  track of the "index" into mItemHotkeys of the current element with
       //  the hotkey that should be checked when the user presses a
       //  hotkey.
-      unsigned mItemHotkeyIndex;
-      int mLastItemHotkey; // Keeps track of the last hotkey that was pressed
-                       //  (If different, mItemHotkeyIndex will need to be reset
-                       //  to 0)
+      unsigned int mItemHotkeyIndex = 0;
+      // Keeps track of the last hotkey that was pressed If different,
+      // mItemHotkeyIndex will need to be reset to 0)
+      int mLastItemHotkey = NOKEY;
       // mExitWhenLeaveFirst and mExitWhenLeaveLast control whether the menu
       //  will exit the input loop when the user is scrolling through the menu
       //  items and leaves the first or  last menu item, respectively.
-      bool mExitWhenLeaveFirst;
-      bool mExitWhenLeaveLast;
+      bool mExitWhenLeaveFirst = false;
+      bool mExitWhenLeaveLast = false;
       // mRefreshItemsWhenModal controls whether or not the menu items will
       //  be refreshed when showModal() is called.
-      bool mRefreshItemsWhenModal;
+      bool mRefreshItemsWhenModal = false;
       // mNumParentMenus is incremented when a cxMenu is added to another menu
       //  as a pull-right or pop-up menu.  It is decremented when the menu is
       //  removed.
-      int mNumParentMenus;
+      int mNumParentMenus = 0;
       // mLastInputWasMouseEvent will be set true if the last input
       //  was a mouse event in the input loop.
-      bool mLastInputWasMouseEvent;
+      bool mLastInputWasMouseEvent = false;
 
       // Returns the index of the bottommost item to show in the subwindow.
       //  Note: If there are less items than will fill the menu, this returns
@@ -1119,7 +1118,7 @@ class cxMenu : public cxWindow {
 
       // Scans a string for a hotkey and adds it hotkey to mItemHotkeys, if the
       //  string contains one.
-      void addHotKey(const string& pItemText);
+      void addHotKey(const std::string& pItemText);
 
       // Makes sure this window is exactly the size needed to
       //  surround the menu items.
@@ -1201,7 +1200,7 @@ class cxMenu : public cxWindow {
       //  pItemIndex: The index of the item to highlight
       void highlightItem(int pItemIndex);
 
-      // Frees the memory used by mOnSelectItemFunction and sets it to NULL.
+      // Frees the memory used by mOnSelectItemFunction and sets it to nullptr.
       void freeOnSelectItemFunction();
 
       // Runs the function for when the user selects an item, if one is set.

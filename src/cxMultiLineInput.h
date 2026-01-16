@@ -27,14 +27,11 @@
 #include "cxInputTypes.h"
 #include "cxFunction.h"
 #include <signal.h> // For sigaction
+#include <string>
 #include <vector>
 #include <set>
 #include <map>
-using std::vector;
-using std::make_pair;
-using std::pair;
-using std::set;
-using std::map;
+#include <memory>
 
 enum eMLIF {
    eMLIF_COMMA_SEP = 0,
@@ -101,7 +98,7 @@ class cxForm; // Pre-declaration to avoid a circular reference
  *  function setCanBeEditable().  If you call this with false, then
  *  the input can never be set editable, even with a call to
  *  setInputOption() with a parameter of eINPUT_EDITABLE.<br>
- *  cxMultiLineInput iInput(NULL, 0, 0, 10, "Text:");<br>
+ *  cxMultiLineInput iInput(nullptr, 0, 0, 10, "Text:");<br>
  *  iInput.setValue("Some text for the input to hold");<br>
  *  iInput.getValue();  // Returns "Some text for the input to hold"<br>
  *  iInput.setFocus(); // Can only display "Some " in the input, since
@@ -153,7 +150,7 @@ class cxMultiLineInput : public cxWindow {
    public:
       /**
        * Default constructor
-       * @param pParentWindow Pointer to parent window; defaults to NULL
+       * @param pParentWindow Pointer to parent window; defaults to nullptr
        * @param pRow Y location of input window (upper-left corner)
        * @param pCol X location of input window (upper-left corner)
        * @param pHeight Height of input window; defaults to 1
@@ -166,7 +163,7 @@ class cxMultiLineInput : public cxWindow {
        *  cxInputOptions.h.
        * @param pInputType Specifies the type of input (text, numeric floating
        *  point, or numeric whole).  This defaults to eINPUT_TYPE_TEXT.
-       * @param pExtValue Pointer to external input value; defaults to NULL
+       * @param pExtValue Pointer to external input value; defaults to nullptr
        * @param pRightLabelOffset The distance between the right edge of the
        *  input and the right label.  Defaults to 0.
        * @param pRightLabelHeight The height of the label to the right of the
@@ -177,14 +174,14 @@ class cxMultiLineInput : public cxWindow {
        * @param pShowRightLabel Whether or not to show the right label.
        *  Defaults to false.
        */
-      explicit cxMultiLineInput(cxWindow *pParentWindow = NULL, int pRow = 0,
+      explicit cxMultiLineInput(cxWindow *pParentWindow = nullptr, int pRow = 0,
                                 int pCol = 0, int pHeight = 1,
                                 int pWidth = DEFAULT_WIDTH,
-                                const string& pLabel = "",
+                                const std::string& pLabel = "",
                                 eBorderStyle pBorderStyle = eBS_NOBORDER,
                                 eInputOptions pInputOption = eINPUT_EDITABLE,
                                 eInputTypes pInputType = eINPUT_TYPE_TEXT,
-                                string *pExtValue = NULL,
+                                std::string *pExtValue = nullptr,
                                 int pRightLabelOffset = 0,
                                 int pRightLabelHeight = 1,
                                 int pRightLabelWidth = 7,
@@ -260,13 +257,13 @@ class cxMultiLineInput : public cxWindow {
        * Returns the label of the input
        * @return The label of the input
        */
-      virtual string getLabel() const;
+      virtual std::string getLabel() const;
 
       /**
        * Sets the label for the input
        * @param pLabel The new label
        */
-      virtual void setLabel(const string& pLabel);
+      virtual void setLabel(const std::string& pLabel);
 
       /**
        * \brief Clears the input value
@@ -289,7 +286,7 @@ class cxMultiLineInput : public cxWindow {
        * Returns the user's input
        * @return The user's input
        */
-      virtual string getValue() const;
+      virtual std::string getValue() const;
 
       /**
        * \brief Sets the text in the input.
@@ -299,34 +296,34 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return Boolean: true on success, or false on failure
        */
-      virtual bool setValue(string pValue, bool pRefresh = false);
+      virtual bool setValue(std::string pValue, bool pRefresh = false);
 
       /**
        * Returns the pointer to the external variable storing user input
        * @return Pointer to external variable storing user input
        */
-      string *getExtValue() const { return(mExtValue); }
+      std::string *getExtValue() const { return(mExtValue); }
 
       /**
        * Mutator for the "external" user value variable pointer
        * @param pExtVal The new pointer to the external variable
        * @param pRefresh Whether or not to refresh the input
        */
-      void setExtValue(string *pExtVal, bool pRefresh = false);
+      void setExtValue(std::string *pExtVal, bool pRefresh = false);
 
       /**
        * \brief Sets the validator string for this input.
        *
        * @param pValidator The new validator string.  See README.txt for format.
        */
-      virtual void setValidatorStr(const string& pValidator);
+      virtual void setValidatorStr(const std::string& pValidator);
 
       /**
        * \brief Returns the validator string
        *
        * @return The validator string
        */
-      virtual string getValidatorStr() const;
+      virtual std::string getValidatorStr() const;
 
       /**
        * \brief Returns whether the text entered into the input is valid.
@@ -341,7 +338,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pText The text to be validated
        * @return Whether or not the text is valid
        */
-      virtual bool textIsValid(const string& pText) const;
+      virtual bool textIsValid(const std::string& pText) const;
 
       /**
        * Returns whether or not input is masked
@@ -657,7 +654,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return A blank string
        */
-      static string clearInput(void* theInput, void* unused);
+      static std::string clearInput(void* theInput, void* unused);
 
       /**
        * Sets a validator function to be run before focus is lost.
@@ -899,15 +896,15 @@ class cxMultiLineInput : public cxWindow {
        * \brief value of the onFocus function will be set in the
        * \brief input.
        *
-       * @param pFunctionRetval If not NULL, the string that this points to
+       * @param pFunctionRetval If not nullptr, the string that this points to
        *  will contain the return value of the onFocus function.  Defaults to
-       *  NULL.
+       *  nullptr.
        *
        * @return Whether the input loop should exit (returns the value of
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(string *pFunctionRetval = NULL);
+      virtual bool runOnFocusFunction(std::string *pFunctionRetval = nullptr);
 
       /**
        * \brief Runs the function that was set with setKeyFunction for this key
@@ -1237,7 +1234,7 @@ class cxMultiLineInput : public cxWindow {
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
 
       /**
        * \brief Returns whether the cursor will be left-aligned when the
@@ -1284,7 +1281,7 @@ class cxMultiLineInput : public cxWindow {
        * @return The return value of the validator function, or a blank string
        *  if the validator function is not set.
        */
-      virtual string runValidatorFunction() const;
+      virtual std::string runValidatorFunction() const;
 
       /**
        * \brief Returns whether a key is in the input's list of what it
@@ -1333,7 +1330,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @param pNavKeys This will contain the navigational keys for the input.
        */
-      virtual void getNavKeys(set<int>& pNavKeys) const;
+      virtual void getNavKeys(std::set<int>& pNavKeys) const;
 
       /**
        * \brief Sets the amount of time (in seconds) that the input should
@@ -1360,7 +1357,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
       /**
        * \brief Returns the input type.  This is a member of the cxInputTypes
@@ -1489,7 +1486,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return Blank string if the value is valid, or a warning if not
        */
-      virtual string inputValidator();
+      virtual std::string inputValidator();
 
       /**
        * \brief This runs each time the user presses a key.  If built-in
@@ -1505,7 +1502,7 @@ class cxMultiLineInput : public cxWindow {
        * @return Blank string on success, or a warning on failure (i.e., if the
        *  input is invalid).
        */
-      virtual string onKeypress();
+      virtual std::string onKeypress();
 
       /**
        * \brief Sets up the input's built-in validator function for the input.
@@ -1575,7 +1572,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pValidate Whether or not to validate the text currently in the
        *  input against the valid option strings.  Defaults to true.
        */
-      virtual void addValidOptions(const string& pValidOptions,
+      virtual void addValidOptions(const std::string& pValidOptions,
                                    bool pValidate = true);
 
       /**
@@ -1588,7 +1585,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pValidate Whether or not to validate the text currently in the
        *  input against the valid option strings.  Defaults to true.
        */
-      virtual void setValidOptions(const string& pValidOptions,
+      virtual void setValidOptions(const std::string& pValidOptions,
                                    bool pValidate = true);
 
       /**
@@ -1600,7 +1597,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pValidate Whether or not to validate the text currently in the
        *  input against the valid option strings.  Defaults to true.
        */
-      virtual void setValidOptions(const map<string, string>& pValidOptions,
+      virtual void setValidOptions(const std::map<std::string, std::string>& pValidOptions,
                                    bool pValidate = true);
 
       /**
@@ -1613,8 +1610,8 @@ class cxMultiLineInput : public cxWindow {
        * @param pValidate Whether or not to validate the text currently in the
        *  input against the valid option strings.  Defaults to true.
        */
-      virtual void addValidOption(const string& pValidOption,
-                                  const string& pRightLabelText = "",
+      virtual void addValidOption(const std::string& pValidOption,
+                                  const std::string& pRightLabelText = "",
                                   bool pValidate = true);
 
       /**
@@ -1625,7 +1622,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pValidOptions (OUT) This will contain the map of valid strings
        *  for the input & help text.
        */
-      virtual void getValidOptions(map<string, string>& pValidOptions) const;
+      virtual void getValidOptions(std::map<std::string, std::string>& pValidOptions) const;
 
       /** 
        * \brief Get the valid input strings formatted
@@ -1634,7 +1631,7 @@ class cxMultiLineInput : public cxWindow {
        *     eMLIF_COMMA_SEP_WITH_DESC=Comma Separated list of inputs with the description
        * @return formatted string of the valid inputs
        */
-      string getValidOptionStrings(const eMLIF& pMLIF=eMLIF_COMMA_SEP) const;
+      std::string getValidOptionStrings(const eMLIF& pMLIF=eMLIF_COMMA_SEP) const;
 
       /**
        * \brief Returns a set of all the valid input strings currently set.
@@ -1642,7 +1639,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pValidOptionStrings (OUT) This will hold the valid input strings
        *  currently set in the input.
        */
-      void getValidOptionStrings(set<string>& pValidOptionStrings) const;
+      void getValidOptionStrings(std::set<std::string>& pValidOptionStrings) const;
 
       /**
        * \brief Returns whether or not a string exists in the input's set of
@@ -1653,7 +1650,7 @@ class cxMultiLineInput : public cxWindow {
        * @return true if the string exists in the set of valid input strings,
        *  or false if not.
        */
-      virtual bool hasValidOptionString(const string& pStr) const;
+      virtual bool hasValidOptionString(const std::string& pStr) const;
 
       /**
        * \brief Returns the help text for one of the valid input strings.  If
@@ -1665,7 +1662,7 @@ class cxMultiLineInput : public cxWindow {
        * @return The help text for the valid input string, or blank if the
        *  given string is not found in the collection.
        */
-      virtual string getValidOptionHelpText(const string& pInput) const;
+      virtual std::string getValidOptionHelpText(const std::string& pInput) const;
 
       /**
        * \brief Clears the set of valid strings that can be typed into the
@@ -1726,14 +1723,14 @@ class cxMultiLineInput : public cxWindow {
        *
        * @param pExtendedHelp New extended help
        */
-      virtual void setExtendedHelp(const string& pExtendedHelp);
+      virtual void setExtendedHelp(const std::string& pExtendedHelp);
 
       /**
        * \brief Returns the extended help set in the input.
        *
        * @return The extended help of the input
        */
-      virtual string getExtendedHelp() const;
+      virtual std::string getExtendedHelp() const;
 
       /**
        * \brief Sets the color to use for the extended help message.
@@ -1803,14 +1800,14 @@ class cxMultiLineInput : public cxWindow {
        *
        * @param pKeys A set of keys to use to display the extended help
        */
-      virtual void setExtendedHelpKeys(const set<int>& pKeys);
+      virtual void setExtendedHelpKeys(const std::set<int>& pKeys);
 
       /**
        * \brief Returns the keys currently set up to display extended help.
        *
        * @return The keys that are currently set up to dispplay extended help
        */
-      virtual set<int> getExtendedHelpKeys() const;
+      virtual std::set<int> getExtendedHelpKeys() const;
 
       /**
        * \brief Returns a comma-separated list of strings representing the
@@ -1819,7 +1816,7 @@ class cxMultiLineInput : public cxWindow {
        * @return A comma-separated list of strings representing the extended
        *  help keys for the input.
        */
-      virtual string getExtendedHelpKeyStrings() const;
+      virtual std::string getExtendedHelpKeyStrings() const;
 
       /**
        * \brief Removes all extended help keys.
@@ -1964,7 +1961,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pRefresh Whether or not to refresh the right label on the
        *  screen (defaults to false)
        */
-      virtual void setRightLabel(const string& pText, bool pRefresh = false);
+      virtual void setRightLabel(const std::string& pText, bool pRefresh = false);
 
       /**
        * \brief Sets the offset & the text of the right label.
@@ -1974,14 +1971,14 @@ class cxMultiLineInput : public cxWindow {
        * @param pRefresh Whether or not to refresh the right label on the
        *  screen (defaults to false)
        */
-      virtual void setRightLabel(int pOffset, const string& pText, bool pRefresh = false);
+      virtual void setRightLabel(int pOffset, const std::string& pText, bool pRefresh = false);
 
       /**
        * \brief Returns the text of the right label
        *
        * @return The text of the right label
        */
-      virtual string getRightLabel() const;
+      virtual std::string getRightLabel() const;
 
       /**
        * \brief Returns the size of the right label
@@ -2088,7 +2085,7 @@ class cxMultiLineInput : public cxWindow {
 
       /**
        * \brief Returns whether or not the validator function is set (if
-       * \brief mValidatorFunction is not NULL and if its function pointer is set)
+       * \brief mValidatorFunction is not nullptr and if its function pointer is set)
        *
        * @return true if the validator function is set, or false if not
        */
@@ -2099,12 +2096,12 @@ class cxMultiLineInput : public cxWindow {
        * \brief This is the function to be run to validate
        * \brief the text bfore focus is lost.
        */
-      cxFunction *mValidatorFunction;
+      std::shared_ptr<cxFunction> mValidatorFunction;
 
       /**
        * \brief Whether or not to run the onFocus and onLeave functions.
        */
-      bool mRunFocusFunctions;
+      bool mRunFocusFunctions = true;
 
       /**
        * \brief Copies another cxMultiLineInput's member variables
@@ -2156,7 +2153,7 @@ class cxMultiLineInput : public cxWindow {
       void setParentForm(cxForm *pParentForm);
 
       /**
-       * \brief Searches the parent cxForm (if mParentForm isn't NULL)
+       * \brief Searches the parent cxForm (if mParentForm isn't nullptr)
        * \brief for a key that runs a function.  Returns true if it is found
        * \brief or false if not.
        *
@@ -2183,17 +2180,17 @@ class cxMultiLineInput : public cxWindow {
        * \brief value of the function may be set in the input if its
        * \brief mUseReturnValue is true.
        *
-       * @param pFunctionExists A pointer to a bool (if non-NULL,
+       * @param pFunctionExists A pointer to a bool (if non-null,
        *  it will store whether or not a function existed for the key).
-       *  Defaults to NULL.
+       *  Defaults to nullptr.
        * @param pRunOnLeaveFunction A pointer to a bool: If non-NUL, it will
        *  store whether or not to run the onLeave function when the window
        *  exits (this is an option for cxFunction).
        *
        * @return Whether or not the input loop should continue
        */
-      virtual bool handleFunctionForLastKey(bool *pFunctionExists = NULL,
-                                            bool *pRunOnLeaveFunction = NULL);
+      virtual bool handleFunctionForLastKey(bool *pFunctionExists = nullptr,
+                                            bool *pRunOnLeaveFunction = nullptr);
 
       /**
        * \brief Enables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -2225,45 +2222,45 @@ class cxMultiLineInput : public cxWindow {
       friend class cxForm; // Because that class uses this class
       friend class cxInput;
 
-      typedef vector<cxInput*> cxInputPtrContainer;
+      typedef std::vector<std::shared_ptr<cxInput> > cxInputPtrContainer;
       cxInputPtrContainer mInputs; // The collection of single-line inputs
       // mExtValue points to an "external" location to load/store the user's
-      //  input (basically, it will be used for user input storage as well as
-      //  mValue, but the value in this input will always be the what mExtValue
-      //  contains).  If NULL, then it won't be used.
-      string *mExtValue;
-      int mCurrentInputLine; // The index of the current single-line input
+      // input (basically, it will be used for user input storage as well as
+      // mValue, but the value in this input will always be the what mExtValue
+      // contains).  If nullptr, then it won't be used.
+      std::string *mExtValue;
+      int mCurrentInputLine = 0; // The index of the current single-line input
       // If mEnterAlwaysExits is true, enter will exit the input loop if
-      //  the cursor is in the middle of one of the input lines; if
-      //  false, enter will go to the next input line and stay in
-      //  the input loop until the user presses enter on the last line.
-      bool mEnterAlwaysExits;
-      bool mReadOnlyOnLeave; // Make the input read-only when leaving showModal()?
-      bool mExitOnFull;      // Whether to exit automatically when full
-      bool mDoInputLoop;     // Whether to run the input loop on focus
-      bool mSkipIfReadOnly;  // Don't wait for input if read-only?
-      bool mRunValidatorFunction; // Controls whether or not the validator function should run
-      bool mUseClearKey;     // Use built-in clear key?
+      // the cursor is in the middle of one of the input lines; if
+      // false, enter will go to the next input line and stay in
+      // the input loop until the user presses enter on the last line.
+      bool mEnterAlwaysExits = true;
+      bool mReadOnlyOnLeave = false;     // Make the input read-only when leaving showModal()?
+      bool mExitOnFull = true;           // Whether to exit automatically when full
+      bool mDoInputLoop = true;          // Whether to run the input loop on focus
+      bool mSkipIfReadOnly = true;       // Don't wait for input if read-only?
+      bool mRunValidatorFunction = true; // Controls whether or not the validator function should run
+      bool mUseClearKey = true;          // Use built-in clear key?
 
       // Whether or not to run the validator function when the user is
       //  navigating in reverse (i.e., with the up arrow or shift-tab).
-      bool mValidateOnReverse;
+      bool mValidateOnReverse = true;
 
       // mParentForm is a pointer to a cxForm, in case the input appears on a
-      //  cxForm.  This can be NULL.
-      cxForm *mParentForm;
+      //  cxForm.  This can be null.
+      cxForm *mParentForm = nullptr;
 
       // If mApplyAttrDefaults is true, some attributes will be applied to
       //  the input when its kind is set.
-      bool mApplyAttrDefaults;
+      bool mApplyAttrDefaults = true;
 
       // mRanFunctionAndShouldExit keeps track of whether the input ran a key
       //  function that was set up to have the input exit when it was done.
-      bool mRanFunctionAndShouldExit;
+      bool mRanFunctionAndShouldExit = false;
 
       // mSkipValidatorKeys keeps track of keys used with key functions where
       //  we don't want to run the validator function.
-      set<int> mSkipValidatorKeys;
+      std::set<int> mSkipValidatorKeys;
 
       // A set of keys that are designated as "navigation keys" -
       //  Normally, when the user presses a key, a cxMultiLineInput will check
@@ -2274,7 +2271,7 @@ class cxMultiLineInput : public cxWindow {
       //  validator function to run before the user leaves the input.  The
       //  default navigational keys are pageUp, pageDown, arrow keys, tab, and
       //  shift-tab.
-      set<int> mNavKeys;
+      std::set<int> mNavKeys;
 
       // mInputType defines the type of input (text, numeric floating point, or
       //  numeric whole).  This specifies which type of validation should be
@@ -2285,39 +2282,39 @@ class cxMultiLineInput : public cxWindow {
       //  values for the input that are valid.  If this is empty, that means
       //  anything is valid.  This is a map - The key is the valid string, and
       //  the value is help text that goes along with it.
-      map<string, string> mValidOptionStrings;
+      std::map<std::string, std::string> mValidOptionStrings;
       // mAutoGenerateExtendedHelp specifies whether or not the extended help
       //  should be auto-generated from the list of valid input strings and
       //  their help texts.
-      bool mAutoGenerateExtendedHelp;
+      bool mAutoGenerateExtendedHelp = false;
 
       // mRangeLowDouble and mRangeHighDouble define low & high numeric values
       //  for floating-point numeric range validation.  If both are 0, that
       //  means any number is valid.
-      long double mRangeLowDouble;
-      long double mRangeHighDouble;
+      long double mRangeLowDouble = 0.0;
+      long double mRangeHighDouble = 0.0;
       // mRagneLowInt and mRangeLowHigh define low & high numeric values for
       //  whole numeric range validation.  If both are 0, that means any number
       //  is valid.
-      long int mRangeLowInt;
-      long int mRangeHighInt;
+      long int mRangeLowInt = 0;
+      long int mRangeHighInt = 0;
 
       // This bool specifies whether or not the validator function should
       //  display a message box when the input is invalid.
-      bool mValidatorFuncMessageBox;
+      bool mValidatorFuncMessageBox = false;
 
-      bool mAllowBlank; // Allow a blank value?
+      bool mAllowBlank = true; // Allow a blank value?
 
       // mExtendedHelp can contain long or more verbose help text.  You can
       //  also set the color & attribute for the extended help text.
-      string mExtendedHelp;
+      std::string mExtendedHelp;
       e_cxColors mExtendedHelpColor;
-      attr_t mExtendedHelpAttribute;
+      attr_t mExtendedHelpAttribute = A_NORMAL;
       // mExtendedHelpKeys specifies keys that can be pressed to display the
       //  extended help.  mUseExtendedHelpKeys specifies whether or not to
       //  use them.
-      set<int> mExtendedHelpKeys;
-      bool mUseExtendedHelpKeys;
+      std::set<int> mExtendedHelpKeys;
+      bool mUseExtendedHelpKeys = true;
 
       // mRightLabel is a window that will display an additional label to
       //  the right of the input.  mRightLabelOffset is the distance between
@@ -2326,11 +2323,11 @@ class cxMultiLineInput : public cxWindow {
       int mRightLabelOffset;
       bool mShowRightLabel; // Whether or not to display the right label
 
-      int mMaxInputLength;  // The maximum length of input acceptable
+      int mMaxInputLength = 32000;  // The maximum length of input acceptable
 
       // mErrorState specifies a current error for the input (i.e., if
       //  validation failed).
-      eInputErrors mErrorState;
+      eInputErrors mErrorState = eNO_ERROR;
 
       // Disable the use of setHotkeyHighlighting from the
       //  outside.
@@ -2359,7 +2356,7 @@ class cxMultiLineInput : public cxWindow {
       // Parameters:
       //  theInput: A pointer to the cxMultiLineInput
       //  unused: Not used
-      static string inputValidatorStatic(void *theInput, void *unused);
+      static std::string inputValidatorStatic(void *theInput, void *unused);
 
       // Static cxWidgets onKeypress function - This calls onKeypress() for
       //  a cxMultiLineInput.
@@ -2367,7 +2364,7 @@ class cxMultiLineInput : public cxWindow {
       // Parameters:
       //  theInput: A pointer to the cxMultiLineInput
       //  unused: Not used
-      static string onKeypressStatic(void *theInput, void *unused);
+      static std::string onKeypressStatic(void *theInput, void *unused);
 
       // This will generate mExtendedHelp based on mValidOptionStrings, if
       //  mValidOptionStrings has anything in it.
@@ -2377,7 +2374,7 @@ class cxMultiLineInput : public cxWindow {
       //  is empty, or if the string is in it, this will return true.  If
       //  mValidOptionStrings is not empty and the string isn't in it, this
       //  will return false.
-      bool checkValidOptionStrings(const string& pValue);
+      bool checkValidOptionStrings(const std::string& pValue);
 
       // This is a helper for validation.  For a numeric input type, this
       //  returns whether or not a value is within the set valid range.  If
@@ -2388,7 +2385,7 @@ class cxMultiLineInput : public cxWindow {
       //
       // Parameters:
       //  pValue: A value to check
-      bool valueInRange(const string& pValue) const;
+      bool valueInRange(const std::string& pValue) const;
 };
 
 #endif

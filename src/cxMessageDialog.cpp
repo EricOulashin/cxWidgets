@@ -1,7 +1,9 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxMessageDialog.h"
+using std::string;
 using std::make_pair;
+using std::make_shared;
 
 cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
                    int pCol, int pHeight,
@@ -10,9 +12,7 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
                    const string& pMessage,
                    long pStyle,
                    const string& pStatus)
-   : cxDialog(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus),
-     mOKBtn(NULL),
-     mCancelBtn(NULL)
+   : cxDialog(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus)
 {
    // Set variables for the starting column & row
    //  & total width of the buttons
@@ -33,16 +33,14 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
    // Create the OK button if they've specified
    //  cxOK or cxYES
    if ((pStyle & cxOK) == cxOK) {
-      mOKBtn = new cxButton(this, theRow, theCol, OKBTN_HEIGHT,
-                            OKBTN_WIDTH, "&OK");
+      mOKBtn = make_shared<cxButton>(this, theRow, theCol, OKBTN_HEIGHT, OKBTN_WIDTH, "&OK");
       mOKBtn->setHotkeyHighlighting(true);
       setFocus(mOKBtn, false);
       theCol += mOKBtn->width();
       totalButtonWidth += mOKBtn->width();
    }
    else if ((pStyle & cxYES) == cxYES) {
-      mOKBtn = new cxButton(this, theRow, theCol, YESBTN_HEIGHT,
-                            YESBTN_WIDTH, "&Yes");
+      mOKBtn = make_shared<cxButton>(this, theRow, theCol, YESBTN_HEIGHT, YESBTN_WIDTH, "&Yes");
       mOKBtn->setHotkeyHighlighting(true);
       setFocus(mOKBtn, false);
       theCol += mOKBtn->width();
@@ -52,24 +50,22 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
    // Create the cancel button if they've specified
    //  cxCANCEL or cxNO
    if ((pStyle & cxCANCEL) == cxCANCEL) {
-      mCancelBtn = new cxButton(this, theRow, theCol, CANCELBTN_HEIGHT,
-                                CANCELBTN_WIDTH, "&Cancel");
+      mCancelBtn = make_shared<cxButton>(this, theRow, theCol, CANCELBTN_HEIGHT, CANCELBTN_WIDTH, "&Cancel");
       mCancelBtn->setHotkeyHighlighting(true);
       totalButtonWidth += mCancelBtn->width();
       // If there is no OK button or if the cxNO_DEFAULT attribute was used,
       //  set focus to this button.
-      if ((mOKBtn == NULL) || ((pStyle & cxNO_DEFAULT) == cxNO_DEFAULT)) {
+      if ((mOKBtn == nullptr) || ((pStyle & cxNO_DEFAULT) == cxNO_DEFAULT)) {
          setFocus(mCancelBtn, false);
       }
    }
    else if ((pStyle & cxNO) == cxNO) {
-      mCancelBtn = new cxButton(this, theRow, theCol, NOBTN_HEIGHT,
-                                NOBTN_WIDTH, "&No");
+      mCancelBtn = make_shared<cxButton>(this, theRow, theCol, NOBTN_HEIGHT, NOBTN_WIDTH, "&No");
       mCancelBtn->setHotkeyHighlighting(true);
       totalButtonWidth += mCancelBtn->width();
       // If there is no OK button or if the cxNO_DEFAULT attribute was used,
       //  set focus to this button.
-      if ((mOKBtn == NULL) || ((pStyle & cxNO_DEFAULT) == cxNO_DEFAULT)) {
+      if ((mOKBtn == nullptr) || ((pStyle & cxNO_DEFAULT) == cxNO_DEFAULT)) {
          setFocus(mCancelBtn, false);
       }
    }
@@ -89,10 +85,10 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
       // Make sure  the buttons are on the bottom of the
       //  form
       theRow = bottom() - OKBTN_HEIGHT;
-      if (mOKBtn != NULL) {
+      if (mOKBtn != nullptr) {
          mOKBtn->move(theRow, mOKBtn->left(), false);
       }
-      if (mCancelBtn != NULL) {
+      if (mCancelBtn != nullptr) {
          mCancelBtn->move(theRow, mCancelBtn->left(), false);
       }
    }
@@ -100,16 +96,16 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
       // The window is big enough to enclose everything..
       //  Make sure the buttons are horizontally centered
       //  in the window.
-      if ((mOKBtn != NULL) && (mCancelBtn != NULL)) {
+      if ((mOKBtn != nullptr) && (mCancelBtn != nullptr)) {
          int okBtnCol = centerCol() - (totalButtonWidth/2);
          int cancelBtnCol = okBtnCol + mOKBtn->width();
          mOKBtn->move(mOKBtn->top(), okBtnCol, false);
          mCancelBtn->move(mCancelBtn->top(), cancelBtnCol, false);
       }
-      else if ((mOKBtn != NULL) && (mCancelBtn == NULL)) {
+      else if ((mOKBtn != nullptr) && (mCancelBtn == nullptr)) {
          mOKBtn->centerHoriz(false);
       }
-      else if ((mOKBtn == NULL) && (mCancelBtn != NULL)) {
+      else if ((mOKBtn == nullptr) && (mCancelBtn != nullptr)) {
          mCancelBtn->centerHoriz(false);
       }
    }
@@ -118,13 +114,13 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
 // Simplified constructor
 cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, const string& pTitle, const string& pMessage)
    : cxDialog(pParentWindow, pTitle, pMessage, ""),
-     mOKBtn(NULL),
-     mCancelBtn(NULL)
+     mOKBtn(nullptr),
+     mCancelBtn(nullptr)
 {
    resize(height()+OKBTN_HEIGHT, width(), false); // Make room for the OK button
 
    int useRow = bottom()-OKBTN_HEIGHT; // TODO: how to handle exact placement if the programmer wants to...
-   mOKBtn = new cxButton(this, useRow, centerCol()-1, OKBTN_HEIGHT, OKBTN_WIDTH, "&OK");
+   mOKBtn = make_shared<cxButton>(this, useRow, centerCol()-1, OKBTN_HEIGHT, OKBTN_WIDTH, "&OK");
    mOKBtn->setHotkeyHighlighting(true);
    setFocus(mOKBtn, false);
 } // simplified constructor
@@ -133,14 +129,12 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, const string& pTitle, 
 cxMessageDialog::cxMessageDialog(const cxMessageDialog& pThatDialog)
    : cxDialog(pThatDialog.getParent(), pThatDialog.top(), pThatDialog.left(),
               pThatDialog.height(), pThatDialog.width(), pThatDialog.getTitle(),
-              pThatDialog.getMessage(), pThatDialog.getStatus()),
-     mOKBtn(NULL),
-     mCancelBtn(NULL)
+              pThatDialog.getMessage(), pThatDialog.getStatus())
 {
 
    // Copy the OK and Cancel buttons
-   if (pThatDialog.mOKBtn != NULL) {
-      mOKBtn = new cxButton(this, pThatDialog.mOKBtn->top(), pThatDialog.mOKBtn->left(),
+   if (pThatDialog.mOKBtn != nullptr) {
+      mOKBtn = make_shared<cxButton>(this, pThatDialog.mOKBtn->top(), pThatDialog.mOKBtn->left(),
                             pThatDialog.mOKBtn->height(), pThatDialog.mOKBtn->width(),
                             pThatDialog.mOKBtn->getMessage());
       mOKBtn->setHotkeyHighlighting(pThatDialog.mOKBtn->getHotkeyHighlighting());
@@ -148,8 +142,8 @@ cxMessageDialog::cxMessageDialog(const cxMessageDialog& pThatDialog)
          setFocus(mOKBtn, false);
       }
    }
-   if (pThatDialog.mCancelBtn != NULL) {
-      mCancelBtn = new cxButton(this, pThatDialog.mCancelBtn->top(),
+   if (pThatDialog.mCancelBtn != nullptr) {
+      mCancelBtn = make_shared<cxButton>(this, pThatDialog.mCancelBtn->top(),
                                 pThatDialog.mCancelBtn->left(),
                                 pThatDialog.mCancelBtn->height(),
                                 pThatDialog.mCancelBtn->width(),
@@ -162,13 +156,6 @@ cxMessageDialog::cxMessageDialog(const cxMessageDialog& pThatDialog)
 } // copy constructor
 
 cxMessageDialog::~cxMessageDialog() {
-   if (mOKBtn != NULL) {
-      delete mOKBtn;
-   }
-
-   if (mCancelBtn != NULL) {
-      delete mCancelBtn;
-   }
 } // destructor
 
 long cxMessageDialog::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows) {
@@ -208,10 +195,10 @@ void cxMessageDialog::hide(bool pHideSubwindows) {
    // Hide the main window, as well as the buttons.
    cxWindow::hide(pHideSubwindows);
 
-   if (mOKBtn != NULL) {
+   if (mOKBtn != nullptr) {
       mOKBtn->hide(false);
    }
-   if (mCancelBtn != NULL) {
+   if (mCancelBtn != nullptr) {
       mCancelBtn->hide(false);
    }
 } // hide
@@ -221,10 +208,10 @@ void cxMessageDialog::unhide(bool pUnhideSubwindows) {
    if (isEnabled()) {
       cxWindow::unhide(pUnhideSubwindows);
 
-      if (mOKBtn != NULL) {
+      if (mOKBtn != nullptr) {
          mOKBtn->unhide(false);
       }
-      if (mCancelBtn != NULL) {
+      if (mCancelBtn != nullptr) {
          mCancelBtn->unhide(false);
       }
    }
@@ -239,10 +226,10 @@ bool cxMessageDialog::move(int pNewRow, int pNewCol, bool pRefresh) {
    if (moved) {
       int y_relative = top() - originalTop;
       int x_relative = left() - originalLeft;
-      if (mOKBtn != NULL) {
+      if (mOKBtn != nullptr) {
          mOKBtn->moveRelative(y_relative, x_relative, pRefresh);
       }
-      if (mCancelBtn != NULL) {
+      if (mCancelBtn != nullptr) {
          mCancelBtn->moveRelative(y_relative, x_relative, pRefresh);
       }
    }
@@ -259,8 +246,8 @@ bool cxMessageDialog::move(int pNewRow, int pNewCol, bool pRefresh) {
    return(moved);
 } // move
 
-void cxMessageDialog::setFocus(cxButton* pButton, bool pShow) {
-   if (pButton != NULL) {
+void cxMessageDialog::setFocus(const std::shared_ptr<cxButton>& pButton, bool pShow) {
+   if (pButton != nullptr) {
 
       attr_t focusAttr=cxBase::hasAttr(eHOTKEY, A_STANDOUT) ? A_REVERSE : A_STANDOUT ;
    
@@ -270,7 +257,7 @@ void cxMessageDialog::setFocus(cxButton* pButton, bool pShow) {
             mOKBtn->show(true, true);
          }
 
-         if (mCancelBtn != NULL) {
+         if (mCancelBtn != nullptr) {
             mCancelBtn->unSetFocusColors(focusAttr);
             if (pShow) {
                mCancelBtn->show(true, true);
@@ -283,7 +270,7 @@ void cxMessageDialog::setFocus(cxButton* pButton, bool pShow) {
             mCancelBtn->show(true, true);
          }
 
-         if (mOKBtn != NULL) {
+         if (mOKBtn != nullptr) {
             mOKBtn->unSetFocusColors(focusAttr);
             if (pShow) {
                mOKBtn->show(true, true);
@@ -303,9 +290,9 @@ long cxMessageDialog::doInputLoop() {
    long returnCode = cxID_EXIT;
 
    // for dragging the window around
-   int pressedX=0;
-   int pressedY=0;
-   bool movingWin=false;
+   int pressedX = 0;
+   int pressedY = 0;
+   bool movingWin = false;
 
    bool continueOn = true;
    while (continueOn) {
@@ -321,7 +308,7 @@ long cxMessageDialog::doInputLoop() {
             break;
          case KEY_LEFT:
          case KEY_UP:
-            if ((mOKBtn != NULL) && (mCancelBtn != NULL)) {
+            if ((mOKBtn != nullptr) && (mCancelBtn != nullptr)) {
                if (!(mOKBtn->hasFocus())) {
                   setFocus(mOKBtn);
                }
@@ -330,7 +317,7 @@ long cxMessageDialog::doInputLoop() {
          case KEY_RIGHT:
          case KEY_DOWN:
          case TAB:
-            if ((mOKBtn != NULL) && (mCancelBtn != NULL)) {
+            if ((mOKBtn != nullptr) && (mCancelBtn != nullptr)) {
                if (mOKBtn->hasFocus()) {
                   setFocus(mCancelBtn);
                }
@@ -339,20 +326,20 @@ long cxMessageDialog::doInputLoop() {
          case ENTER:
          case KEY_ENTER:
          case ' ':
-            if ((mOKBtn != NULL) && (mOKBtn->hasFocus())) {
+            if ((mOKBtn != nullptr) && (mOKBtn->hasFocus())) {
                returnCode=cxID_OK;
             }
-            if ((mCancelBtn != NULL) && (mCancelBtn->hasFocus())) {
+            if ((mCancelBtn != nullptr) && (mCancelBtn->hasFocus())) {
                returnCode=cxID_CANCEL;
             }
             continueOn=false;
             break;
          case 'o':
          case 'O':  // OK
-            // If mOKBtn isn't NULL and has a value
+            // If mOKBtn isn't nullptr and has a value
             //  of "OK", set focus to it, stop the
             //  input loop, and return cxID_OK.
-            if ((mOKBtn != NULL) && (mOKBtn->getMessage() == "&OK")) {
+            if ((mOKBtn != nullptr) && (mOKBtn->getMessage() == "&OK")) {
                setFocus(mOKBtn);
                returnCode=cxID_OK;
                continueOn = false;
@@ -360,10 +347,10 @@ long cxMessageDialog::doInputLoop() {
             break;
          case 'c':
          case 'C':  // Cancel
-            // If mCancelBtn isn't NULL and has a value
+            // If mCancelBtn isn't nullptr and has a value
             //  of "Cancel", set focus to it, stop the
             //  input loop, and return cxID_CANCEL.
-            if ((mCancelBtn != NULL) &&
+            if ((mCancelBtn != nullptr) &&
                 (mCancelBtn->getMessage() == "&Cancel")) {
                setFocus(mCancelBtn);
                returnCode=cxID_CANCEL;
@@ -372,10 +359,10 @@ long cxMessageDialog::doInputLoop() {
             break;
          case 'y':
          case 'Y':  // Yes
-            // If mOKBtn isn't NULL and has a value
+            // If mOKBtn isn't nullptr and has a value
             //  of "Yes", set focus to it, stop the
             //  input loop, and return cxID_OK.
-            if ((mOKBtn != NULL) && (mOKBtn->getMessage() == "&Yes")) {
+            if ((mOKBtn != nullptr) && (mOKBtn->getMessage() == "&Yes")) {
                setFocus(mOKBtn);
                returnCode = cxID_OK;
                continueOn = false;
@@ -383,10 +370,10 @@ long cxMessageDialog::doInputLoop() {
             break;
          case 'n':
          case 'N':  // No
-            // If mCancelBtn isn't NULL and has a value
+            // If mCancelBtn isn't nullptr and has a value
             //  of "No", set focus to it, stop the
             //  input loop, and return cxID_CANCEL.
-            if ((mCancelBtn != NULL) && (mCancelBtn->getMessage() == "&No")) {
+            if ((mCancelBtn != nullptr) && (mCancelBtn->getMessage() == "&No")) {
                setFocus(mCancelBtn);
                returnCode = cxID_CANCEL;
                continueOn = false;
@@ -402,7 +389,7 @@ long cxMessageDialog::doInputLoop() {
                      // If the mouse event occurred in the OK button, then return
                      //  cxID_OK.  If the mosue event occurred in the cancel button,
                      //  return cxID_CANCEL.
-                     if (mOKBtn != NULL) {
+                     if (mOKBtn != nullptr) {
                         if (mouseEvtInRect(mMouse, mOKBtn->top(), mOKBtn->left(),
                                  mOKBtn->bottom(), mOKBtn->right())) {
                            setFocus(mOKBtn);
@@ -411,7 +398,7 @@ long cxMessageDialog::doInputLoop() {
                         }
                      }
                      if (continueOn) { // If it wasn't in the OK button..
-                        if (mCancelBtn != NULL) {
+                        if (mCancelBtn != nullptr) {
                            if (mouseEvtInRect(mMouse, mCancelBtn->top(), mCancelBtn->left(),
                                     mCancelBtn->bottom(), mCancelBtn->right())) {
                               setFocus(mCancelBtn);

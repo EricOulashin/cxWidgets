@@ -45,16 +45,16 @@ class cxFrame : public cxWindow {
        * @param pMessageUnderlines Whether or not to recognize & use underline characters when
        *  displaying the message text.
        */
-      explicit cxFrame(cxWindow *pParentWindow = NULL,
+      explicit cxFrame(cxWindow *pParentWindow = nullptr,
                        int pRow = 0, int pCol = 0,
                        int pHeight = DEFAULT_HEIGHT,
                        int pWidth = DEFAULT_WIDTH,
-                       const string& pTitle = "",
-                       const string& pMessage = "",
-                       const string& pStatus = "",
+                       const std::string& pTitle = "",
+                       const std::string& pMessage = "",
+                       const std::string& pStatus = "",
                        eBorderStyle pBorderStyle = eBS_SINGLE_LINE,
-                       cxWindow *pExtTitleWindow = NULL,
-                       cxWindow *pExtStatusWindow = NULL,
+                       cxWindow *pExtTitleWindow = nullptr,
+                       cxWindow *pExtStatusWindow = nullptr,
                        bool pMessageUnderlines = false);
 
       virtual ~cxFrame();
@@ -66,7 +66,7 @@ class cxFrame : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    private:
       cxMenu mMenuBar;

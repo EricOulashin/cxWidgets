@@ -15,16 +15,14 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-using std::string;
-using std::vector;
 
 #include "cxColors.h"
 #include "cxKeyDefines.h"
 #include "cxWidgetsException.h" // Included here so that
                                 //  everything has access to it
 
-typedef vector<string> stringContainer;
-typedef vector<string>::iterator stringContainerIterator;
+typedef std::vector<std::string> stringContainer;
+typedef std::vector<std::string>::iterator stringContainerIterator;
 
 // Un-comment this line to include some test-only
 //  helper functionality in classes where it might
@@ -61,19 +59,19 @@ class cxObject {
        * Mutator--set to true to use colors
        * @param useIt Boolean--true to use colors
        */
-      void UseColors(bool useIt);
+      static void UseColors(bool useIt);
 
       /**
        * Returns whether or not beeps are used
        * @return Boolean--true means beeps used
        */
-      bool UseBeeps() const { return useBeeps; }
+      static bool UseBeeps() { return useBeeps; }
 
       /**
        * Mutator--set to true to use beeps
        * @param useIt Boolean--set to true to use beeps
        */
-      void UseBeeps(bool useIt) { useBeeps = useIt; }
+      static void UseBeeps(bool useIt) { useBeeps = useIt; }
 
       /**
        * Outputs a beep character
@@ -88,7 +86,7 @@ class cxObject {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual string cxTypeStr() const;
+      virtual std::string cxTypeStr() const;
 
    protected:
       /**

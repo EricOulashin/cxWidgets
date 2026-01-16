@@ -5,7 +5,6 @@
 // This file defines some input validators.
 
 #include <string>
-using std::string;
 
 namespace cxValidators {
    /**
@@ -14,12 +13,12 @@ namespace cxValidators {
     * \brief keypress).
     *
     * @param theInput A pointer to a cxMultiLineInput whose input to validate
-    * @param clearOnSpace A pointer to a boolean (if non-NULL and true, will clear the input
+    * @param clearOnSpace A pointer to a boolean (if non-null and true, will clear the input
     *  when the spacebar is pressed).
     *
     * @return Blank string for valid data or a warning for invalid data.
     */
-   string intOnKeyValidator(void *theInput, void *clearOnSpace);
+   std::string intOnKeyValidator(void *theInput, void *clearOnSpace);
 
    /**
    * \brief Validator for inputs that should only accept floating-point
@@ -27,12 +26,12 @@ namespace cxValidators {
    * \brief validate on each keypress).
    *
    * @param theInput A pointer to the cxMultiLineInput to validate
-   * @param clearOnSpace A pointer to a boolean (if non-NULL and true, will clear the input
+   * @param clearOnSpace A pointer to a boolean (if non-null and true, will clear the input
    *  when the spacebar is pressed).
    *
    * @return Blank string for valid data or a warning for invalid data.
    */
-   string floatingPtOnKeyValidator(void *theInput, void *clearOnSpace);
+   std::string floatingPtOnKeyValidator(void *theInput, void *clearOnSpace);
 
    /**
     * \brief Returns whether or not a string contains a valid floating-point
@@ -43,7 +42,7 @@ namespace cxValidators {
     * @return true if the string contains a valid floating-point number, or
     *  false if not.
     */
-   bool isValidFloatingPtNumStr(const string& pNumStr);
+   bool isValidFloatingPtNumStr(const std::string& pNumStr);
 
    /**
     * \brief Returns whether or not a string contains a valid whole number.  A
@@ -53,7 +52,7 @@ namespace cxValidators {
     *
     * @return true if the string contains a valid whole number, or false if not.
     */
-   bool isValidWholeNumStr(const string& pNumStr);
+   bool isValidWholeNumStr(const std::string& pNumStr);
 
 } // end of namespace cxValidators
 

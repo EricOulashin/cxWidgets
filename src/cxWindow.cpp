@@ -12,6 +12,13 @@ using std::copy;
 using std::insert_iterator;
 using std::front_insert_iterator;
 using std::make_pair;
+using std::string;
+using std::vector;
+using std::set;
+using std::list;
+using std::deque;
+using std::map;
+using std::pair;
 using cxStringUtils::SplitStringRegex;
 using cxStringUtils::toString;
 
@@ -21,42 +28,11 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pStatus, eBorderStyle pBorderStyle,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mWindow(NULL),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(NULL),
-     mOnLeaveFunction(NULL),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
-     mPanel(NULL),
+   : mHotkeyHighlighting(pHotkeyHighlighting),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
-     mTitleParent(NULL),
-     mStatusParent(NULL),
-     mParentWindow(pParentWindow != this ? pParentWindow : NULL),
-     mFocus(false),
-     mBorderStyle(pBorderStyle),
-     mEnabled(true),
-     mDisableCursorOnShow(true),
-     mLastKey(NOKEY),
-     mChangeColorsOnFocus(false),
-     mShowSubwinsForward(true),
-     mShowSelfBeforeSubwins(true),
-     mReturnCode(cxID_EXIT),
-     mRunOnFocus(true),
-     mRunOnLeave(true),
-     mBorderTop(true),
-     mBorderBottom(true),
-     mBorderLeft(true),
-     mBorderRight(true)
+	  mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
+	  mBorderStyle(pBorderStyle)
 {
    // If pHeight & pWidth are <= 0, then use them to control the height of
    //  the window based on the parent window's height/width (or the screen's
@@ -68,7 +44,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    const int maxHeight = (int)(cxBase::height()) - pRow;
    const int maxWidth = (int)(cxBase::width()) - pCol;
    if (pHeight <= 0) {
-      if (pParentWindow != NULL) {
+      if (pParentWindow != nullptr) {
          pHeight = pParentWindow->height() + pHeight;
       }
       else {
@@ -82,7 +58,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    }
 
    if (pWidth <= 0) {
-      if (pParentWindow != NULL) {
+      if (pParentWindow != nullptr) {
          pWidth = pParentWindow->width() + pWidth;
       }
       else {
@@ -99,11 +75,11 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    //  tell them to point to this window with their mTitleParent and
    //  mStatusParent (this way, they can let this window know when
    //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
-   //  to NULL).
-   if (pExtTitleWindow != NULL) {
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr) {
       pExtTitleWindow->mTitleParent = this;
    }
-   if (pExtStatusWindow != NULL) {
+   if (pExtStatusWindow != nullptr) {
       pExtStatusWindow->mStatusParent = this;
    }
 
@@ -120,7 +96,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pMessage, const string& pStatus,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mWindow(NULL),
+   : mWindow(nullptr),
      mMessageColorPair(eWHITE_BLUE),
      mTitleColorPair(eGRAY_BLUE),
      mStatusColorPair(eBROWN_BLUE),
@@ -130,17 +106,17 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizStatusAlignment(eHP_LEFT),
      mDrawMessage(true),
      mDrawSpecialChars(true),
-     mOnFocusFunction(NULL),
-     mOnLeaveFunction(NULL),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
      mHotkeyHighlighting(pHotkeyHighlighting),
-     mPanel(NULL),
+     mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
-     mTitleParent(NULL),
-     mStatusParent(NULL),
-     mParentWindow(pParentWindow != this ? pParentWindow : NULL),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
      mFocus(false),
      mBorderStyle(eBS_SINGLE_LINE),
      mEnabled(true),
@@ -163,11 +139,11 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    //  tell them to point to this window with their mTitleParent and
    //  mStatusParent (this way, they can let this window know when
    //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
-   //  to NULL).
-   if (pExtTitleWindow != NULL) {
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr) {
       pExtTitleWindow->mTitleParent = this;
    }
-   if (pExtStatusWindow != NULL) {
+   if (pExtStatusWindow != nullptr) {
       pExtStatusWindow->mStatusParent = this;
    }
 
@@ -183,7 +159,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pTitle, const string& pMessage,
                    const string& pStatus, cxWindow *pExtTitleWindow,
                    cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
-   : mWindow(NULL),
+   : mWindow(nullptr),
      mMessageColorPair(eWHITE_BLUE),
      mTitleColorPair(eGRAY_BLUE),
      mStatusColorPair(eBROWN_BLUE),
@@ -193,17 +169,17 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizStatusAlignment(eHP_LEFT),
      mDrawMessage(true),
      mDrawSpecialChars(true),
-     mOnFocusFunction(NULL),
-     mOnLeaveFunction(NULL),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
      mHotkeyHighlighting(pHotkeyHighlighting),
-     mPanel(NULL),
+     mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
-     mTitleParent(NULL),
-     mStatusParent(NULL),
-     mParentWindow(pParentWindow != this ? pParentWindow : NULL),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
      mFocus(false),
      mBorderStyle(eBS_SINGLE_LINE),
      mEnabled(true),
@@ -228,11 +204,11 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    //  tell them to point to this window with their mTitleParent and
    //  mStatusParent (this way, they can let this window know when
    //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
-   //  to NULL).
-   if (pExtTitleWindow != NULL) {
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr) {
       pExtTitleWindow->mTitleParent = this;
    }
-   if (pExtStatusWindow != NULL) {
+   if (pExtStatusWindow != nullptr) {
       pExtStatusWindow->mStatusParent = this;
    }
 
@@ -248,7 +224,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pMessage, const string& pStatus,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mWindow(NULL),
+   : mWindow(nullptr),
      mMessageColorPair(eWHITE_BLUE),
      mTitleColorPair(eGRAY_BLUE),
      mStatusColorPair(eBROWN_BLUE),
@@ -258,17 +234,17 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizStatusAlignment(eHP_LEFT),
      mDrawMessage(true),
      mDrawSpecialChars(true),
-     mOnFocusFunction(NULL),
-     mOnLeaveFunction(NULL),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
      mHotkeyHighlighting(pHotkeyHighlighting),
-     mPanel(NULL),
+     mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
-     mTitleParent(NULL),
-     mStatusParent(NULL),
-     mParentWindow(pParentWindow != this ? pParentWindow : NULL),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
      mFocus(false),
      mBorderStyle(eBS_SINGLE_LINE),
      mEnabled(true),
@@ -293,11 +269,11 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    //  tell them to point to this window with their mTitleParent and
    //  mStatusParent (this way, they can let this window know when
    //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
-   //  to NULL).
-   if (pExtTitleWindow != NULL) {
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr) {
       pExtTitleWindow->mTitleParent = this;
    }
-   if (pExtStatusWindow != NULL) {
+   if (pExtStatusWindow != nullptr) {
       pExtStatusWindow->mStatusParent = this;
    }
 
@@ -312,7 +288,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
 cxWindow::cxWindow(cxWindow *pParentWindow, const string& pMessage,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mWindow(NULL),
+   : mWindow(nullptr),
      mMessageColorPair(eWHITE_BLUE),
      mTitleColorPair(eGRAY_BLUE),
      mStatusColorPair(eBROWN_BLUE),
@@ -322,17 +298,17 @@ cxWindow::cxWindow(cxWindow *pParentWindow, const string& pMessage,
      mHorizStatusAlignment(eHP_LEFT),
      mDrawMessage(true),
      mDrawSpecialChars(true),
-     mOnFocusFunction(NULL),
-     mOnLeaveFunction(NULL),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
      mHotkeyHighlighting(pHotkeyHighlighting),
-     mPanel(NULL),
+     mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
-     mTitleParent(NULL),
-     mStatusParent(NULL),
-     mParentWindow(NULL),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(nullptr),
      mFocus(false),
      mBorderStyle(eBS_SINGLE_LINE),
      mEnabled(true),
@@ -357,11 +333,11 @@ cxWindow::cxWindow(cxWindow *pParentWindow, const string& pMessage,
    //  tell them to point to this window with their mTitleParent and
    //  mStatusParent (this way, they can let this window know when
    //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
-   //  to NULL).
-   if (pExtTitleWindow != NULL) {
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr) {
       pExtTitleWindow->mTitleParent = this;
    }
-   if (pExtStatusWindow != NULL) {
+   if (pExtStatusWindow != nullptr) {
       pExtStatusWindow->mStatusParent = this;
    }
 
@@ -377,7 +353,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
                    const string& pTitle, const string& pMessage,
                    const string& pStatus, cxWindow *pExtTitleWindow,
                    cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
-   : mWindow(NULL),
+   : mWindow(nullptr),
      mMessageColorPair(eWHITE_BLUE),
      mTitleColorPair(eGRAY_BLUE),
      mStatusColorPair(eBROWN_BLUE),
@@ -387,17 +363,17 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
      mHorizStatusAlignment(eHP_LEFT),
      mDrawMessage(true),
      mDrawSpecialChars(true),
-     mOnFocusFunction(NULL),
-     mOnLeaveFunction(NULL),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
      mHotkeyHighlighting(pHotkeyHighlighting),
-     mPanel(NULL),
+     mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
-     mTitleParent(NULL),
-     mStatusParent(NULL),
-     mParentWindow(pParentWindow != this ? pParentWindow : NULL),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
      mFocus(false),
      mBorderStyle(eBS_SINGLE_LINE),
      mEnabled(true),
@@ -424,11 +400,11 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
    //  tell them to point to this window with their mTitleParent and
    //  mStatusParent (this way, they can let this window know when
    //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
-   //  to NULL).
-   if (pExtTitleWindow != NULL) {
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr) {
       pExtTitleWindow->mTitleParent = this;
    }
-   if (pExtStatusWindow != NULL) {
+   if (pExtStatusWindow != nullptr) {
       pExtStatusWindow->mStatusParent = this;
    }
 
@@ -442,7 +418,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
 
 // Copy constructor
 cxWindow::cxWindow(const cxWindow& pThatWindow)
-   : mWindow(NULL),
+   : mWindow(nullptr),
      mMessageLines(pThatWindow.mMessageLines),
      mSpecialChars(pThatWindow.mSpecialChars),
      mMessageAttrs(pThatWindow.mMessageAttrs),
@@ -460,8 +436,8 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
      mHorizStatusAlignment(pThatWindow.mHorizStatusAlignment),
      mDrawMessage(pThatWindow.mDrawMessage),
      mDrawSpecialChars(pThatWindow.mDrawSpecialChars),
-     mOnFocusFunction(NULL),
-     mOnLeaveFunction(NULL),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
      // Note: mKeyFunctions and mMouseFunctions are not initialized in this
@@ -470,12 +446,12 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
      mExitKeys(pThatWindow.mExitKeys),
      mHotkeyHighlighting(pThatWindow.mHotkeyHighlighting),
      mMouse(pThatWindow.mMouse),
-     mPanel(NULL),
+     mPanel(nullptr),
      mExtTitleWindow(pThatWindow.mExtTitleWindow),
      mExtStatusWindow(pThatWindow.mExtStatusWindow),
-     mTitleParent(NULL),
-     mStatusParent(NULL),
-     mParentWindow(pThatWindow.mParentWindow != this ? pThatWindow.mParentWindow : NULL),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(pThatWindow.mParentWindow != this ? pThatWindow.mParentWindow : nullptr),
      mFocus(false),
      mBorderStyle(pThatWindow.mBorderStyle),
      mEnabled(pThatWindow.mEnabled),
@@ -502,15 +478,15 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
    }
    // Create mWindow and mPanel
    mWindow = newwin(pThatWindow.height(), pThatWindow.width(), pThatWindow.top(), pThatWindow.left());
-   // If mWindow is NULL, that means newwin() had an error..
-   if (mWindow == NULL) {
+   // If mWindow is nullptr, that means newwin() had an error..
+   if (mWindow == nullptr) {
       throw(cxWidgetsException("Couldn't create a new ncurses window (copy-constructing another cxWindow)."));
    }
    reCreatePanel();
    keypad(mWindow, TRUE); // For each newwin() we have to set this..
 
    // Add this window to the other window's parent window
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       mParentWindow->addSubwindow(this);
    }
    // Note: If the other window's parent window is a cxPanel, we shouldn't
@@ -545,33 +521,33 @@ cxWindow::~cxWindow() {
    clearKeyFunctions();
    clearMouseFunctions();
    // Free the memory used by mOnFocusFunction and mOnLeaveFunction
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       delete mOnFocusFunction;
    }
-   if (mOnLeaveFunction != NULL) {
+   if (mOnLeaveFunction != nullptr) {
       delete mOnLeaveFunction;
    }
 
    // If other cxWindow objects are using this one
    //  as a title or status window, let them know
    //  that this window can no longer be used.
-   if (mTitleParent != NULL) {
-      mTitleParent->mExtTitleWindow = NULL;
+   if (mTitleParent != nullptr) {
+      mTitleParent->mExtTitleWindow = nullptr;
    }
-   if (mStatusParent != NULL) {
-      mStatusParent->mExtStatusWindow = NULL;
+   if (mStatusParent != nullptr) {
+      mStatusParent->mExtStatusWindow = nullptr;
    }
 
    // If other windows are being used for the
    //  title or status, then copy their text
    //  back into them.
-   if (mExtTitleWindow != NULL) {
+   if (mExtTitleWindow != nullptr) {
       mExtTitleWindow->setMessage(mExtTitleTemp);
       if (!(mExtTitleWindow->isHidden())) {
          mExtTitleWindow->show();
       }
    }
-   if (mExtStatusWindow != NULL) {
+   if (mExtStatusWindow != nullptr) {
       mExtStatusWindow->setMessage(mExtStatusTemp);
       if (!(mExtStatusWindow->isHidden())) {
          mExtStatusWindow->show();
@@ -579,7 +555,7 @@ cxWindow::~cxWindow() {
    }
 
    // Remove this window from the parent window's subwindow list.
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       // If the parent window is a cxPanel or something deriving from cxPanel,
       //  remove this window from the cxPanel's mWindows.
       try {
@@ -609,7 +585,7 @@ cxWindow::~cxWindow() {
       mParentWindow->removeSubWindow(this);
    }
 
-   // Set all the subwindows' parent windows to NULL (so that they don't try
+   // Set all the subwindows' parent windows to nullptr (so that they don't try
    //  to do something with this window anymore).  Note: This is using a
    //  while loop surrounding the for loop, because each time we remove a
    //  window from mSubWindows, the iterator gets invalidated, so we need
@@ -617,10 +593,10 @@ cxWindow::~cxWindow() {
    cxWindowPtrContainer::iterator iter;
    while (anySubwinHasThisParent()) {
       for (iter = mSubWindows.begin(); iter != mSubWindows.end(); ++iter) {
-         if ((*iter)->mParentWindow != NULL) {
+         if ((*iter)->mParentWindow != nullptr) {
             if ((*iter)->mParentWindow == this) {
-               //(*iter)->setParent(NULL);
-               (*iter)->mParentWindow = NULL;
+               //(*iter)->setParent(nullptr);
+               (*iter)->mParentWindow = nullptr;
                break; // Exit the for loop; continue with the while loop
             }
          }
@@ -647,7 +623,7 @@ void cxWindow::alignHoriz(eHPosition pPosition, bool pRefresh) {
    //  Align to the left, center or right in the parent window
    //   if there is one, or on the screen if there is no parent window.
    int leftCol = 0;
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       if (pPosition == eHP_CENTER) {
          leftCol = mParentWindow->centerCol() - (width() / 2);
       }
@@ -682,7 +658,7 @@ void cxWindow::alignVert(eVPosition pPosition, bool pRefresh) {
    //  Align in the parent window if there is one, or on the
    //  screen if there is no parent window.
    int topRow = 0;
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       if (pPosition == eVP_CENTER) {
          topRow = mParentWindow->centerRow() - (height() / 2);
       }
@@ -716,7 +692,7 @@ void cxWindow::center(bool pRefresh) {
 string cxWindow::getTitle() const {
    string title;
 
-   if (mExtTitleWindow != NULL) {
+   if (mExtTitleWindow != nullptr) {
       title = mExtTitleWindow->getMessage();
    }
    else {
@@ -732,7 +708,7 @@ void cxWindow::setTitle(const string& pTitle, bool pRefreshTitle) {
    // If an external cxWindow object is to hold the title,
    //  then set the title ther.e.  Otherwise, set the title
    //  in this window.
-   if (mExtTitleWindow != NULL) {
+   if (mExtTitleWindow != nullptr) {
       // Set the message in the external window.
       // Note: calling the external window's setTitle
       //  could result in infinite recursion if there are
@@ -773,7 +749,7 @@ void cxWindow::setTitle(const string& pTitle, bool pRefreshTitle) {
 string cxWindow::getStatus() const {
    string status;
 
-   if (mExtTitleWindow != NULL) {
+   if (mExtTitleWindow != nullptr) {
       status = mExtTitleWindow->getMessage();
    }
    else {
@@ -788,7 +764,7 @@ string cxWindow::getStatus() const {
 void cxWindow::setStatus(const string& pStatus, bool pRefreshStatus) {
    // If an external cxWindow object is to hold the status, then set the
    //  status there..  Otherwise, set the status in this window.
-   if (mExtStatusWindow != NULL) {
+   if (mExtStatusWindow != nullptr) {
       // Set the message in the external window.
       // Note: calling the external window's setStatus
       //  could result in infinite recursion if there are
@@ -932,7 +908,7 @@ void cxWindow::setHorizTitleAlignment(eHPosition pHAlignment) {
    // If this window uses an external window for
    //  the title, then the title alignment is the
    //  message alignment in the other window.
-   if (mExtTitleWindow != NULL) {
+   if (mExtTitleWindow != nullptr) {
       mExtTitleWindow->setHorizMessageAlignment(pHAlignment);
    }
 } // setHorizTitleAlignment
@@ -941,7 +917,7 @@ eHPosition cxWindow::getHorizTitleAlignment() const {
    // If this window uses an external window for
    //  the title, then the title alignment is the
    //  message alignment in the other window.
-   if (mExtTitleWindow != NULL) {
+   if (mExtTitleWindow != nullptr) {
       return(mExtTitleWindow->mHorizMessageAlignment);
    }
    else {
@@ -963,7 +939,7 @@ void cxWindow::setHorizStatusAlignment(eHPosition pHAlignment) {
    // If this window uses an external window for
    //  the title, then the status alignment is the
    //  message alignment in the other window.
-   if (mExtStatusWindow != NULL) {
+   if (mExtStatusWindow != nullptr) {
       mExtStatusWindow->setHorizMessageAlignment(pHAlignment);
    }
 } // setHorizStatusAlignment
@@ -972,7 +948,7 @@ eHPosition cxWindow::getHorizStatusAlignment() const {
    // If this window uses an external window for
    //  the title, then the status alignment is the
    //  message alignment in the other window.
-   if (mExtStatusWindow != NULL) {
+   if (mExtStatusWindow != nullptr) {
       return(mExtStatusWindow->mHorizMessageAlignment);
    }
    else {
@@ -981,9 +957,9 @@ eHPosition cxWindow::getHorizStatusAlignment() const {
 } // getHorizStatusAlignment
 
 void cxWindow::setExtTitleWindow(cxWindow *pWindow, bool pRefreshTitle) {
-   // If pWindow is not NULL, then move the title into the window
+   // If pWindow is not nullptr, then move the title into the window
    //  (if there is any status text).
-   if (pWindow != NULL) {
+   if (pWindow != nullptr) {
       mExtTitleWindow = pWindow;
 
       // Store the external window's text so that it can be set
@@ -1011,21 +987,21 @@ void cxWindow::setExtTitleWindow(cxWindow *pWindow, bool pRefreshTitle) {
       // Tell the external status window to point to this window with
       //  its mTitleParent (this way, they can let this window know when
       //  they go out of scope by setting mExtTitleWindow or mExtTitleWindow
-      //  to NULL).
+      //  to nullptr).
       pWindow->mTitleParent = this;
    }
    else {
-      // The external title window is being set to NULL..  If
+      // The external title window is being set to nullptr..  If
       //  there is currently an external title window set, then
       //  move its text back into the window and reset the title
       //  alignment in this window.
-      if (mExtTitleWindow != NULL) {
+      if (mExtTitleWindow != nullptr) {
          mExtTitleWindow->setMessage(mExtTitleTemp);
          if (!(mExtTitleWindow->isHidden())) {
             mExtTitleWindow->show();
          }
          mExtTitleTemp = "";
-         mExtTitleWindow->mTitleParent = NULL;
+         mExtTitleWindow->mTitleParent = nullptr;
 
          mHorizTitleAlignment = mExtTitleWindow->getHorizMessageAlignment();
       }
@@ -1039,9 +1015,9 @@ cxWindow* cxWindow::getExtTitleWindow() const {
 } // getExtTitleWindow
 
 void cxWindow::setExtStatusWindow(cxWindow *pWindow, bool pRefreshStatus) {
-   // If pWindow is not NULL, then move the status into the window
+   // If pWindow is not nullptr, then move the status into the window
    //  (if there is any status text).
-   if (pWindow != NULL) {
+   if (pWindow != nullptr) {
       mExtStatusWindow = pWindow;
 
       // Store the external window's text so that it can be set
@@ -1073,20 +1049,20 @@ void cxWindow::setExtStatusWindow(cxWindow *pWindow, bool pRefreshStatus) {
       // Tell the external status window to point to this window with
       //  its mStatusParent (this way, they can let this window know when
       //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
-      //  to NULL).
+      //  to nullptr).
       pWindow->mStatusParent = this;
    }
    else {
-      // The external status window is being set to NULL..  If
+      // The external status window is being set to nullptr..  If
       //  there is currently an external status window set, then
       //  move its text back into the window.
-      if (mExtStatusWindow != NULL) {
+      if (mExtStatusWindow != nullptr) {
          mExtStatusWindow->setMessage(mExtStatusTemp);
          if (!(mExtStatusWindow->isHidden())) {
             mExtStatusWindow->show();
          }
          mExtStatusTemp = "";
-         mExtStatusWindow->mStatusParent = NULL;
+         mExtStatusWindow->mStatusParent = nullptr;
       }
 
       mExtTitleWindow = pWindow;
@@ -1102,9 +1078,9 @@ bool cxWindow::isHidden() const {
 } // isHidden
 
 long cxWindow::show(bool pBringToTop, bool pShowSubwindows) {
-   // Only do this if mWindow and mPanel are both non-NULL
+   // Only do this if mWindow and mPanel are both non-nullptr
    //  and the window is enabled.
-   if ((mWindow != NULL) && (mPanel != NULL)) {
+   if ((mWindow != nullptr) && (mPanel != nullptr)) {
       if (mEnabled) {
          // Show the subwindows now, if pShowSubwindows is true and
          //  mShowSelfBeforeSubwins is false.
@@ -1284,7 +1260,7 @@ long cxWindow::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows)
             runOnLeave = runOnLeave && onLeaveFunctionIsSet() &&
                          (mLastKey != ESC);
             if (runOnLeave) {
-               if (mOnLeaveFunction != NULL) {
+               if (mOnLeaveFunction != nullptr) {
                   mOnLeaveFunction->runFunction();
                }
             }
@@ -1334,7 +1310,7 @@ void cxWindow::unSetFocusColors() {
 
 // Erases the window
 void cxWindow::erase(bool pEraseSubwindows) {
-   if (mWindow != NULL) {
+   if (mWindow != nullptr) {
       werase(mWindow);
    }
 
@@ -1365,15 +1341,15 @@ void cxWindow::bringToBottom(bool pRefresh) {
 } // bringToBottom
 
 bool cxWindow::isOnTop() const {
-   // panel_above will return NULL if there is no
+   // panel_above will return nullptr if there is no
    //  other panel above mPanel.
-   return(panel_above(mPanel) == NULL);
+   return(panel_above(mPanel) == nullptr);
 } // isOnTop
 
 bool cxWindow::isOnBottom() const {
-   // panel_below will return NULL if there is no
+   // panel_below will return nullptr if there is no
    //  other panel below mPanel.
-   return(panel_below(mPanel) == NULL);
+   return(panel_below(mPanel) == nullptr);
 } // isOnBottom
 
 bool cxWindow::isAbove(const cxWindow& pThatWindow) const {
@@ -1382,8 +1358,8 @@ bool cxWindow::isAbove(const cxWindow& pThatWindow) const {
    // Follow the chain of windows up to see if this window
    //  is somewhere above pThatWindow.
    PANEL *panel = panel_above(pThatWindow.mPanel);
-   cxWindow *window = NULL;
-   while (panel != NULL) {
+   cxWindow *window = nullptr;
+   while (panel != nullptr) {
       // The user pointer of each window's panel should
       //  always point to their cxWindow.  If the panel's
       //  user pointer points to this window, then this
@@ -1406,8 +1382,8 @@ bool cxWindow::isBelow(const cxWindow& pThatWindow) const {
    // Follow the chain of windows down to see if this window
    //  is somewhere below pThatWindow.
    PANEL *panel = panel_below(pThatWindow.mPanel);
-   cxWindow *window = NULL;
-   while (panel != NULL) {
+   cxWindow *window = nullptr;
+   while (panel != nullptr) {
       // The user pointer of each window's panel should
       //  always point to their cxWindow.  If the panel's
       //  user pointer points to this window, then this
@@ -1468,7 +1444,7 @@ void cxWindow::drawBorder(int pRow, int pCol, int pHeight, int pWidth,
       // Enable the attributes
       enableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, mBorderColorPair, NULL);
+         wcolor_set(mWindow, mBorderColorPair, nullptr);
       }
 
       // Draw the border differently, based on the border style.
@@ -1512,7 +1488,7 @@ void cxWindow::drawBorder(int pRow, int pCol, int pHeight, int pWidth,
       // Disable the attributes
       disableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
    }
 } // drawBorder
@@ -1632,9 +1608,9 @@ void cxWindow::setParent(cxWindow *pNewParent) {
    // Also only set the parent if it's different from
    //  the current parent.
    if ((pNewParent != this) && (pNewParent != mParentWindow)) {
-      if (mParentWindow != NULL) {
+      if (mParentWindow != nullptr) {
          // Make a copy of the current mParentWindow, because mParentWindow
-         //  could be set to NULL by the call to removeSubWindow().
+         //  could be set to nullptr by the call to removeSubWindow().
          cxWindow *parentWindow = mParentWindow;
          // Tell the parent window to remove this window from its subwindow
          //  list.
@@ -1665,10 +1641,10 @@ void cxWindow::setParent(cxWindow *pNewParent) {
 
       mParentWindow = pNewParent;
 
-      // If the new mParentWindow is non-NULL,
+      // If the new mParentWindow is non-nullptr,
       //  tell the new parent to add this
       //  window to its subwindow list.
-      if (mParentWindow != NULL) {
+      if (mParentWindow != nullptr) {
          mParentWindow->addSubwindow(this);
       }
    }
@@ -1864,7 +1840,7 @@ void cxWindow::setLastKey(int pLastKey) {
    // If this window has a parent window, then
    //  the parent window's last key should be
    //  set too.
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       mParentWindow->setLastKey(pLastKey);
    }
 } // setLastKey
@@ -1898,11 +1874,11 @@ void cxWindow::setOnFocusFunction(funcPtr4 pFunction, void *p1, void *p2,
                                  void *p3, void *p4, bool pUseVal,
                                  bool pExitAfterRun) {
    // If mOnFocusFunction is already set, then free its memory.
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       delete mOnFocusFunction;
-      mOnFocusFunction = NULL;
+      mOnFocusFunction = nullptr;
    }
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mOnFocusFunction = new cxFunction4(pFunction, p1, p2, p3, p4, pUseVal,
                                          pExitAfterRun, false);
    }
@@ -1911,11 +1887,11 @@ void cxWindow::setOnFocusFunction(funcPtr4 pFunction, void *p1, void *p2,
 void cxWindow::setOnFocusFunction(funcPtr2 pFunction, void *p1, void *p2,
                                  bool pUseVal, bool pExitAfterRun) {
    // If mOnFocusFunction is already set, then free its memory.
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       delete mOnFocusFunction;
-      mOnFocusFunction = NULL;
+      mOnFocusFunction = nullptr;
    }
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mOnFocusFunction = new cxFunction2(pFunction, p1, p2, pUseVal,
                                          pExitAfterRun, false);
    }
@@ -1924,11 +1900,11 @@ void cxWindow::setOnFocusFunction(funcPtr2 pFunction, void *p1, void *p2,
 void cxWindow::setOnFocusFunction(funcPtr0 pFunction, bool pUseVal,
                                   bool pExitAfterRun) {
    // If mOnFocusFunction is already set, then free its memory.
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       delete mOnFocusFunction;
-      mOnFocusFunction = NULL;
+      mOnFocusFunction = nullptr;
    }
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mOnFocusFunction = new cxFunction0(pFunction, pUseVal, pExitAfterRun,
                                          false);
    }
@@ -1937,11 +1913,11 @@ void cxWindow::setOnFocusFunction(funcPtr0 pFunction, bool pUseVal,
 void cxWindow::setOnLeaveFunction(funcPtr4 pFunction, void *p1, void *p2,
                                   void *p3, void *p4) {
    // If mOnLeaveFunction is already set, then free its memory.
-   if (mOnLeaveFunction != NULL) {
+   if (mOnLeaveFunction != nullptr) {
       delete mOnLeaveFunction;
-      mOnLeaveFunction = NULL;
+      mOnLeaveFunction = nullptr;
    }
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mOnLeaveFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
                                          false, false);
    }
@@ -1949,11 +1925,11 @@ void cxWindow::setOnLeaveFunction(funcPtr4 pFunction, void *p1, void *p2,
 
 void cxWindow::setOnLeaveFunction(funcPtr2 pFunction, void *p1, void *p2) {
    // If mOnLeaveFunction is already set, then free its memory.
-   if (mOnLeaveFunction != NULL) {
+   if (mOnLeaveFunction != nullptr) {
       delete mOnLeaveFunction;
-      mOnLeaveFunction = NULL;
+      mOnLeaveFunction = nullptr;
    }
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mOnLeaveFunction = new cxFunction2(pFunction, p1, p2, false, false,
                                          false);
    }
@@ -1961,11 +1937,11 @@ void cxWindow::setOnLeaveFunction(funcPtr2 pFunction, void *p1, void *p2) {
 
 void cxWindow::setOnLeaveFunction(funcPtr0 pFunction) {
    // If mOnLeaveFunction is already set, then free its memory.
-   if (mOnLeaveFunction != NULL) {
+   if (mOnLeaveFunction != nullptr) {
       delete mOnLeaveFunction;
-      mOnLeaveFunction = NULL;
+      mOnLeaveFunction = nullptr;
    }
-   if (pFunction != NULL) {
+   if (pFunction != nullptr) {
       mOnLeaveFunction = new cxFunction0(pFunction, false, false, false);
    }
 } // setOnLeaveFunction
@@ -1973,11 +1949,11 @@ void cxWindow::setOnLeaveFunction(funcPtr0 pFunction) {
 bool cxWindow::runOnFocusFunction(string *pFunctionRetval) {
    bool exitAfterRun = false;
 
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       if (onFocusFunctionIsSet() && mRunOnFocus) {
          exitAfterRun = mOnFocusFunction->getExitAfterRun();
          string funcRetval = mOnFocusFunction->runFunction();
-         if (NULL != pFunctionRetval) {
+         if (nullptr != pFunctionRetval) {
             *pFunctionRetval = funcRetval;
          }
       }
@@ -1989,7 +1965,7 @@ bool cxWindow::runOnFocusFunction(string *pFunctionRetval) {
 bool cxWindow::runOnLeaveFunction(string *pFunctionRetval) {
    bool exitAfterRun = false;
 
-   if (mOnLeaveFunction != NULL) {
+   if (mOnLeaveFunction != nullptr) {
       // Don't do anything if the last keypress is in mQuitKeys or mExitKeys and
       //  the boolean for the key is false.
       // Check to see whether the onLeave function should be run, based on
@@ -2013,9 +1989,9 @@ bool cxWindow::runOnLeaveFunction(string *pFunctionRetval) {
 
       // Check mKeyFunctions
       if (mKeyFunctions.find(lastKey) != mKeyFunctions.end()) {
-         // The cxFunction pointers in mKeyFunctions shouldn't be NULL,
+         // The cxFunction pointers in mKeyFunctions shouldn't be nullptr,
          //  but check anyway.
-         if (mKeyFunctions[lastKey] != NULL) {
+         if (mKeyFunctions[lastKey] != nullptr) {
             iRunOnLeave = iRunOnLeave && mKeyFunctions[lastKey]->getRunOnLeaveFunction();
          }
       }
@@ -2023,7 +1999,7 @@ bool cxWindow::runOnLeaveFunction(string *pFunctionRetval) {
       if (mOnLeaveFunction->functionIsSet() && iRunOnLeave && mRunOnLeave) {
          exitAfterRun = mOnLeaveFunction->getExitAfterRun();
          string funcRetval = mOnLeaveFunction->runFunction();
-         if (NULL != pFunctionRetval) {
+         if (nullptr != pFunctionRetval) {
             *pFunctionRetval = funcRetval;
          }
       }
@@ -2065,16 +2041,16 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1, void *p2,
                             bool pExitAfterRun, bool pRunOnLeaveFunction) {
    bool setIt = false;
 
-   // If pFunction is NULL, then remove the function from mKeyFunctions if
+   // If pFunction is nullptr, then remove the function from mKeyFunctions if
    //  it exists; otherwise, do an add.
-   if (pFunction == NULL) {
+   if (pFunction == nullptr) {
       // Remove it
       clearKeyFunction(pKey);
       // setIt should be true if it doesn't exist
       setIt = !hasKeyFunction(pKey);
    }
    else {
-      // pFunction isn't NULL.  Add it.
+      // pFunction isn't nullptr.  Add it.
       // First, if there is already a cxFunction in mKeyFunctions for the
       //  function key, then free it & remove it (in case it's a cxFunction2).
       if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
@@ -2083,8 +2059,8 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1, void *p2,
       mKeyFunctions[pKey] = new cxFunction4(pFunction, p1, p2, p3, p4,
                                                  pUseReturnVal, pExitAfterRun,
                                                  pRunOnLeaveFunction);
-      // Make sure new didn't return NULL
-      if (mKeyFunctions[pKey] != NULL) {
+      // Make sure new didn't return nullptr
+      if (mKeyFunctions[pKey] != nullptr) {
          setIt = true;
       }
       else {
@@ -2109,16 +2085,16 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr2 pFunction, void *p1,
                             bool pRunOnLeaveFunction) {
    bool setIt = false;
 
-   // If pFunction is NULL, then remove the function from mKeyFunctions if
+   // If pFunction is nullptr, then remove the function from mKeyFunctions if
    //  it exists; otherwise, do an add.
-   if (pFunction == NULL) {
+   if (pFunction == nullptr) {
       // Remove it
       clearKeyFunction(pKey);
       // setIt should be true if it doesn't exist
       setIt = !hasKeyFunction(pKey);
    }
    else {
-      // pFunction isn't NULL.  Add it.
+      // pFunction isn't nullptr.  Add it.
       // First, if there is already a cxFunction in mKeyFunctions for the
       //  function key, then free it & remove it (in case it's a cxFunction4).
       if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
@@ -2127,8 +2103,8 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr2 pFunction, void *p1,
       mKeyFunctions[pKey] = new cxFunction2(pFunction, p1, p2,
                                                  pUseReturnVal, pExitAfterRun,
                                                  pRunOnLeaveFunction);
-      // Make sure new didn't return NULL
-      if (mKeyFunctions[pKey] != NULL) {
+      // Make sure new didn't return nullptr
+      if (mKeyFunctions[pKey] != nullptr) {
          setIt = true;
       }
       else {
@@ -2152,16 +2128,16 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr0 pFunction, bool pUseReturnVal,
                               bool pExitAfterRun, bool pRunOnLeaveFunction) {
    bool setIt = false;
 
-   // If pFunction is NULL, then remove the function from mKeyFunctions if
+   // If pFunction is nullptr, then remove the function from mKeyFunctions if
    //  it exists; otherwise, do an add.
-   if (pFunction == NULL) {
+   if (pFunction == nullptr) {
       // Remove it
       clearKeyFunction(pKey);
       // setIt should be true if it doesn't exist
       setIt = !hasKeyFunction(pKey);
    }
    else {
-      // pFunction isn't NULL.  Add it.
+      // pFunction isn't nullptr.  Add it.
       // First, if there is already a cxFunction in mKeyFunctions for the
       //  function key, then free it & remove it (in case it's a cxFunction4).
       if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
@@ -2169,8 +2145,8 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr0 pFunction, bool pUseReturnVal,
       }
       mKeyFunctions[pKey] = new cxFunction0(pFunction, pUseReturnVal,
                                           pExitAfterRun, pRunOnLeaveFunction);
-      // Make sure new didn't return NULL
-      if (mKeyFunctions[pKey] != NULL) {
+      // Make sure new didn't return nullptr
+      if (mKeyFunctions[pKey] != nullptr) {
          setIt = true;
       }
       else {
@@ -2204,11 +2180,11 @@ void cxWindow::clearKeyFunction(int pKey) {
    //  this window as an exit key so that it can trickle up to the
    //  cxPanel to be processed.
    if (!hasKeyFunction(pKey)) {
-      if (mParentWindow != NULL) {
+      if (mParentWindow != nullptr) {
          string parentType = mParentWindow->cxTypeStr();
          if ((parentType == "cxPanel") || (parentType == "cxSearchPanel")) {
             cxPanel *parentPanel = dynamic_cast<cxPanel*>(mParentWindow);
-            if (parentPanel != NULL) {
+            if (parentPanel != nullptr) {
                if (parentPanel->hasKeyFunction(pKey)) {
                   addExitKey(pKey);
                }
@@ -2222,12 +2198,12 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr4 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   cxFunction4 *func4 = NULL;
+   cxFunction4 *func4 = nullptr;
    map<int, cxFunction*>::iterator funcIter = mKeyFunctions.begin();
    for (; funcIter != mKeyFunctions.end(); ++funcIter) {
       try {
          func4 = dynamic_cast<cxFunction4*>(funcIter->second);
-         if (func4 != NULL) {
+         if (func4 != nullptr) {
             if (func4->getFunction() == pFunction) {
                keys.insert(funcIter->first);
             }
@@ -2250,12 +2226,12 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr2 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   cxFunction2 *func2 = NULL;
+   cxFunction2 *func2 = nullptr;
    map<int, cxFunction*>::iterator funcIter = mKeyFunctions.begin();
    for (; funcIter != mKeyFunctions.end(); ++funcIter) {
       try {
          func2 = dynamic_cast<cxFunction2*>(funcIter->second);
-         if (func2 != NULL) {
+         if (func2 != nullptr) {
             if (func2->getFunction() == pFunction) {
                keys.insert(funcIter->first);
             }
@@ -2278,12 +2254,12 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr0 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   cxFunction0 *func0 = NULL;
+   cxFunction0 *func0 = nullptr;
    map<int, cxFunction*>::iterator funcIter = mKeyFunctions.begin();
    for (; funcIter != mKeyFunctions.end(); ++funcIter) {
       try {
          func0 = dynamic_cast<cxFunction0*>(funcIter->second);
-         if (func0 != NULL) {
+         if (func0 != nullptr) {
             if (func0->getFunction() == pFunction) {
                keys.insert(funcIter->first);
             }
@@ -2314,7 +2290,7 @@ void cxWindow::clearKeyFunctions() {
    // Check to see if this window is in a cxPanel.  If so, then
    //  we need to add the panel's function keys to this window as exit
    //  keys so they can trickle up to the cxPanel to be processed.
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       try {
          string parentType = mParentWindow->cxTypeStr();
          if ((parentType == "cxPanel") || (parentType == "cxSearchPanel")) {
@@ -2341,8 +2317,8 @@ bool cxWindow::hasKeyFunction(int pKey) const {
 
    map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
    if (iter != mKeyFunctions.end()) {
-      // Check to make sure that the cxFunction pointer is not NULL
-      exists = (iter->second != NULL);
+      // Check to make sure that the cxFunction pointer is not nullptr
+      exists = (iter->second != nullptr);
    }
 
    return(exists);
@@ -2353,16 +2329,16 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr4 pFunction, void *p1,
                             bool pExitAfterRun, bool pRunOnLeaveFunction) {
    bool setIt = false;
 
-   // If pFunction is NULL, then remove the function from mKeyFunctions if
+   // If pFunction is nullptr, then remove the function from mKeyFunctions if
    //  it exists; otherwise, do an add.
-   if (pFunction == NULL) {
+   if (pFunction == nullptr) {
       // Remove it
       clearMouseFunction(pMouseState);
       // setIt should be true if it doesn't exist
       setIt = !hasMouseFunction(pMouseState);
    }
    else {
-      // pFunction isn't NULL.  Add it.
+      // pFunction isn't nullptr.  Add it.
       // First, if there is already a cxFunction in mKeyFunctions for the
       //  function key, then free it & remove it (in case it's a cxFunction2).
       if (mMouseFunctions.find(pMouseState) != mMouseFunctions.end()) {
@@ -2371,8 +2347,8 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr4 pFunction, void *p1,
       mMouseFunctions[pMouseState] = new cxFunction4(pFunction, p1, p2, p3, p4,
                                                  pUseReturnVal, pExitAfterRun,
                                                  pRunOnLeaveFunction);
-      // Make sure new didn't return NULL
-      if (mMouseFunctions[pMouseState] != NULL) {
+      // Make sure new didn't return nullptr
+      if (mMouseFunctions[pMouseState] != nullptr) {
          setIt = true;
       }
       else {
@@ -2389,16 +2365,16 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr2 pFunction, void *p1,
                             bool pRunOnLeaveFunction) {
    bool setIt = false;
 
-   // If pFunction is NULL, then remove the function from mKeyFunctions if
+   // If pFunction is nullptr, then remove the function from mKeyFunctions if
    //  it exists; otherwise, do an add.
-   if (pFunction == NULL) {
+   if (pFunction == nullptr) {
       // Remove it
       clearMouseFunction(pMouseState);
       // setIt should be true if it doesn't exist
       setIt = !hasMouseFunction(pMouseState);
    }
    else {
-      // pFunction isn't NULL.  Add it.
+      // pFunction isn't nullptr.  Add it.
       // First, if there is already a cxFunction in mKeyFunctions for the
       //  function key, then free it & remove it (in case it's a cxFunction4).
       if (mMouseFunctions.find(pMouseState) != mMouseFunctions.end()) {
@@ -2407,8 +2383,8 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr2 pFunction, void *p1,
       mMouseFunctions[pMouseState] = new cxFunction2(pFunction, p1, p2,
                                                  pUseReturnVal, pExitAfterRun,
                                                  pRunOnLeaveFunction);
-      // Make sure new didn't return NULL
-      if (mMouseFunctions[pMouseState] != NULL) {
+      // Make sure new didn't return nullptr
+      if (mMouseFunctions[pMouseState] != nullptr) {
          setIt = true;
       }
       else {
@@ -2425,16 +2401,16 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr0 pFunction,
                             bool pRunOnLeaveFunction) {
    bool setIt = false;
 
-   // If pFunction is NULL, then remove the function from mKeyFunctions if
+   // If pFunction is nullptr, then remove the function from mKeyFunctions if
    //  it exists; otherwise, do an add.
-   if (pFunction == NULL) {
+   if (pFunction == nullptr) {
       // Remove it
       clearMouseFunction(pMouseState);
       // setIt should be true if it doesn't exist
       setIt = !hasMouseFunction(pMouseState);
    }
    else {
-      // pFunction isn't NULL.  Add it.
+      // pFunction isn't nullptr.  Add it.
       // First, if there is already a cxFunction in mKeyFunctions for the
       //  function key, then free it & remove it (in case it's a cxFunction4).
       if (mMouseFunctions.find(pMouseState) != mMouseFunctions.end()) {
@@ -2442,8 +2418,8 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr0 pFunction,
       }
       mMouseFunctions[pMouseState] = new cxFunction0(pFunction, pUseReturnVal,
                                           pExitAfterRun, pRunOnLeaveFunction);
-      // Make sure new didn't return NULL
-      if (mMouseFunctions[pMouseState] != NULL) {
+      // Make sure new didn't return nullptr
+      if (mMouseFunctions[pMouseState] != nullptr) {
          setIt = true;
       }
       else {
@@ -2479,8 +2455,8 @@ bool cxWindow::hasMouseFunction(int pMouseState) const {
 
    map<int, cxFunction*>::const_iterator iter = mMouseFunctions.find(pMouseState);
    if (iter != mMouseFunctions.end()) {
-      // Check to make sure that the cxFunction pointer is not NULL
-      exists = (iter->second != NULL);
+      // Check to make sure that the cxFunction pointer is not nullptr
+      exists = (iter->second != nullptr);
    }
 
    return(exists);
@@ -2817,13 +2793,13 @@ void cxWindow::drawTitle() {
    //  for the title, then refresh it.
    //  Otherwise, draw the title in the
    //  top border.
-   if (mExtTitleWindow != NULL) {
+   if (mExtTitleWindow != nullptr) {
       mExtTitleWindow->show();
    }
    else {
-      // This only makes sense to do if mWindow is not NULL and
+      // This only makes sense to do if mWindow is not nullptr and
       //  the window has a border.
-      if ((mWindow != NULL) && hasBorder()) {
+      if ((mWindow != nullptr) && hasBorder()) {
          writeBorderStrings(mTitleStrings, 0, eTITLE, mTitleColorPair);
       }
    }
@@ -2835,13 +2811,13 @@ void cxWindow::drawStatus() {
    //  for the status, then refresh it.
    //  Otherwise, draw the status in the
    //  bottom border.
-   if (mExtStatusWindow != NULL) {
+   if (mExtStatusWindow != nullptr) {
       mExtStatusWindow->show();
    }
    else {
-      // This only makes sense to do if mWindow is not NULL and
+      // This only makes sense to do if mWindow is not nullptr and
       //  the window has a border.
-      if ((mWindow != NULL) && hasBorder()) {
+      if ((mWindow != nullptr) && hasBorder()) {
          writeBorderStrings(mStatusStrings, height()-1, eSTATUS, mStatusColorPair);
       }
    }
@@ -2852,7 +2828,7 @@ void cxWindow::drawMessage() {
    // Enable the message attributes and message color.
    enableAttrs(mWindow, eMESSAGE);
    if (useColors) {
-      wcolor_set(mWindow, mMessageColorPair, NULL);
+      wcolor_set(mWindow, mMessageColorPair, nullptr);
    }
    if (height() > 0) {
       // Start at row 0 & column 0 if there are no borders, or row 1 & column
@@ -2956,7 +2932,7 @@ void cxWindow::drawMessage() {
    // Disable the message attributes and color.
    disableAttrs(mWindow, eMESSAGE);
    if (useColors) {
-      wcolor_set(mWindow, 0, NULL);
+      wcolor_set(mWindow, 0, nullptr);
    }
 } // drawMessage
 
@@ -2964,7 +2940,7 @@ void cxWindow::drawSpecialChars() {
    if (mSpecialChars.size() > 0) {
       // Enable the message color
       if (useColors) {
-         wcolor_set(mWindow, mMessageColorPair, NULL);
+         wcolor_set(mWindow, mMessageColorPair, nullptr);
       }
 
       // Write the special characters
@@ -2991,7 +2967,7 @@ void cxWindow::drawSpecialChars() {
 
       // Disable the message color
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
    }
 } // drawSpecialChars
@@ -3111,12 +3087,12 @@ void cxWindow::doMouseBehavior() {
 } // doMouseBehavior
 
 cxFunction0* cxWindow::getKeyFunction0(int pKey) const {
-   cxFunction0 *retval = NULL;
+   cxFunction0 *retval = nullptr;
 
    map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
    if (iter != mKeyFunctions.end()) {
       cxFunction *iFunc = iter->second;
-      if (iFunc != NULL) {
+      if (iFunc != nullptr) {
          if (iFunc->cxTypeStr() == "cxFunction0") {
             try {
                retval = dynamic_cast<cxFunction0*>(iFunc);
@@ -3131,12 +3107,12 @@ cxFunction0* cxWindow::getKeyFunction0(int pKey) const {
 } // getKeyFunction2
 
 cxFunction2* cxWindow::getKeyFunction2(int pKey) const {
-   cxFunction2 *retval = NULL;
+   cxFunction2 *retval = nullptr;
 
    map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
    if (iter != mKeyFunctions.end()) {
       cxFunction *iFunc = iter->second;
-      if (iFunc != NULL) {
+      if (iFunc != nullptr) {
          if (iFunc->cxTypeStr() == "cxFunction2") {
             try {
                retval = dynamic_cast<cxFunction2*>(iFunc);
@@ -3151,12 +3127,12 @@ cxFunction2* cxWindow::getKeyFunction2(int pKey) const {
 } // getKeyFunction2
 
 cxFunction4* cxWindow::getKeyFunction4(int pKey) const {
-   cxFunction4 *retval = NULL;
+   cxFunction4 *retval = nullptr;
 
    map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
    if (iter != mKeyFunctions.end()) {
       cxFunction *iFunc = iter->second;
-      if (iFunc != NULL) {
+      if (iFunc != nullptr) {
          if (iFunc->cxTypeStr() == "cxFunction4") {
             try {
                retval = dynamic_cast<cxFunction4*>(iFunc);
@@ -3275,7 +3251,7 @@ string cxWindow::getString(int pRow, int pCol, int pNumber) {
 } // getString
 
 void cxWindow::info() {
-   cxWindow iWindow(NULL, 0, 0, 20, 30, "Info", "", "Press any key");
+   cxWindow iWindow(nullptr, 0, 0, 20, 30, "Info", "", "Press any key");
    iWindow.addMessageLineBelow("Entire Screen:");
    iWindow.addMessageLineBelow("top():" + toString(cxBase::top()) + ":");
    iWindow.addMessageLineBelow("left():" + toString(cxBase::left()) + ":");
@@ -3457,7 +3433,7 @@ void cxWindow::getFunctionKeys(vector<int>& pKeys) const {
 void cxWindow::addAttr(e_WidgetItems pItem, attr_t pAttr) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -3486,7 +3462,7 @@ void cxWindow::addAttr(e_WidgetItems pItem, attr_t pAttr) {
    }
 
    // Insert the attribute, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->insert(pAttr);
    }
 } // addAttr
@@ -3494,7 +3470,7 @@ void cxWindow::addAttr(e_WidgetItems pItem, attr_t pAttr) {
 void cxWindow::setAttr(e_WidgetItems pItem, attr_t pAttr) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -3523,7 +3499,7 @@ void cxWindow::setAttr(e_WidgetItems pItem, attr_t pAttr) {
    }
 
    // Set the attribute, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->clear();
       attrSet->insert(pAttr);
    }
@@ -3532,7 +3508,7 @@ void cxWindow::setAttr(e_WidgetItems pItem, attr_t pAttr) {
 void cxWindow::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -3561,7 +3537,7 @@ void cxWindow::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
    }
 
    // Remove the attribute, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->erase(pAttr);
    }
 } // removeAttr
@@ -3569,7 +3545,7 @@ void cxWindow::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
 void cxWindow::removeAttrs(e_WidgetItems pItem) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -3598,7 +3574,7 @@ void cxWindow::removeAttrs(e_WidgetItems pItem) {
    }
 
    // Remove the attributes, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->clear();
    }
 } // removeAttrs
@@ -3961,15 +3937,15 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
       //  (re-)create them.
       freeWindow();
       mWindow = newwin(newHeight, newWidth, pRow, pCol);
-      // If mWindow is NULL, that means newwin() had an error..
-      if (mWindow == NULL) {
+      // If mWindow is nullptr, that means newwin() had an error..
+      if (mWindow == nullptr) {
          throw(cxWidgetsException("Couldn't create a new ncurses window (constructing a new cxWindow)."));
       }
       reCreatePanel();
       keypad(mWindow, TRUE); // for each newwin() we have to set this...
       hide();
 
-      // Add this window to the parent window, if it's not NULL
+      // Add this window to the parent window, if it's not nullptr
       addToParentWindow(pParentWindow);
    }
    else {
@@ -3996,16 +3972,16 @@ void cxWindow::drawLabel(int pRow, int pCol, const string& pLabel) {
 
 // Removes all sub window pointers
 void cxWindow::removeAllSubwindows() {
-   // Set all the subwindows' parent windows to NULL
+   // Set all the subwindows' parent windows to nullptr
    //  (so that they don't try to do something with
    //  this window anymore).
    cxWindowPtrContainer::iterator iter;
    while (anySubwinHasThisParent()) {
       for (iter = mSubWindows.begin(); iter != mSubWindows.end(); ++iter) {
-         if ((*iter)->mParentWindow != NULL) {
+         if ((*iter)->mParentWindow != nullptr) {
             if ((*iter)->mParentWindow == this) {
-               (*iter)->setParent(NULL);
-               //(*iter)->mParentWindow = NULL;
+               (*iter)->setParent(nullptr);
+               //(*iter)->mParentWindow = nullptr;
                break; // Exit the for loop; continue with the while loop
             }
          }
@@ -4029,7 +4005,7 @@ void cxWindow::removeSubWindow(const cxWindow *pSubWindow) {
              find(mSubWindows.begin(), mSubWindows.end(), pSubWindow);
    while (iter != mSubWindows.end()) {
       if ((*iter)->mParentWindow == this) {
-         (*iter)->mParentWindow = NULL;
+         (*iter)->mParentWindow = nullptr;
       }
       mSubWindows.erase(iter);
       iter = find(mSubWindows.begin(), mSubWindows.end(), pSubWindow);
@@ -4053,7 +4029,7 @@ void cxWindow::setElementColor(short& pColorPair, attr_t& pElementAttr, e_cxColo
 void cxWindow::enableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -4082,7 +4058,7 @@ void cxWindow::enableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    }
 
    // Enable the attributes, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       // If attrSet has at least 1 attribute, enable them; otherwise, enable
       //  the cxBase attributes.
       if (attrSet->size() > 0) {
@@ -4103,7 +4079,7 @@ void cxWindow::enableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
 void cxWindow::disableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -4132,7 +4108,7 @@ void cxWindow::disableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    }
 
    // Disable the attributes, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       // If attrSet has at least 1 attribute, disable them; otherwise, disable
       //  the cxBase attributes.
       if (attrSet->size() > 0) {
@@ -4190,7 +4166,7 @@ void cxWindow::writeWithHighlighting(WINDOW* pWindow, const string& pText,
 } // writeWithHighlighting
 
 void cxWindow::copyCxWinStuff(const cxWindow* pThatWindow, bool pRecreateWin) {
-   if ((pThatWindow != NULL) && (pThatWindow != this)) {
+   if ((pThatWindow != nullptr) && (pThatWindow != this)) {
       if (pRecreateWin) {
          // This method is needed because we have dynamic memory
          //  (mWindow and mPanel)
@@ -4200,8 +4176,8 @@ void cxWindow::copyCxWinStuff(const cxWindow* pThatWindow, bool pRecreateWin) {
          int winLeft = pThatWindow->left();
          freeWindow();
          mWindow = newwin(winHeight, winWidth, winTop, winLeft);
-         // If mWindow is NULL, that means newwin() had an error..
-         if (mWindow == NULL) {
+         // If mWindow is nullptr, that means newwin() had an error..
+         if (mWindow == nullptr) {
             throw(cxWidgetsException("Couldn't create a new ncurses window (copying a cxWindow)."));
          }
          reCreatePanel();
@@ -4329,7 +4305,7 @@ void cxWindow::getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
          pCol = 0;
          break;
       case eHP_RIGHT:
-         if (pParentWindow != NULL) {
+         if (pParentWindow != nullptr) {
             pCol = pParentWindow->right() - width + 1;
             pCol = pParentWindow->right() - width + 1;
          }
@@ -4339,7 +4315,7 @@ void cxWindow::getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
          break;
       case eHP_CENTER: // This is the default
       default:
-         if (pParentWindow != NULL) {
+         if (pParentWindow != nullptr) {
             pCol=((pParentWindow->right() - width) / 2);
          }
          else {
@@ -4348,7 +4324,7 @@ void cxWindow::getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
          break;
    }
 
-   if (pParentWindow != NULL) {
+   if (pParentWindow != nullptr) {
       pRow=(pParentWindow->centerRow() - 1);
    }
    else {
@@ -4364,29 +4340,29 @@ bool cxWindow::handleFunctionForLastKey(bool *pFunctionExists,
    // This function returns whether or not the input loop should continue.
    bool continueOn = true;
 
-   // If pFunctionExists or pRunOnLeaveFunction are not NULL, then default
+   // If pFunctionExists or pRunOnLeaveFunction are not nullptr, then default
    //  them.
-   if (pFunctionExists != NULL) {
+   if (pFunctionExists != nullptr) {
       *pFunctionExists = false;
    }
-   if (pRunOnLeaveFunction != NULL) {
+   if (pRunOnLeaveFunction != nullptr) {
       *pRunOnLeaveFunction = true;
    }
 
    int lastKey = cxWindow::getLastKey();
    if (mKeyFunctions.find(lastKey) != mKeyFunctions.end()) {
       cxFunction *iFunc = mKeyFunctions[lastKey];
-      // The cxFunction pointers in mkeyFunctions shouldn't be NULL, but check
+      // The cxFunction pointers in mkeyFunctions shouldn't be nullptr, but check
       //  just in case.
-      if (iFunc != NULL) {
+      if (iFunc != nullptr) {
          if (iFunc->functionIsSet()) {
             iFunc->runFunction();
             continueOn = !(iFunc->getExitAfterRun());
 
-            if (pFunctionExists != NULL) {
+            if (pFunctionExists != nullptr) {
                *pFunctionExists = true;
             }
-            if (pRunOnLeaveFunction != NULL) {
+            if (pRunOnLeaveFunction != nullptr) {
                *pRunOnLeaveFunction = iFunc->getRunOnLeaveFunction();
             }
          }
@@ -4401,31 +4377,31 @@ bool cxWindow::handleFunctionForLastMouseState(bool *pFunctionExists,
    // This function returns whether or not the input loop should continue.
    bool continueOn = true;
 
-   // If pFunctionExists or pRunOnLeaveFunction are not NULL, then default
+   // If pFunctionExists or pRunOnLeaveFunction are not nullptr, then default
    //  them.
-   if (pFunctionExists != NULL) {
+   if (pFunctionExists != nullptr) {
       *pFunctionExists = false;
    }
-   if (pRunOnLeaveFunction != NULL) {
+   if (pRunOnLeaveFunction != nullptr) {
       *pRunOnLeaveFunction = true;
    }
 
    if (functionExistsForLastMouseState()) {
       cxFunction *iFunc = mMouseFunctions[mMouse.bstate];
-      // The cxFunction pointers in mkeyFunctions shouldn't be NULL, but check
+      // The cxFunction pointers in mkeyFunctions shouldn't be nullptr, but check
       //  just in case.
-      if (iFunc != NULL) {
+      if (iFunc != nullptr) {
          if (iFunc->functionIsSet()) {
             iFunc->runFunction();
             continueOn = !(iFunc->getExitAfterRun());
 
-            if (pFunctionExists != NULL) {
+            if (pFunctionExists != nullptr) {
                *pFunctionExists = true;
             }
-            // If pRunOnLeaveFunction is not NULL, then:
+            // If pRunOnLeaveFunction is not nullptr, then:
             //  If the window should exit after the function runs, then set
             //  pRunOnLeaveFunction to what's set in the cxFunction.
-            if (pRunOnLeaveFunction != NULL) {
+            if (pRunOnLeaveFunction != nullptr) {
                if (iFunc->getExitAfterRun()) {
                   *pRunOnLeaveFunction = iFunc->getRunOnLeaveFunction();
                }
@@ -4452,15 +4428,15 @@ inline int cxWindow::maxSubwindowHeight() const {
 } // maxSubwindowHeight
 
 void cxWindow::reCreatePanel() {
-   if (mPanel != NULL) {
+   if (mPanel != nullptr) {
       del_panel(mPanel);
-      mPanel = NULL;
+      mPanel = nullptr;
    }
-   if (mWindow == NULL) {
-      throw cxWidgetsException("cxWindow::reCreatePanel mWindow should not be NULL.");
+   if (mWindow == nullptr) {
+      throw cxWidgetsException("cxWindow::reCreatePanel mWindow should not be nullptr.");
    }
    mPanel = new_panel(mWindow);
-   if (mPanel == NULL) {
+   if (mPanel == nullptr) {
       throw cxWidgetsException("cxWindow::reCreatePanel could not run new_panel().");
    }
    set_panel_userptr(mPanel, this);
@@ -4468,13 +4444,13 @@ void cxWindow::reCreatePanel() {
 
 // Frees the memory used by mWindow
 void cxWindow::freeWindow() {
-   if (mPanel != NULL) {
+   if (mPanel != nullptr) {
       del_panel(mPanel);
-      mPanel = NULL;
+      mPanel = nullptr;
    }
-   if (mWindow != NULL) {
+   if (mWindow != nullptr) {
       delwin(mWindow);
-      mWindow = NULL;
+      mWindow = nullptr;
    }
 } // freeWindow
 
@@ -4509,7 +4485,7 @@ inline bool cxWindow::subWindowExists(cxWindow *pWindow) const {
 } // subWindowExists
 
 void cxWindow::addToParentWindow(cxWindow *pParentWindow) {
-   if (pParentWindow != NULL) {
+   if (pParentWindow != nullptr) {
       // Add this window to the parent window.
       pParentWindow->addSubwindow(this);
       // It would be nice if there was a way to detect whether
@@ -4571,14 +4547,14 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
       // Enable the text attributes and color
       enableAttrs(mWindow, pItem);
       if (useColors) {
-         wcolor_set(mWindow, pTextColorPair, NULL);
+         wcolor_set(mWindow, pTextColorPair, nullptr);
       }
       // Write the string to the window
       writeWithHighlighting(mWindow, iter->second, pVPos, iter->first, endX);
       // Disable the text attributes and color
       disableAttrs(mWindow, pItem);
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
       // Get the line starting & ending positions - The
       //  line should start after the current string and
@@ -4598,7 +4574,7 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
       // Draw the line between this and the next string
       enableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, mBorderColorPair, NULL);
+         wcolor_set(mWindow, mBorderColorPair, nullptr);
       }
       lineLength = lineEnd - lineStart;
       switch (mBorderStyle) {
@@ -4653,7 +4629,7 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
 
       disableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
    }
    // End case: Write the horizontal border line from the last string to the
@@ -4666,7 +4642,7 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
       // Enable the attributes & color
       enableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, mBorderColorPair, NULL);
+         wcolor_set(mWindow, mBorderColorPair, nullptr);
       }
       int lineLength = endX - lineStart;
       switch (mBorderStyle) {
@@ -4694,7 +4670,7 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
       // Disable the attributes & color
       disableAttrs(mWindow, eBORDER);
       if (useColors) {
-         wcolor_set(mWindow, 0, NULL);
+         wcolor_set(mWindow, 0, nullptr);
       }
    }
 } // writeBorderStrings
@@ -4704,7 +4680,7 @@ inline bool cxWindow::anySubwinHasThisParent() {
 
    cxWindowPtrContainer::iterator iter = mSubWindows.begin();
    for (; iter != mSubWindows.end(); ++iter) {
-      if (NULL != (*iter)) {
+      if (nullptr != (*iter)) {
          if ((*iter)->mParentWindow == this) {
             retval = true;
             break;
@@ -4716,8 +4692,8 @@ inline bool cxWindow::anySubwinHasThisParent() {
 } // anySubwindowHasThisParent
 
 void cxWindow::draw() {
-   // Only do this if mWindow and mPanel are both non-NULL.
-   if ((mWindow != NULL) && (mPanel != NULL)) {
+   // Only do this if mWindow and mPanel are both non-nullptr.
+   if ((mWindow != nullptr) && (mPanel != nullptr)) {
       // If the window has a border, draw the border characters
       if (hasBorder()) {
          drawBorder();
@@ -4792,16 +4768,16 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
       }
       // Clear mKeyFunctions and copy the ones from pWindow
       mKeyFunctions.clear();
-      cxFunction *iFunc = NULL;
+      cxFunction *iFunc = nullptr;
       map<int, cxFunction*>::const_iterator iter2 = pWindow.mKeyFunctions.begin();
       for (; iter2 != pWindow.mKeyFunctions.end(); ++iter2) {
          iFunc = iter2->second;
-         if (iFunc != NULL) {
+         if (iFunc != nullptr) {
             // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
             if (iFunc->cxTypeStr() == "cxFunction0") {
                try {
                   cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(iFunc);
-                  if (iFunc0 != NULL) {
+                  if (iFunc0 != nullptr) {
                      setKeyFunction(iter2->first, iFunc0->getFunction(),
                                     iFunc0->getUseReturnVal(),
                                     iFunc0->getExitAfterRun(),
@@ -4814,7 +4790,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             else if (iFunc->cxTypeStr() == "cxFunction2") {
                try {
                   cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(iFunc);
-                  if (iFunc2 != NULL) {
+                  if (iFunc2 != nullptr) {
                      // If either parameter points to the other window, have it
                      //  point to this one instead.
                      void *param1 = iFunc2->getParam1();
@@ -4837,7 +4813,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             else if (iFunc->cxTypeStr() == "cxFunction4") {
                try {
                   cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(iFunc);
-                  if (iFunc4 != NULL) {
+                  if (iFunc4 != nullptr) {
                      // If any of the parameters point to the other window, have
                      //  them point to this one instead.
                      void *param1 = iFunc4->getParam1();
@@ -4874,16 +4850,16 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
          delete iter->second;
       }
       mMouseFunctions.clear();
-      iFunc = NULL;
+      iFunc = nullptr;
       iter2 = pWindow.mMouseFunctions.begin();
       for (; iter2 != pWindow.mMouseFunctions.end(); ++iter2) {
          iFunc = iter2->second;
-         if (iFunc != NULL) {
+         if (iFunc != nullptr) {
             // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
             if (iFunc->cxTypeStr() == "cxFunction0") {
                try {
                   cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(iFunc);
-                  if (iFunc0 != NULL) {
+                  if (iFunc0 != nullptr) {
                      setMouseFunction(iter2->first, iFunc0->getFunction(),
                                     iFunc0->getUseReturnVal(),
                                     iFunc0->getExitAfterRun(),
@@ -4896,7 +4872,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             else if (iFunc->cxTypeStr() == "cxFunction2") {
                try {
                   cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(iFunc);
-                  if (iFunc2 != NULL) {
+                  if (iFunc2 != nullptr) {
                      // If either parameter points to the other window, have it
                      //  point to this one instead.
                      void *param1 = iFunc2->getParam1();
@@ -4919,7 +4895,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             else if (iFunc->cxTypeStr() == "cxFunction4") {
                try {
                   cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(iFunc);
-                  if (iFunc4 != NULL) {
+                  if (iFunc4 != nullptr) {
                      // If any of the parameters point to the other window, have
                      //  them point to this one instead.
                      void *param1 = iFunc4->getParam1();
@@ -4955,22 +4931,22 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
 
 void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
    // Free the memory currently used by the functions
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       delete mOnFocusFunction;
-      mOnFocusFunction = NULL;
+      mOnFocusFunction = nullptr;
    }
-   if (mOnLeaveFunction != NULL) {
+   if (mOnLeaveFunction != nullptr) {
       delete mOnLeaveFunction;
-      mOnLeaveFunction = NULL;
+      mOnLeaveFunction = nullptr;
    }
 
    // Copy the other window's onFocus function
-   if (pWindow.mOnFocusFunction != NULL) {
+   if (pWindow.mOnFocusFunction != nullptr) {
       // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
       if (pWindow.mOnFocusFunction->cxTypeStr() == "cxFunction0") {
          try {
             cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pWindow.mOnFocusFunction);
-            if (iFunc0 != NULL) {
+            if (iFunc0 != nullptr) {
                setOnFocusFunction(iFunc0->getFunction(),
                                   iFunc0->getUseReturnVal(),
                                   iFunc0->getExitAfterRun());
@@ -4982,7 +4958,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       else if (pWindow.mOnFocusFunction->cxTypeStr() == "cxFunction2") {
          try {
             cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pWindow.mOnFocusFunction);
-            if (iFunc2 != NULL) {
+            if (iFunc2 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.
                void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
@@ -5002,7 +4978,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       else if (pWindow.mOnFocusFunction->cxTypeStr() == "cxFunction4") {
          try {
             cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pWindow.mOnFocusFunction);
-            if (iFunc4 != NULL) {
+            if (iFunc4 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.
                void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
@@ -5024,12 +5000,12 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
    }
 
    // Do the same for the onLeave function
-   if (pWindow.mOnLeaveFunction != NULL) {
+   if (pWindow.mOnLeaveFunction != nullptr) {
       // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
       if (pWindow.mOnLeaveFunction->cxTypeStr() == "cxFunction0") {
          try {
             cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pWindow.mOnLeaveFunction);
-            if (iFunc0 != NULL) {
+            if (iFunc0 != nullptr) {
                setOnLeaveFunction(iFunc0->getFunction());
             }
          }
@@ -5039,7 +5015,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       else if (pWindow.mOnLeaveFunction->cxTypeStr() == "cxFunction2") {
          try {
             cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pWindow.mOnLeaveFunction);
-            if (iFunc2 != NULL) {
+            if (iFunc2 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.
                void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
@@ -5057,7 +5033,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       else if (pWindow.mOnLeaveFunction->cxTypeStr() == "cxFunction4") {
          try {
             cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pWindow.mOnLeaveFunction);
-            if (iFunc4 != NULL) {
+            if (iFunc4 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.
                void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
@@ -5080,7 +5056,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
 bool cxWindow::parentIsCxPanel() const {
    bool isPanel = false;
 
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       isPanel = (mParentWindow->cxTypeStr() == "cxPanel");
    }
 
@@ -5090,7 +5066,7 @@ bool cxWindow::parentIsCxPanel() const {
 bool cxWindow::parentIsCxForm() const {
    bool isForm = false;
 
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       isForm = (mParentWindow->cxTypeStr() == "cxForm");
    }
 
@@ -5100,7 +5076,7 @@ bool cxWindow::parentIsCxForm() const {
 bool cxWindow::parentIsCxNotebook() const {
    bool isNotebook = false;
 
-   if (mParentWindow != NULL) {
+   if (mParentWindow != nullptr) {
       isNotebook = (mParentWindow->cxTypeStr() == "cxNotebook");
    }
 
@@ -5126,7 +5102,7 @@ cxWindowPtrContainer::const_reverse_iterator cxWindow::subWindows_rend() const {
 bool cxWindow::onFocusFunctionIsSet() const {
    bool funcIsSet = false;
 
-   if (mOnFocusFunction != NULL) {
+   if (mOnFocusFunction != nullptr) {
       funcIsSet = mOnFocusFunction->functionIsSet();
    }
 
@@ -5136,7 +5112,7 @@ bool cxWindow::onFocusFunctionIsSet() const {
 bool cxWindow::onLeaveFunctionIsSet() const {
    bool funcIsSet = false;
 
-   if (mOnLeaveFunction != NULL) {
+   if (mOnLeaveFunction != nullptr) {
       funcIsSet = mOnLeaveFunction->functionIsSet();
    }
 

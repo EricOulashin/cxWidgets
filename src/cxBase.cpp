@@ -24,7 +24,17 @@
 #include "cxMenu.h"
 #include "cxForm.h"
 #include "cxStringUtils.h"
+#include <vector>
+#include <map>
+#include <iostream>
+using std::string;
 using std::set;
+using std::list;
+using std::vector;
+using std::map;
+using std::ofstream;
+using std::cerr;
+using std::endl;
 using cxStringUtils::toString;
 using cxStringUtils::isPrintable;
 
@@ -68,9 +78,9 @@ namespace cxBase {
 
 void cxBase::init(bool pEnableMouse) {
    WINDOW* tmpWindow=initscr();         // initialize the curses library
-   if (tmpWindow == NULL) {
-      std::cerr << "Warning: initscr() returned a NULL pointer" << std::endl;
-      throw(cxWidgetsException("Warning: initscr() returned a NULL pointer."));
+   if (tmpWindow == nullptr) {
+      cerr << "Warning: initscr() returned a nullptr pointer" << endl;
+      throw(cxWidgetsException("Warning: initscr() returned a nullptr pointer."));
    }
    //trace(TRACE_DISABLE);
    keypad(stdscr, TRUE);     // enable keyboard mapping
@@ -205,7 +215,7 @@ void cxBase::init(bool pEnableMouse) {
 #ifdef NCURSES_MOUSE_VERSION
    // Initialize the mouse if pEnableMouse is true
    if (pEnableMouse) {
-      mousemask(ALL_MOUSE_EVENTS, NULL);
+      mousemask(ALL_MOUSE_EVENTS, nullptr);
    }
 #endif
 
@@ -325,7 +335,7 @@ void cxBase::setDefaultBorderColor(e_cxColors pColor) {
 void cxBase::messageBox(int pRow, int pCol, int pHeight, int pWidth,
                         const string& pTitle, const string& pMessage,
                         const string& pStatus, eBorderStyle pBorderStyle) {
-   cxWindow aWindow(NULL, pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus, pBorderStyle);
+   cxWindow aWindow(nullptr, pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus, pBorderStyle);
    aWindow.showModal(true, true, false);
    aWindow.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
@@ -333,27 +343,27 @@ void cxBase::messageBox(int pRow, int pCol, int pHeight, int pWidth,
 void cxBase::messageBox(int pRow, int pCol, const string& pTitle,
                         const string& pMessage,
                         const string& pStatus) {
-   cxWindow aWindow(NULL, pRow, pCol, pTitle, pMessage, pStatus);
+   cxWindow aWindow(nullptr, pRow, pCol, pTitle, pMessage, pStatus);
    aWindow.showModal(true, true, false);
    aWindow.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
 void cxBase::messageBox(int pRow, int pCol, const string& pMessage) {
-   cxWindow aWindow(NULL, pRow, pCol, "", pMessage, "");
+   cxWindow aWindow(nullptr, pRow, pCol, "", pMessage, "");
    aWindow.showModal(true, true, false);
    aWindow.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
 void cxBase::messageBox(const string& pTitle, const string& pMessage,
                         const string& pStatus) {
-   cxMessageDialog msgDlg(NULL, pTitle, pMessage);
+   cxMessageDialog msgDlg(nullptr, pTitle, pMessage);
    msgDlg.setStatus(pStatus);
    msgDlg.showModal();
    msgDlg.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
 void cxBase::messageBox(const string& pMessage, const string& pStatus) {
-   cxMessageDialog msgDlg(NULL, "Info", pMessage);
+   cxMessageDialog msgDlg(nullptr, "Info", pMessage);
    msgDlg.setStatus(pStatus);
    msgDlg.showModal();
    msgDlg.hide(); // Hide the window so it doesn't show anymore
@@ -362,7 +372,7 @@ void cxBase::messageBox(const string& pMessage, const string& pStatus) {
 void cxBase::messageBox(const string& pMessage, e_cxColors pMessageColor,
                         attr_t pMessageAttr, e_cxColors pTitleColor,
                         e_cxColors pStatusColor, e_cxColors pBorderColor) {
-   cxMessageDialog msgDlg(NULL, "Info", pMessage);
+   cxMessageDialog msgDlg(nullptr, "Info", pMessage);
    msgDlg.setMessageColor(pMessageColor);
    msgDlg.setAttr(eMESSAGE, pMessageAttr);
    msgDlg.setTitleColor(pTitleColor);
@@ -372,13 +382,13 @@ void cxBase::messageBox(const string& pMessage, e_cxColors pMessageColor,
 } // messageBox
 
 void cxBase::messageDialog(const string& pMessage) {
-   cxMessageDialog msgDlg(NULL, "Info", pMessage);
+   cxMessageDialog msgDlg(nullptr, "Info", pMessage);
    msgDlg.showModal();
    msgDlg.hide(); // Hide the window so it doesn't show anymore
 } // messageDialog
 
 void cxBase::messageDialog(const list<string>& pMessages) {
-   cxMessageDialog msgDlg(NULL, 0, 0, height(), width(), "Info", "");
+   cxMessageDialog msgDlg(nullptr, 0, 0, height(), width(), "Info", "");
    msgDlg.addMessageLinesBelow(pMessages);
    msgDlg.center(false);
    msgDlg.showModal();
@@ -386,14 +396,14 @@ void cxBase::messageDialog(const list<string>& pMessages) {
 } // messageDialog
 
 void cxBase::splash(const string& pTitle, const string& pMessage, int pSleep) {
-   cxWindow aWindow(NULL, pTitle, pMessage, "");
+   cxWindow aWindow(nullptr, pTitle, pMessage, "");
    aWindow.show();
    sleep(pSleep);
    aWindow.hide();
 } // splash
 
 void cxBase::splash(const string& pMessage, int pSleep) {
-   cxWindow aWindow(NULL, pMessage);
+   cxWindow aWindow(nullptr, pMessage);
    aWindow.show();
    sleep(pSleep);
    aWindow.hide();
@@ -449,10 +459,10 @@ string cxBase::getTermType() {
    //   return(string(getenv("TERM"));
    // You will get messages like this:
    //   terminate called after throwing an instance of 'std::logic_error'
-   //   what():  basic_string::_S_construct NULL not valid
+   //   what():  basic_string::_S_construct nullptr not valid
    string retval;
    char *term =getenv("TERM");
-   if (term != NULL) {
+   if (term != nullptr) {
       retval = term;
    }
    return(retval);
@@ -504,7 +514,7 @@ unsigned cxBase::visualStrLen(const string& pStr) {
 } // visualStrLen
 
 string cxBase::bringToTop(void *theWindow, void* unused) {
-   if (theWindow != NULL) {
+   if (theWindow != nullptr) {
       cxWindow* pWindow = (cxWindow*)theWindow;
       pWindow->show(true, false);
    }
@@ -515,7 +525,7 @@ string cxBase::bringToTop(void *theWindow, void* unused) {
 string cxBase::cxFormShowModal(void* theForm, void* unused) {
    string retval = toString(cxID_QUIT);
 
-   if (NULL != theForm) {
+   if (nullptr != theForm) {
       cxForm *iForm = (cxForm*)theForm;
       retval = toString(iForm->showModal());
    }
@@ -526,7 +536,7 @@ string cxBase::cxFormShowModal(void* theForm, void* unused) {
 string cxBase::cxMenuShowModal(void* theMenu, void* unused) {
    string retval = toString(cxID_QUIT);
 
-   if (NULL != theMenu) {
+   if (nullptr != theMenu) {
       cxMenu *iMenu = (cxMenu*)theMenu;
       retval = toString(iMenu->showModal());
    }
@@ -600,16 +610,16 @@ void cxBase::showAllWindows(bool pBringToTop) {
    //  segfault.
    if (cxInitialized()) {
       // Get a pointer to the bottom panel in the stack
-      PANEL *panel = panel_above(NULL);
+      PANEL *panel = panel_above(nullptr);
       // For each panel, get the cxWindow object it points
       //  to, and show it.
-      cxWindow *window = NULL;
-      while (panel != NULL) {
+      cxWindow *window = nullptr;
+      while (panel != nullptr) {
          window = (cxWindow*)panel_userptr(panel);
          // The pointer returned by panel_userptr for the
-         //  panels shouldn't be NULL, but check just in
+         //  panels shouldn't be nullptr, but check just in
          //  case.
-         if (window != NULL) {
+         if (window != nullptr) {
             // Show the window.  Don't show its subwindows
             //  (because they'll be shown too, eventually).
             window->show(pBringToTop, false);
@@ -621,12 +631,12 @@ void cxBase::showAllWindows(bool pBringToTop) {
 } // showAllWindows
 
 cxWindow* cxBase::getTopWindow() {
-   cxWindow *topWindow = NULL;
+   cxWindow *topWindow = nullptr;
 
-   // With a NULL parameter, panel_below() returns a pointer to the topmost
+   // With a nullptr parameter, panel_below() returns a pointer to the topmost
    //  panel in the stack.
-   PANEL *panel = panel_below(NULL);
-   if (NULL != panel) {
+   PANEL *panel = panel_below(nullptr);
+   if (nullptr != panel) {
       topWindow = const_cast<cxWindow*>(static_cast<const cxWindow*>(panel_userptr(panel)));
    }
 
@@ -634,12 +644,12 @@ cxWindow* cxBase::getTopWindow() {
 } // getTopWindow
 
 cxWindow* cxBase::getBottomWindow() {
-   cxWindow *bottomWindow = NULL;
+   cxWindow *bottomWindow = nullptr;
 
-   // With a NULL parameter, panel_above() returns a pointer to the bottom
+   // With a nullptr parameter, panel_above() returns a pointer to the bottom
    //  panel in the stack.
-   PANEL *panel = panel_above(NULL);
-   if (NULL != panel) {
+   PANEL *panel = panel_above(nullptr);
+   if (nullptr != panel) {
       bottomWindow = const_cast<cxWindow*>(static_cast<const cxWindow*>(panel_userptr(panel)));
    }
 
@@ -1054,7 +1064,7 @@ bool cxBase::promptYesNo(const string& pMessage, const string& pTitle,
       title = "Question";
    }
    if (cxInitialized()) {
-      cxMessageDialog iDlg(NULL, 0, 0, 8, 25, title, pMessage,
+      cxMessageDialog iDlg(nullptr, 0, 0, 8, 25, title, pMessage,
             (eMessageDialogStyles)pButtons);
       iDlg.center(false);
       retval = (iDlg.showModal() == cxID_OK);
@@ -1070,7 +1080,7 @@ bool cxBase::cxInitialized() {
 void cxBase::addAttr(e_WidgetItems pItem, attr_t pAttr) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -1104,7 +1114,7 @@ void cxBase::addAttr(e_WidgetItems pItem, attr_t pAttr) {
    }
 
    // Insert the attribute, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->insert(pAttr);
    }
 } // addAttr
@@ -1112,7 +1122,7 @@ void cxBase::addAttr(e_WidgetItems pItem, attr_t pAttr) {
 void cxBase::setAttr(e_WidgetItems pItem, attr_t pAttr) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -1146,7 +1156,7 @@ void cxBase::setAttr(e_WidgetItems pItem, attr_t pAttr) {
    }
 
    // Set the attribute, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->clear();
       attrSet->insert(pAttr);
    }
@@ -1155,7 +1165,7 @@ void cxBase::setAttr(e_WidgetItems pItem, attr_t pAttr) {
 void cxBase::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -1189,7 +1199,7 @@ void cxBase::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
    }
 
    // Remove the attribute, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->erase(pAttr);
    }
 } // removeAttr
@@ -1197,7 +1207,7 @@ void cxBase::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
 void cxBase::removeAttrs(e_WidgetItems pItem) {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
-   set<attr_t>* attrSet = NULL;
+   set<attr_t>* attrSet = nullptr;
 
    switch(pItem) {
       case eMESSAGE:        // Message
@@ -1231,7 +1241,7 @@ void cxBase::removeAttrs(e_WidgetItems pItem) {
    }
 
    // Remove all of the attributes, if attrSet was set.
-   if (NULL != attrSet) {
+   if (nullptr != attrSet) {
       attrSet->clear();
    }
 } // removeAttrs
@@ -1281,10 +1291,10 @@ bool cxBase::hasAttr(e_WidgetItems pItem, attr_t pAttr) {
 } // hasAttr
 
 void cxBase::enableAttrs(WINDOW *pWindow, e_WidgetItems pItem) {
-   if (NULL != pWindow) {
+   if (nullptr != pWindow) {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
 
       switch(pItem) {
          case eMESSAGE:        // Message
@@ -1318,7 +1328,7 @@ void cxBase::enableAttrs(WINDOW *pWindow, e_WidgetItems pItem) {
       }
 
       // Enable the attributes, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          set<attr_t>::const_iterator iter = attrSet->begin();
          for (; iter != attrSet->end(); ++iter) {
             wattron(pWindow, *iter);
@@ -1328,10 +1338,10 @@ void cxBase::enableAttrs(WINDOW *pWindow, e_WidgetItems pItem) {
 } // enableAttrs
 
 void cxBase::disableAttrs(WINDOW *pWindow, e_WidgetItems pItem) {
-   if (NULL != pWindow) {
+   if (nullptr != pWindow) {
       // attrSet is a pointer that will be set to point to the correct attribute
       //  set, depending on the value of pItem.
-      set<attr_t>* attrSet = NULL;
+      set<attr_t>* attrSet = nullptr;
 
       switch(pItem) {
          case eMESSAGE:        // Message
@@ -1365,7 +1375,7 @@ void cxBase::disableAttrs(WINDOW *pWindow, e_WidgetItems pItem) {
       }
 
       // Disable the attributes, if attrSet was set.
-      if (NULL != attrSet) {
+      if (nullptr != attrSet) {
          set<attr_t>::const_iterator iter = attrSet->begin();
          for (; iter != attrSet->end(); ++iter) {
             wattroff(pWindow, *iter);
@@ -1506,15 +1516,15 @@ string cxBase::dump(bool pFancy, const string& pFilename) {
 
    if (theFile.good()) {
       // Allocate an array to store a line from the screen, with the longest
-      //  length we'd need (+1 to account for the NULL termination character).
+      //  length we'd need (+1 to account for the nullptr termination character).
       chtype *line = new chtype[width() + 1];
-      if (NULL != line) {
+      if (nullptr != line) {
          // Get a pointer to the bottom panel in the stack
-         cxWindow* cxWindowPtr = NULL;
+         cxWindow* cxWindowPtr = nullptr;
          // For each panel, get the cxWindow object it points
          //  to, and show it.
-         PANEL *panel = panel_above(NULL);
-         while (panel != NULL) {
+         PANEL *panel = panel_above(nullptr);
+         while (panel != nullptr) {
             cxWindowPtr = (cxWindow*)panel_userptr(panel);
             // If the window isn't hidden, grab each character from it and update
             //  the corresponding character in theScreen (which represents the
@@ -1525,7 +1535,7 @@ string cxBase::dump(bool pFancy, const string& pFilename) {
                   hasBorder = cxWindowPtr->hasBorder();
 
                   const int lineLength = cxWindowPtr->width();
-                  if (NULL != line) {
+                  if (nullptr != line) {
                      int bottomRow = cxWindowPtr->height();
                      int numChars = 0; // # of chars read for each line
 
@@ -1624,7 +1634,7 @@ string cxBase::dump(bool pFancy, const string& pFilename) {
          }
          // Free the memory used  by line
          delete [] line;
-         line = NULL;
+         line = nullptr;
       }
 
       // dump theScreen to the file
@@ -1704,7 +1714,7 @@ void cxBase::removeNavKey(int pKey) {
 string cxBase::getString(int pRow, int pCol, int pNumber, WINDOW *pWin) {
    string retval;
 
-   if (pWin == NULL) {
+   if (pWin == nullptr) {
       pWin = curscr;
    }
 
@@ -1713,10 +1723,10 @@ string cxBase::getString(int pRow, int pCol, int pNumber, WINDOW *pWin) {
 
       // Ensure they want *some* characters
       if (pNumber > 0) {
-         chtype * line = new chtype[pNumber + 1]; // NULL terminated
+         chtype * line = new chtype[pNumber + 1]; // nullptr terminated
          int numChars = mvwinchnstr(pWin, pRow, pCol, line, pNumber);
          if (numChars == pNumber) {
-            for (int i=0; i < pNumber; ++i) { // eliminate the NULL at the end
+            for (int i=0; i < pNumber; ++i) { // eliminate the nullptr at the end
                retval.push_back((line[i] & A_CHARTEXT));
             }
          }
@@ -1732,11 +1742,11 @@ bool cxBase::findString(const string& pSearch, int& pRow, int& pCol, WINDOW *pWi
    pRow=-1;
    pCol=-1;
 
-   if (pWin == NULL) {
+   if (pWin == nullptr) {
       pWin = curscr;
    }
 
-   chtype * line = new chtype[width() + 1]; // NULL terminated
+   chtype * line = new chtype[width() + 1]; // nullptr terminated
    int numChars=0;
    size_t pos = 0;
    string lineString;
@@ -1750,7 +1760,7 @@ bool cxBase::findString(const string& pSearch, int& pRow, int& pCol, WINDOW *pWi
       numChars = mvwinchnstr(pWin, row, 0, line, width());
 
       // move them into a std::string
-      for (int i=0; i < width(); ++i) { // eliminate the NULL at the end
+      for (int i=0; i < width(); ++i) { // eliminate the nullptr at the end
          lineString.push_back((line[i] & A_CHARTEXT)); // only get the text value
       }
 

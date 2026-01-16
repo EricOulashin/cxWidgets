@@ -27,12 +27,13 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <memory> // For auto_ptr
+#include <memory>
 #include <cassert>
 using namespace cxStringUtils;
 using namespace cxBase;
 using namespace std;
-using std::auto_ptr;
+using std::shared_ptr;
+using std::make_shared;
 
 // These IDs are used for the main menu.
 // Note: When adding IDs to this list, also add it to getMenuItemIDStr() to
@@ -625,9 +626,9 @@ string testInputValidator(void *theMultiLineInput, void *unused2, void *unused3,
 } // testInputValidator
 
 // Title & status windows (must be created after
-//  calling cxBase::init()
-cxWindow *gTitleLine = NULL;
-cxWindow *gStatusLine = NULL;
+// calling cxBase::init()
+shared_ptr<cxWindow> gTitleLine;
+shared_ptr<cxWindow> gStatusLine;
 
 // Returns a string representation of one of the menu item ID codes.  This is
 //  useful for debugging.
@@ -647,10 +648,10 @@ int main(int argc, char* argv[]) {
    ourcxObject.UseColors(true);
 
    // Create & display the title & status windows
-   gTitleLine = new cxWindow(NULL, 0, 0, 1, cxBase::width(), "",
-                             "cxWidgets test application", "", eBS_NOBORDER);
-   gStatusLine = new cxWindow(NULL, cxBase::height()-1, 0, 1, cxBase::width(),
-                              "", "Status", "", eBS_NOBORDER);
+   gTitleLine = make_shared<cxWindow>(nullptr, 0, 0, 1, cxBase::width(), "",
+                                      "cxWidgets test application", "", eBS_NOBORDER);
+   gStatusLine = make_shared<cxWindow>(nullptr, cxBase::height()-1, 0, 1, cxBase::width(),
+                                       "", "Status", "", eBS_NOBORDER);
    gStatusLine->setHorizMessageAlignment(eHP_CENTER);
    gTitleLine->show();
    gStatusLine->show();
@@ -658,26 +659,26 @@ int main(int argc, char* argv[]) {
    // Display the main menu
    doMenu(); // MAIN MENU
    // TODO: Setting a key function to a cxForm after inputs have been appended
-   //  no longer fires the function, as in this example:
+   // no longer fires the function, as in this example:
    /*
-   cxForm iForm(NULL, 1, 0, 5, 70, "Form");
+   cxForm iForm(nullptr, 1, 0, 5, 70, "Form");
    cxMultiLineInput *iInput = iForm.append(1, 1, 1, 40, "Input:");
    iInput->setName("someInput");
    //iInput->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
-   iForm.setKeyFunction(KEY_F(5), someWeirdFunc, &iForm, NULL, false, false, true);
+   iForm.setKeyFunction(KEY_F(5), someWeirdFunc, &iForm, nullptr, false, false, true);
    cxBase::messageBox("testApp: First input's first input's exit keys:" + iForm.getInput(0)->firstInputExitKeys() + ":");
    iForm.showModal();
    */
 
    /*
-   cxPanel mainPanel(NULL, 1, 0, 20, 80, "Main panel", "", "Main status",
+   cxPanel mainPanel(nullptr, 1, 0, 20, 80, "Main panel", "", "Main status",
                      eBS_SINGLE_LINE);
-   //cxPanel *subPanel = new cxPanel(NULL, 0, 0, 20, 80, "Subpanel", "",
+   //cxPanel *subPanel = new cxPanel(nullptr, 0, 0, 20, 80, "Subpanel", "",
    //                           "Subpanel status", eBS_SINGLE_LINE);
    //mainPanel.append(subPanel, 0, 0, false);
-   cxMultiForm *multiForm = new cxMultiForm(NULL, 0, 0, 20, 80, "MultiForm");
+   cxMultiForm *multiForm = new cxMultiForm(nullptr, 0, 0, 20, 80, "MultiForm");
    mainPanel.append(multiForm, 0, 0, false);
-   cxForm *searchForm = new cxForm(NULL, 0, 0, 5, 18, "Search form",
+   cxForm *searchForm = new cxForm(nullptr, 0, 0, 5, 18, "Search form",
                                    eBS_NOBORDER);
    searchForm->append(0, 0, 1, 18, "Input 1:");
    searchForm->append(1, 0, 1, 18, "Input 2:");
@@ -686,7 +687,7 @@ int main(int argc, char* argv[]) {
    searchForm->append(4, 0, 1, 18, "Input 5:");
    multiForm->appendForm(searchForm, 1, 1);
    //subPanel->append(searchForm, 1, 1, false);
-   cxForm *dataForm = new cxForm(NULL, 0, 0, 5, 18, "Data form",
+   cxForm *dataForm = new cxForm(nullptr, 0, 0, 5, 18, "Data form",
                                  eBS_NOBORDER);
    dataForm->append(0, 0, 1, 18, "Input 1:");
    dataForm->append(1, 0, 1, 18, "Input 2:");
@@ -701,7 +702,7 @@ int main(int argc, char* argv[]) {
    /*
    // Quick test to demonstrate the ability of a cxMultiLineInput
    //  to allow movement with the up & down arrow, etc.
-   cxMultiLineInput iInput(NULL, 1, 0, 5, 10, "", eBS_SINGLE_LINE);
+   cxMultiLineInput iInput(nullptr, 1, 0, 5, 10, "", eBS_SINGLE_LINE);
    iInput.setTitle("Input");
    iInput.setValue("This is a huge string.");
    iInput.addValueAttr(A_STANDOUT);
@@ -711,12 +712,12 @@ int main(int argc, char* argv[]) {
 
 
    //simpleForm1();
-   //cxComboBox iComboBox(NULL, 1, 0, 2, 25, "Input:", eBS_NOBORDER, eINPUT_EDITABLE, NULL, true);
+   //cxComboBox iComboBox(nullptr, 1, 0, 2, 25, "Input:", eBS_NOBORDER, eINPUT_EDITABLE, nullptr, true);
    //iComboBox.showModal();
 
 /*
    // Test removing a menu item by index w/ no submenu
-   cxMenu iMenu(NULL, 0, 0, 20, 40, "Test");
+   cxMenu iMenu(nullptr, 0, 0, 20, 40, "Test");
    iMenu.append("Item 1", 0);
    iMenu.append("Item 2", 1);
    iMenu.removeMenuItem(2);
@@ -724,7 +725,7 @@ int main(int argc, char* argv[]) {
 */
 /*
    // Test removing a menu item by title
-   cxMenu iMenu(NULL, 0, 0, 20, 40, "Test");
+   cxMenu iMenu(nullptr, 0, 0, 20, 40, "Test");
    iMenu.append("Item 1", 0);
    iMenu.append("Item 2", 1);
    iMenu.removeMenuItem("Item 1");
@@ -732,7 +733,7 @@ int main(int argc, char* argv[]) {
 */
 /*
    // Test cxInput with more complicated input masking.
-   cxInput iInput(NULL, 0, 0, 23, "Phone:");
+   cxInput iInput(nullptr, 0, 0, 23, "Phone:");
    iInput.setValidator("(ddd) ddd-dddd");
    //iInput.setValidator("ddddd");
    //iInput.toggleMasking(true);
@@ -741,14 +742,14 @@ int main(int argc, char* argv[]) {
 */
 /*
    // Test cxMultiLineInput with more complicated input masking.
-   cxMultiLineInput iInput(NULL, 0, 0, 1, 22);
+   cxMultiLineInput iInput(nullptr, 0, 0, 1, 22);
    iInput.setValidator("(ddd) ddd-dddd");
    //iInput.toggleMasking(true);
    iInput.showModal();
    messageBox(iInput.getValue());
 */
 /*
-   cxForm iForm(NULL, 1, 1, 4, 25, "Info");
+   cxForm iForm(nullptr, 1, 1, 4, 25, "Info");
    //iForm.append(1, "Name:");
    iForm.append(1, "Phone:", "(ddd) ddd-dddd");
    iForm.setValue("Phone:", "(503) 123-4567");
@@ -759,7 +760,7 @@ int main(int argc, char* argv[]) {
    // Test an input with complex formatting
    //  and setting its value before setting
    //  focus.
-   cxInput iInput(NULL, 0, 0, 23, "Phone:");
+   cxInput iInput(nullptr, 0, 0, 23, "Phone:");
    iInput.setValidator("(ddd) ddd-dddd");
    iInput.setValue("(503) 123-4567");
    iInput.showModal();
@@ -770,8 +771,6 @@ int main(int argc, char* argv[]) {
    messageBox(os.str());
 */
 
-   delete gTitleLine;
-   delete gStatusLine;
    cxBase::cleanup();
 
    return (0);
@@ -782,7 +781,7 @@ void doMenu() {
    // Set up the submenus
 
    // cxMenu tester stuff
-   cxMenu menuSubMenu(NULL, 1, 0, 0, 50, "Test cxMenu Stuff");
+   cxMenu menuSubMenu(nullptr, 1, 0, 0, 50, "Test cxMenu Stuff");
    menuSubMenu.setWrapping(true);
    menuSubMenu.append("Play with menus", menuCode, "", cxITEM_NORMAL, true);
    menuSubMenu.append("Menu item multiple hotkeys", menuItemWithMultipleHotkeyCode,
@@ -809,7 +808,7 @@ void doMenu() {
                       cxITEM_NORMAL, true);
 
    // cxInput and cxMultiLineInput tester stuff
-   cxMenu inputSubMenu(NULL, 1, 0, 0, 46, "cxInput/cxMultiLineInput");
+   cxMenu inputSubMenu(nullptr, 1, 0, 0, 46, "cxInput/cxMultiLineInput");
    inputSubMenu.setWrapping(true);
    inputSubMenu.append("Single-line input with border", inputCode, "", cxITEM_NORMAL,
                        true);
@@ -890,7 +889,7 @@ void doMenu() {
                        cxITEM_NORMAL, true);
 
    // cxComboBox tester stuff
-   cxMenu comboBoxSubMenu(NULL, 1, 0, 0, 31, "Test cxComboBox Stuff");
+   cxMenu comboBoxSubMenu(nullptr, 1, 0, 0, 31, "Test cxComboBox Stuff");
    comboBoxSubMenu.setWrapping(true);
    comboBoxSubMenu.append("Combo box", comboBoxCode, "", cxITEM_NORMAL, true);
    comboBoxSubMenu.append("Disable menu", comboBoxMenuDisableCode, "", cxITEM_NORMAL, true);
@@ -898,7 +897,7 @@ void doMenu() {
                           cxComboBoxNotEditableMenuEnabledCode, "", cxITEM_NORMAL, true);
 
    // cxForm tester stuff
-   cxMenu formSubMenu(NULL, 1, 0, 0, 50, "Test cxForm Stuff");
+   cxMenu formSubMenu(nullptr, 1, 0, 0, 50, "Test cxForm Stuff");
    formSubMenu.setWrapping(true);
    formSubMenu.append("&Form", formCode, "", cxITEM_NORMAL, true);
    formSubMenu.append("Form with Fn keys", formWithFKeysCode, "", cxITEM_NORMAL,
@@ -962,7 +961,7 @@ void doMenu() {
    formSubMenu.append("appendComboBoxPair()", cxFormAppendComboBoxPairCode, "", cxITEM_NORMAL, true);
 
    // Message box tester stuff
-   cxMenu msgSubMenu(NULL, 1, 0, 0, 25, "Test Message Boxes");
+   cxMenu msgSubMenu(nullptr, 1, 0, 0, 25, "Test Message Boxes");
    msgSubMenu.setWrapping(true);
    msgSubMenu.append("OK box",        msgOKCode, "", cxITEM_NORMAL, true);
    msgSubMenu.append("OK/Cancel box", msgOKCancelCode, "", cxITEM_NORMAL, true);
@@ -979,7 +978,7 @@ void doMenu() {
    msgSubMenu.append("Splash2",       splash2Code, "", cxITEM_NORMAL, true);
 
    // cxWindow tester stuff
-   cxMenu windowSubMenu(NULL, 1, 0, 3, 45, "Window tests");
+   cxMenu windowSubMenu(nullptr, 1, 0, 3, 45, "Window tests");
    windowSubMenu.setWrapping(true);
    windowSubMenu.append("Window test", windowCode, "", cxITEM_NORMAL, true);
    windowSubMenu.append("Window with function keys", cxWindowWithFunctionKeysCode, "", cxITEM_NORMAL, true);
@@ -1013,7 +1012,7 @@ void doMenu() {
                         "", cxITEM_NORMAL, true);
 
    // cxPanel tester stuff
-   cxMenu panelSubMenu(NULL, 1, 0, 3, 49, "Panel tests");
+   cxMenu panelSubMenu(nullptr, 1, 0, 3, 49, "Panel tests");
    panelSubMenu.setWrapping(true);
    panelSubMenu.append("cxPanel test", cxPanelCode, "", cxITEM_NORMAL, true);
    panelSubMenu.append("cxPanel test 2", cxPanelCode2, "", cxITEM_NORMAL, true);
@@ -1032,7 +1031,7 @@ void doMenu() {
                        "", cxITEM_NORMAL, true);
 
    // cxSearchPanel tester stuff
-   cxMenu searchPanelSubMenu(NULL, 1, 0, 3, 49, "Panel tests");
+   cxMenu searchPanelSubMenu(nullptr, 1, 0, 3, 49, "Panel tests");
    searchPanelSubMenu.setWrapping(true);
    searchPanelSubMenu.append("cxSearchPanel", cxSearchPanelTestCode, "",
                              cxITEM_NORMAL, true);
@@ -1042,12 +1041,12 @@ void doMenu() {
                              "", cxITEM_NORMAL, true);
 
    // cxButton test stuff
-   cxMenu buttonSubMenu(NULL, 1, 0, 0, 29, "Test cxButton Stuff");
+   cxMenu buttonSubMenu(nullptr, 1, 0, 0, 29, "Test cxButton Stuff");
    buttonSubMenu.setWrapping(true);
    buttonSubMenu.append("onClick function", cxButtonOnClickCode, "", cxITEM_NORMAL, true);
 
    // cxNotebook test stuff
-   cxMenu notebookSubMenu(NULL, 1, 0, 0, 35, "Test cxNotebook Stuff");
+   cxMenu notebookSubMenu(nullptr, 1, 0, 0, 35, "Test cxNotebook Stuff");
    notebookSubMenu.append("Test 1", cxNotebookTest1Code, "", cxITEM_NORMAL, true);
    notebookSubMenu.append("Test 2", cxNotebookTest2Code, "", cxITEM_NORMAL, true);
    notebookSubMenu.append("Removing a panel", cxNotebookRemoveWindowTestCode,
@@ -1060,7 +1059,7 @@ void doMenu() {
                           "", cxITEM_NORMAL, true);
 
    // Create the main menu, add the submenus & menu items to it.
-   cxMenu mainMenu(NULL, 1, 0, 5, 25, "Main menu");
+   cxMenu mainMenu(nullptr, 1, 0, 5, 25, "Main menu");
    mainMenu.setWrapping(true);
    mainMenu.appendWithPullRight("&Input", &inputSubMenu, "Test input stuff.", true);
    mainMenu.appendWithPullRight("&Combo box", &comboBoxSubMenu, "Test cxComboBox stuff.", true);
@@ -1521,7 +1520,7 @@ void doMenu() {
 }
 
 void msgOK() {
-   cxMessageDialog a(NULL, 12, 12, 10, 20, "I am ok", "This is a test.", cxOK, "Status");
+   cxMessageDialog a(nullptr, 12, 12, 10, 20, "I am ok", "This is a test.", cxOK, "Status");
    if (a.showModal() == cxID_OK) {
       cxBase::messageBox("You chose OK");
    }
@@ -1531,7 +1530,7 @@ void msgOK() {
 }
 
 void msgOKCancel() {
-   cxMessageDialog a(NULL, 12, 12, 10, 20, "Somethin...", "This is a test.", cxOK|cxCANCEL, "Status");
+   cxMessageDialog a(nullptr, 12, 12, 10, 20, "Somethin...", "This is a test.", cxOK|cxCANCEL, "Status");
    if (a.showModal() == cxID_OK) {
       cxBase::messageBox("You chose OK");
    }
@@ -1541,7 +1540,7 @@ void msgOKCancel() {
 }
 
 void msgCancel() {
-   cxMessageDialog a(NULL, 12, 12, 10, 20, "Somethin...", "Going to cancel...", cxCANCEL, "Status");
+   cxMessageDialog a(nullptr, 12, 12, 10, 20, "Somethin...", "Going to cancel...", cxCANCEL, "Status");
    if (a.showModal() == cxID_OK) {
       cxBase::messageBox("You chose OK");
    }
@@ -1551,7 +1550,7 @@ void msgCancel() {
 }
 
 void msgYes() {
-   cxMessageDialog a(NULL, 12, 12, 10, 20, "Answer!", "This is a test.", cxYES, "Status");
+   cxMessageDialog a(nullptr, 12, 12, 10, 20, "Answer!", "This is a test.", cxYES, "Status");
    if (a.showModal() == cxID_OK) {
       cxBase::messageBox("You chose OK");
    }
@@ -1561,7 +1560,7 @@ void msgYes() {
 }
 
 void msgYesNo() {
-   cxMessageDialog a(NULL, 12, 12, 10, 20, "Answer!", "Is this a good test? (defaults to YES)", cxYES|cxNO, "Status");
+   cxMessageDialog a(nullptr, 12, 12, 10, 20, "Answer!", "Is this a good test? (defaults to YES)", cxYES|cxNO, "Status");
    //cxBase::dump("msgYesNo.scn");
    if (a.showModal() == cxID_OK) {
       cxBase::messageBox("You chose OK");
@@ -1572,7 +1571,7 @@ void msgYesNo() {
 }
 
 void msgNoYes() {
-   cxMessageDialog a(NULL, 12, 12, 10, 20, "Answer!", "Is this a good test?(defaults to NO)", cxYES|cxNO, "Status");
+   cxMessageDialog a(nullptr, 12, 12, 10, 20, "Answer!", "Is this a good test?(defaults to NO)", cxYES|cxNO, "Status");
    a.setFocus(a.getCancelButton());
    //noButton->setFocus(false, false, false);
    if (a.showModal() == cxID_OK) {
@@ -1584,7 +1583,7 @@ void msgNoYes() {
 }
 
 void msgNo() {
-   cxMessageDialog a(NULL, 2, 2, 10, 20, "Answer!", "Is this a bad test?", cxNO, "Status");
+   cxMessageDialog a(nullptr, 2, 2, 10, 20, "Answer!", "Is this a bad test?", cxNO, "Status");
    if (a.showModal() == cxID_OK) {
       cxBase::messageBox("You chose OK");
    }
@@ -1595,7 +1594,7 @@ void msgNo() {
 
 void testInput1() {
    // Test cxInput stuff
-   cxInput anInput(NULL, 1, 20, 23, "Name:", eBS_SINGLE_LINE);
+   cxInput anInput(nullptr, 1, 20, 23, "Name:", eBS_SINGLE_LINE);
    anInput.setExitOnFull(true);
    anInput.addAttr(eLABEL, A_UNDERLINE);
    anInput.addAttr(eDATA_EDITABLE, A_UNDERLINE);
@@ -1621,16 +1620,16 @@ void testMenu1() {
    const int item8Code = cxFIRST_AVAIL_RETURN_CODE+5;
    const int item9Code = cxFIRST_AVAIL_RETURN_CODE+6;
    const int item10Code = cxFIRST_AVAIL_RETURN_CODE+7;
-   cxMenu subMenu(NULL, 0, 0, 15, 15, "Submenu");
+   cxMenu subMenu(nullptr, 0, 0, 15, 15, "Submenu");
    subMenu.append("Item 4", item4Code);
    subMenu.append("Item 5", item5Code);
    subMenu.append("Item 6", item6Code);
-   cxMenu subMenu2(NULL, 0, 0, 15, 15, "Submenu2");
+   cxMenu subMenu2(nullptr, 0, 0, 15, 15, "Submenu2");
    subMenu2.append("Item 8", item8Code);
    subMenu2.append("Item 9", item9Code);
    subMenu2.append("Item 10", item10Code);
    subMenu.appendWithPullRight("Item 7", &subMenu2);
-   cxMenu aMenu(NULL, 1, 0, 12, 25, "Main menu");
+   cxMenu aMenu(nullptr, 1, 0, 12, 25, "Main menu");
    aMenu.append("Item 1", item1Code, "Help");
    aMenu.appendWithPullRight("Item 2", &subMenu);
    //aMenu.append("12345678901234567890123456789012345678901234567890123456789012345678901234567890zyxfqa", item3Code, "Long help text");
@@ -1689,7 +1688,7 @@ void testInput2() {
    // Note: Moving a window doesn't move its subwindows, so
    //  if you move a cxInput's parent window, you'll have to move
    //  the cxInput too.
-   cxWindow aWindow(NULL, 10, 10, 5, 40, "Info form", "", "Form test");
+   cxWindow aWindow(nullptr, 10, 10, 5, 40, "Info form", "", "Form test");
    cxInput nameInput(&aWindow, 1, 1, 38, "Name:");
    cxInput ageInput(&aWindow, 2, 1, 38, "Age:");
    cxInput locationInput(&aWindow, 3, 1, 38, "Location:");
@@ -1714,7 +1713,7 @@ void testInput2() {
 }
 
 void window1() {
-   cxWindow aWindow(NULL, 0, 0, 5, 20, "Test", "This is a test", "");
+   cxWindow aWindow(nullptr, 0, 0, 5, 20, "Test", "This is a test", "");
    aWindow.show();
    getch();
 }
@@ -1745,8 +1744,8 @@ void splash2() {
 }
 
 void fileViewer() {
-   //cxFileViewer aFileViewer(NULL, "/etc/hosts", 2, 2, 20, 75);
-   cxFileViewer aFileViewer(NULL, "cxMenu.h", 2, 2, 20, 75);
+   //cxFileViewer aFileViewer(nullptr, "/etc/hosts", 2, 2, 20, 75);
+   cxFileViewer aFileViewer(nullptr, "cxMenu.h", 2, 2, 20, 75);
    aFileViewer.showModal();
 }
 
@@ -1757,13 +1756,13 @@ void attributesSetter() {
    int rightCol=38;
 
    // sample menu for the user to see their changes "real-time"
-   cxWindow iWindow(NULL, leftCol, rightCol, 4, 40, "Sample window title");
+   cxWindow iWindow(nullptr, leftCol, rightCol, 4, 40, "Sample window title");
    iWindow.setMessage("Sample window message.");
    iWindow.setStatus("Sample window status");
    iWindow.show();
 
    // sample for for the user to see their changes "real-time"
-   cxForm iForm(NULL, 7, rightCol, 5, 40, "Sample form title");
+   cxForm iForm(nullptr, 7, rightCol, 5, 40, "Sample form title");
    iForm.append(1, 1, 1, 30, "La&bel1:");
    iForm.append(2, 1, 1, 30, "Label2:", "", "", eINPUT_READONLY);
    iForm.setValue("La&bel1:", "Some data");
@@ -1774,7 +1773,7 @@ void attributesSetter() {
    attr_t tmpAttribute;
 
    // which element?
-   cxMenu elementMenu(NULL, topRow, leftCol, 11, 35, "Menu");
+   cxMenu elementMenu(nullptr, topRow, leftCol, 11, 35, "Menu");
    elementMenu.append("&Message",        1, "Change the message style.");
    elementMenu.append("&Title",          2, "Change the title style.");
    elementMenu.append("&Status",         3, "Change the status style.");
@@ -1790,7 +1789,7 @@ void attributesSetter() {
 
    while(elementChoice != cxID_QUIT) {
       // which attribute?
-      cxMenu attributeMenu(NULL, leftRow + topRow + 1, leftCol, 8, 15, "Attribute Menu");
+      cxMenu attributeMenu(nullptr, leftRow + topRow + 1, leftCol, 8, 15, "Attribute Menu");
       attributeMenu.append("&Normal",   1, "Normal");
       attributeMenu.append("&Dim",      2, "Dim");
       attributeMenu.append("&Bold",     3, "Bold");
@@ -1868,7 +1867,7 @@ void attributesSetter() {
 } // attributeSetter
 
 void singleLineInput() {
-   cxInput input(NULL, 0, 45, 23, "Number:", eBS_NOBORDER, eINPUT_EDITABLE, true);
+   cxInput input(nullptr, 0, 45, 23, "Number:", eBS_NOBORDER, eINPUT_EDITABLE, true);
    input.setValidator("ddd");
    input.showModal();
    mvwprintw(stdscr, 8, 0, "Number entered:%s:", input.getValue().c_str());
@@ -1879,8 +1878,8 @@ void singleLineInput() {
 }
 
 void multiLineInput() {
-   cxMultiLineInput input(NULL, 0, 45, 5, 23, "Text:");
-   //cxMultiLineInput input(NULL, 0, 45, 5, 23, "Text:", eBS_SINGLE_LINE);
+   cxMultiLineInput input(nullptr, 0, 45, 5, 23, "Text:");
+   //cxMultiLineInput input(nullptr, 0, 45, 5, 23, "Text:", eBS_SINGLE_LINE);
    input.showModal();
    mvwprintw(stdscr, 8, 0, "You typed:%s:", input.getValue().c_str());
    wrefresh(stdscr);
@@ -1890,13 +1889,13 @@ void multiLineInput() {
 }
 
 void form() {
-   cxForm iForm(NULL, 2, 2, 7, 40, "Test form");
+   cxForm iForm(nullptr, 2, 2, 7, 40, "Test form");
    iForm.append(1, 1, 1, 9, "&Input 1:");
    iForm.append(2, 1, 1, 18, "I&nput 2:", "", "", eINPUT_READONLY);
    iForm.setCanBeEditable(1, false);
    iForm.append(3, 1, 1, 18, "In&put 3:", "", "Testing the field highlighting");
    iForm.append(4, 12, 1, 7, "Test4:", "", "Testing the Y/N validation.");
-   iForm.setOnKeyFunction(3, inputYesNo, iForm.getInput(3), NULL, NULL, NULL);
+   iForm.setOnKeyFunction(3, inputYesNo, iForm.getInput(3).get(), nullptr, nullptr, nullptr);
    iForm.append(5, 12, 1, 7, "Test5:", "", "Testing single character field.");
    iForm.append(0, 12, 1, 10, "Test:", "", "Field in the border");
    iForm.getInput(2)->setAttr(eDATA_EDITABLE, A_STANDOUT);
@@ -1932,10 +1931,10 @@ void form() {
 
 void cxMenuScrolling() {
    // Test cxMenu scrolling (also test hotkeys)
-   cxMenu subMenu(NULL, 2, 2, 4, 8, "Submenu");
+   cxMenu subMenu(nullptr, 2, 2, 4, 8, "Submenu");
    subMenu.append("Sub item 1", -1);
    subMenu.append("Sub item 2", -1);
-   cxMenu iMenu(NULL, 1, 10, 7, 12, "Test menu");
+   cxMenu iMenu(nullptr, 1, 10, 7, 12, "Test menu");
    iMenu.append("&Item 1", 1, "", cxITEM_NORMAL, false);
    iMenu.append("I&tem 2", 2, "", cxITEM_NORMAL, false);
    iMenu.appendWithPullRight("Item 3", &subMenu, "");
@@ -1960,7 +1959,7 @@ void inputsWithFKeys() {
    int x = 2;
    int y = 73;
 
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 20, "Prompt:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 20, "Prompt:");
    iInput.setKeyFunction(KEY_F(2), someFunction, &x, &y, true);
    // Use 2 keys to run the same function
    iInput.setKeyFunction(KEY_F(3), someFunction2, &x, &y, true);
@@ -1976,7 +1975,7 @@ void formWithFKeys() {
    int x = 2;
    int y = 73;
 
-   cxForm iForm(NULL, 0, 0, 7, 30, "Test form");
+   cxForm iForm(nullptr, 0, 0, 7, 30, "Test form");
    iForm.append(1, 1, 2, 15, "Name:");
    iForm.append(3, 1, 1, 25, "City:");
 
@@ -1985,7 +1984,7 @@ void formWithFKeys() {
    iForm.setFieldKeyFunction("City:", KEY_F(3), someFunction2, &x, &y, true, false);
    iForm.setKeyFunction(KEY_F(4), someFunction, &x, &y, false);
    iForm.setKeyFunction(KEY_F(5), someFunction, &x, &y, true);
-   iForm.setOnLeaveFunction(0, genericMessageFunction, NULL, NULL, NULL, NULL);
+   iForm.setOnLeaveFunction(0, genericMessageFunction, nullptr, nullptr, nullptr, nullptr);
    iForm.showModal();
 
    messageBox("Name:" + iForm.getValue("Name:"));
@@ -1994,7 +1993,7 @@ void formWithFKeys() {
 
 void cxInputMasking() {
    // Test input masking for cxInput
-   cxInput iInput(NULL, 5, 30, 30, "Password:");
+   cxInput iInput(nullptr, 5, 30, 30, "Password:");
    iInput.toggleMasking(true);
    //iInput.setValue("12345");
    //cxBase::messageBox("Value before showModal:" + iInput.getValue() + ":");
@@ -2005,7 +2004,7 @@ void cxInputMasking() {
 
 void cxMultiLineInputMasking() {
    // Test input masking for cxMultiLineInput
-   cxMultiLineInput iInput(NULL, 5, 30, 2, 30, "Password:");
+   cxMultiLineInput iInput(nullptr, 5, 30, 2, 30, "Password:");
    iInput.toggleMasking(true);
    iInput.showModal();
 
@@ -2026,7 +2025,7 @@ string someFunction2(void *int1, void *int2) {
 string someFunction3(void *p1, void *p2, void *p3, void *p4) {
    string retval;
 
-   if (p1 != NULL) {
+   if (p1 != nullptr) {
       cxMultiLineInput *pInput = (cxMultiLineInput*)p1;
       if (pInput->getValue() != "good") {
          retval = "Value is not 'good'";
@@ -2043,9 +2042,9 @@ string hello(void *unused, void *unused2) {
 } // hello
 
 string genericMessageFunction(void *p1, void *p2, void *p3, void *p4) {
-   // If p1 is non-NULL, assume it's a string pointer and
+   // If p1 is non-nullptr, assume it's a string pointer and
    //  use that as the display message.
-   if (p1 != NULL) {
+   if (p1 != nullptr) {
       string *pString = static_cast<string*>(p1);
       messageBox(*pString);
    }
@@ -2057,7 +2056,7 @@ string genericMessageFunction(void *p1, void *p2, void *p3, void *p4) {
 } // genericMessageFunction
 
 void cxWindowMoveRelative() {
-   cxWindow iWindow(NULL, 0, 0, 10, 30, "Test");
+   cxWindow iWindow(nullptr, 0, 0, 10, 30, "Test");
    iWindow.show();
    getch();
    iWindow.moveRelative(1, 0, true);
@@ -2072,7 +2071,7 @@ void cxWindowMoveRelative() {
 }
 
 void stackedFormScrolling() {
-   cxForm iForm(NULL, 5, 1, 20, 30, "Test form", eBS_SINGLE_LINE, NULL, NULL, false, true);
+   cxForm iForm(nullptr, 5, 1, 20, 30, "Test form", eBS_SINGLE_LINE, nullptr, nullptr, false, true);
    for (unsigned i = 0; i < 24; ++i) {
       ostringstream os;
       os << "Item " << i + 1 << ":";
@@ -2086,13 +2085,13 @@ void externalTitleWindow() {
    //  external title window (the window
    //  should move its status to the external
    //  window)
-   cxMenu iMenu(NULL, 1, 1, 15, 10, "Menu");
+   cxMenu iMenu(nullptr, 1, 1, 15, 10, "Menu");
    iMenu.setStatus("Test menu");
    iMenu.append("Item 1", 0, "Help", cxITEM_NORMAL, false);
    iMenu.showModal();
-   //cxWindow iWindow(NULL, 0, 0, 1, 20, "", "", "", eBS_NOBORDER);
+   //cxWindow iWindow(nullptr, 0, 0, 1, 20, "", "", "", eBS_NOBORDER);
    //iMenu.setExtTitleWindow(&iWindow);
-   iMenu.setExtTitleWindow(gTitleLine);
+   iMenu.setExtTitleWindow(gTitleLine.get());
    iMenu.showModal();
 }
 
@@ -2101,18 +2100,18 @@ void externalStatusWindow() {
    //  external status window (the window
    //  should move its status to the external
    //  window)
-   cxMenu iMenu(NULL, 1, 1, 15, 10, "Menu");
+   cxMenu iMenu(nullptr, 1, 1, 15, 10, "Menu");
    iMenu.setStatus("Test menu");
    iMenu.append("Item 1", 0, "Help", cxITEM_NORMAL, false);
    iMenu.showModal();
-   cxWindow iWindow(NULL, 20, 0, 1, 20, "", "", "", eBS_NOBORDER);
+   cxWindow iWindow(nullptr, 20, 0, 1, 20, "", "", "", eBS_NOBORDER);
    iMenu.setExtStatusWindow(&iWindow);
    //iMenu.setExtStatusWindow(gStatusLine);
    iMenu.showModal();
 }
 
 void setInputLabel() {
-   cxInput iInput(NULL, 15, 0, 20, "Test:");
+   cxInput iInput(nullptr, 15, 0, 20, "Test:");
    iInput.showModal();
    cxBase::messageBox(iInput.getValue());
    //iInput.show();
@@ -2125,7 +2124,7 @@ void setInputLabel() {
 }
 
 void setMultiLineInputLabel() {
-   cxMultiLineInput iInput(NULL, 15, 0, 3, 20, "Test:");
+   cxMultiLineInput iInput(nullptr, 15, 0, 3, 20, "Test:");
    iInput.show();
    getch();
    iInput.setLabel("New label:");
@@ -2135,7 +2134,7 @@ void setMultiLineInputLabel() {
 
 void titleAlignment() {
    // TODO: This code does not work
-   cxWindow iWindow(NULL, 1, 1, 5, 40, "Title", "Message", "Status");
+   cxWindow iWindow(nullptr, 1, 1, 5, 40, "Title", "Message", "Status");
    iWindow.show();
    sleep(1);
    iWindow.setHorizTitleAlignment(eHP_CENTER);
@@ -2158,7 +2157,7 @@ void titleAlignment() {
 
 void statusAlignment() {
    // TODO: This code does not work
-   cxWindow iWindow(NULL, 1, 1, 5, 40, "Title", "Message", "Status");
+   cxWindow iWindow(nullptr, 1, 1, 5, 40, "Title", "Message", "Status");
    iWindow.show();
    iWindow.setStatus("Center");
    sleep(1);
@@ -2182,7 +2181,7 @@ void statusAlignment() {
 // For use as a cxWindow key function (used in cxWindowWithFunctionKeys())
 string sayHello(void *p1, void *p2) {
    string message = "Hello";
-   if (p1 != NULL) {
+   if (p1 != nullptr) {
       cxWindow *pWindow = static_cast<cxWindow*>(p1);
       message += " (" + pWindow->getName() + ")";
    }
@@ -2191,7 +2190,7 @@ string sayHello(void *p1, void *p2) {
 } // sayHello
 string sayHello2(void *p1, void *p2) {
    string message = "Hello 2";
-   if (p1 != NULL) {
+   if (p1 != nullptr) {
       cxWindow *pWindow = static_cast<cxWindow*>(p1);
       message += " (" + pWindow->getName() + ")";
    }
@@ -2207,14 +2206,12 @@ void cxWindowCopyConstructor() {
    // Create the original window dynamically, and delete it after it's copied.
    //  This way, we can truly see if the copy constructor works okay.  If it
    //  does, the program shouldn't crash.
-   cxWindow *window1 = new cxWindow(NULL, 1, 1, 5, 40, "Title",
+   shared_ptr<cxWindow> window1 = make_shared<cxWindow>(nullptr, 1, 1, 5, 40, "Title",
                                     "F1 and F2 fire functions.", "Status");
    window1->setName("The window");
-   window1->setKeyFunction(KEY_F(1), sayHello, window1, NULL, false, false);
-   window1->setKeyFunction(KEY_F(2), sayHello2, window1, NULL, false, false);
+   window1->setKeyFunction(KEY_F(1), sayHello, window1.get(), nullptr, false, false);
+   window1->setKeyFunction(KEY_F(2), sayHello2, window1.get(), nullptr, false, false);
    cxWindow window2(*window1);
-   delete window1;
-   window1 = NULL;
    window2.showModal();
 }
 
@@ -2224,12 +2221,12 @@ void demoPanels() {
    //  gives us (i.e., only redrawing what is needed when
    //  something changes, rather than redrawing the entire
    //  screen).
-   cxWindow iWindow(NULL, 1, 1, 10, 25, "Win1", "Window 1");
-   cxWindow iWindow2(NULL, 3, 3, 10, 25, "Win2", "Window 2");
-   cxWindow iWindow3(NULL, 0, 5, 10, 25, "Win3", "Window 3");
-   cxWindow iWindow4(NULL, 1, 6, 10, 25, "Win4", "Window 4");
-   cxWindow iWindow5(NULL, 2, 7, 10, 25, "Win5", "Window 5");
-   cxWindow iWindow6(NULL, 3, 10, 10, 25, "Win6", "Window 6");
+   cxWindow iWindow(nullptr, 1, 1, 10, 25, "Win1", "Window 1");
+   cxWindow iWindow2(nullptr, 3, 3, 10, 25, "Win2", "Window 2");
+   cxWindow iWindow3(nullptr, 0, 5, 10, 25, "Win3", "Window 3");
+   cxWindow iWindow4(nullptr, 1, 6, 10, 25, "Win4", "Window 4");
+   cxWindow iWindow5(nullptr, 2, 7, 10, 25, "Win5", "Window 5");
+   cxWindow iWindow6(nullptr, 3, 10, 10, 25, "Win6", "Window 6");
    iWindow.show(false);
    iWindow2.show(false);
    iWindow3.show(false);
@@ -2246,7 +2243,7 @@ void demoPanels() {
    getch();
    iWindow3.move(1,25);
    getch();
-   cxMenu iMenu(NULL, 1, 1, 8, 15, "Menu");
+   cxMenu iMenu(nullptr, 1, 1, 8, 15, "Menu");
    iMenu.append("Item 1", 1, "help1");
    iMenu.append("Item 2", 2, "Help2");
    iMenu.show();
@@ -2285,7 +2282,7 @@ void demoPanels() {
 } // demoPanels
 
 void menuItemWithMultipleHotkeys() {
-   cxMenu iMenu(NULL, 0, 0, 6, 40, "Test");
+   cxMenu iMenu(nullptr, 0, 0, 6, 40, "Test");
    iMenu.append("Item 1", 1);
    iMenu.append("Item 2", 2);
    iMenu.append("&Item &3", 3);
@@ -2303,14 +2300,14 @@ void menuItemWithMultipleHotkeys() {
 } // menuItemWithMultipleHotkeys
 
 void inputsWithDifferentColors() {
-   cxInput iInput(NULL, 2, 25, 40, "Text:");
+   cxInput iInput(nullptr, 2, 25, 40, "Text:");
    iInput.setValueColor(eBLUE_WHITE);
    iInput.setLabelColor(eYELLOW_BLUE);
    iInput.setValue("Text");
    iInput.show();
    getch();
 
-   cxMultiLineInput iMLInput(NULL, 2, 25, 3, 40, "Text:");
+   cxMultiLineInput iMLInput(nullptr, 2, 25, 3, 40, "Text:");
    iMLInput.setValueColor(eYELLOW_WHITE);
    iMLInput.setLabelColor(eBRTCYAN_BLUE);
    iMLInput.setValue("Text");
@@ -2320,7 +2317,7 @@ void inputsWithDifferentColors() {
 
 void formInputColors() {
    // Test setValue(), setLabelColor(), and setValueColor()
-   cxForm iForm(NULL, 2, 2, 7, 40, "Test form");
+   cxForm iForm(nullptr, 2, 2, 7, 40, "Test form");
    iForm.append(1, 1, 1, 18, "Input 1:");
    iForm.append(2, 1, 1, 18, "Input 2:", "", "");
    iForm.setValue("Input 1:", "Blah");
@@ -2342,7 +2339,7 @@ void formInputColors() {
    iForm.setValueColor(8, eBRTGREEN_BLACK);
 
    // Test setAllColors()
-   cxForm iForm2(NULL, 0, 2, 7, 40, "Test form 2");
+   cxForm iForm2(nullptr, 0, 2, 7, 40, "Test form 2");
    iForm2.append(1, 1, 1, 18, "Input 1:", "", "", eINPUT_READONLY);
    iForm2.append(2, 1, 1, 18, "Input 2:", "", "", eINPUT_READONLY);
    iForm2.setValue("Input 1:", "Text");
@@ -2373,7 +2370,7 @@ void formInputColors() {
 } // formInputColors
 
 void borderlessForm() {
-   cxForm iForm(NULL, 2, 2, 7, 40, "Test form", eBS_NOBORDER);
+   cxForm iForm(nullptr, 2, 2, 7, 40, "Test form", eBS_NOBORDER);
    iForm.append(0, 0, 1, 18, "Input 1:");
    iForm.append(1, 0, 1, 18, "Input 2:", "", "");
    iForm.setAllValueColor(eRED_WHITE);
@@ -2383,7 +2380,7 @@ void borderlessForm() {
 } // borderlessForm
 
 void unselectableMenuItem() {
-   cxMenu iMenu(NULL, 1, 1, 10, 20, "Test menu");
+   cxMenu iMenu(nullptr, 1, 1, 10, 20, "Test menu");
    for (int index = 1; index < 11; ++index) {
       iMenu.append("Item " + cxStringUtils::toString(index), index);
    }
@@ -2394,8 +2391,8 @@ void unselectableMenuItem() {
 
 void testFormReadOnly() {
    //messageBox("HELLO");
-   cxForm iForm(NULL, 0, 0, 0, 0, "testFormReadOnly");
-   //cxForm iForm(NULL, 1, 1, 10, 40, "testFormReadOnly");
+   cxForm iForm(nullptr, 0, 0, 0, 0, "testFormReadOnly");
+   //cxForm iForm(nullptr, 1, 1, 10, 40, "testFormReadOnly");
    iForm.append(1, 1, 1, 10, "A:");
    iForm.append(2, 1, 1, 10, "B:");
    iForm.append(3, 1, 1, 10, "C:");
@@ -2421,14 +2418,14 @@ void testFormReadOnly() {
 } // testFormReadOnly
 
 void stackedFormScrolling2() {
-   cxForm iForm(NULL, 5, 1, 5, 30, "Catalog   Qty", eBS_SINGLE_LINE, NULL, NULL, false, true);
+   cxForm iForm(nullptr, 5, 1, 5, 30, "Catalog   Qty", eBS_SINGLE_LINE, nullptr, nullptr, false, true);
    for (unsigned i = 0; i < 24; ++i) {
       iForm.append(1, 0, "   " + cxStringUtils::toString(i) + ":");
    }
    iForm.showModal();
    /*
-   cxForm iForm(NULL, 2, 1, 5, 12, "Test form", eBS_SINGLE_LINE,
-                NULL, NULL, false, true);
+   cxForm iForm(nullptr, 2, 1, 5, 12, "Test form", eBS_SINGLE_LINE,
+                nullptr, nullptr, false, true);
    for (unsigned i = 0; i < 8; ++i) {
       iForm.append(1, "Item " + cxStringUtils::toString(i), "", "", eINPUT_READONLY);
    }
@@ -2438,32 +2435,32 @@ void stackedFormScrolling2() {
 
 void formWithInputValueValidator() {
    messageBox("Note: The value typed into input 1 must be 'good' for it to be valid.");
-   cxForm iForm(NULL, 1, 1, 15, 45, "Test form");
-   cxMultiLineInput *input = iForm.append(1, 1, 1, 20, "Input 1:");
+   cxForm iForm(nullptr, 1, 1, 15, 45, "Test form");
+   shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 20, "Input 1:");
    iForm.append(2, 1, 1, 20, "Input 2:");
-   iForm.setValidatorFunction("Input 1:", someFunction3, input, NULL, NULL, NULL);
-   //iForm.setValidatorFunction(0, someFunction3, input, NULL, NULL, NULL);
+   iForm.setValidatorFunction("Input 1:", someFunction3, input.get(), nullptr, nullptr, nullptr);
+   //iForm.setValidatorFunction(0, someFunction3, input, nullptr, nullptr, nullptr);
    iForm.showModal();
 } // formWithInputValueValidator
 
 void testFormPos() {
    {
-      cxForm iForm(NULL, 0, 0, 0, 0, "Testing form positions (form 1)");
-      iForm.append( 1, iForm.right()-20, 1, 20, "Test1:");
+      cxForm iForm(nullptr, 0, 0, 0, 0, "Testing form positions (form 1)");
+      iForm.append(1, iForm.right()-20, 1, 20, "Test1:");
       iForm.append(iForm.bottom()-1, iForm.right()-1,  1,  1, "", "", "", eINPUT_EDITABLE, "X");
       iForm.showModal();
    }
    // try again with "X" in corner
    {
-      cxForm iForm(NULL, 0, 0, 0, 0, "Testing form positions (form 2)");
-      iForm.append( 1, iForm.right()-20, 1, 20, "Test1:");
+      cxForm iForm(nullptr, 0, 0, 0, 0, "Testing form positions (form 2)");
+      iForm.append(1, iForm.right()-20, 1, 20, "Test1:");
       iForm.append(iForm.bottom(), iForm.right(),  1,  1, "", "", "", eINPUT_EDITABLE, "X");
       iForm.showModal();
    }
 } // testFormPos
 
 /* void testFormFields() {
-   cxForm iForm(NULL, 0, 0, 0, 0, "Testing form fields");
+   cxForm iForm(nullptr, 0, 0, 0, 0, "Testing form fields");
    iForm.append( 1, 1, 1, 20, "Test1:");
    iForm.append(iForm.bottom()-1, iForm.right()-1,  1,  1, "", "", "", eINPUT_EDITABLE, "X");
    iForm.showModal();
@@ -2471,7 +2468,7 @@ void testFormPos() {
 */
 
 string inputYesNo(void *theInput, void *unused, void *unused2, void *unused3) {
-   if (theInput == NULL) {
+   if (theInput == nullptr) {
       return("");
    }
 
@@ -2496,7 +2493,7 @@ string inputYesNo(void *theInput, void *unused, void *unused2, void *unused3) {
 } // inputYesNo
 
 void formWithMenu() {
-   cxForm iForm(NULL, 5, 0, -5, 0, "Test form");
+   cxForm iForm(nullptr, 5, 0, -5, 0, "Test form");
    cxMenu iMenu(&iForm, 0, 0, 5, 0, "Test menu");
 
    iForm.append(1, 1, 1, 25, "Input 1:");
@@ -2526,9 +2523,9 @@ void cxWindowAssignment() {
    // Note: mParentWindow is not copied from one cxWindow to another.
    //  The reason is that segfaults could happen if it was copied.
 
-   cxWindow windowCopy(NULL, 0, 0, 5, 10, "This will change");
+   cxWindow windowCopy(nullptr, 0, 0, 5, 10, "This will change");
    {
-      cxWindow window1(NULL, 5, 20, 5, 40, "Title", "Message", "Status");
+      cxWindow window1(nullptr, 5, 20, 5, 40, "Title", "Message", "Status");
       windowCopy = window1;
    }
 
@@ -2546,7 +2543,7 @@ void cxMenuAssignment() {
    menuCopy.append("be deleted", 2);
 
    {
-      cxMenu someMenu(NULL, 1, 5, 18, 15, "Test menu");
+      cxMenu someMenu(nullptr, 1, 5, 18, 15, "Test menu");
       someMenu.setHorizTitleAlignment(eHP_CENTER);
       for (int i = 1; i <= 25; ++i) {
          someMenu.append("Item " + cxStringUtils::toString(i), i);
@@ -2561,17 +2558,17 @@ void cxFormAssignment() {
    //string message = "This tests the cxForm assignment operator.  "
    //               + string("If the app doesn't crash, this test passes!");
    //cxBase::messageDialog(message);
-   cxForm formCopy(NULL, 5, 2, 8, 50, "This will go away");
+   cxForm formCopy(nullptr, 5, 2, 8, 50, "This will go away");
    formCopy.append(1, 1, 1, 25, "This will be gone too:");
    formCopy.append(2, 1, 1, 25, "And so will this:");
 
    {
-      cxForm iForm(NULL, 2, 0, 7, 40, "Test form");
+      cxForm iForm(nullptr, 2, 0, 7, 40, "Test form");
       iForm.append(1, 1, 1, 9, "Input 1:");
       iForm.append(2, 1, 1, 18, "Input 2:", "", "", eINPUT_READONLY);
       iForm.append(3, 1, 1, 18, "Input 3:", "", "Testing the field highlighting");
       iForm.append(4, 12, 1, 7, "Test4:", "", "Testing the Y/N validation.");
-      iForm.setOnKeyFunction(3, inputYesNo, iForm.getInput(3), NULL, NULL, NULL);
+      iForm.setOnKeyFunction(3, inputYesNo, iForm.getInput(3).get(), nullptr, nullptr, nullptr);
       iForm.append(5, 12, 1, 7, "Test5:", "", "Testing single character field.");
       iForm.append(0, 12, 1, 10, "Test:", "", "Field in the border");
       iForm.getInput(2)->setAttr(eDATA_EDITABLE, A_STANDOUT);
@@ -2586,7 +2583,7 @@ void cxFormAssignment() {
 } // cxFormAssignment
 
 void multiLineInputResize() {
-   cxMultiLineInput iInput(NULL, 1, 0, 5, 20, "Text:", eBS_SINGLE_LINE);
+   cxMultiLineInput iInput(nullptr, 1, 0, 5, 20, "Text:", eBS_SINGLE_LINE);
    iInput.showModal();
    messageBox(":" + iInput.getValue() + ":");
    iInput.resize(4, 22, false);
@@ -2595,12 +2592,12 @@ void multiLineInputResize() {
 } // multiLineInputResize
 
 void setValFunc() {
-   cxForm iForm(NULL, 0, 0, cxBase::height(), cxBase::width(), "Test form");
+   cxForm iForm(nullptr, 0, 0, cxBase::height(), cxBase::width(), "Test form");
    // this should pop up messageBox with "Success" as a message.
    iForm.append(1, 1, 1, 15, "test:", "", "Just Hit Enter.");
    iForm.setValue("test:", "Hit Enter");
-   //iForm.setValidatorFunction("test:",testBoxSuccess, NULL, NULL, NULL, NULL);
-   iForm.setOnLeaveFunction("test:",testBoxSuccess, NULL, NULL, NULL, NULL);
+   //iForm.setValidatorFunction("test:",testBoxSuccess, nullptr, nullptr, nullptr, nullptr);
+   iForm.setOnLeaveFunction("test:",testBoxSuccess, nullptr, nullptr, nullptr, nullptr);
 
    int ret = 0;
    while(ret != cxID_QUIT) {
@@ -2609,9 +2606,9 @@ void setValFunc() {
 } // setValFunc
 
 string testBoxSuccess(void* Foo1, void* Foo2, void* Foo3, void* Foo4) {
-   // If Foo1 is non-NULL, assume it's a string pointer and use that
+   // If Foo1 is non-nullptr, assume it's a string pointer and use that
    //  for the message box.
-   if (Foo1 != NULL) {
+   if (Foo1 != nullptr) {
       string *pStr = static_cast<string*>(Foo1);
       messageBox(*pStr);
    }
@@ -2623,11 +2620,11 @@ string testBoxSuccess(void* Foo1, void* Foo2, void* Foo3, void* Foo4) {
 } // testBoxSuccess
 
 void formUpArrowFunction() {
-   cxForm iForm(NULL, 2, 0, 7, 40, "Test form");
+   cxForm iForm(nullptr, 2, 0, 7, 40, "Test form");
    iForm.append(1, 1, 1, 9, "Input 1:");
    iForm.append(2, 1, 1, 18, "Input 2:");
-   iForm.setOnLeaveFunction(0, genericMessageFunction, NULL, NULL, NULL, NULL);
-   iForm.setKeyFunction(KEY_UP, cxBase::noOp, NULL, NULL, true);
+   iForm.setOnLeaveFunction(0, genericMessageFunction, nullptr, nullptr, nullptr, nullptr);
+   iForm.setKeyFunction(KEY_UP, cxBase::noOp, nullptr, nullptr, true);
    iForm.showModal();
    if (iForm.getLastKey() == KEY_UP) {
       messageBox("Last key was an up arrow.");
@@ -2638,7 +2635,7 @@ void formUpArrowFunction() {
 } // formUpArrowFunction
 
 void changeMenuItemText() {
-   cxMenu iMenu(NULL, 1, 0, 12, 20, "Test menu");
+   cxMenu iMenu(nullptr, 1, 0, 12, 20, "Test menu");
    for (int i = 1; i <= 10; ++i) {
       iMenu.append("Item " + cxStringUtils::toString(i), i);
    }
@@ -2648,7 +2645,7 @@ void changeMenuItemText() {
 } // changeMenuItemText
 
 void windowWriteText() {
-   cxWindow iWindow(NULL, 1, 0, 20, 50, "Test window", "Message", "Status");
+   cxWindow iWindow(nullptr, 1, 0, 20, 50, "Test window", "Message", "Status");
    iWindow.show();
    iWindow.writeText(2, 1, "Text");
    getch();
@@ -2657,7 +2654,7 @@ void windowWriteText() {
 void formChangeInputFocusWhileModal() {
    messageBox("Press 'n' to change the focus to the last input.");
 
-   cxForm iForm(NULL, 1, 0, 12, 65, "Test form");
+   cxForm iForm(nullptr, 1, 0, 12, 65, "Test form");
    iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(1, 27, 1, 25, "Input 2:");
    iForm.append(2, 1, 1, 25, "Input 3:");
@@ -2680,7 +2677,7 @@ string setAllInputsReadOnly(void *theForm, void *unused, void *unused2, void *un
 void allFormInputsGoReadOnly() {
    messageBox("Press F2 in Input 2 to set all inputs read-only.  The form should still be showing, and it should wait for a keypress.");
 
-   cxForm iForm(NULL, 1, 0, 12, 50, "Test form");
+   cxForm iForm(nullptr, 1, 0, 12, 50, "Test form");
    iForm.append(1, 1, 1, 25, "Input 1:", "", "", eINPUT_READONLY);
    iForm.getInput(0)->setValue("Read-only");
    iForm.append(2, 1, 1, 25, "Input 2:");
@@ -2694,8 +2691,8 @@ void allFormInputsGoReadOnly() {
    iForm.append(8, 1, 1, 25, "Input 8:", "", "", eINPUT_EDITABLE);
    iForm.append(9, 1, 1, 25, "Input 9:", "", "", eINPUT_EDITABLE);
    iForm.append(10, 1, 1, 25, "Input 10:", "", "", eINPUT_EDITABLE);
-   iForm.setFieldKeyFunction("Input 2:", KEY_F(2), setAllInputsReadOnly, &iForm, NULL,
-                          NULL, NULL, false);
+   iForm.setFieldKeyFunction("Input 2:", KEY_F(2), setAllInputsReadOnly, &iForm, nullptr,
+                          nullptr, nullptr, false);
    long retval = iForm.showModal();
    if (retval == cxID_QUIT) {
       messageBox("cxID_QUIT returned");
@@ -2711,7 +2708,7 @@ void allFormInputsGoReadOnly() {
 
 void cxFormNoQuit() {
    messageBox("The form shown here can't be quit out of using ESC.");
-   cxForm iForm(NULL, 1, 0, 12, 60, "Test form");
+   cxForm iForm(nullptr, 1, 0, 12, 60, "Test form");
    iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
    iForm.append(1, 27, 1, 25, "Input 3:");
@@ -2723,7 +2720,7 @@ void cxFormNoQuit() {
 
 void cxMenuNoQuit() {
    messageBox("The menu shown here can't be quit out of using ESC.");
-   cxMenu iMenu(NULL, 1, 0, 15, 12, "Test menu");
+   cxMenu iMenu(nullptr, 1, 0, 15, 12, "Test menu");
    for (int i = 1; i <= 20; ++i) {
       iMenu.append("Item " + cxStringUtils::toString(i), i);
    }
@@ -2734,15 +2731,14 @@ void cxMenuNoQuit() {
 void scrolledWindow() {
    // This demonstrates a scrolled window.  It also
    //  tests that its assignment operator works correctly, etc.
-   cxScrolledWindow *iWin = new cxScrolledWindow(NULL, 1, 0, 4, 10, "Test", "This is some very, very long text.  When this window is initialized, the window should scroll.  Yep, it sure should, yep yep yep.");
-   cxScrolledWindow iWin2(NULL, 2, 5, 10, 75, "Something", "Message", "Status");
+   shared_ptr<cxScrolledWindow> iWin = make_shared<cxScrolledWindow>(nullptr, 1, 0, 4, 10, "Test", "This is some very, very long text.  When this window is initialized, the window should scroll.  Yep, it sure should, yep yep yep.");
+   cxScrolledWindow iWin2(nullptr, 2, 5, 10, 75, "Something", "Message", "Status");
    iWin2 = *iWin;
-   delete iWin;
    iWin2.showModal();
 } // scrolledWindow
 
 void cxInputBorderChange() {
-   cxInput iInput(NULL, 1, 0, 8, "Text:", eBS_NOBORDER);
+   cxInput iInput(nullptr, 1, 0, 8, "Text:", eBS_NOBORDER);
    iInput.showModal();
    messageBox("Value:" + iInput.getValue() + ":");
    iInput.setBorderStyle(eBS_SINGLE_LINE);
@@ -2754,7 +2750,7 @@ void cxInputBorderChange() {
 } // cxInputBorderChange
 
 void cxMultiLineInputBorderChange() {
-   cxMultiLineInput iInput(NULL, 1, 0, 2, 8, "Text:", eBS_NOBORDER);
+   cxMultiLineInput iInput(nullptr, 1, 0, 2, 8, "Text:", eBS_NOBORDER);
    iInput.setExitOnFull(false);
    iInput.showModal();
    messageBox("Value:" + iInput.getValue() + ":");
@@ -2790,11 +2786,11 @@ bool fKeySort(const string& pStr1, const string& pStr2) {
 } // fKeySort
 
 void getFormKeys() {
-   cxForm iForm(NULL, 0, 0, 7, 30, "Test form");
+   cxForm iForm(nullptr, 0, 0, 7, 30, "Test form");
    iForm.append(1, 1, 2, 15, "Name:");
    iForm.append(3, 1, 1, 25, "City:");
 
-   int x, y;
+   int x = 0, y = 0;
    iForm.setKeyFunction(KEY_F(4), someFunction, &x, &y, false);
    iForm.setKeyFunction(KEY_F(5), someFunction, &x, &y, true);
    iForm.setKeyFunction(KEY_NPAGE, someFunction, &x, &y, true);
@@ -2821,14 +2817,14 @@ void multiForm() {
    //  assign properly (it copies another cxMultiform
    //  that goes out of scope - it should copy all
    //  the dynamic data so that there are no segfaults).
-   cxMultiForm copyForm(NULL, 2, 2, 10, 60, "Copy form", eBS_NOBORDER);
+   cxMultiForm copyForm(nullptr, 2, 2, 10, 60, "Copy form", eBS_NOBORDER);
    {
-      cxMultiForm iMultiForm(NULL, 1, 0, 20, 70, "Multi-form", eBS_SINGLE_LINE);
+      cxMultiForm iMultiForm(nullptr, 1, 0, 20, 70, "Multi-form", eBS_SINGLE_LINE);
       iMultiForm.append(1, 1, 1, 25, "Input 1:");
       iMultiForm.append(2, 1, 1, 25, "Input 2:");
       // Append an input on the same line as one of the subforms
       iMultiForm.append(3, 1, 1, 25, "Input 3:");
-      cxForm *iForm = iMultiForm.appendForm(3, 1, 3, 60, "Subform", eBS_SINGLE_LINE);
+      shared_ptr<cxForm> iForm = iMultiForm.appendForm(3, 1, 3, 60, "Subform", eBS_SINGLE_LINE);
       iForm->append(1, 1, 1, 25, "Subform input 1:");
       iForm->append(1, 27, 1, 25, "Subform input 2:");
       iForm = iMultiForm.appendForm(6, 1, 1, 60, "Subform 2"); // Borderless subform
@@ -2842,7 +2838,7 @@ void multiForm() {
 } // multiForm
 
 string multiForm2_goToForm1_Input1(void *theMultiForm, void *unused, void *unused2, void *unused3) {
-   if (theMultiForm== NULL) {
+   if (theMultiForm== nullptr) {
       return("");
    }
    //cxBase::messageBox("in multiForm2_goToForm1_Input1");
@@ -2854,7 +2850,7 @@ string multiForm2_goToForm1_Input1(void *theMultiForm, void *unused, void *unuse
 }
 
 string multiForm2_goToForm3_Input1(void *theMultiForm, void *unused, void *unused2, void *unused3) {
-   if (theMultiForm== NULL) {
+   if (theMultiForm== nullptr) {
       return("");
    }
    //cxBase::messageBox("in multiForm2_goToForm3_Input1");
@@ -2866,7 +2862,7 @@ string multiForm2_goToForm3_Input1(void *theMultiForm, void *unused, void *unuse
 }
 
 string multiForm2_quit(void *theMultiForm, void *unused, void *unused2, void *unused3) {
-   if (theMultiForm== NULL) {
+   if (theMultiForm== nullptr) {
       return("");
    }
    cxMultiForm *pMultiForm = (cxMultiForm*)theMultiForm;
@@ -2876,20 +2872,20 @@ string multiForm2_quit(void *theMultiForm, void *unused, void *unused2, void *un
 
 void multiForm2() {
    // This function tests cxMultiForm events.
-   cxMultiForm iForm(NULL, 1, 0, 20, 70, "Multi-form", eBS_SINGLE_LINE);
+   cxMultiForm iForm(nullptr, 1, 0, 20, 70, "Multi-form", eBS_SINGLE_LINE);
 
-   cxForm* pForm1 = new cxForm(NULL, 3, 1, 4, 60, "Form1");
+   shared_ptr<cxForm> pForm1 = make_shared<cxForm>(nullptr, 3, 1, 4, 60, "Form1");
    pForm1->append(1, 1, 1, 25, "Form 1 input 1:");
    pForm1->append(2, 1, 1, 25, "Form 1 input 2:");
    pForm1->setStatus("test status", true);
 
-   cxForm* pForm2 = new cxForm(NULL, 1, 1, 4, 60, "Form2");
+   shared_ptr<cxForm> pForm2 = make_shared<cxForm>(nullptr, 1, 1, 4, 60, "Form2");
    pForm2->append(1, 1, 1, 25, "Form 2 input 1:");
    pForm2->append(2, 1, 1, 25, "Form 2 input 2:");
    pForm2->addQuitKey(KEY_F(9));
    pForm2->setStatus("F1 = Go to form1/input1, F9=Quit F10=Quit", true);
 
-   cxForm* pForm3 = new cxForm(NULL, 1, 1, 4, 60, "Form3");
+   shared_ptr<cxForm> pForm3 = make_shared<cxForm>(nullptr, 1, 1, 4, 60, "Form3");
    pForm3->append(1, 1, 1, 25, "Form 3 input 1:");
    pForm3->append(2, 1, 1, 25, "Form 3 input 2:");
    pForm3->setStatus("F1 = Go to form1/input1, F2 = Go to form3/input1", true);
@@ -2898,16 +2894,16 @@ void multiForm2() {
    iForm.appendForm(pForm1, 1, 1);
    iForm.appendForm(pForm2, 5, 1);
    iForm.appendForm(pForm3, 9, 1);
-   iForm.setKeyFunction(KEY_F(1), multiForm2_goToForm1_Input1, &iForm, NULL, NULL, NULL, false);
-   iForm.setKeyFunction(KEY_F(2), multiForm2_goToForm3_Input1, &iForm, NULL, NULL, NULL, false);
-   iForm.setKeyFunction(KEY_F(10), multiForm2_quit, &iForm, NULL, NULL, NULL, false);
+   iForm.setKeyFunction(KEY_F(1), multiForm2_goToForm1_Input1, &iForm, nullptr, nullptr, nullptr, false);
+   iForm.setKeyFunction(KEY_F(2), multiForm2_goToForm3_Input1, &iForm, nullptr, nullptr, nullptr, false);
+   iForm.setKeyFunction(KEY_F(10), multiForm2_quit, &iForm, nullptr, nullptr, nullptr, false);
 
    iForm.setAutoExit(true);
    iForm.showModal();
 } // multiForm2
 
 void simpleForm1() {
-   cxForm iForm(NULL, 0, 0, 20, 42, "Keyboard Help");
+   cxForm iForm(nullptr, 0, 0, 20, 42, "Keyboard Help");
    iForm.append(1, 1, 1, 40, "F1  = Field Help", "", "", eINPUT_READONLY);
    iForm.append(2, 1, 1, 40, "sF1 = Keyboard Help", "", "", eINPUT_READONLY);
    iForm.append(3, 1, 1, 40, "F2  = Search", "", "", eINPUT_READONLY);
@@ -2917,7 +2913,7 @@ void simpleForm1() {
 } // simpleForm1
 
 string updateMenu(void *theComboBox, void *unused, void *unused2, void *unused3) {
-   if (theComboBox == NULL) {
+   if (theComboBox == nullptr) {
       return("");
    }
 
@@ -2942,10 +2938,10 @@ string onLeave(void *unused, void *unused2, void *unused3, void *unused4) {
 
 void comboBox() {
    //messageBox("Each time you press a key in the input, a new item will be added to its drop-down menu, demonstrating its updating ability and ability to choose one of the items from the menu.");
-   cxComboBox iComboBox(NULL, 1, 0, 10, 40, "Input:");
-   iComboBox.setOnKeyFunction(updateMenu, &iComboBox, NULL, NULL, NULL);
-   //iComboBox.setOnFocusFunction(onFocus, NULL, NULL, NULL, NULL, false);
-   //iComboBox.setOnLeaveFunction(onLeave, NULL, NULL, NULL, NULL);
+   cxComboBox iComboBox(nullptr, 1, 0, 10, 40, "Input:");
+   iComboBox.setOnKeyFunction(updateMenu, &iComboBox, nullptr, nullptr, nullptr);
+   //iComboBox.setOnFocusFunction(onFocus, nullptr, nullptr, nullptr, nullptr, false);
+   //iComboBox.setOnLeaveFunction(onLeave, nullptr, nullptr, nullptr, nullptr);
    // Change the menu height
    iComboBox.setMenuHeight(11);
    messageBox("Combo box height before resize: " + cxStringUtils::toString(iComboBox.height()));
@@ -2963,25 +2959,25 @@ void comboBox() {
 
 void comboBoxOnForm() {
    //messageBox("Input A on the form is a cxComboBox.  All other inputs are cxMultiLineInputs.");
-   cxForm iForm(NULL, 1, 0, 12, 60, "Test form");
+   cxForm iForm(nullptr, 1, 0, 12, 60, "Test form");
    iForm.appendComboBox(1, 1, 10, 12, "A:");
    iForm.append(1, 14, 1, 12, "B:");
    iForm.append(2, 1, 1, 12, "C:");
-   iForm.setOnKeyFunction("A:", updateMenu, (cxComboBox*)iForm.getInput("A:"), NULL,
-                          NULL, NULL);
+   iForm.setOnKeyFunction("A:", updateMenu, (cxComboBox*)iForm.getInput("A:").get(), nullptr,
+                          nullptr, nullptr);
    iForm.showModal();
 } // comboBoxOnForm
 
 void inputWithoutBorder() {
-   cxForm iForm(NULL, 0, 0, -1, 0, "Do you see my title?");
+   cxForm iForm(nullptr, 0, 0, -1, 0, "Do you see my title?");
    iForm.showModal();
-   cxForm iForm2(NULL, 1, 0, 1, 0, "", eBS_NOBORDER);
+   cxForm iForm2(nullptr, 1, 0, 1, 0, "", eBS_NOBORDER);
    iForm2.append(0, 1, 1, 20, "A:", "", "Enter something janky...");
    iForm2.showModal();
 } // inputWithoutBorder
 
 void formDataChanged() {
-   cxForm iForm(NULL, 1, 0, 12, 60, "Test form");
+   cxForm iForm(nullptr, 1, 0, 12, 60, "Test form");
    iForm.append(1, 1, 1, 12, "A:");
    iForm.append(1, 14, 1, 12, "B:");
    iForm.append(2, 1, 1, 12, "C:");
@@ -3003,14 +2999,14 @@ void formDataChanged() {
 } // formDataChanged
 
 void integerValidate() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 15, "Integer:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 15, "Integer:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
    iInput.showModal();
    cxBase::messageBox("value:" + iInput.getValue() + ":");
 } // integerValidate
 
 void floatingPtValidate() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 25, "Floating-pt #:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 25, "Floating-pt #:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_FLOATING_PT);
    iInput.showModal();
    cxBase::messageBox("value:" + iInput.getValue() + ":");
@@ -3018,31 +3014,31 @@ void floatingPtValidate() {
 
 void integerValidateOnForm() {
    bool clearOnSpace = true;
-   cxForm iForm(NULL, 1, 0, 10, 60, "Test form");
-   cxMultiLineInput *input = iForm.append(1, 1, 1, 40, "Integer:");
-   iForm.setOnKeyFunction("Integer:", cxValidators::intOnKeyValidator, input,
+   cxForm iForm(nullptr, 1, 0, 10, 60, "Test form");
+   shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 40, "Integer:");
+   iForm.setOnKeyFunction("Integer:", cxValidators::intOnKeyValidator, input.get(),
                           &clearOnSpace, true);
    input = iForm.append(2, 1, 1, 40, "Integer 2:");
-   iForm.setOnKeyFunction("Integer 2:", cxValidators::intOnKeyValidator, input,
+   iForm.setOnKeyFunction("Integer 2:", cxValidators::intOnKeyValidator, input.get(),
                           &clearOnSpace, true);
    iForm.showModal();
 } // integerValidate
 
 void floatingPtValidateOnForm() {
    bool clearOnSpace = true;
-   cxForm iForm(NULL, 1, 0, 10, 60, "Test form");
-   cxMultiLineInput *input = iForm.append(1, 1, 1, 40, "Floating pt. # 1:");
+   cxForm iForm(nullptr, 1, 0, 10, 60, "Test form");
+   shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 40, "Floating pt. # 1:");
    iForm.setOnKeyFunction("Floating pt. #1", cxValidators::floatingPtOnKeyValidator,
-                          input, &clearOnSpace, true);
+                          input.get(), &clearOnSpace, true);
    input = iForm.append(2, 1, 1, 40, "Floating pt. # 2:");
    iForm.setOnKeyFunction("Floating pt. #2", cxValidators::floatingPtOnKeyValidator,
-                          input, &clearOnSpace, true);
+                          input.get(), &clearOnSpace, true);
    iForm.showModal();
 } // integerValidate
 
 // This function (showAMessageBox() is for use with formFunctionKeys().
 string showAMessageBox(void *classTypeStr, void *unused) {
-   if (classTypeStr == NULL) {
+   if (classTypeStr == nullptr) {
       messageBox("showAMessageBox()");
    }
    else {
@@ -3056,12 +3052,12 @@ string showAMessageBox(void *classTypeStr, void *unused) {
 void keyFunctionAutoExitOnLastFormInput() {
    cxBase::messageBox("F3 is set up on the first and last inputs of the form, and it's set up to exit the inputs after the function runs.  After pressing F3 on input 1, it should move to input 2.  After pressing F3 on input 3 (the last input), the form should exit.");
 
-   cxForm iForm(NULL, 1, 0, 5, 27, "Test form", eBS_SINGLE_LINE);
-   cxMultiLineInput *input1 = iForm.append(1, 1, 1, 25, "Input 1:");
+   cxForm iForm(nullptr, 1, 0, 5, 27, "Test form", eBS_SINGLE_LINE);
+   shared_ptr<cxMultiLineInput> input1 = iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
-   cxMultiLineInput *input3 = iForm.append(3, 1, 1, 25, "Input 3:");
-   input1->setKeyFunction(KEY_F(3), showAMessageBox, NULL, NULL, false, true);
-   input3->setKeyFunction(KEY_F(3), showAMessageBox, NULL, NULL, false, true);
+   shared_ptr<cxMultiLineInput> input3 = iForm.append(3, 1, 1, 25, "Input 3:");
+   input1->setKeyFunction(KEY_F(3), showAMessageBox, nullptr, nullptr, false, true);
+   input3->setKeyFunction(KEY_F(3), showAMessageBox, nullptr, nullptr, false, true);
    iForm.setAutoExit(true);
    iForm.showModal();
 }
@@ -3075,13 +3071,13 @@ void formFunctionKeys() {
    string cxMLIStr = "cxMultiLineInput"; // For showAMessageBox()
    string cxFormStr = "cxForm";          // For showAMessageBox()
 
-   cxForm iForm(NULL, 1, 0, 5, 27, "Test form", eBS_SINGLE_LINE);
-   iForm.setKeyFunction(KEY_F(2), showAMessageBox, &cxFormStr, NULL, false);
+   cxForm iForm(nullptr, 1, 0, 5, 27, "Test form", eBS_SINGLE_LINE);
+   iForm.setKeyFunction(KEY_F(2), showAMessageBox, &cxFormStr, nullptr, false);
    // Note: It shouldn't matter if we append inputs to the form after setting
    //  a form function key on the form.
-   cxMultiLineInput *input = iForm.append(1, 1, 1, 25, "Input 1:");
-   input->setOnLeaveFunction(genericMessageFunction, NULL, NULL, NULL, NULL);
-   input->setKeyFunction(KEY_F(3), showAMessageBox, &cxMLIStr, NULL, false, false);
+   shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 25, "Input 1:");
+   input->setOnLeaveFunction(genericMessageFunction, nullptr, nullptr, nullptr, nullptr);
+   input->setKeyFunction(KEY_F(3), showAMessageBox, &cxMLIStr, nullptr, false, false);
 
    iForm.showModal();
 } // formFunctionKeys
@@ -3089,7 +3085,7 @@ void formFunctionKeys() {
 void enableDisableForm() {
    messageBox("This function tests setEnabled() for a cxForm.  A cxForm is enabled by default.  A cxForm will be created and shown modally, then disabled, shown modally again, and enabled again & shown modally again.  When disabled, it should hide itself, and showModal() should not process user input.");
 
-   cxForm iForm(NULL, 1, 0, 4, 60, "Test form");
+   cxForm iForm(nullptr, 1, 0, 4, 60, "Test form");
    iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
    iForm.append(1, 27, 1, 25, "Input 3:");
@@ -3114,35 +3110,35 @@ void enableDisableForm() {
 } // enableDisableForm
 
 void multiFormWithDisabledSubform() {
-   cxMultiForm iMultiForm(NULL, 1, 0, 23, 75, "Test form");
+   cxMultiForm iMultiForm(nullptr, 1, 0, 23, 75, "Test form");
    // Append an input to the multiForm for good measure (even though
    //  this is just testing the enabled/disabled stuff on subforms).
    iMultiForm.append(1, 1, 1, 32, "MultiForm input:");
    // Append the subforms to the multiForm
-   cxForm *form = iMultiForm.appendForm(2, 1, 4, 73, "Subform 1", eBS_SINGLE_LINE);
+   shared_ptr<cxForm> form = iMultiForm.appendForm(2, 1, 4, 73, "Subform 1", eBS_SINGLE_LINE);
    form->append(1, 1, 1, 32, "Sub1 input 1:");
    form->append(2, 1, 1, 32, "Sub1 input 2:");
    form->append(1, 34, 1, 32, "Sub1 input 3:");
    form->append(2, 34, 1, 32, "Sub1 input 4:");
-   form = new cxForm(NULL, 1, 0, 4, 73, "Subform 2", eBS_SINGLE_LINE);
+   form = make_shared<cxForm>(nullptr, 1, 0, 4, 73, "Subform 2", eBS_SINGLE_LINE);
    form->append(1, 1, 1, 32, "Sub2 input 1:");
    form->append(2, 1, 1, 32, "Sub2 input 2:");
    form->append(1, 34, 1, 32, "Sub2 input 3:");
    form->append(2, 34, 1, 32, "Sub2 input 4:");
    iMultiForm.appendForm(form, 6, 1);
-   form = new cxForm(NULL, 1, 0, 4, 73, "Subform 3", eBS_SINGLE_LINE);
+   form = make_shared<cxForm>(nullptr, 1, 0, 4, 73, "Subform 3", eBS_SINGLE_LINE);
    form->append(1, 1, 1, 32, "Sub3 input 1:");
    form->append(2, 1, 1, 32, "Sub3 input 2:");
    form->append(1, 34, 1, 32, "Sub3 input 3:");
    form->append(2, 34, 1, 32, "Sub3 input 4:");
    iMultiForm.appendForm(form, 10, 1);
-   form = new cxForm(NULL, 1, 0, 4, 73, "Subform 4", eBS_SINGLE_LINE);
+   form = make_shared<cxForm>(nullptr, 1, 0, 4, 73, "Subform 4", eBS_SINGLE_LINE);
    form->append(1, 1, 1, 32, "Sub4 input 1:");
    form->append(2, 1, 1, 32, "Sub4 input 2:");
    form->append(1, 34, 1, 32, "Sub4 input 3:");
    form->append(2, 34, 1, 32, "Sub4 input 4:");
    iMultiForm.appendForm(form, 14, 1);
-   form = new cxForm(NULL, 1, 0, 4, 73, "Subform 5", eBS_SINGLE_LINE);
+   form = make_shared<cxForm>(nullptr, 1, 0, 4, 73, "Subform 5", eBS_SINGLE_LINE);
    form->append(1, 1, 1, 32, "Sub5 input 1:");
    form->append(2, 1, 1, 32, "Sub5 input 2:");
    form->append(1, 34, 1, 32, "Sub5 input 3:");
@@ -3166,10 +3162,10 @@ void multiFormWithDisabledSubform() {
 } // multiFormWithDisabledSubform
 
 void comboBoxMenuDisable() {
-   cxComboBox iComboBox(NULL, 1, 0, 10, 40, "Input:");
+   cxComboBox iComboBox(nullptr, 1, 0, 10, 40, "Input:");
    messageBox("Height: " + cxStringUtils::toString(iComboBox.height()) + ", width: " +
               cxStringUtils::toString(iComboBox.width()));
-   iComboBox.setOnKeyFunction(updateMenu, &iComboBox, NULL, NULL, NULL);
+   iComboBox.setOnKeyFunction(updateMenu, &iComboBox, nullptr, nullptr, nullptr);
    iComboBox.showModal();
    messageBox("Disabling the menu and showing the combo box again..");
    iComboBox.toggleMenu(false, false);
@@ -3198,23 +3194,23 @@ void inputQuitKeysOnForm() {
    //  SHIFT_F2
    string fieldOnLeaveMsg = "Field onLeave function called";
    string validatorMsg = "Validator function called";
-   cxForm iForm(NULL, 1, 0, 5, 70, "SHIFT-F2 quits this form");
+   cxForm iForm(nullptr, 1, 0, 5, 70, "SHIFT-F2 quits this form");
    iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
    iForm.append(3, 1, 1, 25, "Input 3:");
    iForm.append(1, 26, 1, 25, "Input 4:");
    iForm.append(2, 26, 1, 25, "Input 5:");
    iForm.append(3, 26, 1, 25, "Input 6:");
-   iForm.setValidatorFunction(0, testBoxSuccess, &validatorMsg, NULL, NULL, NULL);
-   iForm.setValidatorFunction(1, testBoxSuccess, &validatorMsg, NULL, NULL, NULL);
-   iForm.setValidatorFunction(2, testBoxSuccess, &validatorMsg, NULL, NULL, NULL);
-   iForm.setValidatorFunction(3, testBoxSuccess, &validatorMsg, NULL, NULL, NULL);
-   iForm.setValidatorFunction(4, testBoxSuccess, &validatorMsg, NULL, NULL, NULL);
-   iForm.setOnLeaveFunction(0, genericMessageFunction, &fieldOnLeaveMsg, NULL, NULL, NULL);
-   iForm.setOnLeaveFunction(1, genericMessageFunction, &fieldOnLeaveMsg, NULL, NULL, NULL);
-   iForm.setOnLeaveFunction(2, genericMessageFunction, &fieldOnLeaveMsg, NULL, NULL, NULL);
-   iForm.setOnLeaveFunction(3, genericMessageFunction, &fieldOnLeaveMsg, NULL, NULL, NULL);
-   iForm.setOnLeaveFunction(4, genericMessageFunction, &fieldOnLeaveMsg, NULL, NULL, NULL);
+   iForm.setValidatorFunction(0, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
+   iForm.setValidatorFunction(1, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
+   iForm.setValidatorFunction(2, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
+   iForm.setValidatorFunction(3, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
+   iForm.setValidatorFunction(4, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
+   iForm.setOnLeaveFunction(0, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
+   iForm.setOnLeaveFunction(1, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
+   iForm.setOnLeaveFunction(2, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
+   iForm.setOnLeaveFunction(3, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
+   iForm.setOnLeaveFunction(4, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
    iForm.setAutoExit(true);
    iForm.addQuitKey(SHIFT_F2);
    iForm.addQuitKey(SHIFT_F3);
@@ -3228,21 +3224,21 @@ void cxMenuFocusFunctions() {
    string loopStartMsg = "loop start function called";
    string loopEndMsg = "loop end function called";
 
-   cxMenu iMenu(NULL, 1, 10, 15, 12, "Test menu");
+   cxMenu iMenu(nullptr, 1, 10, 15, 12, "Test menu");
    for (int index = 1; index < 25; ++index) {
       iMenu.append("Item " + cxStringUtils::toString(index), index);
    }
-   iMenu.setOnFocusFunction(genericMessageFunction, &onFocusMsg, NULL, NULL, NULL, false);
-   iMenu.setOnLeaveFunction(genericMessageFunction, &onLeaveMsg, NULL, NULL, NULL);
-   iMenu.setLoopStartFunction(genericMessageFunction, &loopStartMsg, NULL, NULL, NULL, false);
-   iMenu.setLoopEndFunction(genericMessageFunction, &loopEndMsg, NULL, NULL, NULL, false);
+   iMenu.setOnFocusFunction(genericMessageFunction, &onFocusMsg, nullptr, nullptr, nullptr, false);
+   iMenu.setOnLeaveFunction(genericMessageFunction, &onLeaveMsg, nullptr, nullptr, nullptr);
+   iMenu.setLoopStartFunction(genericMessageFunction, &loopStartMsg, nullptr, nullptr, nullptr, false);
+   iMenu.setLoopEndFunction(genericMessageFunction, &loopEndMsg, nullptr, nullptr, nullptr, false);
    iMenu.showModal();
 } // cxMenuFocusFunctions
 
 // Tests a cxMultiLineInput, with its input
 //  loop disabled, on a cxForm
 void cxInputOnFormLoopDisabled() {
-   cxForm iForm(NULL, 1, 0, 5, 55, "Test form");
+   cxForm iForm(nullptr, 1, 0, 5, 55, "Test form");
    iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
    iForm.append(3, 1, 1, 25, "Input 3:");
@@ -3253,9 +3249,9 @@ void cxInputOnFormLoopDisabled() {
    string onFocusMsg = "Input 2 onFocus function called";
    string onLeaveMsg = "Input 2 onLeave function called";
    iForm.setOnFocusFunction("Input 2:", genericMessageFunction, &onFocusMsg,
-                            NULL, NULL, NULL, false);
+                            nullptr, nullptr, nullptr, false);
    iForm.setOnLeaveFunction("Input 2:", genericMessageFunction, &onLeaveMsg,
-                            NULL, NULL, NULL);
+                            nullptr, nullptr, nullptr);
    iForm.enableInputLoop("Input 2:", false);
 
    iForm.showModal();
@@ -3271,11 +3267,11 @@ void loneInputWithLoopDisabledOnForm() {
    //  etc.).
    string onFocusMsg = "onFocus function";
    string onLeaveMsg = "onLeave function";
-   cxForm iForm(NULL, 1, 0, 5, 28, "Test form");
-   cxMultiLineInput *input = iForm.append(1, 1, 1, 25, "Input 1:");
+   cxForm iForm(nullptr, 1, 0, 5, 28, "Test form");
+   shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 25, "Input 1:");
    input->enableInputLoop(false);
-   input->setOnFocusFunction(genericMessageFunction, &onFocusMsg, NULL, NULL, NULL, false);
-   input->setOnLeaveFunction(genericMessageFunction, &onLeaveMsg, NULL, NULL, NULL);
+   input->setOnFocusFunction(genericMessageFunction, &onFocusMsg, nullptr, nullptr, nullptr, false);
+   input->setOnLeaveFunction(genericMessageFunction, &onLeaveMsg, nullptr, nullptr, nullptr);
    iForm.setAutoExit(true);
    iForm.showModal();
 } // loneInputWithLoopDisabledOnForm
@@ -3287,7 +3283,7 @@ void cxMenuWithMultipleItemHotkeys() {
    //  selected.  If there is more than 1 item with a hotkey,
    //  then the cxMenu should cycle through highlighting the
    //  next item with the hotkey but not actually select it.
-   cxMenu iMenu(NULL, 1, 0, 8, 12, "Test");
+   cxMenu iMenu(nullptr, 1, 0, 8, 12, "Test");
    iMenu.append("&Item 1", 1);
    iMenu.append("It&em 2", 2);
    iMenu.append("It&em 3", 3);
@@ -3302,10 +3298,10 @@ void cxMenuWithMultipleItemHotkeys() {
 } // cxMenuWithMultipleItemHotkeys
 
 void cxMenuItemHotkeysOffMenu() {
-   cxMenu subMenu(NULL, 1, 0, 5, 15, "Submenu");
+   cxMenu subMenu(nullptr, 1, 0, 5, 15, "Submenu");
    subMenu.append("Item 8", 8, "", cxITEM_NORMAL, false);
    subMenu.append("Item 9", 9, "", cxITEM_NORMAL, false);
-   cxMenu iMenu(NULL, 1, 0, 5, 15, "Test");
+   cxMenu iMenu(nullptr, 1, 0, 5, 15, "Test");
    iMenu.append("&Item 1", 1, "", cxITEM_NORMAL, false);
    iMenu.append("Item 2", 2, "", cxITEM_NORMAL, false);
    iMenu.append("Item 3", 3, "", cxITEM_NORMAL, false);
@@ -3318,7 +3314,7 @@ void cxMenuItemHotkeysOffMenu() {
 } // cxMenuItemHotkeysOffMenu
 
 string changeWindowFocus(void *thePanel, void *unused, void *unused2, void *unused3) {
-   if (thePanel == NULL) {
+   if (thePanel == nullptr) {
       return("");
    }
 
@@ -3329,14 +3325,14 @@ string changeWindowFocus(void *thePanel, void *unused, void *unused2, void *unus
 } // changeWindowFocus
 
 void cxPanelTest() {
-   cxPanel iPanel(NULL, 2, 1, 20, 75);
+   cxPanel iPanel(nullptr, 2, 1, 20, 75);
    iPanel.setTitle("The panel"); // Could help with debugging
 
    // Add various other windows to the panel
    // We'll use iPanel.append() to add the following window to
-   //  the panel
-   cxWindow *iWindow = new cxWindow(NULL, 0, 0,
-                                5, 10, "cxWindow", "This is a cxWindow.");
+   // the panel
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 0, 0, 5, 10,
+                                                        "cxWindow", "This is a cxWindow.");
    iPanel.append(iWindow, 1, 1);
 
    // We can pass a pointer to the panel to other windows as their
@@ -3348,30 +3344,30 @@ void cxPanelTest() {
    //  parent if it's a cxPanel, but I don't know if there's a way
    //  in C++ to tell if an object was created dynamically.
 
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 20, "cxForm 1");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 20, "cxForm 1");
    iForm->append(1, 1, 1, 18, "Input 1:");
    iForm->append(2, 1, 1, 18, "Input 2:");
    iForm->append(3, 1, 1, 18, "Input 3:");
    // Set the F7 key on form 1 to change the window focus to the next
    //  window on the panel.
-   iForm->setKeyFunction(KEY_F(7), changeWindowFocus, &iPanel, NULL, NULL, NULL, true);
+   iForm->setKeyFunction(KEY_F(7), changeWindowFocus, &iPanel, nullptr, nullptr, nullptr, true);
    // Set up simple onFocus and onLeave functions for the form
-   iForm->setOnFocusFunction(testOnFocusFunction, NULL, NULL, NULL, NULL,
+   iForm->setOnFocusFunction(testOnFocusFunction, nullptr, nullptr, nullptr, nullptr,
                              false, false);
-   iForm->setOnLeaveFunction(testOnLeaveFunction, NULL, NULL, NULL, NULL);
+   iForm->setOnLeaveFunction(testOnLeaveFunction, nullptr, nullptr, nullptr, nullptr);
    iPanel.append(iForm, 0, 12);
 
-   cxMultiLineInput *iInput = new cxMultiLineInput(NULL, 0, 0, 3, 10, "Input:");
+   shared_ptr<cxMultiLineInput> iInput = make_shared<cxMultiLineInput>(nullptr, 0, 0, 3, 10, "Input:");
    iInput->setTitle("The input");
    iPanel.append(iInput, 5, 24);
 
-   cxForm *iForm2 = new cxForm(NULL, 0, 0, 5, 20, "cxForm 2");
+   shared_ptr<cxForm> iForm2 = make_shared<cxForm>(nullptr, 0, 0, 5, 20, "cxForm 2");
    iForm2->append(1, 1, 1, 18, "Input 1:");
    iForm2->append(2, 1, 1, 18, "Input 2:");
    iForm2->append(3, 1, 1, 18, "Input 3:");
    iPanel.append(iForm2, 7, 3);
 
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, 8, 14, "cxMenu");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, 8, 14, "cxMenu");
    for (long returnCode = 1; returnCode <= 30; ++returnCode) {
       iMenu->append("Item " + cxStringUtils::toString(returnCode), returnCode, "Item " +
                     cxStringUtils::toString(returnCode));
@@ -3395,7 +3391,7 @@ void cxPanelTest() {
 
    // Test getWindow() with an index
    messageBox("Here is just the multi-line input by itself.");
-   cxWindow *win = iPanel.getWindow(2);
+   std::shared_ptr<cxWindow> win = iPanel.getWindow(2);
    win->showModal();
 
    //iPanel.setExitOnLeaveLast(true);
@@ -3418,11 +3414,11 @@ void cxPanelTest() {
    iPanel.delWindow(4);
    long retval = iPanel.showModal();
    messageBox("Return code: " + getReturnCodeStr(retval));
-   cxForm *form = dynamic_cast<cxForm*>(iPanel.getWindow(1));
+   cxForm *form = dynamic_cast<cxForm*>(iPanel.getWindow(1).get());
    messageBox("Value of form 1 input 1:" + form->getValue(0) + ":");
-   form = dynamic_cast<cxForm*>(iPanel.getWindow(3));
+   form = dynamic_cast<cxForm*>(iPanel.getWindow(3).get());
    messageBox("Value of form 2 input 1:" + form->getValue(0) + ":");
-   cxMultiLineInput *input = static_cast<cxMultiLineInput*>(iPanel.getWindow(2));
+   cxMultiLineInput *input = static_cast<cxMultiLineInput*>(iPanel.getWindow(2).get());
    messageBox("Value of the lone input:" + input->getValue() + ":");
 
    // Note: We don't need to free the memory used by the windows
@@ -3435,11 +3431,10 @@ void cxPanelTest2() {
    //  a read-only form at the top, a menu in the middle, and a form at the
    //  bottom.  Note: The order of appending the windows to the panel is
    //  important.
-   cxPanel iPanel(NULL, 1, 0, cxBase::height()-2, cxBase::width(), "Panel", "",
+   cxPanel iPanel(nullptr, 1, 0, cxBase::height()-2, cxBase::width(), "Panel", "",
                   "", eBS_SINGLE_LINE);
    // Add a form with all read-only inputs at the top of the panel
-   cxForm *infoForm = new cxForm(NULL, 0, 0, 1, iPanel.width()-2, "Info form",
-                                 eBS_NOBORDER);
+   shared_ptr<cxForm> infoForm = make_shared<cxForm>(nullptr, 0, 0, 1, iPanel.width()-2, "Info form", eBS_NOBORDER);
    infoForm->append(0, 0, 1, 20, "Name:", "", "", eINPUT_READONLY);
    infoForm->append(0, 22, 1, 20, "Addr:", "", "", eINPUT_READONLY);
    infoForm->setValue(0, "Bob", false);
@@ -3450,7 +3445,7 @@ void cxPanelTest2() {
    infoForm->setWaitForInputIfEmpty(false);
    iPanel.append(infoForm, 1, 1, false);
    // Add a form for user input
-   cxForm *inputForm = new cxForm(NULL, 0, 0, 4, iPanel.width(), "Input form");
+   shared_ptr<cxForm> inputForm = make_shared<cxForm>(nullptr, 0, 0, 4, iPanel.width(), "Input form");
    inputForm->append(1, 1, 1, 20, "Item#:");
    inputForm->append(2, 1, 1, 20, "Price:");
    inputForm->append(1, 22, 1, 20, "Cost:");
@@ -3459,7 +3454,7 @@ void cxPanelTest2() {
    // Add a menu below the informational form
    int inputFormHeight = inputForm->height();
    int menuHeight = iPanel.height() - infoForm->height() - inputFormHeight - 1;
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, menuHeight, iPanel.width(), "Menu");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, menuHeight, iPanel.width(), "Menu");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i), i, "", cxITEM_NORMAL, false);
    }
@@ -3472,14 +3467,14 @@ void cxPanelTest2() {
 void cxPanelDelAllWindowsTest() {
    // This tests cxPanel's delAllWindows().  The app shouldn't crash/segfault,
    //  and there shouldn't be any memory leaks.
-   cxPanel iPanel(NULL, 2, 1, 20, 75);
+   cxPanel iPanel(nullptr, 2, 1, 20, 75);
    iPanel.setTitle("The panel"); // Could help with debugging
 
    // Add various other windows to the panel
    // We'll use iPanel.append() to add the following window to
-   //  the panel
-   cxWindow *iWindow = new cxWindow(NULL, 0, 0,
-                                5, 10, "cxWindow", "This is a cxWindow.");
+   // the panel
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 0, 0, 5, 10,
+                                                        "cxWindow", "This is a cxWindow.");
    iPanel.append(iWindow, 1, 1);
 
    // We can pass a pointer to the panel to other windows as their
@@ -3491,30 +3486,30 @@ void cxPanelDelAllWindowsTest() {
    //  parent if it's a cxPanel, but I don't know if there's a way
    //  in C++ to tell if an object was created dynamically.
 
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 20, "cxForm 1");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 20, "cxForm 1");
    iForm->append(1, 1, 1, 18, "Input 1:");
    iForm->append(2, 1, 1, 18, "Input 2:");
    iForm->append(3, 1, 1, 18, "Input 3:");
    // Set the F7 key on form 1 to change the window focus to the next
    //  window on the panel.
-   iForm->setKeyFunction(KEY_F(7), changeWindowFocus, &iPanel, NULL, NULL, NULL, true);
+   iForm->setKeyFunction(KEY_F(7), changeWindowFocus, &iPanel, nullptr, nullptr, nullptr, true);
    // Set up simple onFocus and onLeave functions for the form
-   iForm->setOnFocusFunction(testOnFocusFunction, NULL, NULL, NULL, NULL,
+   iForm->setOnFocusFunction(testOnFocusFunction, nullptr, nullptr, nullptr, nullptr,
                              false, false);
-   iForm->setOnLeaveFunction(testOnLeaveFunction, NULL, NULL, NULL, NULL);
+   iForm->setOnLeaveFunction(testOnLeaveFunction, nullptr, nullptr, nullptr, nullptr);
    iPanel.append(iForm, 0, 12);
 
-   cxMultiLineInput *iInput = new cxMultiLineInput(NULL, 0, 0, 3, 10, "Input:");
+   shared_ptr<cxMultiLineInput> iInput = make_shared<cxMultiLineInput>(nullptr, 0, 0, 3, 10, "Input:");
    iInput->setTitle("The input");
    iPanel.append(iInput, 5, 24);
 
-   cxForm *iForm2 = new cxForm(NULL, 0, 0, 5, 20, "cxForm 2");
+   shared_ptr<cxForm> iForm2 = make_shared<cxForm>(nullptr, 0, 0, 5, 20, "cxForm 2");
    iForm2->append(1, 1, 1, 18, "Input 1:");
    iForm2->append(2, 1, 1, 18, "Input 2:");
    iForm2->append(3, 1, 1, 18, "Input 3:");
    iPanel.append(iForm2, 7, 3);
 
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, 8, 14, "cxMenu");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, 8, 14, "cxMenu");
    for (long returnCode = 1; returnCode <= 30; ++returnCode) {
       iMenu->append("Item " + cxStringUtils::toString(returnCode), returnCode, "Item " +
                     cxStringUtils::toString(returnCode));
@@ -3530,15 +3525,15 @@ void cxPanelDelAllWindowsTest() {
 
 void cxWindowWithFunctionKeys() {
    string message = "Try pressing F1 and F2.  All other keys will exit this window.";
-   cxWindow iWindow(NULL, 1, 0, 14, 70, "Test window", message);
-   iWindow.setKeyFunction(KEY_F(1), sayHello, NULL, NULL, false, false);
-   iWindow.setKeyFunction(KEY_F(2), sayHello2, NULL, NULL, false, false);
+   cxWindow iWindow(nullptr, 1, 0, 14, 70, "Test window", message);
+   iWindow.setKeyFunction(KEY_F(1), sayHello, nullptr, nullptr, false, false);
+   iWindow.setKeyFunction(KEY_F(2), sayHello2, nullptr, nullptr, false, false);
    long returnCode = iWindow.showModal();
    messageBox("Return code: " + getReturnCodeStr(returnCode));
 } // cxWindowWithFunctionKeys
 
 void cxWindowWithMultipleTitleStrings() {
-   cxWindow iWindow(NULL, 1, 0, 7, 75, "",
+   cxWindow iWindow(nullptr, 1, 0, 7, 75, "",
                     "There should be multiple title strings.",
                     "", eBS_SINGLE_LINE);
    iWindow.addTitleString(1, "At 1", false);
@@ -3548,7 +3543,7 @@ void cxWindowWithMultipleTitleStrings() {
 } // cxWindowWithMultipleTitleStrings
 
 void cxWindowWithMultipleStatusStrings() {
-   cxWindow iWindow(NULL, 1, 0, 10, 50, "Test",
+   cxWindow iWindow(nullptr, 1, 0, 10, 50, "Test",
                     "There should be multiple status strings.", "");
    iWindow.addStatusString(1, "At 1", false);
    iWindow.addStatusString(8, "At 8", false);
@@ -3557,7 +3552,7 @@ void cxWindowWithMultipleStatusStrings() {
 } // cxWindowWithMultipleStatusStrings
 
 string allMenuItemsUnselectable(void *menu, void *unused) {
-   if (menu == NULL) {
+   if (menu == nullptr) {
       return("");
    }
 
@@ -3571,7 +3566,7 @@ string allMenuItemsUnselectable(void *menu, void *unused) {
 } // allMenuItemsUnselectable
 
 string clearAllMenuItems(void *menu, void *unused) {
-   if (menu == NULL) {
+   if (menu == nullptr) {
       return("");
    }
 
@@ -3583,13 +3578,13 @@ string clearAllMenuItems(void *menu, void *unused) {
 
 void cxMenuNoMoreSelectableItemsWhileModal() {
    messageBox("Press F11 to make all menu items un-editable or shift-F11 to clear all the items from the menu.  It should return immediately.");
-   //cxMenu iMenu(NULL, 1, 0, 15, 20, "Test");
-   cxMenu iMenu(NULL, 1, 0, 8, 20, "Test");
+   //cxMenu iMenu(nullptr, 1, 0, 15, 20, "Test");
+   cxMenu iMenu(nullptr, 1, 0, 8, 20, "Test");
    for (int i = 0; i < 12; ++i) {
       iMenu.append("Item " + cxStringUtils::toString(i), i);
    }
-   iMenu.setKeyFunction(KEY_F(11), allMenuItemsUnselectable, &iMenu, NULL, false, false);
-   iMenu.setKeyFunction(SHIFT_F11, clearAllMenuItems, &iMenu, NULL, false, false);
+   iMenu.setKeyFunction(KEY_F(11), allMenuItemsUnselectable, &iMenu, nullptr, false, false);
+   iMenu.setKeyFunction(SHIFT_F11, clearAllMenuItems, &iMenu, nullptr, false, false);
    iMenu.showModal();
 } // cxMenuNoMoreSelectableItemsWhileModal
 
@@ -3597,18 +3592,16 @@ void cxPanelWithNonEditableSubwindows() {
    // Set up a cxPanel with some subwindows that don't have anything
    //  editable on them - Before, this would result in an infinite loop in
    //  cxPanel's showModal(); this was fixed on 04/21/06.
-   cxPanel iPanel(NULL, 1, 0, 20, 80, "Test", "", "", eBS_SINGLE_LINE);
+   cxPanel iPanel(nullptr, 1, 0, 20, 80, "Test", "", "", eBS_SINGLE_LINE);
    iPanel.setExitOnLeaveLast(true);
-   cxMultiLineInput *iInput = new cxMultiLineInput(NULL, 2, 10, 1, 15, "Input:",
-                                   eBS_NOBORDER, eINPUT_READONLY);
+   shared_ptr<cxMultiLineInput> iInput = make_shared<cxMultiLineInput>(nullptr, 2, 10, 1, 15, "Input:",
+                                                                       eBS_NOBORDER, eINPUT_READONLY);
    iPanel.append(iInput);
-   cxPanel *panel2 = new cxPanel(NULL, 3, 5, 3, 50, "Panel 2", "", "",
-                                 eBS_SINGLE_LINE);
+   shared_ptr<cxPanel> panel2 = make_shared<cxPanel>(nullptr, 3, 5, 3, 50, "Panel 2", "", "", eBS_SINGLE_LINE);
    iPanel.append(panel2);
-   cxScrolledWindow *iSWindow = new cxScrolledWindow(NULL, 7, 5, 3, 50,
-                                      "Scrolled window");
+   shared_ptr<cxScrolledWindow> iSWindow = make_shared<cxScrolledWindow>(nullptr, 7, 5, 3, 50, "Scrolled window");
    iPanel.append(iSWindow);
-   cxWindow *iWindow = new cxWindow(NULL, 11, 5, 3, 50, "Window");
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 11, 5, 3, 50, "Window");
    iPanel.append(iWindow);
    iPanel.showModal();
 } // cxPanelWithNonEditableSubwindows
@@ -3617,7 +3610,7 @@ void cxMenuWithDuplicateHotkeys() {
    // Items 4 and 10 have the same hotkey.  The menu will have to scroll to
    //  show each of them when the user presses the 'i' key.  It should go
    //  to each of them, and there should be no scrolling issues.
-   cxMenu iMenu(NULL, 1, 0, 10, 10, "Test");
+   cxMenu iMenu(nullptr, 1, 0, 10, 10, "Test");
    iMenu.append("Item 1", 1);
    iMenu.append("Item 2", 2);
    iMenu.append("Item 3", 3);
@@ -3632,10 +3625,10 @@ void cxMenuWithDuplicateHotkeys() {
 } // cxMenuWithDuplicateHotkeys
 
 void cxPanelWindowSwap() {
-   cxPanel iPanel(NULL, 1, 0, 20, 80, "Panel");
-   cxMenu *menu1 = new cxMenu(NULL, 0, 0, 5, 10, "Menu 1");
-   cxMenu *menu2 = new cxMenu(NULL, 0, 0, 5, 10, "Menu 2");
-   cxMenu *menu3 = new cxMenu(NULL, 0, 0, 5, 10, "Menu 3");
+   cxPanel iPanel(nullptr, 1, 0, 20, 80, "Panel");
+   shared_ptr<cxMenu> menu1 = make_shared<cxMenu>(nullptr, 0, 0, 5, 10, "Menu 1");
+   shared_ptr<cxMenu> menu2 = make_shared<cxMenu>(nullptr, 0, 0, 5, 10, "Menu 2");
+   shared_ptr<cxMenu> menu3 = make_shared<cxMenu>(nullptr, 0, 0, 5, 10, "Menu 3");
    for (int i = 1; i <= 5; ++i) {
       menu1->append("Item " + cxStringUtils::toString(i), i);
       menu2->append("Item " + cxStringUtils::toString(i), i);
@@ -3655,20 +3648,20 @@ void cxPanel_cxMenuUpArrowLeave() {
    cxBase::messageBox("In menu 2, pressing up arrow on the first item will "
                        "go to menu 1.");
 
-   cxPanel iPanel(NULL, 1, 0, height()-2, width(), "Test panel", "", "",
+   cxPanel iPanel(nullptr, 1, 0, height()-2, width(), "Test panel", "", "",
                   eBS_SINGLE_LINE);
-   cxMenu *iMenu1 = new cxMenu(NULL, 0, 0, 7, width(), "Menu 1");
+   shared_ptr<cxMenu> iMenu1 = make_shared<cxMenu>(nullptr, 0, 0, 7, width(), "Menu 1");
    for (int i = 1; i <= 30; ++i) {
       iMenu1->append("Item " + cxStringUtils::toString(i), i);
    }
    iPanel.append(iMenu1, 1, 0, false);
-   cxMenu *iMenu2 = new cxMenu(NULL, 0, 0, 7, width(), "Menu 2");
+   shared_ptr<cxMenu> iMenu2 = make_shared<cxMenu>(nullptr, 0, 0, 7, width(), "Menu 2");
    for (int i = 1; i <= 30; ++i) {
       iMenu2->append("Item " + cxStringUtils::toString(i), i);
    }
    iPanel.append(iMenu2, 8, 0, false);
    iMenu2->setExitWhenLeaveFirst(true);
-   cxMenu *iMenu3 = new cxMenu(NULL, 0, 0, 7, width(), "Menu 3");
+   shared_ptr<cxMenu> iMenu3 = make_shared<cxMenu>(nullptr, 0, 0, 7, width(), "Menu 3");
    for (int i = 1; i <= 30; ++i) {
       iMenu3->append("Item " + cxStringUtils::toString(i), i);
    }
@@ -4104,9 +4097,9 @@ void windowFunctionKeyNoOnLeave() {
    cxBase::messageBox("The next window has an onLeave function.  It will be "
                       "fired after any keypress except F1, which fires a key "
                       "function and is set not to run the onLeave function.");
-   cxWindow iWindow(NULL, 1, 0, 12, 50, "Test", "This is a test window.");
-   iWindow.setOnLeaveFunction(testOnLeaveFunction, NULL, NULL, NULL, NULL);
-   iWindow.setKeyFunction(KEY_F(1), testKeyFunction, NULL, NULL, false, true, false);
+   cxWindow iWindow(nullptr, 1, 0, 12, 50, "Test", "This is a test window.");
+   iWindow.setOnLeaveFunction(testOnLeaveFunction, nullptr, nullptr, nullptr, nullptr);
+   iWindow.setKeyFunction(KEY_F(1), testKeyFunction, nullptr, nullptr, false, true, false);
    iWindow.showModal();
 } // windowFunctionKeyNoOnLeave
 
@@ -4115,14 +4108,14 @@ void formFunctionKeyNoOnLeave() {
                       "fired when you tab through the inputs on the form.  F1 "
                       "fires a key function and is set to leave and not run "
                       "the onLeave function.");
-   cxForm iForm(NULL, 1, 0, 12, 70, "Test");
+   cxForm iForm(nullptr, 1, 0, 12, 70, "Test");
    iForm.setAutoExit(true);
    iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
    iForm.append(1, 27, 1, 25, "Input 3:");
    iForm.append(2, 27, 1, 25, "Input 4:");
-   iForm.setOnLeaveFunction(testOnLeaveFunction, NULL, NULL, NULL, NULL);
-   iForm.setKeyFunction(KEY_F(1), testKeyFunction, NULL, NULL, false, true, false);
+   iForm.setOnLeaveFunction(testOnLeaveFunction, nullptr, nullptr, nullptr, nullptr);
+   iForm.setKeyFunction(KEY_F(1), testKeyFunction, nullptr, nullptr, false, true, false);
    iForm.showModal();
 } // windowFunctionKeyNoOnLeave
 
@@ -4130,9 +4123,9 @@ void cxMultiLineInputFunctionKeyNoValidator() {
    cxBase::messageBox("The input has a validator that validates that you've "
                       "typed \"test\".  F1 is set up to run a function and "
                       "have the input leave focus without running the validator.");
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 30, "Input:");
-   iInput.setValidatorFunction(testInputValidator, &iInput, NULL, NULL, NULL);
-   iInput.setKeyFunction(KEY_F(1), testKeyFunction, NULL, NULL, false, true, false, false);
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Input:");
+   iInput.setValidatorFunction(testInputValidator, &iInput, nullptr, nullptr, nullptr);
+   iInput.setKeyFunction(KEY_F(1), testKeyFunction, nullptr, nullptr, false, true, false, false);
    iInput.showModal();
 } // cxMultiLineInputFunctionKeyNoValidator
 
@@ -4141,22 +4134,22 @@ void cxFormMultiLineInputFunctionKeyNoValidator() {
                       "validator.  F1 on input 1 fires a key function and is "
                       "set to leave input 1 and not run its onLeave function "
                       "or its validator.");
-   cxForm iForm(NULL, 1, 0, 12, 70, "Test");
+   cxForm iForm(nullptr, 1, 0, 12, 70, "Test");
    iForm.setAutoExit(true);
-   cxMultiLineInput *iInput = iForm.append(1, 1, 1, 25, "Input 1:");
+   shared_ptr<cxMultiLineInput> iInput = iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
    iForm.append(1, 27, 1, 25, "Input 3:");
    iForm.append(2, 27, 1, 25, "Input 4:");
-   iForm.setOnLeaveFunction("Input 1:", testOnLeaveFunction, NULL, NULL, NULL,
-                            NULL, true);
-   iInput->setValidatorFunction(testInputValidator, iInput, NULL, NULL, NULL);
-   iForm.setKeyFunction("Input 1:", KEY_F(1), testKeyFunction, NULL, NULL,
+   iForm.setOnLeaveFunction("Input 1:", testOnLeaveFunction, nullptr, nullptr, nullptr,
+                            nullptr, true);
+   iInput->setValidatorFunction(testInputValidator, iInput.get(), nullptr, nullptr, nullptr);
+   iForm.setKeyFunction("Input 1:", KEY_F(1), testKeyFunction, nullptr, nullptr,
                         false, true, false, false);
    iForm.showModal();
 } // cxFormMultiLineInputFunctionKeyNoValidator
 
 void cxFormNavKeys() {
-   cxForm iForm(NULL, 1, 0, 10, 60, "Test form");
+   cxForm iForm(nullptr, 1, 0, 10, 60, "Test form");
    iForm.append(1, 1, 1, 19, "Input 1:");
    iForm.append(2, 1, 1, 19, "Input 2:");
    iForm.append(3, 1, 1, 19, "Input 3:");
@@ -4186,7 +4179,7 @@ void cxFormNavKeys() {
 } // cxFormNavKeys
 
 void addMessageLine() {
-   cxWindow iWindow(NULL, 1, 0, 10, 70, "Test");
+   cxWindow iWindow(nullptr, 1, 0, 10, 70, "Test");
    iWindow.addMessageLineBelow("Line 1");
    iWindow.addMessageLineBelow("Line 2");
    iWindow.addMessageLineBelow("Line 3");
@@ -4196,7 +4189,7 @@ void addMessageLine() {
 } // addMessageLine
 
 void cxFormStartAtFirstInput() {
-   cxForm iForm(NULL, 1, 0, 10, 60, "Test form");
+   cxForm iForm(nullptr, 1, 0, 10, 60, "Test form");
    iForm.append(1, 1, 1, 19, "Input 1:");
    iForm.append(2, 1, 1, 19, "Input 2:");
    iForm.append(3, 1, 1, 19, "Input 3:");
@@ -4213,28 +4206,28 @@ void cxFormStartAtFirstInput() {
 // Event method to help with cxPanelGetLastWindow()
 string onFocusWinForCxPanelGetLastPage(void *thePanel, void *theCurrentWindow,
                              void *unused2, void *unused3) {
-   if ((NULL == thePanel) || (NULL == theCurrentWindow)) {
+   if ((nullptr == thePanel) || (nullptr == theCurrentWindow)) {
       return("");
    }
 
    cxPanel *pPanel = static_cast<cxPanel*>(thePanel);
    cxWindow *pCurrentWindow = static_cast<cxWindow*>(theCurrentWindow);
 
-   cxWindow *lastWindow = pPanel->getLastWindow();
-   if (NULL != lastWindow) {
+   shared_ptr<cxWindow> lastWindow = pPanel->getLastWindow();
+   if (nullptr != lastWindow) {
       cxBase::messageBox("On focus of this window:" + pCurrentWindow->getTitle()
              + ":, the last window title is:" + lastWindow->getTitle() + ":");
    }
    else {
       cxBase::messageBox("On focus of this window:" + pCurrentWindow->getTitle()
-                         + ":, the last window is NULL.");
+                         + ":, the last window is nullptr.");
    }
 
    return("");
 } // onFocusWinForCxPanelGetLastPage
 
 void cxFormClearOnlyEditable() {
-   cxForm iForm(NULL, 1, 0, 20, 70, "Form");
+   cxForm iForm(nullptr, 1, 0, 20, 70, "Form");
    iForm.append(1, 1, 1, 20, "Input 1:");
    iForm.append(2, 1, 1, 20, "Input 2:");
    iForm.append(3, 1, 1, 20, "Input 3:");
@@ -4254,29 +4247,29 @@ void cxFormClearOnlyEditable() {
 
 // Tester for cxPanel::getLastPage()
 void cxPanelGetLastWindow() {
-   cxPanel iPanel(NULL, 1, 0, 21, 80, "Main panel", "", "", eBS_SINGLE_LINE);
+   cxPanel iPanel(nullptr, 1, 0, 21, 80, "Main panel", "", "", eBS_SINGLE_LINE);
 
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, 8, 80, "Menu");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, 8, 80, "Menu");
    for (int i = 1; i <= 10; ++i) {
       iMenu->append("Item " + cxStringUtils::toString(i), i);
    }
-   iMenu->setOnFocusFunction(onFocusWinForCxPanelGetLastPage, &iPanel, iMenu,
-                             NULL, NULL);
+   iMenu->setOnFocusFunction(onFocusWinForCxPanelGetLastPage, &iPanel, iMenu.get(),
+                             nullptr, nullptr);
    iPanel.append(iMenu, 1, 0, false);
 
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 80, "Form");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 80, "Form");
    iForm->append(1, 1, 1, 20, "Input 1:");
    iForm->append(2, 1, 1, 20, "Input 2:");
    iForm->append(3, 1, 1, 20, "Input 3:");
    iForm->append(1, 22, 1, 20, "Input 4:");
    iForm->append(2, 22, 1, 20, "Input 5:");
    iForm->append(3, 22, 1, 20, "Input 6:");
-   iForm->setOnFocusFunction(onFocusWinForCxPanelGetLastPage, &iPanel, iForm,
-                             NULL, NULL);
+   iForm->setOnFocusFunction(onFocusWinForCxPanelGetLastPage, &iPanel, iForm.get(),
+                             nullptr, nullptr);
    iPanel.append(iForm, 9, 0, false);
 
    // Show the window..  The first time the panel is shown, its last window
-   //  should be NULL.
+   //  should be nullptr.
    iPanel.showModal();
 
    // Show the panel again..  The last window should be the window that had
@@ -4297,15 +4290,15 @@ void cxButtonOnClick() {
    cxBase::messageBox("If you press enter or click on the next button, its "
                       "onClick function will fire.");
 
-   cxButton iButton(NULL, 1, 0, 3, 10, "Button");
-   iButton.setOnClickFunction(buttonClickFunction, &iButton, NULL, NULL, NULL);
+   cxButton iButton(nullptr, 1, 0, 3, 10, "Button");
+   iButton.setOnClickFunction(buttonClickFunction, &iButton, nullptr, nullptr, nullptr);
    iButton.showModal();
 } // cxButtonOnClick
 
 void cxMenuMiscTests() {
    {
       // Test getItemTextByReturnCode()
-      cxMenu iMenu(NULL, 0, 0, 10, 16, "Test menu");
+      cxMenu iMenu(nullptr, 0, 0, 10, 16, "Test menu");
       for (unsigned i = 0; i < 5; ++i) {
          iMenu.append("Item " + toString(i), i);
       }
@@ -4353,13 +4346,13 @@ string onLeaveForm(void *theSearchPanel, void *unused, void *unused2,
 string onFocusMenu(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3) {
    //cxBase::messageBox("onFocusMenu");
-   if (theSearchPanel == NULL) {
+   if (theSearchPanel == nullptr) {
       return("");
    }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   cxMenu *iMenu = pSearchPanel->getMenu();
-   cxForm *iForm = pSearchPanel->getForm();
+   shared_ptr<cxMenu> iMenu = pSearchPanel->getMenu();
+   shared_ptr<cxForm> iForm = pSearchPanel->getForm();
    iMenu->setStatus("TAB=Form  /=Search  HOME=First  END=Last  UP=Previous  DOWN=Next", true);
    //iForm->setStatus("", true);
 
@@ -4367,7 +4360,7 @@ string onFocusMenu(void *theSearchPanel, void *unused, void *unused2,
    if (iForm->hasChanged()) {
       pSearchPanel->clearMenu(true);
 
-      cxWindow iWindow(NULL, "Running...");
+      cxWindow iWindow(nullptr, "Running...");
       iWindow.show();
       pSearchPanel->appendToMenu("Item 1");
       pSearchPanel->appendToMenu("Item 2");
@@ -4383,7 +4376,7 @@ string onFocusMenu(void *theSearchPanel, void *unused, void *unused2,
 string onLeaveMenu(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3) {
    //cxBase::messageBox("onLeaveMenu");
-   if (theSearchPanel == NULL) {
+   if (theSearchPanel == nullptr) {
       return("");
    }
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
@@ -4394,11 +4387,11 @@ string onLeaveMenu(void *theSearchPanel, void *unused, void *unused2,
 string formOnEnter(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3) {
    //cxBase::messageBox("formOnEnter");
-   if (theSearchPanel == NULL) {
+   if (theSearchPanel == nullptr) {
       return("");
    }
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   cxMenu *iMenu = pSearchPanel->getMenu();
+   shared_ptr<cxMenu> iMenu = pSearchPanel->getMenu();
    iMenu->append("formOnEnter was fired", 999);
 
    return("");
@@ -4406,12 +4399,12 @@ string formOnEnter(void *theSearchPanel, void *unused, void *unused2,
 
 string menuOnEnter(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3) {
-   if (theSearchPanel == NULL) {
+   if (theSearchPanel == nullptr) {
       return("");
    }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   cxMenu *iMenu = pSearchPanel->getMenu();
+   shared_ptr<cxMenu> iMenu = pSearchPanel->getMenu();
    cxBase::messageBox("The '" + iMenu->getCurrentItemText() + "' item was selected.", "ha ha");
 
    return("");
@@ -4420,12 +4413,12 @@ string menuOnEnter(void *theSearchPanel, void *unused, void *unused2,
 string searchPanelOnFocus(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3) {
    //cxBase::messageBox("searchPanelOnFocus");
-   if (theSearchPanel == NULL) {
+   if (theSearchPanel == nullptr) {
       return("");
    }
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   cxForm *iForm = pSearchPanel->getForm();
+   shared_ptr<cxForm> iForm = pSearchPanel->getForm();
    // Change the data in input 2
    iForm->setValue(2, "abc", false);
    // Set the menu as the current window.  This should simulate running the
@@ -4436,7 +4429,7 @@ string searchPanelOnFocus(void *theSearchPanel, void *unused, void *unused2,
 } // searchPanelOnFocus
 
 void cxSearchPanelTest() {
-   cxSearchPanel iSearchPanel(NULL, 1, 0, 20, 70, "Form", "Menu");
+   cxSearchPanel iSearchPanel(nullptr, 1, 0, 20, 70, "Form", "Menu");
    iSearchPanel.appendToForm(1, 1, 1, 20, "Input 1:", "", "", eINPUT_EDITABLE,
                              "input1");
    iSearchPanel.appendToForm(2, 1, 1, 20, "Input 2:", "", "", eINPUT_EDITABLE,
@@ -4445,22 +4438,22 @@ void cxSearchPanelTest() {
                              "input3");
    iSearchPanel.appendToForm(2, 22, 1, 20, "Input 4:", "", "", eINPUT_EDITABLE,
                              "input4");
-   iSearchPanel.setFormOnFocusFunction(onFocusForm, &iSearchPanel, NULL,
-                           NULL, NULL, false, false);
-   iSearchPanel.setFormOnLeaveFunction(onLeaveForm, &iSearchPanel, NULL,
-                           NULL, NULL);
-   iSearchPanel.setMenuOnFocusFunction(onFocusMenu, &iSearchPanel, NULL,
-                           NULL, NULL, false, false);
-   iSearchPanel.setMenuOnLeaveFunction(onLeaveMenu, &iSearchPanel, NULL,
-                           NULL, NULL);
-   iSearchPanel.setFormOnEnterFunction(formOnEnter, &iSearchPanel, NULL,
-                                       NULL, NULL);
+   iSearchPanel.setFormOnFocusFunction(onFocusForm, &iSearchPanel, nullptr,
+                           nullptr, nullptr, false, false);
+   iSearchPanel.setFormOnLeaveFunction(onLeaveForm, &iSearchPanel, nullptr,
+                           nullptr, nullptr);
+   iSearchPanel.setMenuOnFocusFunction(onFocusMenu, &iSearchPanel, nullptr,
+                           nullptr, nullptr, false, false);
+   iSearchPanel.setMenuOnLeaveFunction(onLeaveMenu, &iSearchPanel, nullptr,
+                           nullptr, nullptr);
+   iSearchPanel.setFormOnEnterFunction(formOnEnter, &iSearchPanel, nullptr,
+                                       nullptr, nullptr);
    // A cxSearchPanel sets an onSelectItem function for its menu, but we can
    //  also set one if we want:
-   //iSearchPanel.setMenuOnSelectItemFunction(menuOnEnter, &iSearchPanel, NULL,
-   //                             NULL, NULL, true, true);
-   iSearchPanel.setOnFocusFunction(searchPanelOnFocus, &iSearchPanel, NULL,
-                                   NULL, NULL, false, false);
+   //iSearchPanel.setMenuOnSelectItemFunction(menuOnEnter, &iSearchPanel, nullptr,
+   //                             nullptr, nullptr, true, true);
+   iSearchPanel.setOnFocusFunction(searchPanelOnFocus, &iSearchPanel, nullptr,
+                                   nullptr, nullptr, false, false);
    iSearchPanel.showModal();
    if (iSearchPanel.itemWasSelected()) {
       cxBase::messageBox("You chose this item:" + iSearchPanel.getSelectedItem() + ":");
@@ -4471,7 +4464,7 @@ void cxSearchPanelTest() {
 } // cxSearchPanelTest
 
 void cxSearchPanelResize() {
-   cxSearchPanel iSearchPanel(NULL, 1, 0, 10, 70, "Form", "Menu");
+   cxSearchPanel iSearchPanel(nullptr, 1, 0, 10, 70, "Form", "Menu");
    iSearchPanel.appendToForm(1, 1, 1, 20, "Input 1:", "", "", eINPUT_EDITABLE,
                              "input1");
    iSearchPanel.appendToForm(2, 1, 1, 20, "Input 2:", "", "", eINPUT_EDITABLE,
@@ -4480,24 +4473,24 @@ void cxSearchPanelResize() {
                              "input3");
    iSearchPanel.appendToForm(2, 22, 1, 20, "Input 4:", "", "", eINPUT_EDITABLE,
                              "input4");
-   iSearchPanel.setFormOnFocusFunction(onFocusForm, &iSearchPanel, NULL,
-                           NULL, NULL, false, false);
-   iSearchPanel.setFormOnLeaveFunction(onLeaveForm, &iSearchPanel, NULL,
-                           NULL, NULL);
-   iSearchPanel.setMenuOnFocusFunction(onFocusMenu, &iSearchPanel, NULL,
-                           NULL, NULL, false, false);
-   iSearchPanel.setMenuOnLeaveFunction(onLeaveMenu, &iSearchPanel, NULL,
-                           NULL, NULL);
+   iSearchPanel.setFormOnFocusFunction(onFocusForm, &iSearchPanel, nullptr,
+                           nullptr, nullptr, false, false);
+   iSearchPanel.setFormOnLeaveFunction(onLeaveForm, &iSearchPanel, nullptr,
+                           nullptr, nullptr);
+   iSearchPanel.setMenuOnFocusFunction(onFocusMenu, &iSearchPanel, nullptr,
+                           nullptr, nullptr, false, false);
+   iSearchPanel.setMenuOnLeaveFunction(onLeaveMenu, &iSearchPanel, nullptr,
+                           nullptr, nullptr);
    iSearchPanel.resize(23, 60, false);
    iSearchPanel.showModal();
 
    cxBase::messageBox("Now testing setFormHeight()");
-   cxForm *iForm = iSearchPanel.getForm(); // To get the form's current height
+   shared_ptr<cxForm> iForm = iSearchPanel.getForm(); // To get the form's current height
    iSearchPanel.setFormHeight(iForm->height()-2, false);
    iSearchPanel.showModal();
 
    cxBase::messageBox("Now testing setMenuHeight()");
-   cxMenu *iMenu = iSearchPanel.getMenu(); // To get the menu's current height
+   shared_ptr<cxMenu> iMenu = iSearchPanel.getMenu(); // To get the menu's current height
    iSearchPanel.setMenuHeight(iMenu->height()-2, false);
    iSearchPanel.showModal();
 } // cxSearchPanelResize
@@ -4506,7 +4499,7 @@ void cxSearchPanelCopyConstructor() {
    // Create one with 'new' so that it can be destroyed after it is copied.
    //  The copy should be like the original, and there should be no
    //  segfaults, etc.
-   cxSearchPanel *iSearchPanel = new cxSearchPanel(NULL, 1, 0, 20, 70, "Form", "Menu");
+   shared_ptr<cxSearchPanel> iSearchPanel = make_shared<cxSearchPanel>(nullptr, 1, 0, 20, 70, "Form", "Menu");
    iSearchPanel->appendToForm(1, 1, 1, 20, "Input 1:", "", "", eINPUT_EDITABLE,
                              "input1");
    iSearchPanel->appendToForm(2, 1, 1, 20, "Input 2:", "", "", eINPUT_EDITABLE,
@@ -4515,27 +4508,26 @@ void cxSearchPanelCopyConstructor() {
                              "input3");
    iSearchPanel->appendToForm(2, 22, 1, 20, "Input 4:", "", "", eINPUT_EDITABLE,
                              "input4");
-   iSearchPanel->setFormOnFocusFunction(onFocusForm, iSearchPanel, NULL,
-                           NULL, NULL, false, false);
-   iSearchPanel->setFormOnLeaveFunction(onLeaveForm, iSearchPanel, NULL,
-                           NULL, NULL);
-   iSearchPanel->setMenuOnFocusFunction(onFocusMenu, iSearchPanel, NULL,
-                           NULL, NULL, false, false);
-   iSearchPanel->setMenuOnLeaveFunction(onLeaveMenu, iSearchPanel, NULL,
-                           NULL, NULL);
-   iSearchPanel->setFormOnEnterFunction(formOnEnter, iSearchPanel, NULL,
-                                        NULL, NULL);
-   iSearchPanel->setOnFocusFunction(searchPanelOnFocus, iSearchPanel, NULL,
-                                   NULL, NULL, false, false);
+   iSearchPanel->setFormOnFocusFunction(onFocusForm, iSearchPanel.get(), nullptr,
+                           nullptr, nullptr, false, false);
+   iSearchPanel->setFormOnLeaveFunction(onLeaveForm, iSearchPanel.get(), nullptr,
+                           nullptr, nullptr);
+   iSearchPanel->setMenuOnFocusFunction(onFocusMenu, iSearchPanel.get(), nullptr,
+                           nullptr, nullptr, false, false);
+   iSearchPanel->setMenuOnLeaveFunction(onLeaveMenu, iSearchPanel.get(), nullptr,
+                           nullptr, nullptr);
+   iSearchPanel->setFormOnEnterFunction(formOnEnter, iSearchPanel.get(), nullptr,
+                                        nullptr, nullptr);
+   iSearchPanel->setOnFocusFunction(searchPanelOnFocus, iSearchPanel.get(), nullptr,
+                                   nullptr, nullptr, false, false);
    iSearchPanel->setName("searchPanel");
    cxSearchPanel copyPanel(*iSearchPanel);
-   delete iSearchPanel;
-   iSearchPanel = NULL;
+   iSearchPanel = nullptr;
    copyPanel.showModal();
 } // cxSearchPanelCopyConstructor
 
 void cxMenuResize() {
-   cxMenu iMenu(NULL, 1, 0, 10, 15, "Test menu");
+   cxMenu iMenu(nullptr, 1, 0, 10, 15, "Test menu");
    for (int i = 1; i <= 15; ++i) {
       iMenu.append("Item " + toString(i), i);
    }
@@ -4550,7 +4542,7 @@ void cxWindowAlignTest() {
    //string text;
    int windowWidth=20;
 
-   cxWindow iWindow(NULL, 0, 0, 3, windowWidth, "Test", "", "");
+   cxWindow iWindow(nullptr, 0, 0, 3, windowWidth, "Test", "", "");
    iWindow.setMessage("1 dead center");
    iWindow.center();
    iWindow.show();
@@ -4628,15 +4620,15 @@ void cxWindowAlignTest() {
 void cxNotebookTest1() {
    // This tests various cxNotebook stuff: Adding panels of stuff, setting the
    //  label text, etc.
-   cxNotebook iNotebook(NULL, 2, 3, 15, 70, true, true, true, 0);
+   cxNotebook iNotebook(nullptr, 2, 3, 15, 70, true, true, true, 0);
    // Append a panel containing a cxMenu and a cxForm
-   cxPanel *iPanel1 = iNotebook.append("Win1");
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, 5, 10, "Menu");
+   shared_ptr<cxPanel> iPanel1 = iNotebook.append("Win1");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, 5, 10, "Menu");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i), i);
    }
    iPanel1->append(iMenu, 1, 1, false);
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 31, "Form");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 31, "Form");
    iForm->append(1, 1, 1, 14, "Input 1:");
    iForm->append(2, 1, 1, 14, "Input 2:");
    iForm->append(3, 1, 1, 14, "Input 3:");
@@ -4645,30 +4637,27 @@ void cxNotebookTest1() {
    iForm->append(3, 16, 1, 14, "Input 6:");
    iPanel1->append(iForm, 1, 12, false);
    // Append another panel containing some more stuff
-   cxPanel *iPanel2 = iNotebook.append("Win2");
-   iMenu = new cxMenu(NULL, 0, 0, 6, iNotebook.width(), "Item       Qty       Price");
+   shared_ptr<cxPanel> iPanel2 = iNotebook.append("Win2");
+   iMenu = make_shared<cxMenu>(nullptr, 0, 0, 6, iNotebook.width(), "Item       Qty       Price");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i) + "       3      $12.00", i);
    }
    iPanel2->append(iMenu, 1, 0);
-   iForm = new cxForm(NULL, 0, 0, 5, iNotebook.width(), "Item form");
+   iForm = make_shared<cxForm>(nullptr, 0, 0, 5, iNotebook.width(), "Item form");
    iForm->append(1, 1, 1, 14, "Desc:");
    iForm->append(2, 1, 1, 14, "Qty:");
    iForm->append(3, 1, 1, 14, "Price:");
    iPanel2->append(iForm, 7, 0, false);
    // Add a 3rd panel
-   cxPanel *iPanel3 = iNotebook.append("Win3");
-   cxFileViewer *iFileViewer = new cxFileViewer(NULL, "cxMenu.h", 0, 0, 7,
-                                                iNotebook.width());
+   shared_ptr<cxPanel> iPanel3 = iNotebook.append("Win3");
+   shared_ptr<cxFileViewer> iFileViewer = make_shared<cxFileViewer>(nullptr, "cxMenu.h", 0, 0, 7, iNotebook.width());
    iPanel3->append(iFileViewer, 1, 0);
-   cxWindow *iWindow = new cxWindow(NULL, 0, 0, 4, iNotebook.width(),
-                                    "cxWindow", "This is a cxWindow");
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 0, 0, 4, iNotebook.width(), "cxWindow", "This is a cxWindow");
    iPanel3->append(iWindow, 8, 0);
    // Add a 4th panel with a cxMultiForm on it
-   cxPanel *iPanel4 = iNotebook.append("Win4");
-   cxMultiForm *iMultiForm = new cxMultiForm(NULL, 0, 0, iPanel4->height()-2,
-                                             iPanel4->width(), "MultiForm",
-                                             eBS_SINGLE_LINE);
+   shared_ptr<cxPanel> iPanel4 = iNotebook.append("Win4");
+   shared_ptr<cxMultiForm> iMultiForm = make_shared<cxMultiForm>(nullptr, 0, 0, iPanel4->height()-2,
+                                                                 iPanel4->width(), "MultiForm", eBS_SINGLE_LINE);
    iPanel4->append(iMultiForm, 1, 0, false);
    iForm = iMultiForm->appendForm(1, 1, 4, iMultiForm->width()-2, "Form 1",
                                   eBS_NOBORDER);
@@ -4706,9 +4695,9 @@ void cxNotebookTest2() {
    bool labelsOnTop=true;
    // TODO: Why does the whole message not show?
    // TODO: Why is yes/no not centered in the window?
-   //cxMessageDialog labelPos(NULL, 0, 0, 3, 60, "Question", "Do you want the labels on the top?", cxYES | cxNO);
+   //cxMessageDialog labelPos(nullptr, 0, 0, 3, 60, "Question", "Do you want the labels on the top?", cxYES | cxNO);
 
-   cxMessageDialog labelPos(NULL, 0, 0, 8, 60, "Question", "Do you want the labels on the top?", cxYES | cxNO);
+   cxMessageDialog labelPos(nullptr, 0, 0, 8, 60, "Question", "Do you want the labels on the top?", cxYES | cxNO);
    labelPos.center(false);
    if (labelPos.showModal() == cxID_OK) {
       labelsOnTop=true;
@@ -4717,7 +4706,7 @@ void cxNotebookTest2() {
       labelsOnTop=false;
    }
 
-   cxNotebook iNotebook(NULL, 3, 3, 15, 70, true, true, true, 2);
+   cxNotebook iNotebook(nullptr, 3, 3, 15, 70, true, true, true, 2);
    if (labelsOnTop) {
       iNotebook.setStatus("Status"); // TODO: does not work
    }
@@ -4726,8 +4715,8 @@ void cxNotebookTest2() {
    }
    iNotebook.setLabelsOnTop(labelsOnTop);
    // Append a panel containing a cxMenu and a cxForm
-   cxPanel *iPanel1 = iNotebook.append("Win1");
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 31, "Form");
+   shared_ptr<cxPanel> iPanel1 = iNotebook.append("Win1");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 31, "Form");
    iForm->append(1, 1, 1, 14, "Input 1:");
    iForm->append(2, 1, 1, 14, "Input 2:");
    iForm->append(3, 1, 1, 14, "Input 3:");
@@ -4737,16 +4726,16 @@ void cxNotebookTest2() {
    iPanel1->append(iForm, 1, 12, false);
 
    // Append another panel containing some more stuff
-   cxPanel *iPanel2 = iNotebook.append("Win2");
-   iForm = new cxForm(NULL, 0, 0, 5, iNotebook.width(), "Item form");
+   shared_ptr<cxPanel> iPanel2 = iNotebook.append("Win2");
+   iForm = make_shared<cxForm>(nullptr, 0, 0, 5, iNotebook.width(), "Item form");
    iForm->append(1, 1, 1, 14, "Desc:");
    iForm->append(2, 1, 1, 14, "Qty:");
    iForm->append(3, 1, 1, 14, "Price:");
    iPanel2->append(iForm, 7, 0, false);
 
    // Add a 3rd panel
-   cxPanel *iPanel3 = iNotebook.append("Win3");
-   cxWindow *iWindow = new cxWindow(NULL, 0, 0, 5, iNotebook.width(),
+   shared_ptr<cxPanel> iPanel3 = iNotebook.append("Win3");
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 0, 0, 5, iNotebook.width(),
                                     "cxWindow", "This is a cxWindow");
    iPanel3->append(iWindow, 7, 0);
 
@@ -4760,15 +4749,15 @@ void cxNotebookRemoveWindowTest() {
    // This test creates a cxNotebook with a few pages, and then removes one.
    //  The application shouldn't crash/segfault and shouldn't leak memory, and
    //  the cxNotebook should still look okay.
-   cxNotebook iNotebook(NULL, 1, 3, 15, 70);
+   cxNotebook iNotebook(nullptr, 1, 3, 15, 70);
    // Append a panel containing a cxMenu and a cxForm
-   cxPanel *iPanel1 = iNotebook.append("Win1");
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, 5, 10, "Menu");
+   shared_ptr<cxPanel> iPanel1 = iNotebook.append("Win1");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, 5, 10, "Menu");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i), i);
    }
    iPanel1->append(iMenu, 1, 1, false);
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 31, "Form");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 31, "Form");
    iForm->append(1, 1, 1, 14, "Input 1:");
    iForm->append(2, 1, 1, 14, "Input 2:");
    iForm->append(3, 1, 1, 14, "Input 3:");
@@ -4777,24 +4766,23 @@ void cxNotebookRemoveWindowTest() {
    iForm->append(3, 16, 1, 14, "Input 6:");
    iPanel1->append(iForm, 1, 12, false);
    // Append another panel containing some more stuff
-   cxPanel *iPanel2 = iNotebook.append("Win2");
-   iMenu = new cxMenu(NULL, 0, 0, 6, iNotebook.width(), "Item       Qty       Price");
+   shared_ptr<cxPanel> iPanel2 = iNotebook.append("Win2");
+   iMenu = make_shared<cxMenu>(nullptr, 0, 0, 6, iNotebook.width(), "Item       Qty       Price");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i) + "       3      $12.00", i);
    }
    iPanel2->append(iMenu, 1, 0);
-   iForm = new cxForm(NULL, 0, 0, 5, iNotebook.width(), "Item form");
+   iForm = make_shared<cxForm>(nullptr, 0, 0, 5, iNotebook.width(), "Item form");
    iForm->append(1, 1, 1, 14, "Desc:");
    iForm->append(2, 1, 1, 14, "Qty:");
    iForm->append(3, 1, 1, 14, "Price:");
    iPanel2->append(iForm, 7, 0, false);
    // Add a 3rd panel
-   cxPanel *iPanel3 = iNotebook.append("Win3");
-   cxFileViewer *iFileViewer = new cxFileViewer(NULL, "cxMenu.h", 0, 0, 7,
-                                                iNotebook.width());
+   shared_ptr<cxPanel> iPanel3 = iNotebook.append("Win3");
+   shared_ptr<cxFileViewer> iFileViewer = make_shared<cxFileViewer>(nullptr, "cxMenu.h", 0, 0, 7, iNotebook.width());
    iPanel3->append(iFileViewer, 1, 0);
-   cxWindow *iWindow = new cxWindow(NULL, 0, 0, 4, iNotebook.width(),
-                                    "cxWindow", "This is a cxWindow");
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 0, 0, 4, iNotebook.width(),
+                                                        "cxWindow", "This is a cxWindow");
    iPanel3->append(iWindow, 8, 0);
    // Remove the 2nd panel
    iNotebook.delWindow(1);
@@ -4806,15 +4794,15 @@ void cxNotebookWithEmptyPanelTest() {
    // This tests a cxNotebook that has a panel with nothing in it.
    // The cxNotebook will have 3 panels.  The middle panel will be the one that
    //  has nothing in it.
-   cxNotebook iNotebook(NULL, 1, 3, 15, 70);
+   cxNotebook iNotebook(nullptr, 1, 3, 15, 70);
    // Append a panel containing a cxMenu and a cxForm
-   cxPanel *iPanel1 = iNotebook.append("Win1");
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, 5, 10, "Menu");
+   shared_ptr<cxPanel> iPanel1 = iNotebook.append("Win1");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, 5, 10, "Menu");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i), i);
    }
    iPanel1->append(iMenu, 1, 1, false);
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 31, "Form");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 31, "Form");
    iForm->append(1, 1, 1, 14, "Input 1:");
    iForm->append(2, 1, 1, 14, "Input 2:");
    iForm->append(3, 1, 1, 14, "Input 3:");
@@ -4825,12 +4813,11 @@ void cxNotebookWithEmptyPanelTest() {
    // Append another panel containing some more stuff
    iNotebook.append("Win2");
    // Add a 3rd panel
-   cxPanel *iPanel3 = iNotebook.append("Win3");
-   cxFileViewer *iFileViewer = new cxFileViewer(NULL, "cxMenu.h", 0, 0, 7,
-                                                iNotebook.width());
+   shared_ptr<cxPanel> iPanel3 = iNotebook.append("Win3");
+   shared_ptr<cxFileViewer> iFileViewer = make_shared<cxFileViewer>(nullptr, "cxMenu.h", 0, 0, 7, iNotebook.width());
    iPanel3->append(iFileViewer, 1, 0);
-   cxWindow *iWindow = new cxWindow(NULL, 0, 0, 4, iNotebook.width(),
-                                    "cxWindow", "This is a cxWindow");
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 0, 0, 4, iNotebook.width(),
+                                                        "cxWindow", "This is a cxWindow");
    iPanel3->append(iWindow, 8, 0);
 
    iNotebook.showModal();
@@ -4840,7 +4827,7 @@ void cxNotebookSetTabSpacing() {
    // This tests the setTabSpacing() method of a cxNotebook.
    {
       // Labels on top
-      cxNotebook iNotebook(NULL, 2, 3, 15, 70, true, true, true, 0);
+      cxNotebook iNotebook(nullptr, 2, 3, 15, 70, true, true, true, 0);
       // Append 3 panels
       iNotebook.append("Win1");
       iNotebook.append("Win2");
@@ -4866,7 +4853,7 @@ void cxNotebookSetTabSpacing() {
 
    {
       // Labels on the bottom
-      cxNotebook iNotebook(NULL, 2, 3, 15, 70, false, true, true, 0);
+      cxNotebook iNotebook(nullptr, 2, 3, 15, 70, false, true, true, 0);
       // Append 3 panels
       iNotebook.append("Win1");
       iNotebook.append("Win2");
@@ -4914,7 +4901,7 @@ void cxNotebookSetTabSpacing() {
    // on the bottom
    for (int i=0; i < 2; ++i) {
       // This tests the setTabSpacing() method of a cxNotebook.
-      cxNotebook iNotebook(NULL, 2, 3, 15, 70, i == 0 ? true : false, true, true, 0);
+      cxNotebook iNotebook(nullptr, 2, 3, 15, 70, i == 0 ? true : false, true, true, 0);
       // Append 3 panels
       iNotebook.append("Win1");
       iNotebook.append("Win2");
@@ -4941,15 +4928,15 @@ void cxNotebookSetTabSpacing() {
 
 void cxNotebookSwapTest() {
    // This tests cxNotebook's swap() method.
-   cxNotebook iNotebook(NULL, 2, 3, 15, 70, true, true, true, 0);
+   cxNotebook iNotebook(nullptr, 2, 3, 15, 70, true, true, true, 0);
    // Append a panel containing a cxMenu and a cxForm
-   cxPanel *iPanel1 = iNotebook.append("Win1");
-   cxMenu *iMenu = new cxMenu(NULL, 0, 0, 5, 10, "Menu");
+   shared_ptr<cxPanel> iPanel1 = iNotebook.append("Win1");
+   shared_ptr<cxMenu> iMenu = make_shared<cxMenu>(nullptr, 0, 0, 5, 10, "Menu");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i), i);
    }
    iPanel1->append(iMenu, 1, 1, false);
-   cxForm *iForm = new cxForm(NULL, 0, 0, 5, 31, "Form");
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 5, 31, "Form");
    iForm->append(1, 1, 1, 14, "Input 1:");
    iForm->append(2, 1, 1, 14, "Input 2:");
    iForm->append(3, 1, 1, 14, "Input 3:");
@@ -4958,32 +4945,33 @@ void cxNotebookSwapTest() {
    iForm->append(3, 16, 1, 14, "Input 6:");
    iPanel1->append(iForm, 1, 12, false);
    // Append another panel containing some more stuff
-   cxPanel *iPanel2 = iNotebook.append("Win2");
-   iMenu = new cxMenu(NULL, 0, 0, 6, iNotebook.width(), "Item       Qty       Price");
+   shared_ptr<cxPanel> iPanel2 = iNotebook.append("Win2");
+   iMenu = make_shared<cxMenu>(nullptr, 0, 0, 6, iNotebook.width(), "Item       Qty       Price");
    for (int i = 1; i <= 30; ++i) {
       iMenu->append("Item " + toString(i) + "       3      $12.00", i);
    }
    iPanel2->append(iMenu, 1, 0);
-   iForm = new cxForm(NULL, 0, 0, 5, iNotebook.width(), "Item form");
+   iForm = make_shared<cxForm>(nullptr, 0, 0, 5, iNotebook.width(), "Item form");
    iForm->append(1, 1, 1, 14, "Desc:");
    iForm->append(2, 1, 1, 14, "Qty:");
    iForm->append(3, 1, 1, 14, "Price:");
    iPanel2->append(iForm, 7, 0, false);
    // Add a 3rd panel
-   cxPanel *iPanel3 = iNotebook.append("Win3");
-   cxFileViewer *iFileViewer = new cxFileViewer(NULL, "cxMenu.h", 0, 0, 7,
-                                                iNotebook.width());
+   shared_ptr<cxPanel> iPanel3 = iNotebook.append("Win3");
+   shared_ptr<cxFileViewer> iFileViewer = make_shared<cxFileViewer>(nullptr, "cxMenu.h", 0, 0, 7, iNotebook.width());
    iPanel3->append(iFileViewer, 1, 0);
-   cxWindow *iWindow = new cxWindow(NULL, 0, 0, 4, iNotebook.width(),
-                                    "cxWindow", "This is a cxWindow");
+   shared_ptr<cxWindow> iWindow = make_shared<cxWindow>(nullptr, 0, 0, 4, iNotebook.width(),
+                                                        "cxWindow", "This is a cxWindow");
    iPanel3->append(iWindow, 8, 0);
 
    // Swap the first & second panels
    assert(iNotebook.swap(0, 1));
    // Also test the other swap() method that takes pointers: Get the current
-   //  2nd & 3rd windows and swap them.  The order should then be Win2, Win3,
-   //  Win1.
-   assert(iNotebook.swap(iNotebook.getWindow(1), iNotebook.getWindow(2)));
+   // 2nd & 3rd windows and swap them.  The order should then be Win2, Win3,
+   // Win1.
+   std::shared_ptr<cxWindow> win1 = iNotebook.getWindow(1);
+   std::shared_ptr<cxWindow> win2 = iNotebook.getWindow(2);
+   assert(iNotebook.swap(win1, win2));
 
    iNotebook.showModal();
 } // cxNotebookSwapTest
@@ -4991,7 +4979,7 @@ void cxNotebookSwapTest() {
 void cxWindowBorderTest() {
    {
       int height=20;
-      cxWindow iWindow(NULL, 0, 0, height, 20, "Title", "Message", "Status", eBS_SINGLE_LINE);
+      cxWindow iWindow(nullptr, 0, 0, height, 20, "Title", "Message", "Status", eBS_SINGLE_LINE);
       iWindow.center();
       iWindow.show();
       sleep(1);
@@ -5018,20 +5006,20 @@ void cxWindowBorderTest() {
    }
 
    {
-      cxWindow iWindow(NULL, 4, 4, 3, 20, "", "Sample Tab", "", eBS_SINGLE_LINE);
+      cxWindow iWindow(nullptr, 4, 4, 3, 20, "", "Sample Tab", "", eBS_SINGLE_LINE);
       iWindow.toggleBorderBottom(false);
       iWindow.show();
       sleep(1);
    }
 
    {
-      cxWindow iWindow(NULL, 4, 4, 3, 20, "", "No border", "", eBS_NOBORDER);
+      cxWindow iWindow(nullptr, 4, 4, 3, 20, "", "No border", "", eBS_NOBORDER);
       iWindow.show();
       sleep(1);
    }
 
    {
-      cxWindow iWindow(NULL, 4, 4, 3, 20, "", "Space Border", "", eBS_SPACE);
+      cxWindow iWindow(nullptr, 4, 4, 3, 20, "", "Space Border", "", eBS_SPACE);
       iWindow.show();
       sleep(1);
    }
@@ -5054,7 +5042,7 @@ void cxWindowSizeTest() {
 
    {
       if (cxBase::cxInitialized()) {
-         cxWindow iWindow(NULL, "1", "1", "1");
+         cxWindow iWindow(nullptr, "1", "1", "1");
          iWindow.show();
          sleep(1);
          iWindow.hide();
@@ -5063,7 +5051,7 @@ void cxWindowSizeTest() {
 
    {
       if (cxBase::cxInitialized()) {
-         cxWindow iWindow(NULL, "12345", "xxxxxxxxxxxxxxxxxx", "");
+         cxWindow iWindow(nullptr, "12345", "xxxxxxxxxxxxxxxxxx", "");
          iWindow.show();
          sleep(1);
          iWindow.hide();
@@ -5072,7 +5060,7 @@ void cxWindowSizeTest() {
 } // cxWindowSizeTest
 
 void cxWindowAttributesTest() {
-   cxWindow iWindow(NULL, "Title XXXXXXXXXX", "Message XXXXXXXXXXXXXXXXXXX", "Status");
+   cxWindow iWindow(nullptr, "Title XXXXXXXXXX", "Message XXXXXXXXXXXXXXXXXXX", "Status");
    iWindow.show();
    sleep(1);
 
@@ -5130,7 +5118,7 @@ void cxWindowAttributesTest() {
 string mouseFunction(void *theWindow, void *unused) {
    messageBox("mouseFunction() fired");
 
-   if (theWindow != NULL) {
+   if (theWindow != nullptr) {
       cxWindow *pWindow = static_cast<cxWindow*>(theWindow);
       messageBox("Window title: " + pWindow->getTitle() + ", mouse state: " +
                  pWindow->getMouseStateStr());
@@ -5140,43 +5128,43 @@ string mouseFunction(void *theWindow, void *unused) {
 } // mouseFunction
 
 void cxWindowMouseFunctionTest() {
-   cxWindow iWindow(NULL, 1, 0, 10, 30, "cxWindow", "Mouse function test window");
-   iWindow.setMouseFunction(BUTTON1_CLICKED, mouseFunction, &iWindow, NULL,
+   cxWindow iWindow(nullptr, 1, 0, 10, 30, "cxWindow", "Mouse function test window");
+   iWindow.setMouseFunction(BUTTON1_CLICKED, mouseFunction, &iWindow, nullptr,
                             false, false, false);
-   iWindow.setMouseFunction(BUTTON2_CLICKED, mouseFunction, &iWindow, NULL,
+   iWindow.setMouseFunction(BUTTON2_CLICKED, mouseFunction, &iWindow, nullptr,
                             false, false, false);
-   iWindow.setMouseFunction(BUTTON3_CLICKED, mouseFunction, &iWindow, NULL,
+   iWindow.setMouseFunction(BUTTON3_CLICKED, mouseFunction, &iWindow, nullptr,
                             false, false, false);
    iWindow.showModal();
 } // cxWindowMouseFunctionTest
 
 void cxMenuMouseFunctionTest() {
-   cxMenu iMenu(NULL, 1, 0, 10, 10, "cxMenu");
+   cxMenu iMenu(nullptr, 1, 0, 10, 10, "cxMenu");
    for (int i = 1; i <= 30; ++i) {
       iMenu.append("Item " + toString(i), i);
    }
-   iMenu.setMouseFunction(BUTTON1_CLICKED, mouseFunction, &iMenu, NULL,
+   iMenu.setMouseFunction(BUTTON1_CLICKED, mouseFunction, &iMenu, nullptr,
                           false, false, false);
-   iMenu.setMouseFunction(BUTTON2_CLICKED, mouseFunction, &iMenu, NULL,
+   iMenu.setMouseFunction(BUTTON2_CLICKED, mouseFunction, &iMenu, nullptr,
                           false, false, false);
-   iMenu.setMouseFunction(BUTTON3_CLICKED, mouseFunction, &iMenu, NULL,
+   iMenu.setMouseFunction(BUTTON3_CLICKED, mouseFunction, &iMenu, nullptr,
                           false, false, false);
    iMenu.showModal();
 } // cxMenuMouseFunctionTest
 
 void cxFormMouseFunctionTest() {
-   cxForm iForm(NULL, 1, 0, 5, 70, "cxForm");
+   cxForm iForm(nullptr, 1, 0, 5, 70, "cxForm");
    iForm.append(1, 1, 1, 33, "Input 1:");
    iForm.append(2, 1, 1, 33, "Input 2:");
    iForm.append(3, 1, 1, 33, "Input 3:");
    iForm.append(1, 35, 1, 33, "Input 4:");
    iForm.append(2, 35, 1, 33, "Input 5:");
    iForm.append(3, 35, 1, 33, "Input 6:");
-   iForm.setMouseFunction(BUTTON1_CLICKED, mouseFunction, &iForm, NULL,
+   iForm.setMouseFunction(BUTTON1_CLICKED, mouseFunction, &iForm, nullptr,
                           false, false, false);
-   iForm.setMouseFunction(BUTTON2_CLICKED, mouseFunction, &iForm, NULL,
+   iForm.setMouseFunction(BUTTON2_CLICKED, mouseFunction, &iForm, nullptr,
                           false, false, false);
-   iForm.setMouseFunction(BUTTON3_CLICKED, mouseFunction, &iForm, NULL,
+   iForm.setMouseFunction(BUTTON3_CLICKED, mouseFunction, &iForm, nullptr,
                           false, false, false);
    iForm.showModal();
 } // cxFormMouseFunctionTest
@@ -5186,17 +5174,17 @@ void cxPanelWithButton() {
    //  The other window will be appended first.  When the user clicks on the
    //  button, its onClick function should fire.
 
-   cxPanel iPanel(NULL, 1, 0, 15, 70, "Panel", "", "", eBS_SINGLE_LINE);
+   cxPanel iPanel(nullptr, 1, 0, 15, 70, "Panel", "", "", eBS_SINGLE_LINE);
    // Append a form to the panel, then append a button.
-   cxForm *iForm = new cxForm(NULL, 0, 0, 2, 68, "", eBS_NOBORDER);
+   shared_ptr<cxForm> iForm = make_shared<cxForm>(nullptr, 0, 0, 2, 68, "", eBS_NOBORDER);
    iForm->append(0, 0, 1, 32, "Input 1:");
    iForm->append(1, 0, 1, 32, "Input 2:");
    iForm->append(0, 34, 1, 32, "Input 3:");
    iForm->append(1, 34, 1, 32, "Input 4:");
    iPanel.append(iForm, 1, 1, false);
 
-   cxButton *iButton = new cxButton(NULL, 1, 0, 3, 10, "Button");
-   iButton->setOnClickFunction(buttonClickFunction, &iButton, NULL, NULL, NULL);
+   shared_ptr<cxButton> iButton = make_shared<cxButton>(nullptr, 1, 0, 3, 10, "Button");
+   iButton->setOnClickFunction(buttonClickFunction, &iButton, nullptr, nullptr, nullptr);
    iPanel.append(iButton, 4, 1, false);
    iButton->center(false); // Center the button horizontally in the panel
 
@@ -5204,14 +5192,14 @@ void cxPanelWithButton() {
 } // cxPanelWithButton
 
 void cxMultiLineInputNumericFloatingPt() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 30, "Floating-point:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Floating-point:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_FLOATING_PT);
    iInput.showModal();
    cxBase::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNumericFloatingPt
 
 void cxMultiLineInputNumericFloatingPtWithRange() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 30, "Floating-point:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Floating-point:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_FLOATING_PT);
    iInput.setRangeDouble(2.0, 5.0);
    iInput.validatorFuncMessageBox(true);
@@ -5220,15 +5208,15 @@ void cxMultiLineInputNumericFloatingPtWithRange() {
 } // cxMultiLineInputNumericFloatingPtWithRange
 
 void cxMultiLineInputNumericWhole() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 30, "Whole #:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Whole #:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
-   iInput.setKeyFunction(KEY_F(8), hello, NULL, NULL, false, false, true);
+   iInput.setKeyFunction(KEY_F(8), hello, nullptr, nullptr, false, false, true);
    iInput.showModal();
    cxBase::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNumericWhole
 
 void cxMultiLineInputNumericWholeWithRange() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 30, "Whole #:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Whole #:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
    iInput.setRangeInt(2, 5);
    iInput.validatorFuncMessageBox(true);
@@ -5239,7 +5227,7 @@ void cxMultiLineInputNumericWholeWithRange() {
 void cxMultiLineInputTextValidation() {
    {
       // Test a text input with valid strings using setValidOptions()
-      cxMultiLineInput iInput(NULL, 1, 0, 1, 18, "Enter a, b, or c:");
+      cxMultiLineInput iInput(nullptr, 1, 0, 1, 18, "Enter a, b, or c:");
       // eINPUT_TYPE_TEXT is the default, but set it anyway:
       iInput.setInputType(eINPUT_TYPE_TEXT);
       iInput.setValidOptions("abc");
@@ -5250,7 +5238,7 @@ void cxMultiLineInputTextValidation() {
 
    {
       // Test a text input with valid strings using addValidOption()
-      cxMultiLineInput iInput(NULL, 1, 0, 1, 18, "Enter d, e, or f:");
+      cxMultiLineInput iInput(nullptr, 1, 0, 1, 18, "Enter d, e, or f:");
       // eINPUT_TYPE_TEXT is the default, but set it anyway:
       iInput.setInputType(eINPUT_TYPE_TEXT);
       iInput.addValidOption("d");
@@ -5263,7 +5251,7 @@ void cxMultiLineInputTextValidation() {
 } // cxMultiLineInputTextValidation
 
 void cxMultiLineInputForceUpper() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 18, "Input:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 18, "Input:");
    iInput.setForceUpper(true);
    iInput.validatorFuncMessageBox(true);
    iInput.showModal();
@@ -5271,7 +5259,7 @@ void cxMultiLineInputForceUpper() {
 } // cxMultiLineInputForceUpper
 
 void cxMultiLineInputNonBlank() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 18, "Input:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 18, "Input:");
    iInput.setAllowBlank(false);
    iInput.validatorFuncMessageBox(true);
    iInput.showModal();
@@ -5281,7 +5269,7 @@ void cxMultiLineInputNonBlank() {
 void cxMultiLineInputTextValidationNonBlankForceUpper() {
    {
       // Test a text input with valid strings using setValidOptions()
-      cxMultiLineInput iInput(NULL, 1, 0, 1, 18, "Enter A, B, or C:");
+      cxMultiLineInput iInput(nullptr, 1, 0, 1, 18, "Enter A, B, or C:");
       // eINPUT_TYPE_TEXT is the default, but set it anyway:
       iInput.setInputType(eINPUT_TYPE_TEXT);
       iInput.setValidOptions("ABC");
@@ -5294,7 +5282,7 @@ void cxMultiLineInputTextValidationNonBlankForceUpper() {
 
    {
       // Test a text input with valid strings using addValidOption()
-      cxMultiLineInput iInput(NULL, 2, 0, 1, 18, "Enter D, E, or F:");
+      cxMultiLineInput iInput(nullptr, 2, 0, 1, 18, "Enter D, E, or F:");
       // eINPUT_TYPE_TEXT is the default, but set it anyway:
       iInput.setInputType(eINPUT_TYPE_TEXT);
       iInput.addValidOption("D");
@@ -5311,7 +5299,7 @@ void cxMultiLineInputTextValidationNonBlankForceUpper() {
 void cxMultiLineInputTextValidationAutoCompletion() {
    cxBase::messageBox("For this input, \"EMAIL\" and \"EMULE\" are valid.");
 
-   cxMultiLineInput iInput(NULL, 2, 0, 1, 20, "Input:", eBS_NOBORDER,
+   cxMultiLineInput iInput(nullptr, 2, 0, 1, 20, "Input:", eBS_NOBORDER,
                            eINPUT_EDITABLE, eINPUT_TYPE_TEXT);
    iInput.setForceUpper(true);
    iInput.setShowRightLabel(true);
@@ -5325,7 +5313,7 @@ void cxMultiLineInputTextValidationAutoCompletion() {
 } // cxMultiLineInputTextValidationAutoCompletion
 
 void cxMultiLineInputExtendedHelpKey() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 18, "Input:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 18, "Input:");
    iInput.setExtendedHelp("This is the extended help.");
    iInput.setExtendedHelpKey(KEY_F(1));
    iInput.setUseExtendedHelpKeys(true);
@@ -5343,7 +5331,7 @@ void cxMultiLineInputExtendedHelpKey() {
 } // cxMultiLineInputExtendedHelpKey
 
 void cxFormExtendedHelpKey() {
-   cxForm iForm(NULL, 1, 0, 4, 70, "Form");
+   cxForm iForm(nullptr, 1, 0, 4, 70, "Form");
    iForm.append(1, 1, 1, 25, "Input 1:");
    iForm.append(2, 1, 1, 25, "Input 2:");
    iForm.append(1, 27, 1, 25, "Input 3:");
@@ -5364,7 +5352,7 @@ void cxFormExtendedHelpKey() {
 } // cxFormExtendedHelpKey
 
 void cxMultiLineInputWithRightLabel() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 18, "Input:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 18, "Input:");
    iInput.setShowRightLabel(true);
    iInput.setRightLabel("Text", false);
    iInput.setRightLabelOffset(1, false);
@@ -5393,10 +5381,10 @@ void cxMultiLineInputWithRightLabelOnForm() {
    //  sets up valid text for the inputs with help strings that should appear
    //  in the right labels when the text is validated (when the user leaves
    //  each input).
-   cxForm iForm(NULL, 1, 0, 5, 79, "Form");
+   cxForm iForm(nullptr, 1, 0, 5, 79, "Form");
 
-   cxMultiLineInput *iInput = iForm.append(1, 1, 1, 25, "Input:", "", "Original status field",
-                            eINPUT_EDITABLE, "", NULL, 1, 1, 9, true);
+   shared_ptr<cxMultiLineInput> iInput = iForm.append(1, 1, 1, 25, "Input:", "", "Original status field",
+                                                      eINPUT_EDITABLE, "", nullptr, 1, 1, 9, true);
    iInput->setForceUpper(true);
    iInput->setValidateOnReverse(false);
    iInput->addValidOption("SCREEN", "Screen");
@@ -5406,7 +5394,7 @@ void cxMultiLineInputWithRightLabelOnForm() {
    iInput->setStatus("New status field (" + iInput->getValidOptionStrings() + ")");
 
    iInput = iForm.append(2, 1, 1, 25, "D, E, F:", "", "",
-                            eINPUT_EDITABLE, "", NULL, 1, 1, 9, true);
+                            eINPUT_EDITABLE, "", nullptr, 1, 1, 9, true);
    iInput->setShowRightLabel(true);
    iInput->setRightLabel("Text2");
    iInput->setValidateOnReverse(false);
@@ -5416,7 +5404,7 @@ void cxMultiLineInputWithRightLabelOnForm() {
    iInput->autoGenerateExtendedHelp(true);
    iInput->setForceUpper(true);
    iInput = iForm.append(3, 1, 1, 25, "G, H, I:", "", "",
-                            eINPUT_EDITABLE, "", NULL, 1, 1, 9, true);
+                            eINPUT_EDITABLE, "", nullptr, 1, 1, 9, true);
    iInput->setShowRightLabel(true);
    iInput->setRightLabel("Text3");
    iInput->setForceUpper(true);
@@ -5424,7 +5412,7 @@ void cxMultiLineInputWithRightLabelOnForm() {
    iInput->addValidOption("H", "Item H");
    iInput->addValidOption("I", "Item I");
    iInput = iForm.append(1, 37, 1, 25, "J, K, L:", "", "",
-                            eINPUT_EDITABLE, "", NULL, 1, 1, 9, true);
+                            eINPUT_EDITABLE, "", nullptr, 1, 1, 9, true);
    iInput->setShowRightLabel(true);
    iInput->setRightLabel("Text4");
    iInput->setForceUpper(true);
@@ -5432,7 +5420,7 @@ void cxMultiLineInputWithRightLabelOnForm() {
    iInput->addValidOption("K", "Item K");
    iInput->addValidOption("L", "Item L");
    iInput = iForm.append(2, 37, 1, 25, "M, N, O:", "", "",
-                            eINPUT_EDITABLE, "", NULL, 1, 1, 9, true);
+                            eINPUT_EDITABLE, "", nullptr, 1, 1, 9, true);
    iInput->setShowRightLabel(true);
    iInput->setRightLabel("Text5");
    iInput->setForceUpper(true);
@@ -5440,7 +5428,7 @@ void cxMultiLineInputWithRightLabelOnForm() {
    iInput->addValidOption("N", "Item N");
    iInput->addValidOption("O", "Item O");
    iInput = iForm.append(3, 37, 1, 25, "P, Q, R:", "", "",
-                            eINPUT_EDITABLE, "", NULL, 1, 1, 9, true);
+                            eINPUT_EDITABLE, "", nullptr, 1, 1, 9, true);
    iInput->setShowRightLabel(true);
    iInput->setRightLabel("Text6");
    iInput->setForceUpper(true);
@@ -5451,7 +5439,7 @@ void cxMultiLineInputWithRightLabelOnForm() {
 } // cxMultiLineInputWithRightLabelOnForm
 
 void cxMultiLineInputAutoGenerateHelpString() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 20, "A, B, or C:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 20, "A, B, or C:");
    iInput.setForceUpper(true);
    iInput.autoGenerateExtendedHelp(true);
    iInput.addValidOption("A", "Item A");
@@ -5461,11 +5449,11 @@ void cxMultiLineInputAutoGenerateHelpString() {
 } // cxMultiLineInputAutoGenerateHelpString
 
 string storeSearchFormOnEnter(void *theSearchPanel, void *unused, void *unused2, void *unused3) {
-   if (theSearchPanel == NULL) {
+   if (theSearchPanel == nullptr) {
       return("");
    }
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   cxMenu *iMenu = pSearchPanel->getMenu();
+   shared_ptr<cxMenu> iMenu = pSearchPanel->getMenu();
    // Note: This is where you would populate the menu from something (like an SQL call)
    iMenu->clear(false);
    iMenu->append("Atlanta    1", 1);
@@ -5476,19 +5464,19 @@ string storeSearchFormOnEnter(void *theSearchPanel, void *unused, void *unused2,
 } // storeSearchFormOnEnter
 
 string storeSearchMenuOnEnter(void *theSearchPanel, void *unused, void *unused2, void *unused3) {
-   if (theSearchPanel == NULL) {
+   if (theSearchPanel == nullptr) {
       return("");
    }
 
    //cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
-   //cxMenu *iMenu = pSearchPanel->getMenu();
+   //shared_ptr<cxMenu> iMenu = pSearchPanel->getMenu();
    //cxBase::messageBox("The '" + iMenu->getCurrentItemText() + "' item was selected.", "ha ha");
 
    return("");
 } // storeSearchMenuOnEnter
 
 string storeOnLeave(void *theInput, void *unused) {
-   if (theInput == NULL) {
+   if (theInput == nullptr) {
       return("");
    }
 
@@ -5513,27 +5501,27 @@ string storeOnLeave(void *theInput, void *unused) {
 } // storeOnLeave
 
 string storeSearch(void *theInput, void *unused) {
-   if (theInput == NULL) {
+   if (theInput == nullptr) {
       return("");
    }
 
    string retval;
    cxMultiLineInput *pInput = static_cast<cxMultiLineInput*>(theInput);
-   cxSearchPanel iSearchPanel(NULL, 1, 0, 20, 70, "Search", "Menu");
+   cxSearchPanel iSearchPanel(nullptr, 1, 0, 20, 70, "Search", "Menu");
    iSearchPanel.setFormHeight(3, false); // TODO: When setting the form, the status goes away. Why?
 
-   cxMultiLineInput* input = iSearchPanel.appendToForm(1, 1, 1, 30, "Keyword:", "", "Enter partial information for searching", eINPUT_EDITABLE, "keyword");
+   shared_ptr<cxMultiLineInput> input = iSearchPanel.appendToForm(1, 1, 1, 30, "Keyword:", "", "Enter partial information for searching", eINPUT_EDITABLE, "keyword");
    // set keyword to the value that was in the input form
    input->setValue(pInput->getValue());
    input->setExtendedHelp("Enter information to limit the search. A case insensitve search is performed on each column displayed in the results.");
 
-   cxMenu *iMenu = iSearchPanel.getMenu();
+   shared_ptr<cxMenu> iMenu = iSearchPanel.getMenu();
    iMenu->setStatus("TAB=Form  /=Search  HOME=First  END=Last  UP=Previous  DOWN=Next", true);
    // TODO: Need to have ENTER actually leave storeSearch() and set the value in the "store" field on the cxForm
 
-   //cxForm *iForm = pSearchPanel->getForm();
+   //shared_ptr<cxForm> iForm = pSearchPanel->getForm();
 
-   iSearchPanel.setFormOnEnterFunction(storeSearchFormOnEnter, &iSearchPanel, NULL, NULL, NULL);
+   iSearchPanel.setFormOnEnterFunction(storeSearchFormOnEnter, &iSearchPanel, nullptr, nullptr, nullptr);
    long searchRetval=iSearchPanel.showModal();
    if (searchRetval != cxID_QUIT) {
       //messageBox("searchRetval:" + toString(searchRetval));
@@ -5553,7 +5541,7 @@ string storeSearch(void *theInput, void *unused) {
 } // storeSearch
 
 void itemSales() {
-   cxForm iForm(NULL, 1, 0, 5, 79, "Item Sales");
+   cxForm iForm(nullptr, 1, 0, 5, 79, "Item Sales");
    // Disable input validation when the user presses the jump-to key (F4) so
    //  that we can jump from all inputs.
    iForm.allValidateOnJumpKey(false);
@@ -5561,7 +5549,7 @@ void itemSales() {
    int row=2;
 
    // store 
-   pair<cxMultiLineInput*, cxMultiLineInput*> inputs = iForm.appendPair(row,
+   pair<shared_ptr<cxMultiLineInput>, shared_ptr<cxMultiLineInput> > inputs = iForm.appendPair(row,
                                2, 1, 8, "Store:", "", "Store number", eINPUT_EDITABLE,
                                "store");
    inputs.first->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
@@ -5572,12 +5560,12 @@ void itemSales() {
    inputs.first->setExtendedHelp("Enter store. (" + toString(inputs.first->getRangeLowInt()) + "-" + toString(inputs.first->getRangeHighInt()) + ")");
    inputs.first->setStatus("Store Number (" + toString(inputs.first->getRangeLowInt()) + "-" + toString(inputs.first->getRangeHighInt()) + ")");
    // storeSearch() will set the input from the search.
-   inputs.first->setKeyFunction('+', storeSearch, inputs.first, NULL, false);
+   inputs.first->setKeyFunction('+', storeSearch, inputs.first.get(), nullptr, false);
 
    // right label stuffs
    inputs.first->setRightLabelOffset(5, false);
    inputs.first->setShowRightLabel(true);
-   inputs.first->setOnLeaveFunction(storeOnLeave, inputs.first, NULL);
+   inputs.first->setOnLeaveFunction(storeOnLeave, inputs.first.get(), nullptr);
 
    inputs.second->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
    inputs.second->setRangeInt(1, 99);
@@ -5588,18 +5576,18 @@ void itemSales() {
    inputs.second->setExtendedHelp("Enter store. (" + toString(inputs.second->getRangeLowInt()) + "-" + toString(inputs.second->getRangeHighInt()) + ")");
    inputs.second->setStatus("Store Number (" + toString(inputs.second->getRangeLowInt()) + "-" + toString(inputs.second->getRangeHighInt()) + ")");
    // storeSearch() will set the input from the search.
-   inputs.second->setKeyFunction('+', storeSearch, inputs.second, &iForm, false);
+   inputs.second->setKeyFunction('+', storeSearch, inputs.second.get(), &iForm, false);
 
    // right label stuffs
    inputs.second->setRightLabelOffset(10, false);
    inputs.second->setShowRightLabel(true);
-   inputs.second->setOnLeaveFunction(storeOnLeave, inputs.second, NULL);
+   inputs.second->setOnLeaveFunction(storeOnLeave, inputs.second.get(), nullptr);
 
    // '+' character
-   cxMultiLineInput *iInput=iForm.append(row, 13, 1, 1, "+", "", "", eINPUT_READONLY, "storePlus"); 
+   shared_ptr<cxMultiLineInput> iInput = iForm.append(row, 13, 1, 1, "+", "", "", eINPUT_READONLY, "storePlus"); 
    iInput->setCanBeEditable(false); // so you cannot jump to this input
    // '/' character
-   iInput=iForm.append(row, 22, 1, 1, "/", "", "", eINPUT_READONLY, "storeSlash"); 
+   iInput = iForm.append(row, 22, 1, 1, "/", "", "", eINPUT_READONLY, "storeSlash"); 
    iInput->setCanBeEditable(false); // so you cannot jump to this input
 
    // item 
@@ -5617,7 +5605,7 @@ void itemSales() {
 
    long formRetval=iForm.showModal();
    while (formRetval != cxID_QUIT) {
-      cxScrolledWindow iScrolledWindow(NULL, 0, 0, -1, -1, "Item Sales Report", "", "");
+      cxScrolledWindow iScrolledWindow(nullptr, 0, 0, -1, -1, "Item Sales Report", "", "");
       iScrolledWindow.addMessageLineBelow("one");
       iScrolledWindow.addMessageLineBelow("two");
       iScrolledWindow.addMessageLineBelow("three");
@@ -5629,42 +5617,42 @@ void itemSales() {
 
 void cxFormAppendPair() {
    try {
-      cxMenu iMenu(NULL, 0, 0, 4, 11, "Menu");
+      cxMenu iMenu(nullptr, 0, 0, 4, 11, "Menu");
       iMenu.center(false);
       iMenu.append("Version 1", 1);
       iMenu.append("Version 2", 2);
       long returnCode = iMenu.showModal();
       iMenu.hide();
-      cxForm iForm(NULL, 1, 0, 5, 75, "Form");
+      cxForm iForm(nullptr, 1, 0, 5, 75, "Form");
       iForm.setAutoExit(true);
       if (returnCode == 1) {
-         pair<cxMultiLineInput*, cxMultiLineInput*> inputs = iForm.appendPair(1, 1,
+         pair<shared_ptr<cxMultiLineInput>, shared_ptr<cxMultiLineInput> > inputs = iForm.appendPair(1, 1,
                1, 30, "Store #:", "", "", eINPUT_EDITABLE, "stno");
-         if (inputs.first != NULL) {
+         if (inputs.first != nullptr) {
             cxBase::messageBox("First input name:" + inputs.first->getName() + ":");
             inputs.first->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
          }
          else {
-            cxBase::messageBox("Warning: The first input is NULL");
+            cxBase::messageBox("Warning: The first input is nullptr");
          }
-         if (inputs.second != NULL) {
+         if (inputs.second != nullptr) {
             cxBase::messageBox("Second input name:" + inputs.second->getName() + ":");
             inputs.second->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
          }
          else {
-            cxBase::messageBox("Warning: The second input is NULL");
+            cxBase::messageBox("Warning: The second input is nullptr");
          }
 
          iForm.showModal();
       }
       else if (returnCode == 2) {
-         cxMultiLineInput *input1 = new cxMultiLineInput(NULL, 0, 0, 1, 20,
+         shared_ptr<cxMultiLineInput> input1 = make_shared<cxMultiLineInput>(nullptr, 0, 0, 1, 20,
                                        "User:", eBS_NOBORDER, eINPUT_EDITABLE,
-                                       eINPUT_TYPE_TEXT, NULL, 1, 1, 7, true);
+                                       eINPUT_TYPE_TEXT, nullptr, 1, 1, 7, true);
          input1->setName("user");
-         cxMultiLineInput *input2 = new cxMultiLineInput(NULL, 0, 0, 1, 20,
+         shared_ptr<cxMultiLineInput> input2 = make_shared<cxMultiLineInput>(nullptr, 0, 0, 1, 20,
                                        "User:", eBS_NOBORDER, eINPUT_EDITABLE,
-                                       eINPUT_TYPE_TEXT, NULL, 1, 1, 7, true);
+                                       eINPUT_TYPE_TEXT, nullptr, 1, 1, 7, true);
          input1->setName("user");
          iForm.appendPair(input1, input2, 1, 1);
          input1->setRightLabel("1234567", false);
@@ -5690,11 +5678,11 @@ void cxFormAppendPair() {
 } // cxFormAppendPair
 
 void cxFormAppendComboBoxPair() {
-   cxForm iForm(NULL, 1, 0, 4, 70, "Form");
+   cxForm iForm(nullptr, 1, 0, 4, 70, "Form");
    try {
-      pair<cxComboBox*, cxComboBox*> comboBoxes = iForm.appendComboBoxPair(1, 1,
+      pair<shared_ptr<cxComboBox>, shared_ptr<cxComboBox> > comboBoxes = iForm.appendComboBoxPair(1, 1,
                            1, 30, "Store:", "", "", eINPUT_EDITABLE, "store");
-      if (comboBoxes.first != NULL) {
+      if (comboBoxes.first != nullptr) {
          cxBase::messageBox("First combo box name:" + comboBoxes.first->getName() + ":");
          comboBoxes.first->appendToMenu("Portland");
          comboBoxes.first->appendToMenu("Aloha");
@@ -5702,9 +5690,9 @@ void cxFormAppendComboBoxPair() {
          comboBoxes.first->appendToMenu("Seattle");
       }
       else {
-         cxBase::messageBox("Warning: The first combo box is NULL");
+         cxBase::messageBox("Warning: The first combo box is nullptr");
       }
-      if (comboBoxes.second != NULL) {
+      if (comboBoxes.second != nullptr) {
          cxBase::messageBox("Second combo box name:" + comboBoxes.second->getName() + ":");
          comboBoxes.second->appendToMenu("Portland");
          comboBoxes.second->appendToMenu("Aloha");
@@ -5712,7 +5700,7 @@ void cxFormAppendComboBoxPair() {
          comboBoxes.second->appendToMenu("Seattle");
       }
       else {
-         cxBase::messageBox("Warning: The second combo box is NULL");
+         cxBase::messageBox("Warning: The second combo box is nullptr");
       }
    }
    catch (const cxWidgetsException& e) {
@@ -5731,7 +5719,7 @@ void cxMultiLineInputSetValue() {
    cxBase::messageBox("This test uses assert() to validate the tests.  If "
                       "the program doesn't bail, then all the tests passed.");
 
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 70, "Input:");
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 70, "Input:");
    // Try it with text validation
    iInput.setInputType(eINPUT_TYPE_TEXT);
    iInput.useBuiltInValidator(); // This is set up by default, but do it anyway..
@@ -5823,7 +5811,7 @@ void cxMultiLineInputSetValue() {
 } // cxMultiLineInputSetValue
 
 void cxMultiLineInputMaxInputLength() {
-   cxMultiLineInput iInput(NULL, 1, 0, 2, 10, "Input:", eBS_NOBORDER);
+   cxMultiLineInput iInput(nullptr, 1, 0, 2, 10, "Input:", eBS_NOBORDER);
    iInput.setMaxInputLength(10);
    cxBase::messageBox("The max input length is " + toString(iInput.getMaxInputLength()));
    iInput.showModal();
@@ -5831,7 +5819,7 @@ void cxMultiLineInputMaxInputLength() {
 } // cxMultiLineInputMaxInputLength
 
 void cxMultiLineInputExtendedHelpColorsAndAttrs() {
-   cxMultiLineInput iInput(NULL, 1, 0, 1, 10, "Input:", eBS_NOBORDER);
+   cxMultiLineInput iInput(nullptr, 1, 0, 1, 10, "Input:", eBS_NOBORDER);
    iInput.setExtendedHelp("This is the extended help.");
    cxBase::messageBox("Using default extended help color & attribute");
    iInput.showModal();
@@ -5843,12 +5831,12 @@ void cxMultiLineInputExtendedHelpColorsAndAttrs() {
 } // cxMultiLineInputExtendedHelpColorsAndAttrs
 
 void cxWindowMessageNewlines() {
-   cxWindow iWindow(NULL, 1, 0, 8, 40, "cxWindow", "This message\nhad a newline.");
+   cxWindow iWindow(nullptr, 1, 0, 8, 40, "cxWindow", "This message\nhad a newline.");
    iWindow.showModal();
 } // cxWindowMessageNewlines
 
 void cxMenuAltItemText() {
-   cxMenu iMenu(NULL, 1, 0, 10, 20, "Menu");
+   cxMenu iMenu(nullptr, 1, 0, 10, 20, "Menu");
    // Append some items with alternate item text different than the display
    //  text
    for (int i = 1; i <= 20; ++i) {
@@ -5891,7 +5879,7 @@ void cxComboBoxNotEditableMenuEnabled() {
    // This tests a cxComboBox that is not "editable", but its drop-dowm nenu
    //  is enabled.  This means that the user can't type in the input, but they
    //  can choose something from the drop-down menu.
-   cxComboBox iComboBox(NULL, 1, 0, 1, 20, "Input:");
+   cxComboBox iComboBox(nullptr, 1, 0, 1, 20, "Input:");
    iComboBox.appendToMenu("Item 1");
    iComboBox.appendToMenu("Item 2");
    iComboBox.appendToMenu("Item 3");
@@ -5901,12 +5889,12 @@ void cxComboBoxNotEditableMenuEnabled() {
 } // cxComboBoxNotEditableMenuEnabled
 
 void cxMultiLineInputOverrideOnKeypress() {
-   floatingPtInputWithRightLabel iInput(NULL, 1, 0, 1, 25, "Floating-pt. #:");
+   floatingPtInputWithRightLabel iInput(nullptr, 1, 0, 1, 25, "Floating-pt. #:");
    iInput.showModal();
 } // cxMultiLineInputOverrideOnKeypress
 
 void cxWindowAddMessageLinesAbove() {
-   cxWindow iWindow(NULL, 1, 0, 12, 50, "cxWindow", "Original message");
+   cxWindow iWindow(nullptr, 1, 0, 12, 50, "cxWindow", "Original message");
    iWindow.addMessageLineAbove("First line added above");
    vector<string> moreLines;
    moreLines.push_back("Another line 1");
