@@ -29,8 +29,16 @@ project file available if you wish to use KDevelop.
 
 I worked on this library from 2005 to 2007 while working at a startup company called Red Ace Solutions
 (which no longer exists).  I worked on the majority of this library, together with Mike Kinney (the owner
-of Red Ace Solutions) as well as Glen Thorne.  We developed this library on Fedora Linux.  We tested it on
-the following operating systems:
+of Red Ace Solutions) as well as Glen Thorne.  We developed this library on Fedora Linux.
+
+I have recently modernized the code a bit to be more up to date with C++17, including:
+<ul>
+<li>Using <a href='https://en.cppreference.com/w/cpp/memory/shared_ptr.html' target='_blank'>std::shared_ptr</a> to manage dynamically-allocated memory instead of doing manual allocations & de-allocations with 'new' &amp; 'free'. This should help avoid memory leaks.
+<li>Initializing class member variables in the declaration (in the header file) as applicable
+<li>Use of the keyword 'nullptr' instead of 'NULL'
+</ul>
+
+At Red Ace Solutions, we tested cxWidgets on the following operating systems:
 <ul>
 	<li>IBM AIX 5.3
 	<li>IBM AIX 4.3.3
