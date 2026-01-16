@@ -565,7 +565,7 @@ cxWindow::~cxWindow() {
             cxPanel::cxWindowPtrCollection::iterator iter =
                        parentPanel->mWindows.begin();
             for (; iter != parentPanel->mWindows.end(); ++iter) {
-               if ((*iter) == this) {
+               if (iter->get() == this) {
                   // A pointer to this window was found in the
                   //  panel's mWindows..  Remove it from its
                   //  mWindows (note: there should be only 1 pointer
@@ -1624,7 +1624,7 @@ void cxWindow::setParent(cxWindow *pNewParent) {
                cxPanel *parentPanel = dynamic_cast<cxPanel*>(parentWindow);
                cxPanel::cxWindowPtrCollection::iterator iter = parentPanel->mWindows.begin();
                for (; iter != parentPanel->mWindows.end(); ++iter) {
-                  if ((*iter) == this) {
+                  if (iter->get() == this) {
                      parentPanel->mWindows.erase(iter);
                      break;
                   }
