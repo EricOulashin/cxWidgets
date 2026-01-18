@@ -87,6 +87,7 @@ Some notable make commands
 <li><b>make testApp</b>: Builds just testApp (this builds all the object files, as well as the static library libcxWidgets.a)
 <li><b>make libcxWidgets.a</b>: Builds the static library
 <li><b>make libcxWidgets.so</b> (Linux) or <b>make libcxWidgets.dylib</b> (Mac OS X): Builds the dynamic library
+<li><b>make install</b>: Installs the libraries to your system
 <li><b>make clean</b>: Deletes binaries
 </ul>
 
