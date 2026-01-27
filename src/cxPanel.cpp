@@ -11,6 +11,7 @@ using std::string;
 using std::map;
 using std::shared_ptr;
 using std::make_shared;
+using std::pair;
 
 // Note to developers: When calling the panel's top(), bottom(), or height(),
 //  fully scope them, as in cxPanel::top(), cxPanel::bottom(), cxPanel::height().
@@ -955,23 +956,20 @@ bool cxPanel::addWindowPtr(const shared_ptr<cxWindow>& pWindow) {
       cxWindowPtrCollection::iterator winIter = mWindows.begin();
       for (; winIter != mWindows.end(); ++winIter) {
          // Add the keys in mKeyFunctions as exit keys
-         funcIter = mKeyFunctions.begin();
-         for (; funcIter != mKeyFunctions.end(); ++funcIter) {
+         for (const pair<int, shared_ptr<cxFunction>>& keyFuncPair : mKeyFunctions) {
             // Have the window not run its onLeave function, and not
             // override if the window already has that key set up as a
             // keypress function.
-            addExitKeyToWindow(*winIter, funcIter->first, false, false);
+            addExitKeyToWindow(*winIter, keyFuncPair.first, false, false);
          }
 
          // Add the exit keys from mExitKeys
-         keyIter = mExitKeys.begin();
-         for (; keyIter != mExitKeys.end(); ++keyIter) {
-            addExitKeyToWindow(*winIter, keyIter->first, false, false);
+         for (const pair<int, bool>& exitKeyPair : mExitKeys) {
+            addExitKeyToWindow(*winIter, exitKeyPair.first, false, false);
          }
          // Add the quit keys from mQuitKeys
-         keyIter = mQuitKeys.begin();
-         for (; keyIter != mQuitKeys.end(); ++keyIter) {
-            addQuitKeyToWindow(*winIter, keyIter->first, false, false);
+         for (const pair<int, bool>& quitKeyPair : mQuitKeys) {
+            addQuitKeyToWindow(*winIter, quitKeyPair.first, false, false);
          }
       }
 

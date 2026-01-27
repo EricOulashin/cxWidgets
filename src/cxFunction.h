@@ -56,6 +56,8 @@ class cxFunction {
        */
       virtual std::string runFunction() const = 0;
 
+      virtual void* getFuncPtr() const = 0;
+
       /**
        * \brief Accessor for whether the caller should use the return value
        * \brief of the function.
@@ -186,6 +188,8 @@ class cxFunction0 : public cxFunction {
        */
       virtual std::string runFunction() const override;
 
+      virtual void* getFuncPtr() const override;
+
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction0".  This can be
        * \brief used to determine the type of cxWidgets object that deriving
@@ -314,6 +318,8 @@ class cxFunction2 : public cxFunction {
        *		otherwise returns empty string
        */
       virtual std::string runFunction() const override;
+
+      virtual void* getFuncPtr() const override;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction2".  This can be
@@ -453,6 +459,8 @@ class cxFunction4 : public cxFunction {
        *    otherwise returns empty string
        */
       virtual std::string runFunction() const override;
+
+      virtual void* getFuncPtr() const override;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction4".  This can be

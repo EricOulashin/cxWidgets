@@ -33,9 +33,10 @@ of Red Ace Solutions) as well as Glen Thorne.  We developed this library on Fedo
 
 I have recently modernized the code a bit to be more up to date with C++17, including:
 <ul>
-<li>Using <a href='https://en.cppreference.com/w/cpp/memory/shared_ptr.html' target='_blank'>std::shared_ptr</a> to manage dynamically-allocated memory instead of doing manual allocations & de-allocations with 'new' &amp; 'free'. This should help avoid memory leaks.
-<li>Initializing class member variables in the declaration (in the header file) as applicable
-<li>Use of the keyword 'nullptr' instead of 'NULL'
+<li>Using <a href='https://en.cppreference.com/w/cpp/memory/shared_ptr.html' target='_blank'>std::shared_ptr</a> and <a href='https://en.cppreference.com/w/cpp/memory/unique_ptr.html' target='_blank'>std::unique_ptr</a> to manage dynamically-allocated memory instead of doing manual allocations & de-allocations with 'new' &amp; 'free'. This should help avoid memory leaks.
+<li>Initializing class member variables in the declaration (in the header file) as applicable. This is known as default member initialization, or in-class member initialization.
+<li>Use of the <a href='https://en.cppreference.com/w/cpp/language/nullptr.html' target='_blank'>'nullptr'</a> keyword instead of 'NULL'. nullptr is a typed null pointer; also, it avoids ambiguous function calls that could happen when using NULL (which is typically defined as (void*)0).
+<li>Use of the <a href='http://en.cppreference.com/w/cpp/language/override.html' target='_blank'>'override'</a> keyword to help keep track of which class functions/methods are overridden from base classes.
 </ul>
 
 At Red Ace Solutions, we tested cxWidgets on the following operating systems:

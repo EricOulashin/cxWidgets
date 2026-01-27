@@ -13,6 +13,7 @@ using std::set;
 using cxStringUtils::indexOfLastCap;
 using cxStringUtils::isPrintable;
 using std::isupper;
+using std::shared_ptr;
 using std::make_shared;
 using cxBase::visualStrLen;
 
@@ -1377,7 +1378,7 @@ bool cxInput::handleFunctionForLastKey(bool *pFunctionExists,
 
    int lastKey = cxWindow::getLastKey();
    if (mKeyFunctions.find(lastKey) != mKeyFunctions.end()) {
-      cxFunction *iFunc = mKeyFunctions[lastKey];
+      shared_ptr<cxFunction> iFunc = mKeyFunctions[lastKey];
       // The cxFunction pointers in mKeyFunctions shouldn't be nullptr, but
       //  check just in case.
       if (iFunc != nullptr) {

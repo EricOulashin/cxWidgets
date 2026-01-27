@@ -166,28 +166,28 @@ shared_ptr<cxMultiLineInput> cxForm::append(int pRow, int pCol, int pHeight, int
          }
          else {
             // If one of the edges of the input is along one of the
-            //  form borders, set inputsOnBorder to true - let the
-            //  user put inputs on borders and behave accordingly
-            //  during scrolling, etc.
+            // form borders, set inputsOnBorder to true - let the
+            // user put inputs on borders and behave accordingly
+            // during scrolling, etc.
             if ((input->top() == top()) || (input->bottom() == bottom())) {
                mInputsOnBorder = true;
             }
          }
 
          // If mApplyAttrDefaults is true, apply an attribute
-         //  to the value of the input so that it stands out
-         //  from the rest of the form.
+         // to the value of the input so that it stands out
+         // from the rest of the form.
          if (mApplyAttrDefaults) {
             applyAttrDefaults(input);
          }
 
          // Apply all the other attributes that have been applied to the
-         //  form to the new input so it has the same attributes as all the
-         //  others.
+         // form to the new input so it has the same attributes as all the
+         // others.
          applyWinAttributes(input);
 
          // If the validator string (pValidator) is "m", turn on masking for
-         //  the input.  Otherwise, set the validator string using pValidator.
+         // the input.  Otherwise, set the validator string using pValidator.
          if (pValidator == "m") {
             input->toggleMasking(true);
          }
@@ -204,17 +204,16 @@ shared_ptr<cxMultiLineInput> cxForm::append(int pRow, int pCol, int pHeight, int
          //input->trapNonAssignedFKeys(false);
 
          // Add all form function keys to the input's list of keys that exit
-         //  its input loop.  Note that this passes (pFunctionKey, false, true)
-         //  to the input - the false is so that the input does not run its
-         //  onLeave function when it exits, and the true is to make sure that
-         //  the exit key gets set.
-         map<int, cxFunction*>::const_iterator funcIter = mKeyFunctions.begin();
-         for (; funcIter != mKeyFunctions.end(); ++funcIter) {
-            input->addExitKey(funcIter->first, false, true);
+         // its input loop.  Note that this passes (pFunctionKey, false, true)
+         // to the input - the false is so that the input does not run its
+         // onLeave function when it exits, and the true is to make sure that
+         // the exit key gets set.
+         for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+            input->addExitKey(funcPair.first, false, true);
          }
 
          // Add all the form's quit keys & exit keys to
-         //  the input.
+         // the input.
          map<int, bool>::const_iterator keyIter = mQuitKeys.begin();
          for (; keyIter != mQuitKeys.end(); ++keyIter) {
             input->addQuitKey(keyIter->first, keyIter->second);
@@ -591,17 +590,15 @@ shared_ptr<cxMultiLineInput> cxForm::append(int pHeight, int pWidth,
       input->trapNonAssignedFKeys(false);
 
       // Add all form function keys to the input's list of keys that exit
-      //  its input loop.  Note that this passes (pFunctionKey, false, true)
-      //  to the input - the false is so that the input does not run its
-      //  onLeave function when it exits, and the true is to make sure that
-      //  the exit key gets set.
-      map<int, cxFunction*>::const_iterator funcIter = mKeyFunctions.begin();
-      for (; funcIter != mKeyFunctions.end(); ++funcIter) {
-         input->addExitKey(funcIter->first, false, true);
+      // its input loop.  Note that this passes (pFunctionKey, false, true)
+      // to the input - the false is so that the input does not run its
+      // onLeave function when it exits, and the true is to make sure that
+      // the exit key gets set.
+      for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+         input->addExitKey(funcPair.first, false, true);
       }
 
-      // Add all the form's quit keys & exit keys to
-      //  the input.
+      // Add all the form's quit keys & exit keys to the input.
       map<int, bool>::const_iterator keyIter = mQuitKeys.begin();
       for (; keyIter != mQuitKeys.end(); ++keyIter) {
          input->addQuitKey(keyIter->first, keyIter->second);
@@ -677,10 +674,9 @@ shared_ptr<cxMultiLineInput> cxForm::append(const cxMultiLineInput& input) {
    iInput->trapNonAssignedFKeys(false);
 
    // Add all form function keys to the input's list of
-   //  keys that stop its input loop.
-   map<int, cxFunction*>::const_iterator funcIter = mKeyFunctions.begin();
-   for (; funcIter != mKeyFunctions.end(); ++funcIter) {
-      iInput->addExitKey(funcIter->first, false, true);
+   // keys that stop its input loop.
+   for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+      iInput->addExitKey(funcPair.first, false, true);
    }
 
    // Add all form function keys to the input's list of keys that exit
@@ -765,25 +761,22 @@ void cxForm::append(shared_ptr<cxMultiLineInput>& pInput, int pRow, int pCol, bo
          pInput->trapNonAssignedFKeys(false);
 
          // Add all form function keys to the input's list of keys that exit
-         //  its input loop.  Note that this passes (pFunctionKey, false, true)
-         //  to the input - the false is so that the input does not run its
-         //  onLeave function when it exits, and the true is to make sure that
-         //  the exit key gets set.
-         map<int, cxFunction*>::const_iterator funcIter = mKeyFunctions.begin();
-         for (; funcIter != mKeyFunctions.end(); ++funcIter) {
-            pInput->addExitKey(funcIter->first, false, true);
+         // its input loop.  Note that this passes (pFunctionKey, false, true)
+         // to the input - the false is so that the input does not run its
+         // onLeave function when it exits, and the true is to make sure that
+         // the exit key gets set.
+         for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+            pInput->addExitKey(funcPair.first, false, true);
          }
 
-         // Add all the form's quit keys & exit keys to
-         //  the input.
-         map<int, bool>::const_iterator keyIter = mQuitKeys.begin();
-         for (; keyIter != mQuitKeys.end(); ++keyIter) {
-            pInput->addQuitKey(keyIter->first, keyIter->second);
+         // Add all the form's quit keys & exit keys to the input.
+         for (const pair<int, bool>& keyPair : mQuitKeys) {
+            pInput->addQuitKey(keyPair.first, keyPair.second);
          }
-         keyIter = mExitKeys.begin();
-         for (; keyIter != mExitKeys.end(); ++keyIter) {
-            pInput->addExitKey(keyIter->first, keyIter->second);
+         for (const pair<int, bool>& keyPair : mExitKeys) {
+            pInput->addExitKey(keyPair.first, keyPair.second);
          }
+
          // Add the menu jump hotkey to the input as an exit key
          pInput->addExitKey(mInputJumpKey, false, true);
 
@@ -3400,9 +3393,8 @@ bool cxForm::formKeyIsSet(int pKey) const {
 
    // If the key isn't mInputJumpKey, look in mKeyFunctions
    if (!keyIsSet) {
-      map<int, cxFunction*>::const_iterator funcIter = mKeyFunctions.begin();
-      for (; funcIter != mKeyFunctions.end(); ++funcIter) {
-         if (funcIter->first == pKey) {
+      for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+         if (funcPair.first == pKey) {
             keyIsSet = true;
             break;
          }

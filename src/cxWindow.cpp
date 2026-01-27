@@ -11,14 +11,19 @@
 using std::copy;
 using std::insert_iterator;
 using std::front_insert_iterator;
+using std::pair;
 using std::make_pair;
+using std::shared_ptr;
+using std::make_shared;
+using std::dynamic_pointer_cast;
+using std::unique_ptr;
+using std::make_unique;
 using std::string;
 using std::vector;
 using std::set;
 using std::list;
 using std::deque;
 using std::map;
-using std::pair;
 using cxStringUtils::SplitStringRegex;
 using cxStringUtils::toString;
 
@@ -520,13 +525,6 @@ cxWindow::~cxWindow() {
    // Free the memory used by the key functions and mouse event functions
    clearKeyFunctions();
    clearMouseFunctions();
-   // Free the memory used by mOnFocusFunction and mOnLeaveFunction
-   if (mOnFocusFunction != nullptr) {
-      delete mOnFocusFunction;
-   }
-   if (mOnLeaveFunction != nullptr) {
-      delete mOnLeaveFunction;
-   }
 
    // If other cxWindow objects are using this one
    //  as a title or status window, let them know
@@ -817,9 +815,9 @@ string cxWindow::getMessage() const {
 
 void cxWindow::setMessage(const string &pMessage) {
    // If this is a single-line, borderless window, then
-   //  just truncate the message so that it will fit in
-   //  one line.  Otherwise, call init() again to re-initialize
-   //  the window based on the new message.
+   // just truncate the message so that it will fit in
+   // one line.  Otherwise, call init() again to re-initialize
+   // the window based on the new message.
    if ((mBorderStyle == eBS_NOBORDER) && (height() == 1)) {
       mMessageLines.clear();
       if ((int)pMessage.length() > width()) {
@@ -1642,8 +1640,8 @@ void cxWindow::setParent(cxWindow *pNewParent) {
       mParentWindow = pNewParent;
 
       // If the new mParentWindow is non-nullptr,
-      //  tell the new parent to add this
-      //  window to its subwindow list.
+      // tell the new parent to add this
+      // window to its subwindow list.
       if (mParentWindow != nullptr) {
          mParentWindow->addSubwindow(this);
       }
@@ -1665,11 +1663,11 @@ void cxWindow::dump(string& pResult) {
    //  the border characters properly).
    if (!hasBorder()) {
       const int lineLength = width();
-      chtype * line = new chtype[lineLength];
+      unique_ptr line = make_unique<chtype[]>(lineLength);
       int bottomRow = bottom() - top() + 1;
       int numChars = 0; // # of chars read for each line
       for (int i = 0; i < bottomRow; ++i) {
-         numChars = mvwinchnstr(mWindow, i, 0, line, lineLength);
+         numChars = mvwinchnstr(mWindow, i, 0, line.get(), lineLength);
          if (numChars != ERR) {
             // We have to add each character 1 at a time to
             //  pResult, because in order to extract the characters
@@ -1697,7 +1695,6 @@ void cxWindow::dump(string& pResult) {
             pResult += '\n';
          }
       }
-      delete [] line;
    }
    else {
       // We're using a border.
@@ -1720,11 +1717,11 @@ void cxWindow::dump(string& pResult) {
       //  add the text inside the box, then add
       //  another vertical line.
       const int lineLength = width()-2;
-      chtype * line = new chtype[lineLength];
+      unique_ptr line = make_unique<chtype[]>(lineLength);
       int bottomRow = bottom() - top();
       int numChars = 0; // # of chars read for each line
       for (int i = 1; i < bottomRow; ++i) {
-         numChars = mvwinchnstr(mWindow, i, 1, line, lineLength);
+         numChars = mvwinchnstr(mWindow, i, 1, line.get(), lineLength);
          if (numChars != ERR) {
             pResult += "│";
             // We have to add each character 1 at a time to
@@ -1747,7 +1744,6 @@ void cxWindow::dump(string& pResult) {
          pResult += "─";
       }
       pResult += "┘\n";
-      delete [] line;
    }
 } // dump
 
@@ -1871,78 +1867,72 @@ void cxWindow::setChangeColorsOnFocus(bool pChangeColorsOnFocus) {
 } // setChangeColorsOnFocus
 
 void cxWindow::setOnFocusFunction(funcPtr4 pFunction, void *p1, void *p2,
-                                 void *p3, void *p4, bool pUseVal,
-                                 bool pExitAfterRun) {
-   // If mOnFocusFunction is already set, then free its memory.
-   if (mOnFocusFunction != nullptr) {
-      delete mOnFocusFunction;
-      mOnFocusFunction = nullptr;
+                                  void *p3, void *p4, bool pUseVal,
+                                  bool pExitAfterRun) {
+   shared_ptr<cxFunction4> funcPtr = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, pUseVal,
+                                                              pExitAfterRun, false);
+   if (funcPtr != nullptr) {
+      mOnFocusFunction = dynamic_pointer_cast<cxFunction>(funcPtr);
    }
-   if (pFunction != nullptr) {
-      mOnFocusFunction = new cxFunction4(pFunction, p1, p2, p3, p4, pUseVal,
-                                         pExitAfterRun, false);
+   else {
+      mOnFocusFunction = nullptr;
    }
 } // setOnFocusFunction
 
 void cxWindow::setOnFocusFunction(funcPtr2 pFunction, void *p1, void *p2,
                                  bool pUseVal, bool pExitAfterRun) {
-   // If mOnFocusFunction is already set, then free its memory.
-   if (mOnFocusFunction != nullptr) {
-      delete mOnFocusFunction;
-      mOnFocusFunction = nullptr;
+   shared_ptr<cxFunction2> funcPtr = make_shared<cxFunction2>(pFunction, p1, p2, pUseVal,
+                                                              pExitAfterRun, false);
+   if (funcPtr != nullptr) {
+      mOnFocusFunction = dynamic_pointer_cast<cxFunction>(funcPtr);
    }
-   if (pFunction != nullptr) {
-      mOnFocusFunction = new cxFunction2(pFunction, p1, p2, pUseVal,
-                                         pExitAfterRun, false);
+   else {
+      mOnFocusFunction = nullptr;
    }
 } // setOnFocusFunction
 
 void cxWindow::setOnFocusFunction(funcPtr0 pFunction, bool pUseVal,
                                   bool pExitAfterRun) {
-   // If mOnFocusFunction is already set, then free its memory.
-   if (mOnFocusFunction != nullptr) {
-      delete mOnFocusFunction;
+   shared_ptr<cxFunction0> funcPtr = make_shared<cxFunction0>(pFunction, pUseVal,
+                                                              pExitAfterRun, false);
+    if (funcPtr != nullptr) {
+        mOnFocusFunction = dynamic_pointer_cast<cxFunction>(funcPtr);
+    }
+    else {
       mOnFocusFunction = nullptr;
-   }
-   if (pFunction != nullptr) {
-      mOnFocusFunction = new cxFunction0(pFunction, pUseVal, pExitAfterRun,
-                                         false);
-   }
+    }
 } // setOnFocusFunction
 
 void cxWindow::setOnLeaveFunction(funcPtr4 pFunction, void *p1, void *p2,
                                   void *p3, void *p4) {
-   // If mOnLeaveFunction is already set, then free its memory.
-   if (mOnLeaveFunction != nullptr) {
-      delete mOnLeaveFunction;
-      mOnLeaveFunction = nullptr;
+   shared_ptr<cxFunction4> funcPtr = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false,
+                                                              false, false);
+   if (funcPtr != nullptr) {
+      mOnLeaveFunction = dynamic_pointer_cast<cxFunction>(funcPtr);
    }
-   if (pFunction != nullptr) {
-      mOnLeaveFunction = new cxFunction4(pFunction, p1, p2, p3, p4, false,
-                                         false, false);
+   else {
+      mOnLeaveFunction = nullptr;
    }
 } // setOnLeaveFunction
 
 void cxWindow::setOnLeaveFunction(funcPtr2 pFunction, void *p1, void *p2) {
-   // If mOnLeaveFunction is already set, then free its memory.
-   if (mOnLeaveFunction != nullptr) {
-      delete mOnLeaveFunction;
-      mOnLeaveFunction = nullptr;
+  shared_ptr<cxFunction2> funcPtr = make_shared<cxFunction2>(pFunction, p1, p2, false,
+                                                              false, false);
+   if (funcPtr != nullptr) {
+      mOnLeaveFunction = dynamic_pointer_cast<cxFunction>(funcPtr);
    }
-   if (pFunction != nullptr) {
-      mOnLeaveFunction = new cxFunction2(pFunction, p1, p2, false, false,
-                                         false);
+   else {
+      mOnLeaveFunction = nullptr;
    }
 } // setOnLeaveFunction
 
 void cxWindow::setOnLeaveFunction(funcPtr0 pFunction) {
-   // If mOnLeaveFunction is already set, then free its memory.
-   if (mOnLeaveFunction != nullptr) {
-      delete mOnLeaveFunction;
-      mOnLeaveFunction = nullptr;
+   shared_ptr<cxFunction0> funcPtr = make_shared<cxFunction0>(pFunction, false, false, false);
+   if (funcPtr != nullptr) {
+      mOnLeaveFunction = dynamic_pointer_cast<cxFunction>(funcPtr);
    }
-   if (pFunction != nullptr) {
-      mOnLeaveFunction = new cxFunction0(pFunction, false, false, false);
+   else {
+      mOnLeaveFunction = nullptr;
    }
 } // setOnLeaveFunction
 
@@ -1967,7 +1957,7 @@ bool cxWindow::runOnLeaveFunction(string *pFunctionRetval) {
 
    if (mOnLeaveFunction != nullptr) {
       // Don't do anything if the last keypress is in mQuitKeys or mExitKeys and
-      //  the boolean for the key is false.
+      // the boolean for the key is false.
       // Check to see whether the onLeave function should be run, based on
       //  the last keypress:
       //  - If the last keypress is in mQuitKeys or mExitKeys and the boolean
@@ -2024,11 +2014,11 @@ bool cxWindow::onLeaveFunctionEnabled() const {
    return(mRunOnLeave);
 } // onLeaveFunctionEnabled
 
-cxFunction* const cxWindow::getOnFocusFunction() const {
+const shared_ptr<cxFunction>& cxWindow::getOnFocusFunction() const {
    return(mOnFocusFunction);
 } // getOnFocusFunction
 
-cxFunction* const cxWindow::getOnLeaveFunction() const {
+const shared_ptr<cxFunction>& cxWindow::getOnLeaveFunction() const {
    return(mOnLeaveFunction);
 } // getOnLeaveFunction
 
@@ -2050,21 +2040,16 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1, void *p2,
       setIt = !hasKeyFunction(pKey);
    }
    else {
-      // pFunction isn't nullptr.  Add it.
-      // First, if there is already a cxFunction in mKeyFunctions for the
-      //  function key, then free it & remove it (in case it's a cxFunction2).
-      if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
-         delete mKeyFunctions[pKey];
-      }
-      mKeyFunctions[pKey] = new cxFunction4(pFunction, p1, p2, p3, p4,
-                                                 pUseReturnVal, pExitAfterRun,
-                                                 pRunOnLeaveFunction);
-      // Make sure new didn't return nullptr
-      if (mKeyFunctions[pKey] != nullptr) {
+       // pFunction isn't nullptr.  Add it.
+      shared_ptr<cxFunction4> func4Ptr = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4,
+                                                                  pUseReturnVal, pExitAfterRun,
+                                                                  pRunOnLeaveFunction);
+      if (func4Ptr != nullptr) {
+         mKeyFunctions[pKey] = dynamic_pointer_cast<cxFunction>(func4Ptr);
          setIt = true;
       }
       else {
-         // new couldn't allocate any memory..  Remove it from the map.
+         // We couldn't allocate any memory, so remove it from the map.
          mKeyFunctions.erase(pKey);
       }
    }
@@ -2095,27 +2080,22 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr2 pFunction, void *p1,
    }
    else {
       // pFunction isn't nullptr.  Add it.
-      // First, if there is already a cxFunction in mKeyFunctions for the
-      //  function key, then free it & remove it (in case it's a cxFunction4).
-      if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
-         delete mKeyFunctions[pKey];
-      }
-      mKeyFunctions[pKey] = new cxFunction2(pFunction, p1, p2,
-                                                 pUseReturnVal, pExitAfterRun,
-                                                 pRunOnLeaveFunction);
-      // Make sure new didn't return nullptr
-      if (mKeyFunctions[pKey] != nullptr) {
+      shared_ptr<cxFunction2> func2Ptr = make_shared<cxFunction2>(pFunction, p1, p2,
+                                                                  pUseReturnVal, pExitAfterRun,
+                                                                  pRunOnLeaveFunction);
+      if (func2Ptr != nullptr) {
+         mKeyFunctions[pKey] = dynamic_pointer_cast<cxFunction>(func2Ptr);
          setIt = true;
       }
       else {
-         // new couldn't allocate any memory..  Remove it from the map.
+         // We couldn't allocate any memory, so remove it from the map.
          mKeyFunctions.erase(pKey);
       }
    }
 
    // If the key was successfully set, remove it from the lists of exit keys
-   //  and quit keys (so that we can be sure that the key won't make the
-   //  window leave its input loop before the function can fire).
+   // and quit keys (so that we can be sure that the key won't make the
+   // window leave its input loop before the function can fire).
    if (setIt) {
       removeExitKey(pKey);
       removeQuitKey(pKey);
@@ -2138,26 +2118,21 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr0 pFunction, bool pUseReturnVal,
    }
    else {
       // pFunction isn't nullptr.  Add it.
-      // First, if there is already a cxFunction in mKeyFunctions for the
-      //  function key, then free it & remove it (in case it's a cxFunction4).
-      if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
-         delete mKeyFunctions[pKey];
-      }
-      mKeyFunctions[pKey] = new cxFunction0(pFunction, pUseReturnVal,
-                                          pExitAfterRun, pRunOnLeaveFunction);
-      // Make sure new didn't return nullptr
-      if (mKeyFunctions[pKey] != nullptr) {
+      shared_ptr<cxFunction0> func0Ptr = make_shared<cxFunction0>(pFunction, pUseReturnVal, pExitAfterRun,
+                                                                  pRunOnLeaveFunction);
+      if (func0Ptr != nullptr) {
+         mKeyFunctions[pKey] = dynamic_pointer_cast<cxFunction>(func0Ptr);
          setIt = true;
       }
       else {
-         // new couldn't allocate any memory..  Remove it from the map.
+         // We couldn't allocate any memory, so remove it from the map.
          mKeyFunctions.erase(pKey);
       }
    }
 
    // If the key was successfully set, remove it from the lists of exit keys
-   //  and quit keys (so that we can be sure that the key won't make the
-   //  window leave its input loop before the function can fire).
+   // and quit keys (so that we can be sure that the key won't make the
+   // window leave its input loop before the function can fire).
    if (setIt) {
       removeExitKey(pKey);
       removeQuitKey(pKey);
@@ -2168,9 +2143,8 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr0 pFunction, bool pUseReturnVal,
 
 void cxWindow::clearKeyFunction(int pKey) {
    // If the function exists, free the memory used by it and remove it
-   //  from mKeyFunctions.
+   // from mKeyFunctions.
    if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
-      delete mKeyFunctions[pKey];
       mKeyFunctions.erase(pKey);
    }
 
@@ -2198,15 +2172,11 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr4 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   cxFunction4 *func4 = nullptr;
-   map<int, cxFunction*>::iterator funcIter = mKeyFunctions.begin();
-   for (; funcIter != mKeyFunctions.end(); ++funcIter) {
+   for (const pair<int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       try {
-         func4 = dynamic_cast<cxFunction4*>(funcIter->second);
-         if (func4 != nullptr) {
-            if (func4->getFunction() == pFunction) {
-               keys.insert(funcIter->first);
-            }
+         shared_ptr<cxFunction4> func4 = dynamic_pointer_cast<cxFunction4>(funcPair.second);
+         if (func4 != nullptr && func4->getFunction() == pFunction) {
+            keys.insert(funcPair.first);
          }
       }
       catch (const std::bad_cast& e) {
@@ -2226,15 +2196,11 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr2 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   cxFunction2 *func2 = nullptr;
-   map<int, cxFunction*>::iterator funcIter = mKeyFunctions.begin();
-   for (; funcIter != mKeyFunctions.end(); ++funcIter) {
+   for (const pair<int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       try {
-         func2 = dynamic_cast<cxFunction2*>(funcIter->second);
-         if (func2 != nullptr) {
-            if (func2->getFunction() == pFunction) {
-               keys.insert(funcIter->first);
-            }
+         shared_ptr<cxFunction2> func2 = dynamic_pointer_cast<cxFunction2>(funcPair.second);
+         if (func2 != nullptr && func2->getFunction() == pFunction) {
+            keys.insert(funcPair.first);
          }
       }
       catch (const std::bad_cast& e) {
@@ -2254,15 +2220,11 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr0 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   cxFunction0 *func0 = nullptr;
-   map<int, cxFunction*>::iterator funcIter = mKeyFunctions.begin();
-   for (; funcIter != mKeyFunctions.end(); ++funcIter) {
+   for (const pair<int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       try {
-         func0 = dynamic_cast<cxFunction0*>(funcIter->second);
-         if (func0 != nullptr) {
-            if (func0->getFunction() == pFunction) {
-               keys.insert(funcIter->first);
-            }
+         shared_ptr<cxFunction0> func0 = dynamic_pointer_cast<cxFunction0>(funcPair.second);
+         if (func0 != nullptr && func0->getFunction() == pFunction) {
+            keys.insert(funcPair.first);
          }
       }
       catch (const std::bad_cast& e) {
@@ -2279,11 +2241,6 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr0 pFunction) {
 } // clearKeyFunction
 
 void cxWindow::clearKeyFunctions() {
-   // Free the memory used by the key functions
-   map<int, cxFunction*>::iterator iter = mKeyFunctions.begin();
-   for (; iter != mKeyFunctions.end(); ++iter) {
-      delete iter->second;
-   }
    // Clear the map
    mKeyFunctions.clear();
 
@@ -2315,7 +2272,7 @@ void cxWindow::clearKeyFunctions() {
 bool cxWindow::hasKeyFunction(int pKey) const {
    bool exists = false;
 
-   map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
+   map<int, shared_ptr<cxFunction> >::const_iterator iter = mKeyFunctions.find(pKey);
    if (iter != mKeyFunctions.end()) {
       // Check to make sure that the cxFunction pointer is not nullptr
       exists = (iter->second != nullptr);
@@ -2339,20 +2296,15 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr4 pFunction, void *p1,
    }
    else {
       // pFunction isn't nullptr.  Add it.
-      // First, if there is already a cxFunction in mKeyFunctions for the
-      //  function key, then free it & remove it (in case it's a cxFunction2).
-      if (mMouseFunctions.find(pMouseState) != mMouseFunctions.end()) {
-         delete mMouseFunctions[pMouseState];
-      }
-      mMouseFunctions[pMouseState] = new cxFunction4(pFunction, p1, p2, p3, p4,
-                                                 pUseReturnVal, pExitAfterRun,
-                                                 pRunOnLeaveFunction);
-      // Make sure new didn't return nullptr
-      if (mMouseFunctions[pMouseState] != nullptr) {
+      shared_ptr<cxFunction4> func4Ptr = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4,
+                                                                  pUseReturnVal, pExitAfterRun,
+                                                                  pRunOnLeaveFunction);
+      if (func4Ptr != nullptr) {
+         mMouseFunctions[pMouseState] = dynamic_pointer_cast<cxFunction>(func4Ptr);
          setIt = true;
       }
       else {
-         // new couldn't allocate any memory..  Remove it from the map.
+         // We couldn't allocate any memory, so remove it from the map.
          mMouseFunctions.erase(pMouseState);
       }
    }
@@ -2375,20 +2327,15 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr2 pFunction, void *p1,
    }
    else {
       // pFunction isn't nullptr.  Add it.
-      // First, if there is already a cxFunction in mKeyFunctions for the
-      //  function key, then free it & remove it (in case it's a cxFunction4).
-      if (mMouseFunctions.find(pMouseState) != mMouseFunctions.end()) {
-         delete mMouseFunctions[pMouseState];
-      }
-      mMouseFunctions[pMouseState] = new cxFunction2(pFunction, p1, p2,
-                                                 pUseReturnVal, pExitAfterRun,
-                                                 pRunOnLeaveFunction);
-      // Make sure new didn't return nullptr
-      if (mMouseFunctions[pMouseState] != nullptr) {
+      shared_ptr<cxFunction2> func2Ptr = make_shared<cxFunction2>(pFunction, p1, p2,
+                                                                  pUseReturnVal, pExitAfterRun,
+                                                                  pRunOnLeaveFunction);
+      if (func2Ptr != nullptr) {
+         mMouseFunctions[pMouseState] = dynamic_pointer_cast<cxFunction>(func2Ptr);
          setIt = true;
       }
       else {
-         // new couldn't allocate any memory..  Remove it from the map.
+         // We couldn't allocate any memory, so remove it from the map.
          mMouseFunctions.erase(pMouseState);
       }
    }
@@ -2411,19 +2358,15 @@ bool cxWindow::setMouseFunction(int pMouseState, funcPtr0 pFunction,
    }
    else {
       // pFunction isn't nullptr.  Add it.
-      // First, if there is already a cxFunction in mKeyFunctions for the
-      //  function key, then free it & remove it (in case it's a cxFunction4).
-      if (mMouseFunctions.find(pMouseState) != mMouseFunctions.end()) {
-         delete mMouseFunctions[pMouseState];
-      }
-      mMouseFunctions[pMouseState] = new cxFunction0(pFunction, pUseReturnVal,
-                                          pExitAfterRun, pRunOnLeaveFunction);
-      // Make sure new didn't return nullptr
-      if (mMouseFunctions[pMouseState] != nullptr) {
+      shared_ptr<cxFunction0> func0Ptr = make_shared<cxFunction0>(pFunction,
+                                                                  pUseReturnVal, pExitAfterRun,
+                                                                  pRunOnLeaveFunction);
+      if (func0Ptr != nullptr) {
+         mMouseFunctions[pMouseState] = dynamic_pointer_cast<cxFunction>(func0Ptr);
          setIt = true;
       }
       else {
-         // new couldn't allocate any memory..  Remove it from the map.
+         // We couldn't allocate any memory, so remove it from the map.
          mMouseFunctions.erase(pMouseState);
       }
    }
@@ -2435,17 +2378,11 @@ void cxWindow::clearMouseFunction(int pMouseState) {
    // If the mouse event exists, free the memory used by it and remove it
    //  from mMouseFunctions.
    if (mMouseFunctions.find(pMouseState) != mMouseFunctions.end()) {
-      delete mMouseFunctions[pMouseState];
       mMouseFunctions.erase(pMouseState);
    }
 } // clearMouseFunction
 
 void cxWindow::clearMouseFunctions() {
-   // Free the memory used by the mouse event functions
-   map<int, cxFunction*>::iterator iter = mMouseFunctions.begin();
-   for (; iter != mMouseFunctions.end(); ++iter) {
-      delete iter->second;
-   }
    // Clear the map
    mMouseFunctions.clear();
 } // clearMouseFunctions
@@ -2453,7 +2390,7 @@ void cxWindow::clearMouseFunctions() {
 bool cxWindow::hasMouseFunction(int pMouseState) const {
    bool exists = false;
 
-   map<int, cxFunction*>::const_iterator iter = mMouseFunctions.find(pMouseState);
+   map<int, shared_ptr<cxFunction> >::const_iterator iter = mMouseFunctions.find(pMouseState);
    if (iter != mMouseFunctions.end()) {
       // Check to make sure that the cxFunction pointer is not nullptr
       exists = (iter->second != nullptr);
@@ -3086,64 +3023,62 @@ bool cxWindow::mouseEvtWasInTitle() const {
 void cxWindow::doMouseBehavior() {
 } // doMouseBehavior
 
-cxFunction0* cxWindow::getKeyFunction0(int pKey) const {
-   cxFunction0 *retval = nullptr;
-
-   map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
+shared_ptr<cxFunction> cxWindow::getKeyFunction(int pKey) const {
+   map<int, shared_ptr<cxFunction> >::const_iterator iter = mKeyFunctions.find(pKey);
    if (iter != mKeyFunctions.end()) {
-      cxFunction *iFunc = iter->second;
-      if (iFunc != nullptr) {
-         if (iFunc->cxTypeStr() == "cxFunction0") {
-            try {
-               retval = dynamic_cast<cxFunction0*>(iFunc);
-            }
-            catch (...) {
-            }
+      return(iter->second);
+   }
+   else {
+      return(nullptr);
+   }
+}
+
+std::shared_ptr<cxFunction0> cxWindow::getKeyFunction0(int pKey) const {
+   shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
+   if (funcPtr != nullptr) {
+      if (funcPtr->cxTypeStr() == "cxFunction0") {
+         try {
+            return dynamic_pointer_cast<cxFunction0>(funcPtr);
+         }
+         catch (...) {
          }
       }
    }
-
-   return(retval);
+   else {
+      return nullptr;
+   }
 } // getKeyFunction2
 
-cxFunction2* cxWindow::getKeyFunction2(int pKey) const {
-   cxFunction2 *retval = nullptr;
-
-   map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
-   if (iter != mKeyFunctions.end()) {
-      cxFunction *iFunc = iter->second;
-      if (iFunc != nullptr) {
-         if (iFunc->cxTypeStr() == "cxFunction2") {
-            try {
-               retval = dynamic_cast<cxFunction2*>(iFunc);
-            }
-            catch (...) {
-            }
+std::shared_ptr<cxFunction2> cxWindow::getKeyFunction2(int pKey) const {
+   shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
+   if (funcPtr != nullptr) {
+      if (funcPtr->cxTypeStr() == "cxFunction2") {
+         try {
+            return dynamic_pointer_cast<cxFunction2>(funcPtr);
+         }
+         catch (...) {
          }
       }
    }
-
-   return(retval);
+   else {
+      return nullptr;
+   }
 } // getKeyFunction2
 
-cxFunction4* cxWindow::getKeyFunction4(int pKey) const {
-   cxFunction4 *retval = nullptr;
-
-   map<int, cxFunction*>::const_iterator iter = mKeyFunctions.find(pKey);
-   if (iter != mKeyFunctions.end()) {
-      cxFunction *iFunc = iter->second;
-      if (iFunc != nullptr) {
-         if (iFunc->cxTypeStr() == "cxFunction4") {
-            try {
-               retval = dynamic_cast<cxFunction4*>(iFunc);
-            }
-            catch (...) {
-            }
+std::shared_ptr<cxFunction4> cxWindow::getKeyFunction4(int pKey) const {
+  shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
+   if (funcPtr != nullptr) {
+      if (funcPtr->cxTypeStr() == "cxFunction4") {
+         try {
+            return dynamic_pointer_cast<cxFunction4>(funcPtr);
+         }
+         catch (...) {
          }
       }
    }
-
-   return(retval);
+   else {
+      return nullptr;
+   }
 } // getKeyFunction4
 
 bool cxWindow::mouseButton1Pressed() const {
@@ -3404,29 +3339,29 @@ e_cxColors cxWindow::getItemColor(e_WidgetItems pItem) const {
    return(color);
 } // getItemColor
 
-map<int, cxFunction*>::iterator cxWindow::keyFunctions_begin() {
+map<int, shared_ptr<cxFunction> >::iterator cxWindow::keyFunctions_begin() {
    return(mKeyFunctions.begin());
 } // keyFunctions_begin
 
-map<int, cxFunction*>::iterator cxWindow::keyFunctions_end() {
+map<int, shared_ptr<cxFunction> >::iterator cxWindow::keyFunctions_end() {
    return(mKeyFunctions.end());
 } // keyFunctions_end
 
 void cxWindow::getFunctionKeyStrings(vector<string>& pKeys) const {
    pKeys.clear();
 
-   map<int, cxFunction*>::const_iterator iter = mKeyFunctions.begin();
+   map<int, shared_ptr<cxFunction> >::const_iterator iter = mKeyFunctions.begin();
    for (; iter != mKeyFunctions.end(); ++iter) {
-      pKeys.push_back(cxBase::getKeyStr(iter->first));
+      pKeys.emplace_back(cxBase::getKeyStr(iter->first));
    }
 } // getFunctionKeyStrings
 
 void cxWindow::getFunctionKeys(vector<int>& pKeys) const {
    pKeys.clear();
 
-   map<int, cxFunction*>::const_iterator iter = mKeyFunctions.begin();
+   map<int, shared_ptr<cxFunction> >::const_iterator iter = mKeyFunctions.begin();
    for (; iter != mKeyFunctions.end(); ++iter) {
-      pKeys.push_back(iter->first);
+      pKeys.emplace_back(iter->first);
    }
 } // getFunctionKeys
 
@@ -4351,9 +4286,9 @@ bool cxWindow::handleFunctionForLastKey(bool *pFunctionExists,
 
    int lastKey = cxWindow::getLastKey();
    if (mKeyFunctions.find(lastKey) != mKeyFunctions.end()) {
-      cxFunction *iFunc = mKeyFunctions[lastKey];
+      shared_ptr<cxFunction> iFunc = mKeyFunctions[lastKey];
       // The cxFunction pointers in mkeyFunctions shouldn't be nullptr, but check
-      //  just in case.
+      // just in case.
       if (iFunc != nullptr) {
          if (iFunc->functionIsSet()) {
             iFunc->runFunction();
@@ -4378,7 +4313,7 @@ bool cxWindow::handleFunctionForLastMouseState(bool *pFunctionExists,
    bool continueOn = true;
 
    // If pFunctionExists or pRunOnLeaveFunction are not nullptr, then default
-   //  them.
+   // them.
    if (pFunctionExists != nullptr) {
       *pFunctionExists = false;
    }
@@ -4387,9 +4322,9 @@ bool cxWindow::handleFunctionForLastMouseState(bool *pFunctionExists,
    }
 
    if (functionExistsForLastMouseState()) {
-      cxFunction *iFunc = mMouseFunctions[mMouse.bstate];
+      shared_ptr<cxFunction> iFunc = mMouseFunctions[mMouse.bstate];
       // The cxFunction pointers in mkeyFunctions shouldn't be nullptr, but check
-      //  just in case.
+      // just in case.
       if (iFunc != nullptr) {
          if (iFunc->functionIsSet()) {
             iFunc->runFunction();
@@ -4399,8 +4334,8 @@ bool cxWindow::handleFunctionForLastMouseState(bool *pFunctionExists,
                *pFunctionExists = true;
             }
             // If pRunOnLeaveFunction is not nullptr, then:
-            //  If the window should exit after the function runs, then set
-            //  pRunOnLeaveFunction to what's set in the cxFunction.
+            // If the window should exit after the function runs, then set
+            // pRunOnLeaveFunction to what's set in the cxFunction.
             if (pRunOnLeaveFunction != nullptr) {
                if (iFunc->getExitAfterRun()) {
                   *pRunOnLeaveFunction = iFunc->getRunOnLeaveFunction();
@@ -4633,8 +4568,8 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
       }
    }
    // End case: Write the horizontal border line from the last string to the
-   //  edge of the window (to clear any text that may have been there if the
-   //  new text is shorter)
+   // edge of the window (to clear any text that may have been there if the
+   // new text is shorter)
    if (pStrings.size() > 0) {
       --iter; // To get to the last element in pStrings
       lineStart = iter->first + (int)(iter->second.length());
@@ -4761,22 +4696,17 @@ bool cxWindow::mouseEvtWasButtonEvt() const {
 void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
    // Make sure the other window is a different window than this one
    if (&pWindow != this) {
-      // Free the memory currently used by the functions
-      map<int, cxFunction*>::iterator iter = mKeyFunctions.begin();
-      for (; iter != mKeyFunctions.end(); ++iter) {
-         delete iter->second;
-      }
       // Clear mKeyFunctions and copy the ones from pWindow
       mKeyFunctions.clear();
-      cxFunction *iFunc = nullptr;
-      map<int, cxFunction*>::const_iterator iter2 = pWindow.mKeyFunctions.begin();
+      shared_ptr<cxFunction> iFunc = nullptr;
+      map<int, shared_ptr<cxFunction> >::const_iterator iter2 = pWindow.mKeyFunctions.begin();
       for (; iter2 != pWindow.mKeyFunctions.end(); ++iter2) {
          iFunc = iter2->second;
          if (iFunc != nullptr) {
             // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
             if (iFunc->cxTypeStr() == "cxFunction0") {
                try {
-                  cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(iFunc);
+                  shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(iFunc);
                   if (iFunc0 != nullptr) {
                      setKeyFunction(iter2->first, iFunc0->getFunction(),
                                     iFunc0->getUseReturnVal(),
@@ -4789,7 +4719,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             }
             else if (iFunc->cxTypeStr() == "cxFunction2") {
                try {
-                  cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(iFunc);
+                  shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(iFunc);
                   if (iFunc2 != nullptr) {
                      // If either parameter points to the other window, have it
                      //  point to this one instead.
@@ -4812,7 +4742,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             }
             else if (iFunc->cxTypeStr() == "cxFunction4") {
                try {
-                  cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(iFunc);
+                  shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(iFunc);
                   if (iFunc4 != nullptr) {
                      // If any of the parameters point to the other window, have
                      //  them point to this one instead.
@@ -4846,9 +4776,6 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
       }
 
       // Do the same with mMouseFunctions
-      for (iter = mMouseFunctions.begin(); iter != mMouseFunctions.end(); ++iter) {
-         delete iter->second;
-      }
       mMouseFunctions.clear();
       iFunc = nullptr;
       iter2 = pWindow.mMouseFunctions.begin();
@@ -4858,7 +4785,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
             if (iFunc->cxTypeStr() == "cxFunction0") {
                try {
-                  cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(iFunc);
+                  shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(iFunc);
                   if (iFunc0 != nullptr) {
                      setMouseFunction(iter2->first, iFunc0->getFunction(),
                                     iFunc0->getUseReturnVal(),
@@ -4871,7 +4798,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             }
             else if (iFunc->cxTypeStr() == "cxFunction2") {
                try {
-                  cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(iFunc);
+                  shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(iFunc);
                   if (iFunc2 != nullptr) {
                      // If either parameter points to the other window, have it
                      //  point to this one instead.
@@ -4894,7 +4821,7 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
             }
             else if (iFunc->cxTypeStr() == "cxFunction4") {
                try {
-                  cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(iFunc);
+                  shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(iFunc);
                   if (iFunc4 != nullptr) {
                      // If any of the parameters point to the other window, have
                      //  them point to this one instead.
@@ -4932,11 +4859,9 @@ void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
 void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
    // Free the memory currently used by the functions
    if (mOnFocusFunction != nullptr) {
-      delete mOnFocusFunction;
       mOnFocusFunction = nullptr;
    }
    if (mOnLeaveFunction != nullptr) {
-      delete mOnLeaveFunction;
       mOnLeaveFunction = nullptr;
    }
 
@@ -4945,7 +4870,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
       if (pWindow.mOnFocusFunction->cxTypeStr() == "cxFunction0") {
          try {
-            cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pWindow.mOnFocusFunction);
+            shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(pWindow.mOnFocusFunction);
             if (iFunc0 != nullptr) {
                setOnFocusFunction(iFunc0->getFunction(),
                                   iFunc0->getUseReturnVal(),
@@ -4957,7 +4882,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       }
       else if (pWindow.mOnFocusFunction->cxTypeStr() == "cxFunction2") {
          try {
-            cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pWindow.mOnFocusFunction);
+            shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(pWindow.mOnFocusFunction);
             if (iFunc2 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.
@@ -4977,7 +4902,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       }
       else if (pWindow.mOnFocusFunction->cxTypeStr() == "cxFunction4") {
          try {
-            cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pWindow.mOnFocusFunction);
+            shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(pWindow.mOnFocusFunction);
             if (iFunc4 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.
@@ -5004,7 +4929,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
       if (pWindow.mOnLeaveFunction->cxTypeStr() == "cxFunction0") {
          try {
-            cxFunction0 *iFunc0 = dynamic_cast<cxFunction0*>(pWindow.mOnLeaveFunction);
+            shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(pWindow.mOnLeaveFunction);
             if (iFunc0 != nullptr) {
                setOnLeaveFunction(iFunc0->getFunction());
             }
@@ -5014,7 +4939,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       }
       else if (pWindow.mOnLeaveFunction->cxTypeStr() == "cxFunction2") {
          try {
-            cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(pWindow.mOnLeaveFunction);
+            shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(pWindow.mOnLeaveFunction);
             if (iFunc2 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.
@@ -5032,7 +4957,7 @@ void cxWindow::setFocusFunctions(const cxWindow& pWindow) {
       }
       else if (pWindow.mOnLeaveFunction->cxTypeStr() == "cxFunction4") {
          try {
-            cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(pWindow.mOnLeaveFunction);
+            shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(pWindow.mOnLeaveFunction);
             if (iFunc4 != nullptr) {
                // If either parameter points to the other window, have it
                //  point to this one instead.

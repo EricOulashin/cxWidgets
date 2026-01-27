@@ -74,6 +74,10 @@ string cxFunction0::runFunction() const {
    }
 }
 
+void* cxFunction0::getFuncPtr() const {
+   return (void*)mFunction;
+}
+
 string cxFunction0::cxTypeStr() const {
    return("cxFunction0");
 } // cxTypeStr
@@ -137,6 +141,10 @@ string cxFunction2::runFunction() const {
    else {
       return("");
    }
+}
+
+void* cxFunction2::getFuncPtr() const {
+   return (void*)mFunction;
 }
 
 string cxFunction2::cxTypeStr() const {
@@ -224,6 +232,10 @@ string cxFunction4::runFunction() const {
    else {
       return("");
    }
+}
+
+void* cxFunction4::getFuncPtr() const {
+   return (void*)mFunction;
 }
 
 string cxFunction4::cxTypeStr() const {

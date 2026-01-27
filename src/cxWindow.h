@@ -31,6 +31,7 @@
 #include <list>
 #include <deque>
 #include <utility>
+#include <memory>
 
 class cxWindow;
 typedef std::vector<cxWindow*> cxWindowPtrContainer;
@@ -1261,14 +1262,14 @@ class cxWindow : public cxObject {
        *
        * @return The onFocus function
        */
-      virtual cxFunction* const getOnFocusFunction() const;
+      virtual const std::shared_ptr<cxFunction>& getOnFocusFunction() const;
 
       /**
        * \brief Accessor for the onLeave function
        *
        * @return The onLeave function
        */
-      virtual cxFunction* const getOnLeaveFunction() const;
+      virtual const std::shared_ptr<cxFunction>& getOnLeaveFunction() const;
 
       /**
        * \brief Returns whether or not the window is currently
@@ -1575,7 +1576,7 @@ class cxWindow : public cxObject {
        *
        * @return A begin iterator to the map of key functions
        */
-      std::map<int, cxFunction*>::iterator keyFunctions_begin();
+      std::map<int, std::shared_ptr<cxFunction> >::iterator keyFunctions_begin();
 
       /**
        * \brief Returns an end iterator to the map of cxFunction pointers.
@@ -1586,7 +1587,7 @@ class cxWindow : public cxObject {
        *
        * @return An end iterator to the map of key functions
        */
-      std::map<int, cxFunction*>::iterator keyFunctions_end();
+      std::map<int, std::shared_ptr<cxFunction> >::iterator keyFunctions_end();
 
       /**
        * \brief Populates a collection of strings representing the keys
@@ -2137,6 +2138,19 @@ class cxWindow : public cxObject {
       virtual void doMouseBehavior(int pMouseY, int pMouseX);
 
       /**
+       * \brief Returns a cxFunction pointer for a key.
+       * \brief If the key does not exist in mKeyFunctions, or if the
+       * \brief pointer is not a cxFunction2 pointer (i.e., its cxTypeStr()
+       * \brief doesn't return "cxFunction2"),, this will return nullptr.
+       *
+       * @param pKey The key to look for in mKeyFunctions
+       *
+       * @return A cxFunction2 pointer for the key, or nullptr if there is no
+       *  function for the key.
+       */
+      std::shared_ptr<cxFunction> getKeyFunction(int pKey) const;
+
+      /**
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction0
        * \brief pointer.  If the key does not exist in mKeyFunctions, or if the
        * \brief pointer is not a cxFunction2 pointer (i.e., its cxTypeStr()
@@ -2147,7 +2161,7 @@ class cxWindow : public cxObject {
        * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
-      cxFunction0* getKeyFunction0(int pKey) const;
+      std::shared_ptr<cxFunction0> getKeyFunction0(int pKey) const;
 
       /**
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction2
@@ -2160,7 +2174,7 @@ class cxWindow : public cxObject {
        * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
-      cxFunction2* getKeyFunction2(int pKey) const;
+      std::shared_ptr<cxFunction2> getKeyFunction2(int pKey) const;
 
       /**
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction4
@@ -2173,7 +2187,7 @@ class cxWindow : public cxObject {
        * @return A cxFunction4 pointer for the key, or nullptr if there is no
        *  cxFunction4 for the key.
        */
-      cxFunction4* getKeyFunction4(int pKey) const;
+      std::shared_ptr<cxFunction4> getKeyFunction4(int pKey) const;
 
       /**
        * \brief Returns whether or not the mouse event read in mMouse was
@@ -2463,26 +2477,26 @@ class cxWindow : public cxObject {
       bool mDrawMessage = true;      // Whether or not to draw the message
       bool mDrawSpecialChars = true; // Whether or not to draw the "special" chars
 
-      cxFunction *mOnFocusFunction = nullptr; // Function for when focus is gained
-      cxFunction *mOnLeaveFunction = nullptr; // Function for when focus is lost
+      std::shared_ptr<cxFunction> mOnFocusFunction = nullptr; // Function for when focus is gained
+      std::shared_ptr<cxFunction> mOnLeaveFunction = nullptr; // Function for when focus is lost
       bool mIsModal = false;   // Whether or not the window is being shown modally
       // mLeaveNow can be set true by exitNow() or quitNow() if an external
-      //  function wants the window object to leave its input loop.
+      // function wants the window object to leave its input loop.
       bool mLeaveNow = false;
       // This map contains pointers to functions to be called for various
-      //  keypresses.
-      std::map<int, cxFunction*> mKeyFunctions;
+      // keypresses.
+      std::map<int, std::shared_ptr<cxFunction> > mKeyFunctions;
       // This map contains pointers to functions to be called for various
-      //  mouse states.
-      std::map<int, cxFunction*> mMouseFunctions;
+      // mouse states.
+      std::map<int, std::shared_ptr<cxFunction> > mMouseFunctions;
       // mQuitKeys and mExitKeys contain additional keys to cause the window
-      //  to quit the input loop & return cxID_QUIT and cxID_EXIT,
-      //  respectively.  The key to the maps is the keypress, and the boolean
-      //  tells whether or not to run the onLeave function before leaving.
+      // to quit the input loop & return cxID_QUIT and cxID_EXIT,
+      // respectively.  The key to the maps is the keypress, and the boolean
+      // tells whether or not to run the onLeave function before leaving.
       std::map<int, bool> mQuitKeys;
       std::map<int, bool> mExitKeys;
       // mHotkeyHighlighting specifies whether or not to use hotkey
-      //  attributes in the message.
+      // attributes in the message.
       bool mHotkeyHighlighting;
 #ifdef NCURSES_MOUSE_VERSION
       MEVENT mMouse; // Stores data for mouse events

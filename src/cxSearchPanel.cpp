@@ -6,6 +6,7 @@ using std::string;
 using std::map;
 using std::shared_ptr;
 using std::make_shared;
+using std::dynamic_pointer_cast;
 
 cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
                  int pHeight, int pWidth, const string& pFormTitle,
@@ -554,10 +555,10 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    // Look at the onFocus and onLeave function for the form.  If any of the
    //  parameters point to the other searchPanel or its form or menu, then
    //  have them use this one instead.
-   cxFunction *onFocusFunc = mForm->getOnFocusFunction();
+   shared_ptr<cxFunction> onFocusFunc = mForm->getOnFocusFunction();
    if (onFocusFunc != nullptr) {
       if (onFocusFunc->cxTypeStr() == "cxFunction2") {
-         cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onFocusFunc);
+         shared_ptr<cxFunction2> iFunc2 = std::dynamic_pointer_cast<cxFunction2>(onFocusFunc);
          if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
@@ -571,7 +572,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
          }
       }
       else if (onFocusFunc->cxTypeStr() == "cxFunction4") {
-         cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onFocusFunc);
+         shared_ptr<cxFunction4> iFunc4 = std::dynamic_pointer_cast<cxFunction4>(onFocusFunc);
          if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
@@ -586,10 +587,10 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
          }
       }
    }
-   cxFunction *onLeaveFunc = mForm->getOnLeaveFunction();
+   shared_ptr<cxFunction> onLeaveFunc = mForm->getOnLeaveFunction();
    if (onLeaveFunc != nullptr) {
       if (onLeaveFunc->cxTypeStr() == "cxFunction2") {
-         cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onLeaveFunc);
+         shared_ptr<cxFunction2> iFunc2 = std::dynamic_pointer_cast<cxFunction2>(onLeaveFunc);
          if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
@@ -602,7 +603,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
          }
       }
       else if (onLeaveFunc->cxTypeStr() == "cxFunction4") {
-         cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onLeaveFunc);
+         shared_ptr<cxFunction4> iFunc4 = std::dynamic_pointer_cast<cxFunction4>(onLeaveFunc);
          if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
@@ -621,7 +622,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    onFocusFunc = mMenu->getOnFocusFunction();
    if (onFocusFunc != nullptr) {
       if (onFocusFunc->cxTypeStr() == "cxFunction2") {
-         cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onFocusFunc);
+         shared_ptr<cxFunction2> iFunc2 = std::dynamic_pointer_cast<cxFunction2>(onFocusFunc);
          if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
@@ -635,7 +636,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
          }
       }
       else if (onFocusFunc->cxTypeStr() == "cxFunction4") {
-         cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onFocusFunc);
+         shared_ptr<cxFunction4> iFunc4 = std::dynamic_pointer_cast<cxFunction4>(onFocusFunc);
          if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
@@ -653,7 +654,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    onLeaveFunc = mMenu->getOnLeaveFunction();
    if (onLeaveFunc != nullptr) {
       if (onLeaveFunc->cxTypeStr() == "cxFunction2") {
-         cxFunction2 *iFunc2 = dynamic_cast<cxFunction2*>(onLeaveFunc);
+         shared_ptr<cxFunction2> iFunc2 = std::dynamic_pointer_cast<cxFunction2>(onLeaveFunc);
          if (iFunc2 != nullptr) {
             void* params[] = { iFunc2->getParam1(), iFunc2->getParam2() };
             for (int i = 0; i < 2; ++i) {
@@ -666,7 +667,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
          }
       }
       else if (onLeaveFunc->cxTypeStr() == "cxFunction4") {
-         cxFunction4 *iFunc4 = dynamic_cast<cxFunction4*>(onLeaveFunc);
+         shared_ptr<cxFunction4> iFunc4 = std::dynamic_pointer_cast<cxFunction4>(onLeaveFunc);
          if (iFunc4 != nullptr) {
             void* params[] = { iFunc4->getParam1(), iFunc4->getParam2(),
                                iFunc4->getParam3(), iFunc4->getParam4() };
@@ -715,12 +716,11 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    }
 
    // Same with the form & menu key functions
-   map<int, cxFunction*>::iterator funcIter = mForm->keyFunctions_begin();
+   map<int, shared_ptr<cxFunction> >::iterator funcIter = mForm->keyFunctions_begin();
    for (; funcIter != mForm->keyFunctions_end(); ++funcIter) {
       // We'll need to check 2 parameters if it's a cxFunction2, or 4
-      //  parameters if it's a cxFunction4.
-      cxFunction2 *iFunction2 = getKeyFunction2(funcIter->first);
-      cxFunction4 *iFunction4 = getKeyFunction4(funcIter->first);
+      // parameters if it's a cxFunction4.
+      shared_ptr<cxFunction4> iFunction4 = getKeyFunction4(funcIter->first);
       if (iFunction4 != nullptr) {
          void* params[] = { iFunction4->getParam1(), iFunction4->getParam2(),
                             iFunction4->getParam3(), iFunction4->getParam4() };
@@ -734,25 +734,27 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
                iFunction4->getUseReturnVal(), iFunction4->getExitAfterRun(),
                iFunction4->getRunOnLeaveFunction());
       }
-      else if (iFunction2 != nullptr) {
-         void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
-         for (int i = 0; i < 2; ++i) {
-            if (params[i] == (void*)(&pPanel)) {
-               params[i] = (void*)this;
+      else {
+         shared_ptr<cxFunction2> iFunction2 = getKeyFunction2(funcIter->first);
+         if (iFunction2 != nullptr) {
+            void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
+            for (int i = 0; i < 2; ++i) {
+               if (params[i] == (void*)(&pPanel)) {
+                  params[i] = (void*)this;
+               }
             }
+            mForm->setKeyFunction(funcIter->first, iFunction2->getFunction(),
+                           params[0], params[1], iFunction2->getUseReturnVal(),
+                           iFunction2->getExitAfterRun(),
+                           iFunction2->getRunOnLeaveFunction());
          }
-         mForm->setKeyFunction(funcIter->first, iFunction2->getFunction(),
-                        params[0], params[1], iFunction2->getUseReturnVal(),
-                        iFunction2->getExitAfterRun(),
-                        iFunction2->getRunOnLeaveFunction());
       }
    }
    funcIter = mMenu->keyFunctions_begin();
    for (; funcIter != mMenu->keyFunctions_end(); ++funcIter) {
       // We'll need to check 2 parameters if it's a cxFunction2, or 4
-      //  parameters if it's a cxFunction4.
-      cxFunction2 *iFunction2 = getKeyFunction2(funcIter->first);
-      cxFunction4 *iFunction4 = getKeyFunction4(funcIter->first);
+      // parameters if it's a cxFunction4.
+      shared_ptr<cxFunction4> iFunction4 = getKeyFunction4(funcIter->first);
       if (iFunction4 != nullptr) {
          void* params[] = { iFunction4->getParam1(), iFunction4->getParam2(),
                             iFunction4->getParam3(), iFunction4->getParam4() };
@@ -766,17 +768,20 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
                iFunction4->getUseReturnVal(), iFunction4->getExitAfterRun(),
                iFunction4->getRunOnLeaveFunction());
       }
-      else if (iFunction2 != nullptr) {
-         void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
-         for (int i = 0; i < 2; ++i) {
-            if (params[i] == (void*)(&pPanel)) {
-               params[i] = (void*)this;
+      else {
+         shared_ptr<cxFunction2> iFunction2 = getKeyFunction2(funcIter->first);
+         if (iFunction2 != nullptr) {
+            void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
+            for (int i = 0; i < 2; ++i) {
+               if (params[i] == (void*)(&pPanel)) {
+                  params[i] = (void*)this;
+               }
             }
+            mMenu->setKeyFunction(funcIter->first, iFunction2->getFunction(),
+                           params[0], params[2], iFunction2->getUseReturnVal(),
+                           iFunction2->getExitAfterRun(),
+                           iFunction2->getRunOnLeaveFunction());
          }
-         mMenu->setKeyFunction(funcIter->first, iFunction2->getFunction(),
-                        params[0], params[2], iFunction2->getUseReturnVal(),
-                        iFunction2->getExitAfterRun(),
-                        iFunction2->getRunOnLeaveFunction());
       }
    }
 } // checkEventFunctionPointers

@@ -1457,20 +1457,17 @@ bool cxMultiForm::selectPrevForm() {
 } // selectPrevForm
 
 void cxMultiForm::addFormFunctionKeysToSubform(std::shared_ptr<cxForm>& pForm) {
-   map<int, cxFunction*>::const_iterator iter = mKeyFunctions.begin();
-   for (; iter != mKeyFunctions.end(); ++iter) {
-      pForm->addExitKey(iter->first);
+   for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+      pForm->addExitKey(funcPair.first, false, true);
    }
 } // addFormFunctionKeysToSubform
 
 void cxMultiForm::addQuitAndExitKeysToSubform(std::shared_ptr<cxForm>& pForm) {
-   map<int, bool>::iterator iter = mQuitKeys.begin();
-   for (; iter != mQuitKeys.end(); ++iter) {
-      pForm->addQuitKey(iter->first, false, true);
+   for (const pair<int, bool>& quitKeyPair : mQuitKeys) {
+      pForm->addQuitKey(quitKeyPair.first, false, true);
    }
-
-   for (iter = mExitKeys.begin(); iter != mExitKeys.end(); ++iter) {
-      pForm->addQuitKey(iter->first, false, true);
+   for (const pair<int, bool>& exitKeyPair : mExitKeys) {
+      pForm->addQuitKey(exitKeyPair.first, false, true);
    }
 } // addQuitAndExitKeysToSubform
 

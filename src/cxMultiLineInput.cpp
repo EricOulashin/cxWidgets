@@ -3069,7 +3069,7 @@ bool cxMultiLineInput::handleFunctionForLastKey(bool *pFunctionExists,
 
    int lastKey = getLastKey();
    if (mKeyFunctions.find(lastKey) != mKeyFunctions.end()) {
-      cxFunction *iFunc = mKeyFunctions[lastKey];
+      shared_ptr<cxFunction> iFunc = mKeyFunctions[lastKey];
       // The cxFunction pointers in mKeyFunctions shouldn't be nullptr, but check
       //  anyway.
       if (iFunc != nullptr) {
