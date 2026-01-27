@@ -333,7 +333,7 @@ class cxSearchPanel : public cxPanel {
        * @param pNewWidth The new width
        * @param pRefresh Whether or not to refresh the window (defaults to true)
        */
-      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true);
+      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true) override;
 
       /**
        * \brief Sets the form's height.  The menu will also be re-sized accordingly
@@ -358,7 +358,7 @@ class cxSearchPanel : public cxPanel {
        *
        * @return The name of the cxWidgets class ("cxSearchPanel")
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Sets a function to be called when the enter key is pressed on

@@ -66,7 +66,7 @@ class cxFrame : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    private:
       cxMenu mMenuBar;

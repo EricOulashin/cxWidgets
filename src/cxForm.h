@@ -777,7 +777,7 @@ class cxForm : public cxWindow {
        * @param pShowSubwindows Whether or not to show sub-windows also.  Defaults to true.
        * @return The return value of cxWindow::show()
        */
-      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true);
+      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true) override;
 
        /**
        * \brief Shows the form and waits for input.
@@ -790,7 +790,7 @@ class cxForm : public cxWindow {
        *  presses ESC; otherwise, returns cxID_EXIT.
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = false,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * \brief Returns whether or not a call to showModal() will wait for a
@@ -803,21 +803,21 @@ class cxForm : public cxWindow {
        * @return Whether or not a call to showModal() will wait for a keypress
        *  from the user.
        */
-      virtual bool modalGetsKeypress() const;
+      virtual bool modalGetsKeypress() const override;
 
       /**
        * Hides the form (along with all the inputs)
        * @param pHideSubwindows Whether or not to also hide the subwindows (defaults
        *    to true)
        */
-      virtual void hide(bool pHideSubwindows = true);
+      virtual void hide(bool pHideSubwindows = true) override;
 
       /**
        * Un-hides the form (along with all the inputs).
        * @param pUnhideSubwindows Whether or not to also unhide the subwindows
        *    (defaults to true)
        */
-      virtual void unhide(bool pUnhideSubwindows = true);
+      virtual void unhide(bool pUnhideSubwindows = true) override;
 
        /**
        * Changes the window's position (based on a new upper-left corner).  Also moves the input windows.
@@ -827,7 +827,7 @@ class cxForm : public cxWindow {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * \brief Returns the number of inputs in the form.
@@ -1386,7 +1386,7 @@ class cxForm : public cxWindow {
        * @param pColor The color to set the item to (see the e_cxColors
        *  enumeration in cxColors.h)
        */
-      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor);
+      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor) override;
 
       /**
        * \brief Returns the top row of an input (by index), or -1 if the given
@@ -1683,7 +1683,7 @@ class cxForm : public cxWindow {
        * @param pStatus The new status message for window
        * @param pRefreshStatus Whether or not to refresh the status area (defaults to true)
        */
-      virtual void setStatus(const std::string& pStatus, bool pRefreshStatus = true);
+      virtual void setStatus(const std::string& pStatus, bool pRefreshStatus = true) override;
 
       /**
        * \brief Turns off the custom status text set with setStatus.
@@ -2565,7 +2565,7 @@ when the user presses the 'n' key.
        *
        * @param pEnabled Whether the form should be enabled or not (true/false)
        */
-      virtual void setEnabled(bool pEnabled);
+      virtual void setEnabled(bool pEnabled) override;
 
       /**
        * \brief Toggles whether or not to use the status text of the inputs
@@ -2599,7 +2599,7 @@ when the user presses the 'n' key.
        *
        * @return A pointer to the parent window
        */
-      virtual cxWindow* getParent() const;
+      virtual cxWindow* getParent() const override;
 
       /**
        * \brief Returns the index of the next editable input after a given
@@ -2631,7 +2631,7 @@ when the user presses the 'n' key.
        *  enumeration).
        * @param pAttr The ncurses atribute to add.
        */
-      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Sets the ncurses attribute to use for one of the items in the
@@ -2645,7 +2645,7 @@ when the user presses the 'n' key.
        *  enumeration).
        * @param pAttr The ncurses atribute to apply.
        */
-      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes an ncurses attribute from one of the item lists.  For
@@ -2657,7 +2657,7 @@ when the user presses the 'n' key.
        *  e_WidgetItems enumeration).
        * @param pAttr The ncurses attribute to remove
        */
-      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes all attributes for a given window item.  For eLABEL,
@@ -2668,7 +2668,7 @@ when the user presses the 'n' key.
        * @param pItem The item to remove attributes for (see the e_WidgetItems
        *  enumeration).
        */
-      virtual void removeAttrs(e_WidgetItems pItem);
+      virtual void removeAttrs(e_WidgetItems pItem) override;
 
       /**
        * \brief Returns the set of ncurses attributes for a given item.
@@ -2677,7 +2677,7 @@ when the user presses the 'n' key.
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const override;
 
       /**
        * \brief Gathers a set of keys considered to be "navigational" keys from
@@ -2714,26 +2714,26 @@ when the user presses the 'n' key.
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Sets the last keypress
        *
        * @param pLastKey The last keypress
        */
-      virtual void setLastKey(int pLastKey);
+      virtual void setLastKey(int pLastKey) override;
 
       /**
        * \brief This causes the form to exit its input loop with a code of
        * \brief cxID_QUIT.
        */
-      virtual void quitNow();
+      virtual void quitNow() override;
 
       /**
        * \brief This causes the form to exit its input loop with a code of
        * \brief cxID_EXIT.
        */
-      virtual void exitNow();
+      virtual void exitNow() override;
 
       /**
        * \brief Sets a single key to use to display extended help for all

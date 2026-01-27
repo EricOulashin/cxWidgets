@@ -213,7 +213,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pShowSubwindows Whether or not to show sub-windows also.  Always uses false.
        * @return Returns cxID_EXIT
        */
-      virtual long show(bool pBringToTop = false, bool pShowSubwindows = false);
+      virtual long show(bool pBringToTop = false, bool pShowSubwindows = false) override;
 
       /**
        * \brief Enters a loop for user input.  Returns cxID_EXIT or cxID_QUIT,
@@ -230,7 +230,7 @@ class cxMultiLineInput : public cxWindow {
        *  the user pressed ESC to quit out, or cxID_EXIT otherwise).
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = false);
+                             bool pShowSubwindows = false) override;
 
       /**
        * Hides the input (the input still exists; it just won't be displayed).
@@ -251,7 +251,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pEraseSubwindows Whether or not to erase the subwindows (defaults to
        *    true)
        */
-      virtual void erase(bool pEraseSubwindows = true);
+      virtual void erase(bool pEraseSubwindows = true) override;
 
       /**
        * Returns the label of the input
@@ -280,7 +280,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pRefresh Whether or not to refresh the input
        *  (defaults to false)
        */
-      virtual void clear(bool pRefresh = false);
+      virtual void clear(bool pRefresh = false) override;
 
       /**
        * Returns the user's input
@@ -372,7 +372,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * \brief Changes input's width and height.  The upper-left coordinate
@@ -381,7 +381,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pNewWidth The new width
        * @param pRefresh Whether or not to refresh the window (defaults to true)
        */
-      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true);
+      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true) override;
 
       /**
        * \brief Adds a function to call when the user presses some key.
@@ -620,7 +620,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pColor The color to set the item to (see the e_cxColors
        *  enumeration in cxColors.h)
        */
-      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor);
+      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor) override;
 
       /**
        * \brief Returns the input option for the input (i.e., eINPUT_EDITABLE,
@@ -797,7 +797,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return Whether or not the input currently has focus
        */
-      virtual bool hasFocus() const;
+      virtual bool hasFocus() const override;
 
       /**
        * \brief Sets whether the input should go read-only when setFocus() exits.
@@ -844,7 +844,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @param pBorderStyle The type of border to use
        */
-      virtual void setBorderStyle(eBorderStyle pBorderStyle);
+      virtual void setBorderStyle(eBorderStyle pBorderStyle) override;
 
       /**
        * \brief Returns whether the input is above another window.
@@ -853,7 +853,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return True if the window is above pThatWindow; false if the window is below pThatWindow.
        */
-      virtual bool isAbove(const cxWindow& pThatWindow) const;
+      virtual bool isAbove(const cxWindow& pThatWindow) const override;
 
       /**
        * \brief Returns whether the input is below another window.
@@ -862,13 +862,13 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return True if the window is below pThatWindow; false if the window is above pThatWindow.
        */
-      virtual bool isBelow(const cxWindow& pThatWindow) const;
+      virtual bool isBelow(const cxWindow& pThatWindow) const override;
 
       /**
        * \brief Brings the window to the top
        * @param pRefresh Whether to refresh the screen (defaults to true)
        */
-      virtual void bringToTop(bool pRefresh = true);
+      virtual void bringToTop(bool pRefresh = true) override;
 
       /**
        * \brief Refreshes just the value portion of the input.
@@ -904,7 +904,7 @@ class cxMultiLineInput : public cxWindow {
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(std::string *pFunctionRetval = nullptr);
+      virtual bool runOnFocusFunction(std::string *pFunctionRetval = nullptr) override;
 
       /**
        * \brief Runs the function that was set with setKeyFunction for this key
@@ -1064,7 +1064,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pDisableCursorOnShow Whether or not to disable
        *  the cursor when shown
        */
-      virtual void setDisableCursorOnShow(bool pDisableCursorOnShow);
+      virtual void setDisableCursorOnShow(bool pDisableCursorOnShow) override;
 
       /**
        * \brief Returns the parent cxForm pointer.
@@ -1099,7 +1099,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @param pLastKey A key (represented by an int)
        */
-      virtual void setLastKey(int pLastKey);
+      virtual void setLastKey(int pLastKey) override;
 
       /**
        * \brief Returns whether or not a call to showModal() will wait for a
@@ -1110,14 +1110,14 @@ class cxMultiLineInput : public cxWindow {
        * @return Whether or not a call to showModal() will wait for a keypress
        *  from the user.
        */
-      virtual bool modalGetsKeypress() const;
+      virtual bool modalGetsKeypress() const override;
 
       /**
        * \brief Enables or disables the input.
        *
        * @param pEnabled Whether the input should be enabled or not (true/false)
        */
-      virtual void setEnabled(bool pEnabled);
+      virtual void setEnabled(bool pEnabled) override;
 
       /**
        * \brief After this is called, the code returned by showModal will
@@ -1135,7 +1135,7 @@ class cxMultiLineInput : public cxWindow {
        * \brief Tells the input to exit the input loop now, with a return value
        * \brief of cxID_QUIT.
        */
-      virtual void quitNow();
+      virtual void quitNow() override;
 
       /**
        * \brief After this is called, the code returned by showModal will
@@ -1153,7 +1153,7 @@ class cxMultiLineInput : public cxWindow {
        * \brief Tells the input to exit the input loop now, with a return value
        * \brief of cxID_EXIT.
        */
-      virtual void exitNow();
+      virtual void exitNow() override;
 
       /**
        * \brief Sets whether or not the validator function should be used.
@@ -1178,7 +1178,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return A pointer to the parent window
        */
-      virtual cxWindow* getParent() const;
+      virtual cxWindow* getParent() const override;
 
       /**
        * \brief Returns whether the input ran a key function that was set up
@@ -1196,7 +1196,7 @@ class cxMultiLineInput : public cxWindow {
        *  enumeration).
        * @param pAttr The ncurses atribute to add.
        */
-      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Sets the ncurses attribute to use for one of the items in the
@@ -1208,7 +1208,7 @@ class cxMultiLineInput : public cxWindow {
        *  enumeration).
        * @param pAttr The ncurses atribute to apply.
        */
-      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes an ncurses attribute from one of the item lists.
@@ -1217,7 +1217,7 @@ class cxMultiLineInput : public cxWindow {
        *  e_WidgetItems enumeration).
        * @param pAttr The ncurses attribute to remove
        */
-      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes all attributes for a given window item.
@@ -1225,7 +1225,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pItem The item to remove attributes for (see the e_WidgetItems
        *  enumeration).
        */
-      virtual void removeAttrs(e_WidgetItems pItem);
+      virtual void removeAttrs(e_WidgetItems pItem) override;
 
       /**
        * \brief Returns the set of ncurses attributes for a given item.
@@ -1234,7 +1234,7 @@ class cxMultiLineInput : public cxWindow {
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const override;
 
       /**
        * \brief Returns whether the cursor will be left-aligned when the
@@ -1357,7 +1357,7 @@ class cxMultiLineInput : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Returns the input type.  This is a member of the cxInputTypes
@@ -2190,7 +2190,7 @@ class cxMultiLineInput : public cxWindow {
        * @return Whether or not the input loop should continue
        */
       virtual bool handleFunctionForLastKey(bool *pFunctionExists = nullptr,
-                                            bool *pRunOnLeaveFunction = nullptr);
+                                            bool *pRunOnLeaveFunction = nullptr) override;
 
       /**
        * \brief Enables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -2204,7 +2204,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pItem The item type to retrieve attributes for - see the
        *  e_cxWidgetItems enumeration (defined in cxWidgetItems.h).
        */
-      virtual void enableAttrs(WINDOW *pWin, e_WidgetItems pItem);
+      virtual void enableAttrs(WINDOW *pWin, e_WidgetItems pItem) override;
 
       /**
        * \brief Disables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -2216,7 +2216,7 @@ class cxMultiLineInput : public cxWindow {
        * @param pItem The item type to retrieve attributes for - see the
        *  e_cxWidgetItems enumeration (defined in cxWidgetItems.h).
        */
-      virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem);
+      virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem) override;
 
    private:
       friend class cxForm; // Because that class uses this class
@@ -2335,7 +2335,7 @@ class cxMultiLineInput : public cxWindow {
 
       // Fills mWindow with the current window text, but does not actually
       //  show it.
-      virtual void draw();
+      virtual void draw() override;
 
       // Returns whether or not what's on the screen differs from the member
       //  data.

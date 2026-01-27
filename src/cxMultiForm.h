@@ -179,7 +179,7 @@ class cxMultiForm : public cxForm {
        *  false and the first parameter is true, the subforms won't show.
        * @return The return value of cxForm::show()
        */
-      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true);
+      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true) override;
 
       /**
        * \brief Shows the form and waits for input.
@@ -196,7 +196,7 @@ class cxMultiForm : public cxForm {
        *  cxReturnCodes.h
         */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = false,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * \brief Shows (refreshes) all inputs
@@ -353,7 +353,7 @@ class cxMultiForm : public cxForm {
        * @param pRefresh Whether or not to refresh the input (defaults to false)
        * @return True if successful or false if not
        */
-      virtual bool setValue(int pIndex, const std::string& pValue, bool pRefresh = false);
+      virtual bool setValue(int pIndex, const std::string& pValue, bool pRefresh = false) override;
 
       /**
        * Sets the value of one of the inputs on the form (by label/name).
@@ -364,7 +364,7 @@ class cxMultiForm : public cxForm {
        * @param pRefresh Whether or not to refresh the input (defaults to false)
        * @return True if successful or false if not
        */
-      virtual bool setValue(const std::string& pLabel, const std::string& pValue, bool pIsLabel = true, bool pRefresh = false);
+      virtual bool setValue(const std::string& pLabel, const std::string& pValue, bool pIsLabel = true, bool pRefresh = false) override;
 
       /**
        * \brief Returns the number of subforms on the form.
@@ -397,21 +397,21 @@ class cxMultiForm : public cxForm {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * \brief Hides the form
        * @param pHideSubwindows Whether or not to also hide the subwindows (defaults
        *    to true)
        */
-      virtual void hide(bool pHideSubwindows = true);
+      virtual void hide(bool pHideSubwindows = true) override;
 
       /**
        * \brief Un-hides the form
        * @param pUnhideSubwindows Whether or not to also unhide the subwindows
        *    (defaults to true)
        */
-      virtual void unhide(bool pUnhideSubwindows = true);
+      virtual void unhide(bool pUnhideSubwindows = true) override;
 
       /**
        * Adds a function to call when the user presses some key.
@@ -439,7 +439,7 @@ class cxMultiForm : public cxForm {
                                   void *p1, void *p2, void *p3, void *p4,
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
 
       /**
        * Adds a function to call when the user presses some key.
@@ -551,7 +551,7 @@ class cxMultiForm : public cxForm {
        *  any of the subforms have changed; returns false if nothing
        *  has changed.
        */
-      virtual bool hasChanged() const;
+      virtual bool hasChanged() const override;
 
       /**
        * \brief Setter for whether or not data should be considered changed.
@@ -559,7 +559,7 @@ class cxMultiForm : public cxForm {
        * @param pDataChanged Whether or not data should be considered changed
        *  (true/false)
        */
-      virtual void setChanged(bool pDataChanged);
+      virtual void setChanged(bool pDataChanged) override;
 
       /**
        * \brief Enables or disables one of the subforms (by index).
@@ -616,14 +616,14 @@ class cxMultiForm : public cxForm {
        * @return Whether or not the key was added
        */
       virtual bool addQuitKey(int pKey, bool pRunOnLeaveFunction = true,
-                              bool pOverride = false);
+                              bool pOverride = false) override;
 
       /**
        * \brief Removes a quit key (but doesn't work for ESC)
        *
        * @param pKey The key to remove from the list of quit keys
        */
-      virtual void removeQuitKey(int pKey);
+      virtual void removeQuitKey(int pKey) override;
 
       /**
        * \brief Adds a key that will cause the form to quit and
@@ -642,14 +642,14 @@ class cxMultiForm : public cxForm {
        * @return Whether or not the key was added
        */
       virtual bool addExitKey(int pKey, bool pRunOnLeaveFunction = true,
-                              bool pOverride = false);
+                              bool pOverride = false) override;
 
       /**
        * \brief Removes an exit key
        *
        * @param pKey The key to remove from the list of exit keys
        */
-      virtual void removeExitKey(int pKey);
+      virtual void removeExitKey(int pKey) override;
 
       /**
        * \brief Sets whether the window should disable the cursor
@@ -658,7 +658,7 @@ class cxMultiForm : public cxForm {
        * @param pDisableCursorOnShow Whether or not to disable
        *  the cursor when shown
        */
-      virtual void setDisableCursorOnShow(bool pDisableCursorOnShow);
+      virtual void setDisableCursorOnShow(bool pDisableCursorOnShow) override;
 
       /**
        * \brief Clears the multiForm and all the subforms.
@@ -697,7 +697,7 @@ class cxMultiForm : public cxForm {
        *
        * @param pEnabled Whether the multiForm should be enabled or not (true/false)
        */
-      virtual void setEnabled(bool pEnabled);
+      virtual void setEnabled(bool pEnabled) override;
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to
@@ -706,7 +706,7 @@ class cxMultiForm : public cxForm {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    protected:
       /**

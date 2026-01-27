@@ -60,6 +60,16 @@ class cxApp : public cxObject {
        */
       virtual long onExit();
 
+      /**
+       * \brief Returns the name of the cxWidgets class.  This is overridden
+       * \brief in cxObject-based classes.  This can be used to determine
+       * \brief the type of cxWidgets object that deriving classes derive from
+       * \brief in applications.
+       *
+       * @return The name of the cxWidgets class.
+       */
+      virtual std::string cxTypeStr() const override;
+
    private:
       cxFrame *mAppFrame = nullptr; // The application's frame
 };

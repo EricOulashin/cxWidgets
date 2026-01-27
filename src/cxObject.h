@@ -76,7 +76,7 @@ class cxObject {
       /**
        * Outputs a beep character
        */
-      void beep();
+      virtual void beep();
 
       /**
        * \brief Returns the name of the cxWidgets class.  This is overridden

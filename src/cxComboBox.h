@@ -107,7 +107,7 @@ class cxComboBox : public cxMultiLineInput {
        *  presses ESC; otherwise, returns cxID_EXIT.
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * \brief Changes window's width and height.  The window's upper-left
@@ -120,7 +120,7 @@ class cxComboBox : public cxMultiLineInput {
        * @param pNewWidth The new width
        * @param pRefresh Whether or not to refresh the window (defaults to true)
        */
-      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true);
+      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true) override;
 
       /**
        * \brief Changes the window's position, based on a new upper-left corner
@@ -131,28 +131,28 @@ class cxComboBox : public cxMultiLineInput {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * \brief Erases the window
        * @param pEraseSubwindows Whether or not to erase the subwindows (defaults to
        *    true)
        */
-      virtual void erase(bool pEraseSubwindows = true);
+      virtual void erase(bool pEraseSubwindows = true) override;
 
       /**
        * \brief Hides the window
        * @param pHideSubwindows Whether or not to also hide the subwindows (defaults
        *    to true)
        */
-      virtual void hide(bool pHideSubwindows = true);
+      virtual void hide(bool pHideSubwindows = true) override;
 
       /**
        * \brief Un-hides the window
        * @param pUnhideSubwindows Whether or not to also unhide the subwindows
        *    (defaults to true)
        */
-      virtual void unhide(bool pUnhideSubwindows = true);
+      virtual void unhide(bool pUnhideSubwindows = true) override;
 
       /**
        * \brief Adds a string item to the end of the menu.
@@ -305,7 +305,7 @@ class cxComboBox : public cxMultiLineInput {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Returns a pointer to the drop-down menu.

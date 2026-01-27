@@ -213,7 +213,7 @@ class cxMenu : public cxWindow {
        *  the user presses ESC.
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * \brief Returns whether or not a call to showModal() will wait for a
@@ -226,7 +226,7 @@ class cxMenu : public cxWindow {
        * @return Whether or not a call to showModal() will wait for a keypress
        *  from the user.
        */
-      virtual bool modalGetsKeypress() const;
+      virtual bool modalGetsKeypress() const override;
 
       /**
        * \brief Scrolls the menu item list by a certain amount.
@@ -284,7 +284,7 @@ class cxMenu : public cxWindow {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * Returns the number of menu items
@@ -299,12 +299,12 @@ class cxMenu : public cxWindow {
        * @param pRefresh Whether or not to refresh the menu (defaults
        *  to false)
        */
-      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = false);
+      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = false) override;
 
       /**
        * Outputs the menu item text lines
        */
-      virtual void drawMessage();
+      virtual void drawMessage() override;
 
       /**
        * \brief Shows the menu.
@@ -316,7 +316,7 @@ class cxMenu : public cxWindow {
        *   that might need to return a value.  For cxWindow, cxID_EXIT is
        *   always returned.
        */
-      virtual long show(bool pBringToTop = true, bool pShowSubwindows = true);
+      virtual long show(bool pBringToTop = true, bool pShowSubwindows = true) override;
 
       /**
        * Erases the window
@@ -343,7 +343,7 @@ class cxMenu : public cxWindow {
        *
        * @return The return code set by the last call to showModal()
        */
-      virtual long getReturnCode() const;
+      virtual long getReturnCode() const override;
 
       /**
        * Returns the return code for a menu item at a specified index.
@@ -402,7 +402,7 @@ class cxMenu : public cxWindow {
       /**
        * \brief Draws a border around the menu
        */
-      virtual void drawBorder();
+      virtual void drawBorder() override;
 
       /**
        * \brief Toggles selectability for an item (by index).  Selectability
@@ -488,7 +488,7 @@ class cxMenu : public cxWindow {
        * @param pStatus The new status message for window
        * @param pRefreshStatus Whether or not to refresh the status area (defaults to true)
        */
-      virtual void setStatus(const std::string& pStatus, bool pRefreshStatus = true);
+      virtual void setStatus(const std::string& pStatus, bool pRefreshStatus = true) override;
 
       /**
        * \brief Turns off the custom status text set with setStatus.
@@ -548,7 +548,7 @@ class cxMenu : public cxWindow {
        *
        * @param pBorderStyle A eBorderStyle enumeration value (see cxBorderStyles.h)
        */
-      virtual void setBorderStyle(eBorderStyle pBorderStyle);
+      virtual void setBorderStyle(eBorderStyle pBorderStyle) override;
 
       /**
        * \brief Returns whether or not an item exists in the menu.
@@ -798,7 +798,7 @@ class cxMenu : public cxWindow {
        *  enumeration).
        * @param pAttr The ncurses atribute to add.
        */
-      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Sets the ncurses attribute to use for one of the items in the
@@ -810,7 +810,7 @@ class cxMenu : public cxWindow {
        *  enumeration).
        * @param pAttr The ncurses atribute to apply.
        */
-      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes an ncurses attribute from one of the item lists.
@@ -819,7 +819,7 @@ class cxMenu : public cxWindow {
        *  e_WidgetItems enumeration).
        * @param pAttr The ncurses attribute to remove
        */
-      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes all attributes for a given window item.
@@ -827,7 +827,7 @@ class cxMenu : public cxWindow {
        * @param pItem The item to remove attributes for (see the e_WidgetItems
        *  enumeration).
        */
-      virtual void removeAttrs(e_WidgetItems pItem);
+      virtual void removeAttrs(e_WidgetItems pItem) override;
 
       /**
        * \brief Returns the set of ncurses attributes for a given item.
@@ -836,7 +836,7 @@ class cxMenu : public cxWindow {
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const override;
 
       /**
        * \brief Enables/disables the use of hotkey attributes.
@@ -846,7 +846,7 @@ class cxMenu : public cxWindow {
        *
        * @param pHotkeyHighlighting Whether or not to use hotkey attributes.
        */
-      virtual void setHotkeyHighlighting(bool pHotkeyHighlighting);
+      virtual void setHotkeyHighlighting(bool pHotkeyHighlighting) override;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxMenu".  This can be
@@ -855,7 +855,7 @@ class cxMenu : public cxWindow {
        *
        * @return The name of the cxWidgets class ("cxMenu").
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Sorts the menu items by their return code.  Note: If the same
@@ -1013,7 +1013,7 @@ class cxMenu : public cxWindow {
        * @param pItem The item type to retrieve attributes for - see the
        *  e_cxWidgetItems enumeration (defined in cxWidgetItems.h).
        */
-      virtual void enableAttrs(WINDOW *pWin, e_WidgetItems pItem);
+      virtual void enableAttrs(WINDOW *pWin, e_WidgetItems pItem) override;
 
       /**
        * \brief Disables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -1025,7 +1025,7 @@ class cxMenu : public cxWindow {
        * @param pItem The item type to retrieve attributes for - see the
        *  e_cxWidgetItems enumeration (defined in cxWidgetItems.h).
        */
-      virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem);
+      virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem) override;
 
    private:
       WINDOW *mSubWindow = nullptr;                      // For scrolling

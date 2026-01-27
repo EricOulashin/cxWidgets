@@ -1136,7 +1136,7 @@ bool cxNotebook::selectPrevWin() {
    return(retval);
 } // selectPrevWin
 
-bool cxNotebook::swap(shared_ptr<cxWindow>& pWindow1, shared_ptr<cxWindow>& pWindow2) {
+bool cxNotebook::swap(const std::shared_ptr<cxWindow>& pWindow1, const std::shared_ptr<cxWindow>& pWindow2) {
    return swap(pWindow1.get(), pWindow2.get());
 } // swap
 

@@ -27,3 +27,7 @@ long cxApp::onInit() {
 long cxApp::onExit() {
    return(cxID_EXIT);
 }
+
+std::string cxApp::cxTypeStr() const {
+   return("cxApp");
+} // cxTypeStr

@@ -94,7 +94,7 @@ class cxPanel : public cxWindow {
        *  presses ESC; otherwise, returns cxID_EXIT.
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * \brief Returns whether or not the panel will exit focus
@@ -274,7 +274,7 @@ class cxPanel : public cxWindow {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * \brief Sets which window will get focus in the next
@@ -458,7 +458,7 @@ class cxPanel : public cxWindow {
        *   that might need to return a value.  For cxWindow, cxID_EXIT is
        *   always returned.
        */
-      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true);
+      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true) override;
 
       /**
        * \brief Hides the panel, along with the windows in the panel.
@@ -466,7 +466,7 @@ class cxPanel : public cxWindow {
        * @param pHideSubwindows This is here so that this function is
        *  overridden from cxWindow.
        */
-      virtual void hide(bool pHideSubwindows = true);
+      virtual void hide(bool pHideSubwindows = true) override;
 
       /**
        * \brief Un-hides the panel, along with the windows in the panel.
@@ -474,7 +474,7 @@ class cxPanel : public cxWindow {
        * @param pUnhideSubwindows This is here so that this function is
        *  overridden from cxWindow.
        */
-      virtual void unhide(bool pUnhideSubwindows = true);
+      virtual void unhide(bool pUnhideSubwindows = true) override;
 
       /**
        * \brief Returns whether or not the panel window will be
@@ -554,7 +554,7 @@ class cxPanel : public cxWindow {
        * @param pRefresh Whether or not to refresh the windows as they are
        *  cleared (defaults to false).
        */
-      virtual void clear(bool pRefresh = false);
+      virtual void clear(bool pRefresh = false) override;
 
       /**
        * \brief Adds a key that will cause the window to quit its input loop
@@ -573,14 +573,14 @@ class cxPanel : public cxWindow {
        * @return Whether or not the key was added
        */
       virtual bool addQuitKey(int pKey, bool pRunOnLeaveFunction = true,
-                              bool pOverride = false);
+                              bool pOverride = false) override;
 
       /**
        * \brief Removes a quit key
        *
        * @param pKey The key to remove from the list of quit keys
        */
-      virtual void removeQuitKey(int pKey);
+      virtual void removeQuitKey(int pKey) override;
 
       /**
        * \brief Adds a key that will cause the window to quit its input loop
@@ -599,14 +599,14 @@ class cxPanel : public cxWindow {
        * @return Whether or not the key was added
        */
       virtual bool addExitKey(int pKey, bool pRunOnLeaveFunction = true,
-                              bool pOverride = false);
+                              bool pOverride = false) override;
 
       /**
        * \brief Removes an exit key
        *
        * @param pKey The key to remove from the list of exit keys
        */
-      virtual void removeExitKey(int pKey);
+      virtual void removeExitKey(int pKey) override;
 
       /**
        * \brief Enables or disables the panel.  Disabling/enabling a cxPanel
@@ -614,7 +614,7 @@ class cxPanel : public cxWindow {
        *
        * @param pEnabled Whether the panel should be enabled or not (true/false)
        */
-      virtual void setEnabled(bool pEnabled);
+      virtual void setEnabled(bool pEnabled) override;
 
       /**
        * \brief Enables or disables a window in the panel (by index).
@@ -670,7 +670,7 @@ class cxPanel : public cxWindow {
        * @param pColor The color to set the item to (see the e_cxColors
        *  enumeration in cxColors.h)
        */
-      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor);
+      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor) override;
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to
@@ -679,19 +679,19 @@ class cxPanel : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief This causes the panel to stop its input loop with a code of
        * \brief cxID_QUIT.
        */
-      virtual void quitNow();
+      virtual void quitNow() override;
 
       /**
        * \brief This causes the panel to stop its input loop with a code of
        * \brief cxID_EXIT.
        */
-      virtual void exitNow();
+      virtual void exitNow() override;
 
       /**
        * \brief Returns a pointer to the last window in the panel that was
@@ -739,13 +739,13 @@ class cxPanel : public cxWindow {
        * \brief Returns the top row of the window
        * @return The top row of the window
        */
-      virtual int top() const;
+      virtual int top() const override;
 
       /**
        * \brief Returns the bottom row of the window
        * @return The bottom row of the window
        */
-      virtual int bottom() const;
+      virtual int bottom() const override;
 
    protected:
       typedef std::vector<std::shared_ptr<cxWindow> > cxWindowPtrCollection;

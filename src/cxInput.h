@@ -156,7 +156,7 @@ class cxInput : public cxWindow {
        * @param pShowSubwindows Whether or not to show sub-windows also.  Always uses false.
        * @return The return value of cxWindow::show()
        */
-      virtual long show(bool pBringToTop = false, bool pShowSubwindows = false);
+      virtual long show(bool pBringToTop = false, bool pShowSubwindows = false) override;
 
       /**
        * \brief Handles user input for the form.
@@ -172,7 +172,7 @@ class cxInput : public cxWindow {
        *  the user pressed ESC to quit out, or cxID_EXIT otherwise).
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = false);
+                             bool pShowSubwindows = false) override;
 
       /**
        * Returns the label for the input
@@ -201,7 +201,7 @@ class cxInput : public cxWindow {
        * @param pRefresh Whether or not to refresh the input
        *  (defaults to false)
        */
-      virtual void clear(bool pRefresh = false);
+      virtual void clear(bool pRefresh = false) override;
 
       /**
        * Returns the user's input
@@ -349,7 +349,7 @@ class cxInput : public cxWindow {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * \brief Changes the input's width.  The upper-left coordinate stays
@@ -360,7 +360,7 @@ class cxInput : public cxWindow {
        * @param pNewWidth The new width
        * @param pRefresh Whether or not to refresh the window (defaults to true)
        */
-      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true);
+      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true) override;
 
        /**
        * Sets whether or not to exit upon use of a function key.
@@ -420,7 +420,7 @@ class cxInput : public cxWindow {
        * @param pColor The color to set the item to (see the e_cxColors
        *  enumeration in cxColors.h)
        */
-      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor);
+      virtual void setColor(e_WidgetItems pItem, e_cxColors pColor) override;
 
       /**
        * \brief Enables/disables the display of the cursor.
@@ -563,7 +563,7 @@ class cxInput : public cxWindow {
        *
        * @return Whether or not the input currently has focus
        */
-      virtual bool hasFocus() const;
+      virtual bool hasFocus() const override;
 
       /**
        * \brief Sets whether the input should go read-only when setFocus() exits.
@@ -593,7 +593,7 @@ class cxInput : public cxWindow {
        *
        * @param pBorderStyle A eBorderStyle enumeration value (see cxBorderStyles.h)
        */
-      virtual void setBorderStyle(eBorderStyle pBorderStyle);
+      virtual void setBorderStyle(eBorderStyle pBorderStyle) override;
 
       /**
        * \brief Refreshes just the value portion of the input.
@@ -693,7 +693,7 @@ class cxInput : public cxWindow {
        *
        * @param pLastKey A key (represented by an int)
        */
-      virtual void setLastKey(int pLastKey);
+      virtual void setLastKey(int pLastKey) override;
 
       /**
        * \brief Returns whether or not a call to showModal() will wait for a
@@ -704,7 +704,7 @@ class cxInput : public cxWindow {
        * @return Whether or not a call to showModal() will wait for a keypress
        *  from the user.
        */
-      virtual bool modalGetsKeypress() const;
+      virtual bool modalGetsKeypress() const override;
 
       /**
        * \brief Runs the onFocus function, if it's set.  If the
@@ -720,7 +720,7 @@ class cxInput : public cxWindow {
        *  the onFocus function's mExitAfterRun, or false if the onFocus
        *  function isn't set).
        */
-      virtual bool runOnFocusFunction(std::string *pFunctionRetval = nullptr);
+      virtual bool runOnFocusFunction(std::string *pFunctionRetval = nullptr) override;
 
       /**
        * \brief Returns a pointer to the parent window.  If the cxInput
@@ -730,7 +730,7 @@ class cxInput : public cxWindow {
        *
        * @return A pointer to the parent window
        */
-      virtual cxWindow* getParent() const;
+      virtual cxWindow* getParent() const override;
 
       /**
        * \brief Adds an ncurses attribute to use for one of the items in the
@@ -740,7 +740,7 @@ class cxInput : public cxWindow {
        *  enumeration).
        * @param pAttr The ncurses atribute to add.
        */
-      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void addAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Sets the ncurses attribute to use for one of the items in the
@@ -752,7 +752,7 @@ class cxInput : public cxWindow {
        *  enumeration).
        * @param pAttr The ncurses atribute to apply.
        */
-      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void setAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes an ncurses attribute from one of the item lists.
@@ -761,7 +761,7 @@ class cxInput : public cxWindow {
        *  e_WidgetItems enumeration).
        * @param pAttr The ncurses attribute to remove
        */
-      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr);
+      virtual void removeAttr(e_WidgetItems pItem, attr_t pAttr) override;
 
       /**
        * \brief Removes all attributes for a given window item.
@@ -769,7 +769,7 @@ class cxInput : public cxWindow {
        * @param pItem The item to remove attributes for (see the e_WidgetItems
        *  enumeration).
        */
-      virtual void removeAttrs(e_WidgetItems pItem);
+      virtual void removeAttrs(e_WidgetItems pItem) override;
 
       /**
        * \brief Returns the set of ncurses attributes for a given item.
@@ -778,7 +778,7 @@ class cxInput : public cxWindow {
        *  enumeration).
        * @param pAttrs This will contain the attributes for the item.
        */
-      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const;
+      virtual void getAttrs(e_WidgetItems pItem, std::set<attr_t>& pAttrs) const override;
 
       /**
        * \brief Runs the input's validator function and returns its return
@@ -813,7 +813,7 @@ class cxInput : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Toggles the option to force text to be upper-case.
@@ -882,7 +882,7 @@ class cxInput : public cxWindow {
        * @return Whether or not the input loop should continue
        */
       virtual bool handleFunctionForLastKey(bool *pFunctionExists = nullptr,
-                                          bool *pRunOnLeaveFunction = nullptr);
+                                          bool *pRunOnLeaveFunction = nullptr) override;
 
       /**
        * \brief Enables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -894,7 +894,7 @@ class cxInput : public cxWindow {
        * @param pItem The item type to retrieve attributes for - see the
        *  e_cxWidgetItems enumeration (defined in cxWidgetItems.h).
        */
-      virtual void enableAttrs(WINDOW *pWin, e_WidgetItems pItem);
+      virtual void enableAttrs(WINDOW *pWin, e_WidgetItems pItem) override;
 
       /**
        * \brief Disables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -906,7 +906,7 @@ class cxInput : public cxWindow {
        * @param pItem The item type to retrieve attributes for - see the
        *  e_cxWidgetItems enumeration (defined in cxWidgetItems.h).
        */
-      virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem);
+      virtual void disableAttrs(WINDOW *pWin, e_WidgetItems pItem) override;
 
       /**
        * \brief Returns the color of one of the items in a window.
@@ -917,7 +917,7 @@ class cxInput : public cxWindow {
        * @return A member of the e_cxColors enumeration representing the color
        *  of the item (see cxColors.h)
        */
-      virtual e_cxColors getItemColor(e_WidgetItems pItem) const;
+      virtual e_cxColors getItemColor(e_WidgetItems pItem) const override;
 
    private:
       friend class cxMultiLineInput;  // Because that class uses this class
@@ -1020,7 +1020,7 @@ class cxInput : public cxWindow {
 
       // Fills mWindow with the current window text, but does not actually
       //  show it.
-      virtual void draw();
+      virtual void draw() override;
 
 #ifdef WANT_TIMEOUT
       // mTimeout is the length of time (in seconds) for the input to be idle

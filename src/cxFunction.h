@@ -193,7 +193,7 @@ class cxFunction0 : public cxFunction {
        *
        * @return The name of the cxWidgets class ("cxFunction0").
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    private:
       funcPtr0 mFunction; // This is the actual function pointer
@@ -322,7 +322,7 @@ class cxFunction2 : public cxFunction {
        *
        * @return The name of the cxWidgets class ("cxFunction2").
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    private:
       funcPtr2 mFunction; // The actual function pointer
@@ -461,7 +461,7 @@ class cxFunction4 : public cxFunction {
        *
        * @return The name of the cxWidgets class ("cxFunction4").
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    private:
       funcPtr4 mFunction; // The actual function pointer

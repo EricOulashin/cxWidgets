@@ -126,7 +126,7 @@ class cxButton : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Shows the button and waits for input.  Fires the button's set
@@ -143,7 +143,7 @@ class cxButton : public cxWindow {
        *  presses ESC; otherwise, returns cxID_EXIT.
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * \brief Sets the "on click" function pointer for the button.  When
@@ -195,7 +195,7 @@ class cxButton : public cxWindow {
        * \brief quitNow() on the button so that it will quit out of an input
        * \brief loop if it's in one.
        */
-      virtual void doMouseBehavior();
+      virtual void doMouseBehavior() override;
 
    private:
       // mOnClickFunction is a pointer to a function that should fire when

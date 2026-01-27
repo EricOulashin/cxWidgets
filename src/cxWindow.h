@@ -2070,7 +2070,7 @@ class cxWindow : public cxObject {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Returns whether or not something told the window to leave now.

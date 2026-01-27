@@ -181,7 +181,7 @@ class cxNotebook: public cxPanel {
        *   that might need to return a value.  For cxWindow, cxID_EXIT is
        *   always returned.
        */
-      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true);
+      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true) override;
 
       /**
        * \brief Shows the notebook and allows the user to interact with the
@@ -197,7 +197,7 @@ class cxNotebook: public cxPanel {
        *  presses ESC; otherwise, returns cxID_EXIT.
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
        /**
        * \brief Hides the notebook
@@ -205,7 +205,7 @@ class cxNotebook: public cxPanel {
        * @param pHideSubwindows Whether or not to also hide the subwindows (defaults
        *    to true)
        */
-      virtual void hide(bool pHideSubwindows = true);
+      virtual void hide(bool pHideSubwindows = true) override;
 
       /**
        * \brief Un-hides the notebook
@@ -213,14 +213,14 @@ class cxNotebook: public cxPanel {
        * @param pUnhideSubwindows Whether or not to also unhide the subwindows
        *    (defaults to true)
        */
-      virtual void unhide(bool pUnhideSubwindows = true);
+      virtual void unhide(bool pUnhideSubwindows = true) override;
 
       /**
        * \brief Returns the class type as a string ("cxNotebook")
        *
        * @return The class type as a string ("cxNotebook")
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Returns whether a window exists in the notebook.
@@ -291,7 +291,7 @@ class cxNotebook: public cxPanel {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * \brief Sets whether one of the panels in the notebook should show
@@ -356,7 +356,7 @@ class cxNotebook: public cxPanel {
        * @param pShowSubwindows Whether or not to show the subwindows for the
        *   subwindows.  Defaults to true.
        */
-      virtual void showSubwindows(bool pBringToTop = true, bool pShowSubwindows = true);
+      virtual void showSubwindows(bool pBringToTop = true, bool pShowSubwindows = true) override;
 
       /**
        * \brief Returns the label for one of the panels (by index).
@@ -412,7 +412,7 @@ class cxNotebook: public cxPanel {
        *
        * @param pEnabled Whether the notebook should be enabled or not (true/false)
        */
-      virtual void setEnabled(bool pEnabled);
+      virtual void setEnabled(bool pEnabled) override;
 
       /**
        * \brief Enables or disables a window in the notebook (by index).  (This
@@ -423,7 +423,7 @@ class cxNotebook: public cxPanel {
        * @param pEnabled Boolean: If true, the window will be enabled, and if
        *  false, the window will be disabled.
        */
-      virtual void setEnabled(unsigned int pIndex, bool pEnabled);
+      virtual void setEnabled(unsigned int pIndex, bool pEnabled) override;
 
       /**
        * \brief Enables or disables a window in the panel (by title/name).
@@ -438,7 +438,7 @@ class cxNotebook: public cxPanel {
        *  window's title.  If this is false, then pID will refer to the
        *  window's name.
        */
-      virtual void setEnabled(const std::string& pID, bool pEnabled, bool pIsTitle = true);
+      virtual void setEnabled(const std::string& pID, bool pEnabled, bool pIsTitle = true) override;
 
       /**
        * \brief Sets the key to be used for navigation to the next tab
@@ -552,7 +552,7 @@ class cxNotebook: public cxPanel {
        * @return A pointer to the panel removed.  If pIndex is not a valid
        * index, the smart pointer returned will have a null value for its pointer.
        */
-      virtual std::shared_ptr<cxWindow> removeWindow(unsigned int pIndex);
+      virtual std::shared_ptr<cxWindow> removeWindow(unsigned int pIndex) override;
 
       /**
        * \brief Removes a panel from the notebook, without freeing its memory
@@ -564,7 +564,7 @@ class cxNotebook: public cxPanel {
        *
        * @param pWindow A pointer to a panel to be removed from the notebook
        */
-      virtual void removeWindow(cxWindow *pWindow);
+      virtual void removeWindow(cxWindow *pWindow) override;
 
       /**
        * \brief Removes a panel from the notebook (by index) and frees up its
@@ -574,7 +574,7 @@ class cxNotebook: public cxPanel {
        *
        * @param pIndex The index of the panel to remove from the notebook
        */
-      virtual void delWindow(unsigned int pIndex);
+      virtual void delWindow(unsigned int pIndex) override;
 
       /**
        * \brief Removes a panel from the notebook (by pointer).  Does nothing
@@ -594,7 +594,7 @@ class cxNotebook: public cxPanel {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindow(unsigned int pIndex);
+      virtual bool setCurrentWindow(unsigned int pIndex) override;
 
       /**
        * \brief Sets which panel will get focus in the next call to
@@ -619,7 +619,7 @@ class cxNotebook: public cxPanel {
        *
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindow(const std::string& pID, bool pIsLabel);
+      virtual bool setCurrentWindow(const std::string& pID, bool pIsLabel) override;
 
       /**
        * \brief Sets which window will get focus in the next
@@ -631,7 +631,7 @@ class cxNotebook: public cxPanel {
        *  in the panel, it will then be the current window).
        * @return True if successful or false if not
        */
-      virtual bool setCurrentWindowByPtr(cxWindow *pWindow);
+      virtual bool setCurrentWindowByPtr(cxWindow *pWindow) override;
 
       /**
        * \brief Returns the index of the tab (label window) that was clicked
@@ -654,7 +654,7 @@ class cxNotebook: public cxPanel {
        *
        * @return Whether or not the windows got swapped
        */
-      virtual bool swap(int pWindow1Index, int pWindow2Index);
+      virtual bool swap(int pWindow1Index, int pWindow2Index) override;
 
       /**
        * \brief Swaps the order of 2 panels (by pointer).  If both pointers are
@@ -667,8 +667,8 @@ class cxNotebook: public cxPanel {
        *
        * @return Whether or not the windows got swapped
        */
-      virtual bool swap(std::shared_ptr<cxWindow>& pWindow1, std::shared_ptr<cxWindow>& pWindow2);
-      virtual bool swap(cxWindow *pWindow1, cxWindow *pWindow2);
+      virtual bool swap(const std::shared_ptr<cxWindow>& pWindow1, const std::shared_ptr<cxWindow>& pWindow2) override;
+      virtual bool swap(cxWindow *pWindow1, cxWindow *pWindow2) override;
 
       /**
        * \brief Selects the next available (enabled) window (moving forward),

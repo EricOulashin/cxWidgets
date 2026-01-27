@@ -92,7 +92,7 @@ class cxDialog : public cxWindow {
        * @return A code corresponding to user's input (cxID_OK or cxID_QUIT)
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to
@@ -101,7 +101,7 @@ class cxDialog : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    private:
 };

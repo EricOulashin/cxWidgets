@@ -83,21 +83,21 @@ class cxMessageDialog : public cxDialog {
        * @return The code corresponding to the user's input
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = true);
+                             bool pShowSubwindows = true) override;
 
       /**
        * Hides the dialog
        * @param pHideSubwindows Whether or not to also hide the subwindows
        *  (defaults to true)
        */
-      virtual void hide(bool pHideSubwindows = true);
+      virtual void hide(bool pHideSubwindows = true) override;
 
       /**
        * Un-hides the window.
        * @param pUnhideSubwindows Whether or not to also unhide the subwindows
        *    (defaults to true)
        */
-      virtual void unhide(bool pUnhideSubwindows = true);
+      virtual void unhide(bool pUnhideSubwindows = true) override;
 
        /**
        * \brief Changes the window's position, based on a new upper-left corner
@@ -107,7 +107,7 @@ class cxMessageDialog : public cxDialog {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /** 
        * @brief get a pointer to the the OK/Yes button
@@ -135,7 +135,7 @@ class cxMessageDialog : public cxDialog {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    protected:
       // Handles the input loop.  Returns the return code as a result of

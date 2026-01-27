@@ -65,7 +65,7 @@ class cxFileViewer : public cxScrolledWindow {
        *   that might need to return a value.  For cxWindow, cxFIRST_AVAIL_RETURN_CODE
        *   is always returned.
        */
-      virtual long show(bool pBringToTop = true, bool pShowSubwindows = true);
+      virtual long show(bool pBringToTop = true, bool pShowSubwindows = true) override;
 
       /**
        * \brief Loads the contents of the file
@@ -85,7 +85,7 @@ class cxFileViewer : public cxScrolledWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
    protected:
       /**

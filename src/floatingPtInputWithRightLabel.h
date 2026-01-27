@@ -23,7 +23,7 @@ class floatingPtInputWithRightLabel : public cxMultiLineInput {
 
       // In addition do doing the per-key validation, this will update the
       //  right label.
-      std::string onKeypress();
+      std::string onKeypress() override;
 };
 
 #endif

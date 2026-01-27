@@ -189,7 +189,7 @@ class cxScrolledWindow : public cxWindow {
        *   that might need to return a value.  For cxScrolledWindow, cxID_EXIT
        *   is always returned.
        */
-      virtual long show(bool pBringToTop = true, bool pShowSubwindows = true);
+      virtual long show(bool pBringToTop = true, bool pShowSubwindows = true) override;
 
       /**
        * \brief Shows the window, running an input loop allowing the user to
@@ -206,7 +206,7 @@ class cxScrolledWindow : public cxWindow {
        *  if the user pressed any other key.
        */
       virtual long showModal(bool pShowSelf = true, bool pBringToTop = true,
-                             bool pShowSubwindows = false);
+                             bool pShowSubwindows = false) override;
 
       /**
        * \brief Scrolls the window text by a certain amount.
@@ -221,7 +221,7 @@ class cxScrolledWindow : public cxWindow {
       /**
        * Draws the message to the window.
        */
-      virtual void drawMessage();
+      virtual void drawMessage() override;
 
       /**
        * Changes the position of the window, based on a new upper-left corner
@@ -231,7 +231,7 @@ class cxScrolledWindow : public cxWindow {
        *
        * @return Whether or not the move succeeded or not (true/false)
        */
-      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true);
+      virtual bool move(int pNewRow, int pNewCol, bool pRefresh = true) override;
 
       /**
        * Resizes the window
@@ -239,7 +239,7 @@ class cxScrolledWindow : public cxWindow {
        * @param pNewWidth New width of the window
        * @param pRefresh Whether or not to refresh the window.  Defaults to false.
        */
-      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = false);
+      virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = false) override;
 
       /**
        * \brief Assignment operator
@@ -327,12 +327,12 @@ class cxScrolledWindow : public cxWindow {
        *
        * @return The name of the cxWidgets class.
        */
-      virtual std::string cxTypeStr() const;
+      virtual std::string cxTypeStr() const override;
 
       /**
        * \brief Draws a border around the window
        */
-      virtual void drawBorder();
+      virtual void drawBorder() override;
 
    protected:
       /**
