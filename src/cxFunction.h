@@ -163,7 +163,7 @@ class cxFunction0 : public cxFunction {
        * Returns whether the internal funtion pointer is set.
        * @return Returns true if the internal function pointer is set (not null), or false otherwise.
        */
-      virtual bool functionIsSet() const;
+      virtual bool functionIsSet() const override;
 
       /**
        * Sets the internal function pointer
@@ -184,7 +184,7 @@ class cxFunction0 : public cxFunction {
        * @return Returns return value of function pointed to if pointer is not null,
        *		otherwise returns empty string
        */
-      virtual std::string runFunction() const;
+      virtual std::string runFunction() const override;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction0".  This can be
@@ -261,7 +261,7 @@ class cxFunction2 : public cxFunction {
        * Returns whether the internal funtion pointer is set.
        * @return Returns true if the internal function pointer is set (not null), or false otherwise.
        */
-      virtual bool functionIsSet() const;
+      virtual bool functionIsSet() const override;
 
       /**
        * Sets the internal function pointer
@@ -313,7 +313,7 @@ class cxFunction2 : public cxFunction {
        * @return Returns return value of function pointed to if pointer is not null,
        *		otherwise returns empty string
        */
-      virtual std::string runFunction() const;
+      virtual std::string runFunction() const override;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction2".  This can be
@@ -374,7 +374,7 @@ class cxFunction4 : public cxFunction {
        * Returns whether the internal funtion pointer is set.
        * @return Returns true if the internal function pointer is set (not null), or false otherwise.
        */
-      virtual bool functionIsSet() const;
+      virtual bool functionIsSet() const override;
 
       /**
        * Sets the internal function pointer
@@ -452,7 +452,7 @@ class cxFunction4 : public cxFunction {
        * @return Returns return value of function pointed to if pointer is not null,
        *    otherwise returns empty string
        */
-      virtual std::string runFunction() const;
+      virtual std::string runFunction() const override;
 
       /**
        * \brief Returns the name of the cxWidgets class, "cxFunction4".  This can be
