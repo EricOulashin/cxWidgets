@@ -869,6 +869,12 @@ void cxInput::clearValidatorFunction() {
    mValidatorFunction.reset();
 } // clearValidatorFunction
 
+bool cxInput::setOnKeyFunction(const shared_ptr<cxFunction>& pFunction) {
+   clearOnKeyFunction();
+   mOnKeyFunction = pFunction;
+   return true;
+} // setOnKeyFunction
+
 bool cxInput::setOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2,
                                void *p3, void *p4) {
    bool setIt = false;

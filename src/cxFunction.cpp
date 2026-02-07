@@ -177,8 +177,8 @@ void cxFunction4::setFunction(funcPtr4 pFuncPtr) {
 }
 
 funcPtr4 cxFunction4::getFunction() const {
-   return(mFunction);
-} // getFunction
+   return mFunction;
+}
 
 // Sets the parameters to pass to the function.
 void cxFunction4::setParams(void *pParam1, void *pParam2, void *pParam3, void *pParam4) {

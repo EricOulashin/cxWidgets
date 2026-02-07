@@ -612,6 +612,27 @@ class cxForm : public cxWindow {
        * @param pLabel The label of the field
        * @param pFunction The function to be run - Must have this signature:
        *  string func(void*, void*, void*, void*)
+       * @param pIsLabel If true (default), pLabel specifies the input label.
+       *     If false, pLabel specifies the name of the input.
+       */
+      virtual void setOnFocusFunction(const std::string& pLabel,
+                           const std::shared_ptr<cxFunction>& pFunction,
+                           bool pIsLabel = true);
+
+      /**
+       * Sets the "on focus" function pointer for a field (by index).
+       * The function must have this signature: string func(void*, void*, void*, void*).
+       * @param pIndex The index of the field
+       * @param pFunction The function to be run - Must have signature string func(void*, void*, void*, void*)
+       */
+      virtual void setOnFocusFunction(unsigned pIndex, const std::shared_ptr<cxFunction>& pFunction);
+
+      /**
+       * Sets the "on focus" function pointer for a field (by label).
+       * The function must have this signature: string func(void*, void*, void*, void*).
+       * @param pLabel The label of the field
+       * @param pFunction The function to be run - Must have this signature:
+       *  string func(void*, void*, void*, void*)
        * @param p1 Pointer to the first parameter to be used for the function
        * @param p2 Pointer to the second parameter to be used for the function
        * @param p3 Pointer to the 3rd parameter to be used for the function
@@ -638,6 +659,29 @@ class cxForm : public cxWindow {
        */
       virtual void setOnFocusFunction(unsigned pIndex, funcPtr4 pFunction,
                          void *p1, void *p2, void *p3, void *p4, bool pUseVal);
+
+      /**
+       * Sets the "on leave" function pointer for a field (by label/name).
+       * The function must have this signature: string func(void*, void*, void*, void*).
+       * @param pLabel The label/name of the field
+       * @param pFunction The function to be run - Must have signature string func(void*, void*, void*, void*)
+       * @param pIsLabel If true (default), pLabel specifies the input label.
+       *     If false, pLabel specifies the name of the input.
+       */
+      virtual void setOnLeaveFunction(const std::string& pLabel, const std::shared_ptr<cxFunction>& pFunction,
+                              bool pIsLabel = true);
+
+      /**
+       * Sets the "on leave" function pointer for a field (by index).
+       * The function must have this signature: string func(void*, void*, void*, void*).
+       * @param pIndex The index of the field
+       * @param pFunction The function to be run - Must have signature string func(void*, void*, void*, void*)
+       * @param p1 Pointer to the first parameter to be used for the function
+       * @param p2 Pointer to the second parameter to be used for the function
+       * @param p3 Pointer to the 3rd parameter to be used for the function
+       * @param p4 Pointer to the 4th parameter to be used for the function
+       */
+      virtual void setOnLeaveFunction(unsigned pIndex, const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * Sets the "on leave" function pointer for a field (by label/name).
@@ -1025,6 +1069,17 @@ class cxForm : public cxWindow {
       virtual bool setCurrentInputByPtr(const cxMultiLineInput* const pInput);
 
       /**
+       * \brief Sets a function to be called when a key is pressed.
+       *
+       * @param pKey The key to use for the function
+       * @param pFunction The function to call. This can be an instance of
+       * one of the derived cxFunction classes as well.
+       *
+       * @return True if the key & function was added or false if not
+       */
+      virtual bool setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) override;
+
+      /**
        * \brief Adds a function to call when the user presses some key.
        *
        * @param pKey The keypress to fire the function
@@ -1049,7 +1104,7 @@ class cxForm : public cxWindow {
                                   void *p1, void *p2, void *p3, void *p4,
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
 
       /**
        * \brief Adds a function to call when the user presses some key.
@@ -1075,7 +1130,7 @@ class cxForm : public cxWindow {
                                   void *p1, void *p2,
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
 
       /**
        * \brief Adds a function to call when the user presses some key.
@@ -1098,7 +1153,33 @@ class cxForm : public cxWindow {
       virtual bool setKeyFunction(int pKey, funcPtr0 pFunction,
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
+
+      /**
+       * \brief Sets a function to be called when a key is pressed.
+       *
+       * @param pIndex The index of the input on the form
+       * @param pKey The key to use for the function
+       * @param pFunction The function to call. This can be an instance of
+       * one of the derived cxFunction classes as well.
+       *
+       * @return True if the key & function was added or false if not
+       */
+      virtual bool setKeyFunction(int pIndex, int pKey, const std::shared_ptr<cxFunction>& pFunction);
+
+      /**
+       * \brief Sets a function to be called when a key is pressed.
+       *
+       * @param pIndex The index of the input on the form
+       * @param pLabel The label/name of the input
+       * @param pFunction The function to call. This can be an instance of
+       * one of the derived cxFunction classes as well.
+       * @param pIsLabel If true (default), pLabel is the input's label.  If
+       *  false, pLabel is the input's name.
+       *
+       * @return True if the key & function was added or false if not
+       */
+      virtual bool setKeyFunction(const std::string& pLabel, int pKey, const std::shared_ptr<cxFunction>& pFunction, bool pIsLabel = true);
 
       /**
        * \brief Adds a function to call when the user presses some key for
@@ -1814,6 +1895,15 @@ class cxForm : public cxWindow {
        */
       void setOnKeyFunction(const std::string& pLabel, funcPtr0 pFunction,
                             bool pIsLabel = true);
+
+
+      /**
+       * \brief Sets a function to be run whenever a key is pressed, in all
+       * \brief inputs on the form.
+       *
+       * @param pFunction The function to be run
+       */
+      void setAllOnKeyFunction(const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed, in all

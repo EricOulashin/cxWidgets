@@ -384,6 +384,17 @@ class cxMultiLineInput : public cxWindow {
       virtual void resize(int pNewHeight, int pNewWidth, bool pRefresh = true) override;
 
       /**
+       * \brief Sets a function to be called when a key is pressed.
+       *
+       * @param pKey The key to use for the function
+       * @param pFunction The function to call. This can be an instance of
+       * one of the derived cxFunction classes as well.
+       *
+       * @return True if the key & function was added or false if not
+       */
+      virtual bool setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) override;
+
+      /**
        * \brief Adds a function to call when the user presses some key.
        * \brief This version adds a pointer to a function with this signature:
        * \brief string func(void*, void*, void*, void*).
@@ -410,7 +421,7 @@ class cxMultiLineInput : public cxWindow {
       virtual bool setKeyFunction(int pKey, funcPtr4 pFunction,
                                   void *p1, void *p2, void *p3, void *p4,
                                   bool pUseVal, bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
 
       /**
        * \brief Just like the above function, but also lets you specify whether
@@ -713,6 +724,16 @@ class cxMultiLineInput : public cxWindow {
        * @return Whether or not the value in the input takes up the maximum possible space for the input.
        */
       bool isFull() const;
+
+      /**
+       * \brief Sets a function to be run whenever a key is pressed.
+       * @param pFunction Function to point to--must have signature string func(void*, void*, void*, void*)
+       * @param p1 Pointer to the first parameter to be used for the function
+       * @param p2 Pointer to the second parameter to be used for the function
+       * @param p3 Pointer to the 3rd parameter to be used for the function
+       * @param p4 Pointer to the 4th parameter to be used for the function
+       */
+      virtual void setOnKeyFunction(const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed.

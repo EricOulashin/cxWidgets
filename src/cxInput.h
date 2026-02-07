@@ -487,6 +487,15 @@ class cxInput : public cxWindow {
       /**
        * \brief Sets a function to be run whenever a key is pressed (referred
        * \brief to as the "onKey" function).
+       * @param pFunction Function to point to
+       *
+       * @return true if the function was set, or false if not
+       */
+      virtual bool setOnKeyFunction(const std::shared_ptr<cxFunction>& pFunction);
+
+      /**
+       * \brief Sets a function to be run whenever a key is pressed (referred
+       * \brief to as the "onKey" function).
        * @param pFunction Function to point to--must have signature string func(void*, void*, void*, void*)
        * @param p1 Pointer to the first parameter to be used for the function
        * @param p2 Pointer to the second parameter to be used for the function
@@ -495,7 +504,7 @@ class cxInput : public cxWindow {
        *
        * @return true if the function was set, or false if not
        */
-      bool setOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2,
+      virtual bool setOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2,
                             void *p3, void *p4);
 
       /**
@@ -509,7 +518,7 @@ class cxInput : public cxWindow {
        *
        * @return true if the function was set, or false if not
        */
-      bool setOnKeyFunction(funcPtr2 pFunction, void *p1, void *p2);
+      virtual bool setOnKeyFunction(funcPtr2 pFunction, void *p1, void *p2);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed (referred
@@ -522,7 +531,7 @@ class cxInput : public cxWindow {
        *
        * @return true if the function was set, or false if not
        */
-      bool setOnKeyFunction(funcPtr0 pFunction);
+      virtual bool setOnKeyFunction(funcPtr0 pFunction);
 
       /**
        * \brief Sets whether the onKey function should be fired or not.
@@ -530,19 +539,19 @@ class cxInput : public cxWindow {
        * @param pRunOnKeyFunction Whether or not the onKey function should be
        *  fired
        */
-      void toggleOnKeyFunction(bool pRunOnKeyFunction);
+      virtual void toggleOnKeyFunction(bool pRunOnKeyFunction);
 
       /**
        * \brief Un-sets the onKey function.
        */
-      void clearOnKeyFunction();
+      virtual void clearOnKeyFunction();
 
       /**
        * \brief Returns whether or not the onKey function will be run.
        *
        * @return Whether or not the onKey function will be run
        */
-      bool onKeyFunctionEnabled() const;
+      virtual bool onKeyFunctionEnabled() const;
 
       /**
        * \brief Returns whether the value in the input takes up the maximum possible space in the input.

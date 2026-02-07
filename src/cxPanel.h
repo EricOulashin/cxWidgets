@@ -313,6 +313,17 @@ class cxPanel : public cxWindow {
       virtual bool setCurrentWindowByPtr(cxWindow *pWindow);
 
       /**
+       * \brief Sets a function to be called when a key is pressed.
+       *
+       * @param pKey The key to use for the function
+       * @param pFunction The function to call. This can be an instance of
+       * one of the derived cxFunction classes as well.
+       *
+       * @return True if the key & function was added or false if not
+       */
+      virtual bool setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) override;
+
+      /**
        * \brief Sets a function to be called when a key is pressed.  Note that
        * \brief when a key function is set on a cxPanel, the key will be
        * \brief added to the panel's subwindows as exit keys - so if you need
@@ -343,7 +354,7 @@ class cxPanel : public cxWindow {
                                   void *p1, void *p2, void *p3, void *p4,
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
 
       /**
        * \brief Sets a function to be called when a key is pressed.  Note that
@@ -374,7 +385,7 @@ class cxPanel : public cxWindow {
                                   void *p1, void *p2,
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
 
       /**
        * \brief Sets a function to be called when a key is pressed.  Note that
@@ -404,7 +415,7 @@ class cxPanel : public cxWindow {
       virtual bool setKeyFunction(int pKey, funcPtr0 pFunction,
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
-                                  bool pRunOnLeaveFunction = true);
+                                  bool pRunOnLeaveFunction = true) override;
 
       /**
        * \brief Removes a hotkey from the window so that it will not
@@ -412,7 +423,7 @@ class cxPanel : public cxWindow {
        *
        * @param pKey The hotkey to remove
        */
-      virtual void clearKeyFunction(int pKey);
+      virtual void clearKeyFunction(int pKey) override;
 
       /**
        * \brief Returns the index of the current window.

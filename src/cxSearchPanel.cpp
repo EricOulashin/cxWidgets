@@ -720,7 +720,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    for (; funcIter != mForm->keyFunctions_end(); ++funcIter) {
       // We'll need to check 2 parameters if it's a cxFunction2, or 4
       // parameters if it's a cxFunction4.
-      shared_ptr<cxFunction4> iFunction4 = getKeyFunction4(funcIter->first);
+      shared_ptr<cxFunction4> iFunction4 = getKeyFunctionAsFunction4(funcIter->first);
       if (iFunction4 != nullptr) {
          void* params[] = { iFunction4->getParam1(), iFunction4->getParam2(),
                             iFunction4->getParam3(), iFunction4->getParam4() };
@@ -735,7 +735,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
                iFunction4->getRunOnLeaveFunction());
       }
       else {
-         shared_ptr<cxFunction2> iFunction2 = getKeyFunction2(funcIter->first);
+         shared_ptr<cxFunction2> iFunction2 = getKeyFunctionAsFunction2(funcIter->first);
          if (iFunction2 != nullptr) {
             void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
             for (int i = 0; i < 2; ++i) {
@@ -754,7 +754,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
    for (; funcIter != mMenu->keyFunctions_end(); ++funcIter) {
       // We'll need to check 2 parameters if it's a cxFunction2, or 4
       // parameters if it's a cxFunction4.
-      shared_ptr<cxFunction4> iFunction4 = getKeyFunction4(funcIter->first);
+      shared_ptr<cxFunction4> iFunction4 = getKeyFunctionAsFunction4(funcIter->first);
       if (iFunction4 != nullptr) {
          void* params[] = { iFunction4->getParam1(), iFunction4->getParam2(),
                             iFunction4->getParam3(), iFunction4->getParam4() };
@@ -769,7 +769,7 @@ void cxSearchPanel::checkEventFunctionPointers(const cxSearchPanel& pPanel) {
                iFunction4->getRunOnLeaveFunction());
       }
       else {
-         shared_ptr<cxFunction2> iFunction2 = getKeyFunction2(funcIter->first);
+         shared_ptr<cxFunction2> iFunction2 = getKeyFunctionAsFunction2(funcIter->first);
          if (iFunction2 != nullptr) {
             void* params[] = { iFunction2->getParam1(), iFunction2->getParam2() };
             for (int i = 0; i < 2; ++i) {

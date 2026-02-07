@@ -1866,6 +1866,10 @@ void cxWindow::setChangeColorsOnFocus(bool pChangeColorsOnFocus) {
    mChangeColorsOnFocus = pChangeColorsOnFocus;
 } // setChangeColorsOnFocus
 
+void cxWindow::setOnFocusFunction(const std::shared_ptr<cxFunction>& pFunction) {
+   mOnFocusFunction = pFunction;
+} // setOnFocusFunction
+
 void cxWindow::setOnFocusFunction(funcPtr4 pFunction, void *p1, void *p2,
                                   void *p3, void *p4, bool pUseVal,
                                   bool pExitAfterRun) {
@@ -1902,6 +1906,10 @@ void cxWindow::setOnFocusFunction(funcPtr0 pFunction, bool pUseVal,
       mOnFocusFunction = nullptr;
     }
 } // setOnFocusFunction
+
+void cxWindow::setOnLeaveFunction(const std::shared_ptr<cxFunction>& pFunction) {
+   mOnLeaveFunction = pFunction;
+} // setOnLeaveFunction
 
 void cxWindow::setOnLeaveFunction(funcPtr4 pFunction, void *p1, void *p2,
                                   void *p3, void *p4) {
@@ -2025,6 +2033,11 @@ const shared_ptr<cxFunction>& cxWindow::getOnLeaveFunction() const {
 bool cxWindow::isModal() const {
    return(mIsModal);
 } // isModal
+
+bool cxWindow::setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) {
+   mKeyFunctions[pKey] = pFunction;
+   return true;
+} // setKeyFunction
 
 bool cxWindow::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1, void *p2,
                             void *p3, void *p4, bool pUseReturnVal,
@@ -2280,6 +2293,11 @@ bool cxWindow::hasKeyFunction(int pKey) const {
 
    return(exists);
 } // hasKeyFunction
+
+bool cxWindow::setMouseFunction(int pMouseState, const shared_ptr<cxFunction>& pFunction) {
+   mMouseFunctions[pMouseState] = pFunction;
+   return true;
+} // setMouseFunction
 
 bool cxWindow::setMouseFunction(int pMouseState, funcPtr4 pFunction, void *p1,
                             void *p2, void *p3, void *p4, bool pUseReturnVal,
@@ -3033,7 +3051,7 @@ shared_ptr<cxFunction> cxWindow::getKeyFunction(int pKey) const {
    }
 }
 
-std::shared_ptr<cxFunction0> cxWindow::getKeyFunction0(int pKey) const {
+std::shared_ptr<cxFunction0> cxWindow::getKeyFunctionAsFunction0(int pKey) const {
    shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
    if (funcPtr != nullptr) {
       if (funcPtr->cxTypeStr() == "cxFunction0") {
@@ -3049,7 +3067,7 @@ std::shared_ptr<cxFunction0> cxWindow::getKeyFunction0(int pKey) const {
    }
 } // getKeyFunction2
 
-std::shared_ptr<cxFunction2> cxWindow::getKeyFunction2(int pKey) const {
+std::shared_ptr<cxFunction2> cxWindow::getKeyFunctionAsFunction2(int pKey) const {
    shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
    if (funcPtr != nullptr) {
       if (funcPtr->cxTypeStr() == "cxFunction2") {
@@ -3065,7 +3083,7 @@ std::shared_ptr<cxFunction2> cxWindow::getKeyFunction2(int pKey) const {
    }
 } // getKeyFunction2
 
-std::shared_ptr<cxFunction4> cxWindow::getKeyFunction4(int pKey) const {
+std::shared_ptr<cxFunction4> cxWindow::getKeyFunctionAsFunction4(int pKey) const {
   shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
    if (funcPtr != nullptr) {
       if (funcPtr->cxTypeStr() == "cxFunction4") {

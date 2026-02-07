@@ -13,6 +13,7 @@
  */
 
 #include <string>
+#include <memory>
 
 // Typedefs for various function pointer types
 typedef std::string (*funcPtr0)();
@@ -477,6 +478,846 @@ class cxFunction4 : public cxFunction {
       void *mParam2;  // The second parameter to pass to the function
       void *mParam3;  // The 3rd parameter to pass to the function
       void *mParam4;  // The 4th parameter to pass to the function
+};
+
+/** \class cxFunction2Templated
+ * \brief This class is a cxFunction that is templated to take 2 pointers of specific types
+ *
+*/
+template<typename T1, typename T2>
+class cxFunction2Templated : public cxFunction {
+   public:
+      using FuncPtr = std::string (*)(T1 *, T2 *);
+
+      /**
+       * \brief Static create method for cxFunction2Templated.  This is the recommended way to create a cxFunction2Templated, as it returns a shared pointer to the created object.
+       */
+      static std::shared_ptr<cxFunction2Templated<T1, T2>> create(FuncPtr pFuncPtr, T1 *pParam1, T2 *pParam2,
+                                      bool pUseReturnVal = false, bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true) {
+         return std::make_shared<cxFunction2Templated<T1, T2>>(pFuncPtr, pParam1, pParam2,
+                                      pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction);
+      }
+
+      /**
+       * \brief Default constructor.  All parameters have default values
+       * \brief available.  Note that function must have this signature:
+       * \brief string func(void*, void*)
+       *
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
+       * @param pParam1 The first parameter to pass to the function when it's
+       *  run - This is a void pointer.
+       * @param pParam2 The second parameter to pass to the function when it's
+       *  run - This is a void pointer.
+       * @param pUseReturnVal Indicates whether caller will make use of return
+       *  value.  Defaults to false
+       * @param pExitAfterRun Whether or not the caller should exit from its
+       *  input loop once the function is done.  Defaults to false.
+       * @param pRunOnLeaveFunction Whether or not the caller should run its
+       *  onLeave function when it exits (useful if pExitAfterRun is true).
+       *  This defaults to true.
+       */
+       explicit cxFunction2Templated(FuncPtr pFuncPtr = nullptr, T1 *pParam1 = nullptr,
+                                      T2 *pParam2 = nullptr, bool pUseReturnVal = false,
+                                      bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true)
+           : cxFunction(pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction),
+             mFunction(pFuncPtr),
+             mParam1(pParam1),
+             mParam2(pParam2)
+        {
+        }
+
+      /**
+       * Destructor
+       */
+      virtual ~cxFunction2Templated() { }
+
+      /**
+       * Returns whether the internal funtion pointer is set.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
+       */
+      virtual bool functionIsSet() const override {
+         return (mFunction != nullptr);
+      }
+
+      /**
+       * Sets the internal function pointer
+       * @param pFuncPtr The function to which to point
+       */
+      void setFunction(FuncPtr pFuncPtr) {
+         mFunction = pFuncPtr;
+      }
+
+      /**
+       * \brief Accessor for the internal function pointer
+       *
+       * @return The internal function pointer
+       */
+      FuncPtr getFunction() const {
+         return mFunction;
+      }
+
+      /**
+       * Sets the parameters to pass to the function.
+       * @param pParam1 First parameter to pass to function
+       * @param pParam2 Second parameter to pass to function
+       */
+      void setParams(T1 *pParam1, T2 *pParam2) {
+         mParam1 = pParam1;
+         mParam2 = pParam2;
+      }
+
+      /**
+       * Sets the first parameter
+       * @param pParam First parameter to pass to function
+       */
+      void setParam1(T1 *pParam) {
+         mParam1 = pParam;
+      }
+
+      /**
+       * Sets the second parameter
+       * @param pParam Second parameter to pass to function
+       */
+      void setParam2(T2 *pParam) {
+         mParam2 = pParam;
+      }
+
+      /**
+       * Accessor for the first function parameter
+       * @return Returns pointer to first parameter
+       */
+      T1* getParam1() const {
+         return mParam1;
+      }
+
+      /**
+       * Accessor for the second function parameter
+       * @return Returns pointer to second parameter
+       */
+      T2* getParam2() const {
+         return mParam2;
+      }
+
+      /**
+       * If function pointer is not null, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not null,
+       *    otherwise returns empty string
+       */
+      virtual std::string runFunction() const override {
+         if (mFunction != nullptr) {
+            return(mFunction(mParam1, mParam2));
+         }
+         else {
+            return("");
+         }
+      }
+
+      virtual void* getFuncPtr() const override {
+         return (void*)mFunction;
+      }
+
+      /**
+       * \brief Returns the name of the cxWidgets class, "cxFunction2Templated".  This can be
+       * \brief used to determine the type of cxWidgets object that deriving
+       * \brief classes derive from in applications.
+       *
+       * @return The name of the cxWidgets class ("cxFunction2Templated").
+       */
+      virtual std::string cxTypeStr() const override {
+         return("cxFunction2Templated");
+      }
+
+   private:
+      FuncPtr mFunction; // The actual function pointer
+      T1 *mParam1;  // The first parameter to pass to the function
+      T2 *mParam2;  // The second parameter to pass to the function
+};
+
+/** \class cxFunction1RefTemplated
+ * \brief This class is a cxFunction that is templated to take a reference of a specific type
+ *
+*/
+template<typename T1>
+class cxFunction1RefTemplated : public cxFunction {
+   public:
+      using FuncPtr = std::string (*)(T1 &);
+
+      static std::shared_ptr<cxFunction1RefTemplated<T1>> create(FuncPtr pFuncPtr, T1 &pParam1,
+                                      bool pUseReturnVal = false, bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true) {
+         return std::make_shared<cxFunction1RefTemplated<T1>>(pFuncPtr, pParam1,
+                                      pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction);
+      }
+
+      /**
+       * \brief Default constructor.  All parameters have default values
+       * \brief available.  Note that function must have this signature:
+       * \brief string func(void*, void*)
+       *
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
+       * @param pParam1 The first parameter to pass to the function when it's
+       *  run
+       * @param pUseReturnVal Indicates whether caller will make use of return
+       *  value.  Defaults to false
+       * @param pExitAfterRun Whether or not the caller should exit from its
+       *  input loop once the function is done.  Defaults to false.
+       * @param pRunOnLeaveFunction Whether or not the caller should run its
+       *  onLeave function when it exits (useful if pExitAfterRun is true).
+       *  This defaults to true.
+       */
+       explicit cxFunction1RefTemplated(FuncPtr pFuncPtr, T1 &pParam,
+                                      bool pUseReturnVal = false,
+                                      bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true)
+           : cxFunction(pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction),
+             mFunction(pFuncPtr),
+             mParam(pParam)
+        {
+        }
+
+      /**
+       * Destructor
+       */
+      virtual ~cxFunction1RefTemplated() { }
+
+      /**
+       * Returns whether the internal funtion pointer is set.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
+       */
+      virtual bool functionIsSet() const override {
+         return (mFunction != nullptr);
+      }
+
+      /**
+       * Sets the internal function pointer
+       * @param pFuncPtr The function to which to point
+       */
+      void setFunction(FuncPtr pFuncPtr) {
+         mFunction = pFuncPtr;
+      }
+
+      /**
+       * \brief Accessor for the internal function pointer
+       *
+       * @return The internal function pointer
+       */
+      FuncPtr getFunction() const {
+         return mFunction;
+      }
+
+      /**
+       * Sets the parameter to pass to the function.
+       * @param pParam The parameter to pass to function
+       */
+      void setParam(T1 &pParam) {
+         mParam = pParam;
+      }
+
+      /**
+       * Accessor for the function parameter
+       * @return Returns the first parameter
+       */
+      const T1& getParam() const {
+         return mParam;
+      }
+
+      /**
+       * If function pointer is not null, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not null,
+       *    otherwise returns empty string
+       */
+      virtual std::string runFunction() const override {
+         if (mFunction != nullptr) {
+            return(mFunction(mParam));
+         }
+         else {
+            return("");
+         }
+      }
+
+      virtual void* getFuncPtr() const override {
+         return (void*)mFunction;
+      }
+
+      /**
+       * \brief Returns the name of the cxWidgets class, "cxFunction1RefTemplated".  This can be
+       * \brief used to determine the type of cxWidgets object that deriving
+       * \brief classes derive from in applications.
+       *
+       * @return The name of the cxWidgets class ("cxFunction1RefTemplated").
+       */
+      virtual std::string cxTypeStr() const override {
+         return("cxFunction1RefTemplated");
+      }
+
+   private:
+      FuncPtr mFunction; // The actual function pointer
+      T1 &mParam;  // The parameter to pass to the function
+};
+
+
+/** \class cxFunction2RefTemplated
+ * \brief This class is a cxFunction that is templated to take 2 references of specific types
+ *
+*/
+template<typename T1, typename T2>
+class cxFunction2RefTemplated : public cxFunction {
+   public:
+      using FuncPtr = std::string (*)(T1 &, T2 &);
+
+      /** 
+       * \brief Static create method for cxFunction2RefTemplated.  This is the recommended way to create a cxFunction2RefTemplated, as it returns a shared pointer to the created object.
+       */
+      static std::shared_ptr<cxFunction2RefTemplated<T1, T2>> create(FuncPtr pFuncPtr, T1 &pParam1, T2 &pParam2,
+                                      bool pUseReturnVal = false, bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true) {
+         return std::make_shared<cxFunction2RefTemplated<T1, T2>>(pFuncPtr, pParam1, pParam2,
+                                      pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction);
+      }
+
+      /**
+       * \brief Default constructor.  All parameters have default values
+       * \brief available.  Note that function must have this signature:
+       * \brief string func(void*, void*)
+       *
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
+       * @param pParam1 The first parameter to pass to the function when it's
+       *  run
+       * @param pParam2 The second parameter to pass to the function when it's
+       *  run
+       * @param pUseReturnVal Indicates whether caller will make use of return
+       *  value.  Defaults to false
+       * @param pExitAfterRun Whether or not the caller should exit from its
+       *  input loop once the function is done.  Defaults to false.
+       * @param pRunOnLeaveFunction Whether or not the caller should run its
+       *  onLeave function when it exits (useful if pExitAfterRun is true).
+       *  This defaults to true.
+       */
+       explicit cxFunction2RefTemplated(FuncPtr pFuncPtr, T1 &pParam1,
+                                      T2 &pParam2, bool pUseReturnVal = false,
+                                      bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true)
+           : cxFunction(pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction),
+             mFunction(pFuncPtr),
+             mParam1(pParam1),
+             mParam2(pParam2)
+        {
+        }
+
+      /**
+       * Destructor
+       */
+      virtual ~cxFunction2RefTemplated() { }
+
+      /**
+       * Returns whether the internal funtion pointer is set.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
+       */
+      virtual bool functionIsSet() const override {
+         return (mFunction != nullptr);
+      }
+
+      /**
+       * Sets the internal function pointer
+       * @param pFuncPtr The function to which to point
+       */
+      void setFunction(FuncPtr pFuncPtr) {
+         mFunction = pFuncPtr;
+      }
+
+      /**
+       * \brief Accessor for the internal function pointer
+       *
+       * @return The internal function pointer
+       */
+      FuncPtr getFunction() const {
+         return mFunction;
+      }
+
+      /**
+       * Sets the parameters to pass to the function.
+       * @param pParam1 First parameter to pass to function
+       * @param pParam2 Second parameter to pass to function
+       */
+      void setParams(T1 &pParam1, T2 &pParam2) {
+         mParam1 = pParam1;
+         mParam2 = pParam2;
+      }
+
+      /**
+       * Sets the first parameter
+       * @param pParam First parameter to pass to function
+       */
+      void setParam1(T1 &pParam) {
+         mParam1 = pParam;
+      }
+
+      /**
+       * Sets the second parameter
+       * @param pParam Second parameter to pass to function
+       */
+      void setParam2(T2 &pParam) {
+         mParam2 = pParam;
+      }
+
+      /**
+       * Accessor for the first function parameter
+       * @return Returns the first parameter
+       */
+      const T1& getParam1() const {
+         return mParam1;
+      }
+
+      /**
+       * Accessor for the second function parameter
+       * @return Returns the second parameter
+       */
+      const T2& getParam2() const {
+         return mParam2;
+      }
+
+      /**
+       * If function pointer is not null, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not null,
+       *    otherwise returns empty string
+       */
+      virtual std::string runFunction() const override {
+         if (mFunction != nullptr) {
+            return(mFunction(mParam1, mParam2));
+         }
+         else {
+            return("");
+         }
+      }
+
+      virtual void* getFuncPtr() const override {
+         return (void*)mFunction;
+      }
+
+      /**
+       * \brief Returns the name of the cxWidgets class, "cxFunction2RefTemplated".  This can be
+       * \brief used to determine the type of cxWidgets object that deriving
+       * \brief classes derive from in applications.
+       *
+       * @return The name of the cxWidgets class ("cxFunction2RefTemplated").
+       */
+      virtual std::string cxTypeStr() const override {
+         return("cxFunction2RefTemplated");
+      }
+
+   private:
+      FuncPtr mFunction; // The actual function pointer
+      T1 &mParam1;  // The first parameter to pass to the function
+      T2 &mParam2;  // The second parameter to pass to the function
+};
+
+/** \class cxFunction4Templated
+ * \brief This class is a cxFunction that is templated to take 4 pointers of specific types
+ *
+*/
+template<typename T1, typename T2, typename T3, typename T4>
+class cxFunction4Templated : public cxFunction {
+   public:
+      using FuncPtr = std::string (*)(T1 *, T2 *, T3 *, T4 *);
+
+      /**
+       * \brief Static create method for cxFunction4Templated.  This is the recommended way to create a cxFunction4Templated, as it returns a shared pointer to the created object.
+       */
+      static std::shared_ptr<cxFunction4Templated<T1, T2, T3, T4>> create(FuncPtr pFuncPtr, T1 *pParam1, T2 *pParam2,
+                                      T3 *pParam3, T4 *pParam4, bool pUseReturnVal = false,
+                                      bool pExitAfterRun = false, bool pRunOnLeaveFunction = true) {
+         return std::make_shared<cxFunction4Templated<T1, T2, T3, T4>>(pFuncPtr, pParam1, pParam2,
+                                      pParam3, pParam4, pUseReturnVal, pExitAfterRun,
+                                      pRunOnLeaveFunction);
+      }
+
+      /**
+       * \brief Default constructor.  All parameters have default values
+       * \brief available.  Note that function must have this signature:
+       * \brief string func(void*, void*)
+       *
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
+       * @param pParam1 The first parameter to pass to the function when it's
+       *  run - This is a void pointer.
+       * @param pParam2 The second parameter to pass to the function when it's
+       *  run - This is a void pointer.
+       * @param pParam3 The 3rd parameter to pass to the function when it's
+       *  run - This is a void pointer.
+       * @param pParam4 The 4th parameter to pass to the function when it's
+       *  run - This is a void pointer.
+       * @param pUseReturnVal Indicates whether caller will make use of return
+       *  value.  Defaults to false
+       * @param pExitAfterRun Whether or not the caller should exit from its
+       *  input loop once the function is done.  Defaults to false.
+       * @param pRunOnLeaveFunction Whether or not the caller should run its
+       *  onLeave function when it exits (useful if pExitAfterRun is true).
+       *  This defaults to true.
+       */
+       explicit cxFunction4Templated(FuncPtr pFuncPtr = nullptr, T1 *pParam1 = nullptr,
+                                      T2 *pParam2 = nullptr, T3 *pParam3 = nullptr,
+                                      T4 *pParam4 = nullptr, bool pUseReturnVal = false,
+                                      bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true)
+           : cxFunction(pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction),
+             mFunction(pFuncPtr),
+             mParam1(pParam1),
+             mParam2(pParam2),
+             mParam3(pParam3),
+             mParam4(pParam4)
+        {
+        }
+
+      /**
+       * Destructor
+       */
+      virtual ~cxFunction4Templated() { }
+
+      /**
+       * Returns whether the internal funtion pointer is set.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
+       */
+      virtual bool functionIsSet() const override {
+         return (mFunction != nullptr);
+      }
+
+      /**
+       * Sets the internal function pointer
+       * @param pFuncPtr The function to which to point
+       */
+      void setFunction(FuncPtr pFuncPtr) {
+         mFunction = pFuncPtr;
+      }
+
+      /**
+       * \brief Accessor for the internal function pointer
+       *
+       * @return The internal function pointer
+       */
+      FuncPtr getFunction() const {
+         return mFunction;
+      }
+
+      /**
+       * Sets the parameters to pass to the function.
+       * @param pParam1 First parameter to pass to function
+       * @param pParam2 Second parameter to pass to function
+       * @param pParam3 3rd parameter to pass to function
+       * @param pParam4 4th parameter to pass to function
+       */
+      void setParams(T1 *pParam1, T2 *pParam2, T3 *pParam3, T4 *pParam4) {
+         mParam1 = pParam1;
+         mParam2 = pParam2;
+         mParam3 = pParam3;
+         mParam4 = pParam4;
+      }
+
+      /**
+       * Sets the first parameter
+       * @param pParam First parameter to pass to function
+       */
+      void setParam1(T1 *pParam) {
+         mParam1 = pParam;
+      }
+
+      /**
+       * Sets the second parameter
+       * @param pParam Second parameter to pass to function
+       */
+      void setParam2(T2 *pParam) {
+         mParam2 = pParam;
+      }
+
+      /**
+       * Sets the 3rd parameter
+       * @param pParam 3rd parameter to pass to function
+       */
+      void setParam3(T3 *pParam) {
+         mParam3 = pParam;
+      }
+
+      /**
+       * Sets the 4th parameter
+       * @param pParam 4th parameter to pass to function
+       */
+      void setParam4(T4 *pParam) {
+         mParam4 = pParam;
+      }
+
+      /**
+       * Accessor for the first function parameter
+       * @return Returns pointer to first parameter
+       */
+      T1* getParam1() const {
+         return mParam1;
+      }
+
+      /**
+       * Accessor for the second function parameter
+       * @return Returns pointer to second parameter
+       */
+      T2* getParam2() const {
+         return mParam2;
+      }
+
+      /**
+       * Accessor for the 3rd function parameter
+       * @return Returns pointer to first parameter
+       */
+      T3* getParam3() const {
+         return mParam3;
+      }
+
+      /**
+       * Accessor for the 4th function parameter
+       * @return Returns pointer to second parameter
+       */
+      T4* getParam4() const {
+         return mParam4;
+      }
+
+      /**
+       * If function pointer is not null, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not null,
+       *    otherwise returns empty string
+       */
+      virtual std::string runFunction() const override {
+         if (mFunction != nullptr) {
+            return(mFunction(mParam1, mParam2, mParam3, mParam4));
+         }
+         else {
+            return("");
+         }
+      }
+
+      virtual void* getFuncPtr() const override {
+         return (void*)mFunction;
+      }
+
+      /**
+       * \brief Returns the name of the cxWidgets class, "cxFunction4Templated".  This can be
+       * \brief used to determine the type of cxWidgets object that deriving
+       * \brief classes derive from in applications.
+       *
+       * @return The name of the cxWidgets class ("cxFunction4Templated").
+       */
+      virtual std::string cxTypeStr() const override {
+         return("cxFunction4Templated");
+      }
+
+   private:
+      FuncPtr mFunction; // The actual function pointer
+      T1 *mParam1;  // The first parameter to pass to the function
+      T2 *mParam2;  // The second parameter to pass to the function
+      T3 *mParam3;  // The 3rd parameter to pass to the function
+      T4 *mParam4;  // The 4th parameter to pass to the function
+};
+
+/** \class cxFunction4RefTemplated
+ * \brief This class is a cxFunction that is templated to take 4 references of specific types
+ *
+*/
+template<typename T1, typename T2, typename T3, typename T4>
+class cxFunction4RefTemplated : public cxFunction {
+   public:
+      using FuncPtr = std::string (*)(T1 &, T2 &, T3 &, T4 &);
+
+      /**
+       * \brief Static create method for cxFunction4RefTemplated.  This is the recommended way to create a cxFunction4RefTemplated, as it returns a shared pointer to the created object.
+       */
+      static std::shared_ptr<cxFunction4RefTemplated<T1, T2, T3, T4>> create(FuncPtr pFuncPtr, T1 &pParam1, T2 &pParam2,
+                                      T3 &pParam3, T4 &pParam4, bool pUseReturnVal = false,
+                                      bool pExitAfterRun = false, bool pRunOnLeaveFunction = true) {
+         return std::make_shared<cxFunction4RefTemplated<T1, T2, T3, T4>>(pFuncPtr, pParam1, pParam2,
+                                      pParam3, pParam4, pUseReturnVal, pExitAfterRun,
+                                      pRunOnLeaveFunction);
+      }
+
+      /**
+       * \brief Default constructor.  All parameters have default values
+       * \brief available.  Note that function must have this signature:
+       * \brief string func(void*, void*)
+       *
+       * @param pFuncPtr Pointer to the function to be run.  Defaults to nullptr.
+       * @param pParam1 The first parameter to pass to the function when it's
+       *  run
+       * @param pParam2 The second parameter to pass to the function when it's
+       *  run
+       * @param pParam3 The 3rd parameter to pass to the function when it's
+       *  run
+       * @param pParam4 The 4th parameter to pass to the function when it's
+       *  run
+       * @param pUseReturnVal Indicates whether caller will make use of return
+       *  value.  Defaults to false
+       * @param pExitAfterRun Whether or not the caller should exit from its
+       *  input loop once the function is done.  Defaults to false.
+       * @param pRunOnLeaveFunction Whether or not the caller should run its
+       *  onLeave function when it exits (useful if pExitAfterRun is true).
+       *  This defaults to true.
+       */
+       explicit cxFunction4RefTemplated(FuncPtr pFuncPtr, T1 &pParam1,
+                                      T2 &pParam2, T3 &pParam3, T4 &pParam4,
+                                      bool pUseReturnVal = false,
+                                      bool pExitAfterRun = false,
+                                      bool pRunOnLeaveFunction = true)
+           : cxFunction(pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction),
+             mFunction(pFuncPtr),
+             mParam1(pParam1),
+             mParam2(pParam2),
+             mParam3(pParam3),
+             mParam4(pParam4)
+        {
+        }
+
+      /**
+       * Destructor
+       */
+      virtual ~cxFunction4RefTemplated() { }
+
+      /**
+       * Returns whether the internal funtion pointer is set.
+       * @return Returns true if the internal function pointer is set (not null), or false otherwise.
+       */
+      virtual bool functionIsSet() const override {
+         return (mFunction != nullptr);
+      }
+
+      /**
+       * Sets the internal function pointer
+       * @param pFuncPtr The function to which to point
+       */
+      void setFunction(FuncPtr pFuncPtr) {
+         mFunction = pFuncPtr;
+      }
+
+      /**
+       * \brief Accessor for the internal function pointer
+       *
+       * @return The internal function pointer
+       */
+      FuncPtr getFunction() const {
+         return mFunction;
+      }
+
+      /**
+       * Sets the parameters to pass to the function.
+       * @param pParam1 First parameter to pass to function
+       * @param pParam2 Second parameter to pass to function
+       * @param pParam3 Third parameter to pass to function
+       * @param pParam4 Fourth parameter to pass to function
+       */
+      void setParams(T1 &pParam1, T2 &pParam2, T3 &pParam3, T4 &pParam4) {
+         mParam1 = pParam1;
+         mParam2 = pParam2;
+         mParam3 = pParam3;
+         mParam4 = pParam4;
+      }
+
+      /**
+       * Sets the first parameter
+       * @param pParam First parameter to pass to function
+       */
+      void setParam1(T1 &pParam) {
+         mParam1 = pParam;
+      }
+
+      /**
+       * Sets the second parameter
+       * @param pParam Second parameter to pass to function
+       */
+      void setParam2(T2 &pParam) {
+         mParam2 = pParam;
+      }
+
+      /**
+       * Sets the 3rd parameter
+       * @param pParam Third parameter to pass to function
+       */
+      void setParam3(T3 &pParam) {
+         mParam3 = pParam;
+      }
+
+      /**
+       * Sets the 4th parameter
+       * @param pParam Fourth parameter to pass to function
+       */
+      void setParam4(T4 &pParam) {
+         mParam4 = pParam;
+      }
+
+      /**
+       * Accessor for the first function parameter
+       * @return Returns the 1st parameter
+       */
+      const T1& getParam1() const {
+         return mParam1;
+      }
+
+      /**
+       * Accessor for the second function parameter
+       * @return Returns the 2nd parameter
+       */
+      const T2& getParam2() const {
+         return mParam2;
+      }
+
+      /**
+       * Accessor for the 3rd function parameter
+       * @return Returns the 3rd parameter
+       */
+      const T3& getParam3() const {
+         return mParam3;
+      }
+
+      /**
+       * Accessor for the 4th function parameter
+       * @return Returns the 4th parameter
+       */
+      const T4& getParam4() const {
+         return mParam4;
+      }
+
+      /**
+       * If function pointer is not null, runs the function and returns its return value;
+       * If function pointer is nullptr, returns empty string
+       * @return Returns return value of function pointed to if pointer is not null,
+       *    otherwise returns empty string
+       */
+      virtual std::string runFunction() const override {
+         if (mFunction != nullptr) {
+            return(mFunction(mParam1, mParam2, mParam3, mParam4));
+         }
+         else {
+            return("");
+         }
+      }
+
+      virtual void* getFuncPtr() const override {
+         return (void*)mFunction;
+      }
+
+      /**
+       * \brief Returns the name of the cxWidgets class, "cxFunction4RefTemplated".  This can be
+       * \brief used to determine the type of cxWidgets object that deriving
+       * \brief classes derive from in applications.
+       *
+       * @return The name of the cxWidgets class ("cxFunction4RefTemplated").
+       */
+      virtual std::string cxTypeStr() const override {
+         return("cxFunction4RefTemplated");
+      }
+
+   private:
+      FuncPtr mFunction; // The actual function pointer
+      T1 &mParam1;  // The first parameter to pass to the function
+      T2 &mParam2;  // The second parameter to pass to the function
+      T3 &mParam3;  // The third parameter to pass to the function
+      T4 &mParam4;  // The fourth parameter to pass to the function
 };
 
 #endif

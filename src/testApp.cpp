@@ -2597,7 +2597,7 @@ void setValFunc() {
    iForm.append(1, 1, 1, 15, "test:", "", "Just Hit Enter.");
    iForm.setValue("test:", "Hit Enter");
    //iForm.setValidatorFunction("test:",testBoxSuccess, nullptr, nullptr, nullptr, nullptr);
-   iForm.setOnLeaveFunction("test:",testBoxSuccess, nullptr, nullptr, nullptr, nullptr);
+   iForm.setOnLeaveFunction("test:", testBoxSuccess, nullptr, nullptr, nullptr, nullptr);
 
    int ret = 0;
    while(ret != cxID_QUIT) {
@@ -2618,6 +2618,7 @@ string testBoxSuccess(void* Foo1, void* Foo2, void* Foo3, void* Foo4) {
 
    return("");
 } // testBoxSuccess
+
 
 void formUpArrowFunction() {
    cxForm iForm(nullptr, 2, 0, 7, 40, "Test form");

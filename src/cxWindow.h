@@ -1120,6 +1120,14 @@ class cxWindow : public cxObject {
        * \brief Sets the "on focus" function pointer
        * \brief The function must have this signature: string func(void*, void*, void*, void*).
        *
+       * @param pFunction The function to be run
+       */
+      virtual void setOnFocusFunction(const std::shared_ptr<cxFunction>& pFunction);
+
+      /**
+       * \brief Sets the "on focus" function pointer
+       * \brief The function must have this signature: string func(void*, void*, void*, void*).
+       *
        * @param pFunction The function to be run - Must have this signature:
        *  string func(void*, void*, void*, void*)
        * @param p1 Pointer to the first parameter to be used for the function
@@ -1166,7 +1174,15 @@ class cxWindow : public cxObject {
                                       bool pExitAfterRun = false);
 
       /**
-       * \brief Sets the "on focus" function pointer
+       * \brief Sets the "on leave" function pointer
+       * \brief The function must have this signature: string func(void*, void*, void*, void*).
+       *
+       * @param pFunction The function to be run
+       */
+      virtual void setOnLeaveFunction(const std::shared_ptr<cxFunction>& pFunction);
+
+      /**
+       * \brief Sets the "on leave" function pointer
        * \brief The function must have this signature: string func(void*, void*, void*, void*).
        *
        * @param pFunction The function to be run - Must have this signature:
@@ -1279,6 +1295,17 @@ class cxWindow : public cxObject {
        *  shown modally
        */
       virtual bool isModal() const;
+
+      /**
+       * \brief Sets a function to be called when a key is pressed.
+       *
+       * @param pKey The key to use for the function
+       * @param pFunction The function to call. This can be an instance of
+       * one of the derived cxFunction classes as well.
+       *
+       * @return True if the key & function was added or false if not
+       */
+      virtual bool setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * \brief Sets a function to be called when a key is pressed.
@@ -1400,6 +1427,38 @@ class cxWindow : public cxObject {
        *  set up for the key
        */
       virtual bool hasKeyFunction(int pKey) const;
+
+      /**
+       * \brief Sets a function to be called for a certain mouse state.
+       *
+       * @param pMouseState The mouse state to fire the function.  This is
+       *  a list of mouse states:<br>
+       *  BUTTON1_PRESSED          Mouse button 1 down<br>
+       *  BUTTON1_RELEASED         Mouse button 1 up<br>
+       *  BUTTON1_CLICKED          Mouse button 1 clicked<br>
+       *  BUTTON1_DOUBLE_CLICKED   Mouse button 1 double clicked<br>
+       *  BUTTON1_TRIPLE_CLICKED   Mouse button 1 triple clicked<br>
+       *  BUTTON2_PRESSED          Mouse button 2 down<br>
+       *  BUTTON2_RELEASED         Mouse button 2 up<br>
+       *  BUTTON2_CLICKED          Mouse button 2 clicked<br>
+       *  BUTTON2_DOUBLE_CLICKED   Mouse button 2 double clicked<br>
+       *  BUTTON2_TRIPLE_CLICKED   Mouse button 2 triple clicked<br>
+       *  BUTTON3_PRESSED          Mouse button 3 down<br>
+       *  BUTTON3_RELEASED         Mouse button 3 up<br>
+       *  BUTTON3_CLICKED          Mouse button 3 clicked<br>
+       *  BUTTON3_DOUBLE_CLICKED   Mouse button 3 double clicked<br>
+       *  BUTTON3_TRIPLE_CLICKED   Mouse button 3 triple clicked<br>
+       *  BUTTON4_PRESSED          Mouse button 4 down<br>
+       *  BUTTON4_RELEASED         Mouse button 4 up<br>
+       *  BUTTON4_CLICKED          Mouse button 4 clicked<br>
+       *  BUTTON4_DOUBLE_CLICKED   Mouse button 4 double clicked<br>
+       *  BUTTON4_TRIPLE_CLICKED   Mouse button 4 triple clicked<br>
+       * @param pFunction The function to call. This can be an instance of
+       * one of the derived cxFunction classes as well.
+       *
+       * @return True if the key & function was added or false if not
+       */
+      virtual bool setMouseFunction(int pMouseState, const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * \brief Sets a function to be called for a certain mouse state.
@@ -2161,7 +2220,7 @@ class cxWindow : public cxObject {
        * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
-      std::shared_ptr<cxFunction0> getKeyFunction0(int pKey) const;
+      std::shared_ptr<cxFunction0> getKeyFunctionAsFunction0(int pKey) const;
 
       /**
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction2
@@ -2174,7 +2233,7 @@ class cxWindow : public cxObject {
        * @return A cxFunction2 pointer for the key, or nullptr if there is no
        *  cxFunction2 for the key.
        */
-      std::shared_ptr<cxFunction2> getKeyFunction2(int pKey) const;
+      std::shared_ptr<cxFunction2> getKeyFunctionAsFunction2(int pKey) const;
 
       /**
        * \brief Returns a cxFunction pointer for a key, casted to a cxFunction4
@@ -2187,7 +2246,7 @@ class cxWindow : public cxObject {
        * @return A cxFunction4 pointer for the key, or nullptr if there is no
        *  cxFunction4 for the key.
        */
-      std::shared_ptr<cxFunction4> getKeyFunction4(int pKey) const;
+      std::shared_ptr<cxFunction4> getKeyFunctionAsFunction4(int pKey) const;
 
       /**
        * \brief Returns whether or not the mouse event read in mMouse was

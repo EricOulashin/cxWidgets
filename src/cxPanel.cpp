@@ -253,9 +253,8 @@ bool cxPanel::move(int pNewRow, int pNewCol, bool pRefresh) {
    // Move the window
    bool moved = cxWindow::move(pNewRow, pNewCol, pRefresh);
    // Move the contained windows
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->moveRelative(vOffset, hOffset, pRefresh);
+   for (auto& window : mWindows) {
+      window->moveRelative(vOffset, hOffset, pRefresh);
    }
 
    return(moved);
@@ -355,6 +354,19 @@ bool cxPanel::setCurrentWindowByPtr(cxWindow *pWindow) {
    return(success);
 } // setCurrentWindowByPtr
 
+bool cxPanel::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) {
+   // Set the key function for the parent class
+   bool setIt = cxWindow::setKeyFunction(pKey, pFunction);
+   if (setIt) {
+      // Add the key to each window's exit keys.
+      for (auto& window : mWindows) {
+         window->addExitKey(pKey, false, true);
+      }
+   }
+
+   return(setIt);
+} // setKeyFunction
+
 bool cxPanel::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1,
                             void *p2, void *p3, void *p4, bool pUseReturnVal,
                             bool pExitAfterRun, bool pRunOnLeaveFunction) {
@@ -363,9 +375,8 @@ bool cxPanel::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1,
                            p3, p4, pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each window's exit keys.
-      cxPanel::cxWindowPtrCollection::iterator iter = mWindows.begin();
-      for (; iter != mWindows.end(); ++iter) {
-         (*iter)->addExitKey(pKey, false, true);
+      for (auto& window : mWindows) {
+         window->addExitKey(pKey, false, true);
       }
    }
 
@@ -380,9 +391,8 @@ bool cxPanel::setKeyFunction(int pKey, funcPtr2 pFunction, void *p1,
                            pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each window's exit keys.
-      cxPanel::cxWindowPtrCollection::iterator iter = mWindows.begin();
-      for (; iter != mWindows.end(); ++iter) {
-         (*iter)->addExitKey(pKey, false, true);
+      for (auto& window : mWindows) {
+         window->addExitKey(pKey, false, true);
       }
    }
 
@@ -396,9 +406,8 @@ bool cxPanel::setKeyFunction(int pKey, funcPtr0 pFunction, bool pUseReturnVal,
                                          pExitAfterRun, pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each window's exit keys.
-      cxPanel::cxWindowPtrCollection::iterator iter = mWindows.begin();
-      for (; iter != mWindows.end(); ++iter) {
-         (*iter)->addExitKey(pKey, false, true);
+      for (auto& window : mWindows) {
+         window->addExitKey(pKey, false, true);
       }
    }
 
@@ -409,9 +418,8 @@ void cxPanel::clearKeyFunction(int pKey) {
    // Clear the key in the parent class, and remove the key as an exit
    //  key from all subwindows.
    cxWindow::clearKeyFunction(pKey);
-   cxPanel::cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->removeExitKey(pKey);
+   for (auto& window : mWindows) {
+      window->removeExitKey(pKey);
    }
 } // clearKeyFunction
 
@@ -420,9 +428,8 @@ int cxPanel::getCurrentWindowIndex() const {
 
    if (mWindows.size() > 0) {
       int j = 0;
-      cxPanel::cxWindowPtrCollection::const_iterator iter = mWindows.begin();
-      for (; iter != mWindows.end(); ++iter) {
-         if ((*iter) == (*mWindowIter)) {
+      for (const auto& window : mWindows) {
+         if (window == *mWindowIter) {
             currentWindow = j;
             break;
          }
@@ -437,9 +444,8 @@ int cxPanel::getWindowIndex(const shared_ptr<cxWindow>& pWindow) const {
    int windowIndex = -1;
 
    int i = 0;
-   cxPanel::cxWindowPtrCollection::const_iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      if (*iter == pWindow) {
+   for (const auto& window : mWindows) {
+      if (window == pWindow) {
          windowIndex = i;
          break;
       }
@@ -453,9 +459,8 @@ int cxPanel::getWindowIndex(cxWindow *pWindow) const {
    int windowIndex = -1;
 
    int i = 0;
-   cxPanel::cxWindowPtrCollection::const_iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      if (iter->get() == pWindow) {
+   for (const auto& window : mWindows) {
+      if (window.get() == pWindow) {
          windowIndex = i;
          break;
       }
@@ -490,9 +495,8 @@ long cxPanel::show(bool pBringToTop, bool pShowSubwindows) {
       //  order.
       if (getShowSubwinsForward()) {
          // Show them in forward order
-         cxWindowPtrCollection::iterator iter = mWindows.begin();
-         for (; iter != mWindows.end(); ++iter) {
-            (*iter)->show(pBringToTop, pShowSubwindows);
+         for (const auto& window : mWindows) {
+            window->show(pBringToTop, pShowSubwindows);
          }
       }
       else {
@@ -511,11 +515,10 @@ void cxPanel::hide(bool pHideSubwindows) {
    // Hide the main window
    cxWindow::hide(pHideSubwindows);
    // Hide all the windows in the panel
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
+   for (const auto& window : mWindows) {
       // The cxWindow pointer shouldn't be null, but check just in case.
-      if ((*iter) != nullptr) {
-         (*iter)->hide(pHideSubwindows);
+      if (window != nullptr) {
+         window->hide(pHideSubwindows);
       }
    }
 } // hide
@@ -524,11 +527,10 @@ void cxPanel::unhide(bool pUnhideSubwindows) {
    // Unhide the main window
    cxWindow::unhide(pUnhideSubwindows);
    // Unhide all the windows in the panel
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
+   for (const auto& window : mWindows) {
       // The cxWindow pointer shouldn't be null, but check just in case.
-      if ((*iter) != nullptr) {
-         (*iter)->unhide(pUnhideSubwindows);
+      if (window != nullptr) {
+         window->unhide(pUnhideSubwindows);
       }
    }
 } // unhide
@@ -574,9 +576,8 @@ void cxPanel::enableWindow(unsigned int pIndex, bool pEnabled) {
 } // enableWindow
 
 void cxPanel::clear(bool pRefresh) {
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->clear(pRefresh);
+   for (auto& window : mWindows) {
+      window->clear(pRefresh);
    }
 } // clear
 
@@ -588,10 +589,9 @@ bool cxPanel::addQuitKey(int pKey, bool pRunOnLeaveFunction, bool pOverride) {
    if (added) {
       removeExitKey(pKey);
 
-      cxWindowPtrCollection::iterator iter = mWindows.begin();
-      for (; iter != mWindows.end(); ++iter) {
-         (*iter)->removeExitKey(pKey);
-         addQuitKeyToWindow(*iter, pKey, pRunOnLeaveFunction, pOverride);
+      for (auto& window : mWindows) {
+         window->removeExitKey(pKey);
+         addQuitKeyToWindow(window, pKey, pRunOnLeaveFunction, pOverride);
       }
    }
 
@@ -603,9 +603,8 @@ void cxPanel::removeQuitKey(int pKey) {
    //  parent class removeQuitKey()), then remove it from the
    //  windows in the panel.
    cxWindow::removeQuitKey(pKey);
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->removeQuitKey(pKey);
+   for (auto& window : mWindows) {
+      window->removeQuitKey(pKey);
    }
 } // removeQuitKey
 
@@ -617,10 +616,9 @@ bool cxPanel::addExitKey(int pKey, bool pRunOnLeaveFunction, bool pOverride) {
    if (added) {
       removeQuitKey(pKey);
 
-      cxWindowPtrCollection::iterator iter = mWindows.begin();
-      for (; iter != mWindows.end(); ++iter) {
-         (*iter)->removeQuitKey(pKey);
-         addExitKeyToWindow(*iter, pKey, pRunOnLeaveFunction, pOverride);
+      for (auto& window : mWindows) {
+         window->removeQuitKey(pKey);
+         addExitKeyToWindow(window, pKey, pRunOnLeaveFunction, pOverride);
       }
    }
 
@@ -632,9 +630,8 @@ void cxPanel::removeExitKey(int pKey) {
    //  parent class removeExitKey()), then remove it from the
    //  windows in the panel.
    cxWindow::removeExitKey(pKey);
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->removeExitKey(pKey);
+   for (auto& window : mWindows) {
+      window->removeExitKey(pKey);
    }
 } // removeExitKey
 
@@ -642,9 +639,8 @@ void cxPanel::setEnabled(bool pEnabled) {
    // Enable/disable the panel window, and then enable/disable the subwindows
    //  in the panel.
    cxWindow::setEnabled(pEnabled);
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->setEnabled(pEnabled);
+   for (auto& window : mWindows) {
+      window->setEnabled(pEnabled);
    }
 } // setEnabled
 
@@ -725,7 +721,7 @@ bool cxPanel::swap(cxWindow *pWindow1, cxWindow *pWindow2) {
 
       // Swap the cxWindow pointers, but only if we found them in
       //  mWindows.
-      if ((iter1 != mWindows.end()) && (iter2 != mWindows.end())) {
+      if (iter1 != mWindows.end() && iter2 != mWindows.end()) {
          iter1->swap(*iter2);
          swapped = true;
       }
@@ -741,9 +737,8 @@ bool cxPanel::swap(const std::shared_ptr<cxWindow>& pWindow1, const std::shared_
 void cxPanel::setColor(e_WidgetItems pItem, e_cxColors pColor) {
    // Set the color on this panel and all windows in the panel.
    cxWindow::setColor(pItem, pColor);
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->setColor(pItem, pColor);
+   for (auto& window : mWindows) {
+      window->setColor(pItem, pColor);
    }
 } // setColor
 
@@ -753,21 +748,18 @@ string cxPanel::cxTypeStr() const {
 
 void cxPanel::quitNow() {
    cxWindow::quitNow();
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->quitNow();
+   for (auto& window : mWindows) {
+      window->quitNow();
       try {
-         string winType = (*iter)->cxTypeStr();
-         if ((winType == "cxPanel") || (winType == "cxSearchPanel") ||
-             (winType == "cxNotebook")) {
-            cxPanel *panel = dynamic_cast<cxPanel*>(iter->get());
-            cxWindowPtrCollection::iterator iter2 = panel->mWindows.begin();
-            for (; iter2 != panel->mWindows.end(); ++iter2) {
-               (*iter2)->quitNow();
+         const string winType = window->cxTypeStr();
+         if (winType == "cxPanel" || winType == "cxSearchPanel" || winType == "cxNotebook") {
+            cxPanel *panel = dynamic_cast<cxPanel*>(window.get());
+            for (auto& otherPanelWindow : panel->mWindows) {
+               otherPanelWindow->quitNow();
             }
          }
-         else if ((*iter)->cxTypeStr() == "cxMultiForm") {
-            cxMultiForm *multiForm = dynamic_cast<cxMultiForm*>(iter->get());
+         else if (winType == "cxMultiForm") {
+            cxMultiForm *multiForm = dynamic_cast<cxMultiForm*>(window.get());
             unsigned int numSubforms = multiForm->numSubforms();
             shared_ptr<cxForm> subform = nullptr;
             for (unsigned int i = 0; i < numSubforms; ++i) {
@@ -786,20 +778,18 @@ void cxPanel::quitNow() {
 
 void cxPanel::exitNow() {
    cxWindow::exitNow();
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      (*iter)->exitNow();
+   for (auto& window : mWindows) {
+      window->exitNow();
       try {
-         string winType = (*iter)->cxTypeStr();
-         if ((winType == "cxPanel") || (winType == "cxSearchPanel")) {
-            cxPanel *panel = dynamic_cast<cxPanel*>(iter->get());
-            cxWindowPtrCollection::iterator iter2 = panel->mWindows.begin();
-            for (; iter2 != panel->mWindows.end(); ++iter2) {
-               (*iter2)->exitNow();
+         const string winType = window->cxTypeStr();
+         if (winType == "cxPanel" || winType == "cxSearchPanel") {
+            cxPanel *panel = dynamic_cast<cxPanel*>(window.get());
+            for (auto& otherPanelWindow : panel->mWindows) {
+               otherPanelWindow->exitNow();
             }
          }
-         else if ((*iter)->cxTypeStr() == "cxMultiForm") {
-            cxMultiForm *multiForm = dynamic_cast<cxMultiForm*>(iter->get());
+         else if (winType == "cxMultiForm") {
+            cxMultiForm *multiForm = dynamic_cast<cxMultiForm*>(window.get());
             unsigned int numSubforms = multiForm->numSubforms();
             shared_ptr<cxForm> subform;
             for (unsigned int i = 0; i < numSubforms; ++i) {
@@ -827,20 +817,19 @@ void cxPanel::setName(unsigned int pIndex, const string& pName) {
 } // setName
 
 void cxPanel::setName(const string& pID, const string& pName, bool pIsTitle) {
-   cxWindowPtrCollection::iterator iter = mWindows.begin();
    if (pIsTitle) {
-      for (; iter != mWindows.end(); ++iter) {
-         if ((*iter)->getTitle() == pID) {
-            (*iter)->setName(pID);
+      for (auto& window : mWindows) {
+         if (window->getTitle() == pID) {
+            window->setName(pID);
             break;
          }
       }
    }
    else {
       // pIsTitle is false - Going by the window names.
-      for (; iter != mWindows.end(); ++iter) {
-         if ((*iter)->getName() == pID) {
-            (*iter)->setName(pID);
+      for (auto& window : mWindows) {
+         if (window->getName() == pID) {
+            window->setName(pID);
             break;
          }
       }
@@ -866,10 +855,9 @@ bool cxPanel::anyEnabledWindows() const {
    //  true and if it will wait for a keypress in its showModal().  This
    //  way, it is guaranteed that a call to cxPanel's showModal() won't
    //  end up in infinite loop land.
-   cxWindowPtrCollection::const_iterator iter = mWindows.begin();
-   for (; iter != mWindows.end(); ++iter) {
-      if ((*iter) != nullptr) {
-         if (((*iter)->isEnabled()) && ((*iter)->modalGetsKeypress())) {
+   for (const auto& window : mWindows) {
+      if (window != nullptr) {
+         if (window->isEnabled() && window->modalGetsKeypress()) {
             anyEnabled = true;
             break;
          }
@@ -953,23 +941,22 @@ bool cxPanel::addWindowPtr(const shared_ptr<cxWindow>& pWindow) {
       //  set of quit/exit keys.
       map<int, bool>::const_iterator keyIter;
       map<int, cxFunction*>::const_iterator funcIter;
-      cxWindowPtrCollection::iterator winIter = mWindows.begin();
-      for (; winIter != mWindows.end(); ++winIter) {
+      for (auto& window : mWindows) {
          // Add the keys in mKeyFunctions as exit keys
          for (const pair<int, shared_ptr<cxFunction>>& keyFuncPair : mKeyFunctions) {
             // Have the window not run its onLeave function, and not
             // override if the window already has that key set up as a
             // keypress function.
-            addExitKeyToWindow(*winIter, keyFuncPair.first, false, false);
+            addExitKeyToWindow(window, keyFuncPair.first, false, false);
          }
 
          // Add the exit keys from mExitKeys
          for (const pair<int, bool>& exitKeyPair : mExitKeys) {
-            addExitKeyToWindow(*winIter, exitKeyPair.first, false, false);
+            addExitKeyToWindow(window, exitKeyPair.first, false, false);
          }
          // Add the quit keys from mQuitKeys
          for (const pair<int, bool>& quitKeyPair : mQuitKeys) {
-            addQuitKeyToWindow(*winIter, quitKeyPair.first, false, false);
+            addQuitKeyToWindow(window, quitKeyPair.first, false, false);
          }
       }
 
@@ -977,7 +964,7 @@ bool cxPanel::addWindowPtr(const shared_ptr<cxWindow>& pWindow) {
       // from its mWindows.
       try {
          // If the window's parent is a cxPanel..
-         if ((parentType == "cxPanel") || (parentType == "cxSearchPanel")) {
+         if (parentType == "cxPanel" || parentType == "cxSearchPanel") {
             cxPanel *parentPanel = dynamic_cast<cxPanel*>(pWindow->getParent());
             // Look for pWindow in the other panel's mWindows and remove it
             // if it's there.

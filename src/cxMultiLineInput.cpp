@@ -14,6 +14,8 @@ using std::set;
 using std::map;
 using std::shared_ptr;
 using std::make_shared;
+using std::unique_ptr;
+using std::make_unique;
 using cxStringUtils::stringToLong;
 using cxStringUtils::stringToLongDouble;
 using cxStringUtils::toString;
@@ -183,17 +185,15 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
 {
    // Copy the other input's single-line inputs
    shared_ptr<cxInput> myInput;
-   cxInputPtrContainer::const_iterator iter = pThatInput.mInputs.begin();
-   for(; iter != pThatInput.mInputs.end(); ++iter) {
-      myInput = make_shared<cxInput>(**iter);
+   for (const auto& input : pThatInput.mInputs) {
+      myInput = make_shared<cxInput>(*input);
       myInput->mParentMLInput = this;
       if (mUseExtendedHelpKeys) {
          for (int helpKey : mExtendedHelpKeys)
             myInput->addExitKey(helpKey, false, true);
          /*
-         set<int>::iterator iter = mExtendedHelpKeys.begin();
-         for (; iter != mExtendedHelpKeys.end(); ++iter) {
-            myInput->addExitKey(*iter, false, true);
+         for (int helpKey : mExtendedHelpKey) {
+            myInput->addExitKey(helpKey, false, true);
          }
          */
       }
@@ -258,9 +258,8 @@ long cxMultiLineInput::show(bool pBringToTop, bool pShowSubwindows) {
       }
 
       // Show all the single-line inputs
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         returnVal = (*iter)->show(pBringToTop, false);
+      for (const auto& input : mInputs) {
+         returnVal = input->show(pBringToTop, false);
       }
 
       // Show the subwindows now, if pShowSubwindows is true and
@@ -476,9 +475,8 @@ void cxMultiLineInput::hide(bool pHideSubwindows) {
    // Hide the main window, as well as all the inputs.
    cxWindow::hide(false);
 
-   cxInputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->hide(false);
+   for (const auto& input : mInputs) {
+      input->hide(false);
    }
 } // hide
 
@@ -488,9 +486,8 @@ void cxMultiLineInput::unhide(bool pUnhideSubwindows) {
    if (isEnabled()) {
       cxWindow::unhide(false);
 
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->unhide(false);
+      for (const auto& input : mInputs) {
+         input->unhide(false);
       }
    }
 } // unhide
@@ -499,9 +496,8 @@ void cxMultiLineInput::erase(bool pEraseSubwindows) {
    // Erase the main window, as well as all the inputs.
    cxWindow::erase(pEraseSubwindows);
 
-   cxInputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->erase(pEraseSubwindows);
+   for (const auto& input : mInputs) {
+      input->erase(pEraseSubwindows);
    }
 } // erase
 
@@ -534,18 +530,17 @@ string cxMultiLineInput::getValue() const {
    //  this was one big input.  Otherwise (if
    //  mEnterAlwaysexits is false), add newline characters
    //  to the value after each input line.
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
    if (mEnterAlwaysExits) {
-      for (; iter != mInputs.end(); ++iter) {
-         string currentValue = (*iter)->getValue(false, false);
+      for (const auto& input : mInputs) {
+         string currentValue = input->getValue(false, false);
          if (currentValue != "") {
             value += currentValue;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         value += (*iter)->getValue(false, false) + "\n";
+      for (const auto& input : mInputs) {
+         value += input->getValue(false, false) + "\n";
       }
 
       // Remove the trailing newline from value
@@ -561,9 +556,8 @@ string cxMultiLineInput::getValue() const {
 
 // Clears the input value.
 void cxMultiLineInput::clearValue(bool pRefresh) {
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->clearValue(pRefresh);
+   for (const auto& input : mInputs) {
+      input->clearValue(pRefresh);
    }
 } // clearValue
 
@@ -649,9 +643,8 @@ bool cxMultiLineInput::setValue(string pValue, bool pRefresh) {
       mErrorState = eNO_ERROR;
       // Figure out which line the cursor should be on
       mCurrentInputLine = 0;
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->isFull()) {
+      for (const auto& input : mInputs) {
+         if (input->isFull()) {
             ++mCurrentInputLine;
          }
          else {
@@ -737,9 +730,8 @@ string cxMultiLineInput::getValidatorStr() const {
    // The validator is spread out across each input..  So
    //  it needs to be put back together.
    string validatorStr;
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      validatorStr += (*iter)->getValidatorStr();
+   for (const auto& input : mInputs) {
+      validatorStr += input->getValidatorStr();
    }
 
    return(validatorStr);
@@ -750,10 +742,12 @@ bool cxMultiLineInput::textIsValid() const {
 
    // Keep checking each single-line input until
    //  we encounter one that is empty.
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; (iter != mInputs.end()) && isValid; ++iter) {
-      if ((*iter)->getValue() != "") {
-         isValid = (*iter)->textIsValid();
+   for (const auto& input : mInputs) {
+      if (input->getValue() != "") {
+         isValid = input->textIsValid();
+         if (!isValid) {
+            break;
+         }
       }
       else {
          break; // The current input has no value entered in it
@@ -780,10 +774,10 @@ bool cxMultiLineInput::getMasked() {
    bool allInputsMasked = true;
 
    cxInputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
+   for (const auto& input : mInputs) {
       // If this input has masking turned off, then
       //  set allInputsMasked false and break from the loop.
-      if (!((*iter)->getMasked())) {
+      if (!(input->getMasked())) {
          allInputsMasked = false;
          break;
       }
@@ -794,9 +788,8 @@ bool cxMultiLineInput::getMasked() {
 
 // Enables/disables input masking.
 void cxMultiLineInput::toggleMasking(bool pMasking) {
-   cxInputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->toggleMasking(pMasking);
+   for (const auto& input : mInputs) {
+      input->toggleMasking(pMasking);
    }
 }
 
@@ -811,9 +804,8 @@ char cxMultiLineInput::getMaskChar() const {
 }
 
 void cxMultiLineInput::setMaskChar(char pMaskChar) {
-   cxInputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->setMaskChar(pMaskChar);
+   for (const auto& input : mInputs) {
+      input->setMaskChar(pMaskChar);
    }
 }
 
@@ -845,15 +837,14 @@ bool cxMultiLineInput::move(int pNewRow, int pNewCol, bool pRefresh) {
       }
 
       // Move all the input line windows
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
+      for (const auto& input : mInputs) {
          // Store the input's position in
          //  oldInputPositions
-         int inputTop = (*iter)->top();
-         int inputLeft = (*iter)->left();
+         int inputTop = input->top();
+         int inputLeft = input->left();
          oldInputPositions.push_back(pair<int, int>(inputTop, inputLeft));
          // Move the input
-         moved = (*iter)->move(row, col, false);
+         moved = input->move(row, col, false);
          // If moving the input failed, then move all the previously-
          //  moved single-line inputs back to where they were.
          if (!moved) {
@@ -942,9 +933,8 @@ void cxMultiLineInput::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
       }
 
       // Re-size all current inputs with the new width
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->resize(1, inputWidth, false);
+      for (const auto& input : mInputs) {
+         input->resize(1, inputWidth, false);
       }
 
       // If pNewHeight is greater than the old height, add more single-line
@@ -1017,6 +1007,23 @@ void cxMultiLineInput::resize(int pNewHeight, int pNewWidth, bool pRefresh) {
    }
 } // resize
 
+bool cxMultiLineInput::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) {
+   bool setIt = cxWindow::setKeyFunction(pKey, pFunction);
+   if (setIt) {
+      // Add the key to each input's set of exit keys.
+      for (const auto& input : mInputs) {
+         input->addExitKey(pKey, false, true);
+      }
+
+      // Make sure the key doesn't exist in the quitKey and exitKey lists
+      //  (for this multi-line input; not for the single-line inputs!)
+      cxWindow::removeQuitKey(pKey);
+      cxWindow::removeExitKey(pKey);
+   }
+
+   return(setIt);
+} // setKeyFunction
+
 bool cxMultiLineInput::setKeyFunction(int pFunctionKey,
                                 funcPtr4 pFunction,
                                 void *p1, void *p2, void *p3, void *p4,
@@ -1026,9 +1033,8 @@ bool cxMultiLineInput::setKeyFunction(int pFunctionKey,
                       p2, p3, p4, pUseVal, pExitAfterRun, pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each input's set of exit keys.
-      cxInputPtrContainer::iterator iter = mInputs.begin();;
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->addExitKey(pFunctionKey, false, true);
+      for (const auto& input : mInputs) {
+         input->addExitKey(pFunctionKey, false, true);
       }
 
       // Make sure the key doesn't exist in the quitKey and exitKey lists
@@ -1060,9 +1066,8 @@ bool cxMultiLineInput::setKeyFunction(int pFunctionKey, funcPtr2 pFunction,
                              pUseVal, pExitAfterRun, pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each input's set of exit keys.
-      cxInputPtrContainer::iterator iter;
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         (*iter)->addExitKey(pFunctionKey, false, true);
+      for (const auto& input : mInputs) {
+         input->addExitKey(pFunctionKey, false, true);
       }
 
       // Make sure the key doesn't exist in the quitKey and exitKey lists.
@@ -1094,9 +1099,8 @@ bool cxMultiLineInput::setKeyFunction(int pFunctionKey, funcPtr0 pFunction,
                              pUseVal, pExitAfterRun, pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each input's set of exit keys.
-      cxInputPtrContainer::iterator iter;
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         (*iter)->addExitKey(pFunctionKey, false, true);
+      for (const auto& input : mInputs) {
+         input->addExitKey(pFunctionKey, false, true);
       }
 
       // Make sure the key doesn't exist in the quitKey and exitKey lists.
@@ -1162,9 +1166,8 @@ e_cxColors cxMultiLineInput::getLabelColor() const {
 
 void cxMultiLineInput::setValueColor(e_cxColors pColor) {
    // Set the value color of all inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setValueColor(pColor);
+   for (const auto& input : mInputs) {
+      input->setValueColor(pColor);
    }
 } // setValueColor
 
@@ -1180,9 +1183,8 @@ e_cxColors cxMultiLineInput::getValueColor() const {
 
 void cxMultiLineInput::setColor(e_WidgetItems pItem, e_cxColors pColor) {
    // Set the color on all the single-line inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setColor(pItem, pColor);
+   for (const auto& input : mInputs) {
+      input->setColor(pItem, pColor);
    }
 } // setColor
 
@@ -1201,9 +1203,8 @@ int cxMultiLineInput::getInputOption() const {
 } // getKind
 
 void cxMultiLineInput::setInputOption(eInputOptions pInputKind) {
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setInputOption(pInputKind);
+   for (const auto& input : mInputs) {
+      input->setInputOption(pInputKind);
    }
 
    // If mApplyAttrDefaults is true, apply an attribute
@@ -1227,9 +1228,8 @@ void cxMultiLineInput::setInputOption(eInputOptions pInputKind) {
 } // setInputOption
 
 void cxMultiLineInput::toggleCursor(bool pShowCursor) {
-   cxInputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->toggleCursor(pShowCursor);
+   for (const auto& input : mInputs) {
+      input->toggleCursor(pShowCursor);
    }
 } // toggleCursor
 
@@ -1320,9 +1320,8 @@ void cxMultiLineInput::clearValidatorFunction() {
 
 bool cxMultiLineInput::isFull() const {
    bool allFull = true;
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      if ( !((*iter)->isFull()) ) {
+   for (const auto& input : mInputs) {
+      if ( !(input->isFull()) ) {
          allFull = false;
          break;
       }
@@ -1331,44 +1330,45 @@ bool cxMultiLineInput::isFull() const {
    return(allFull);
 } // isFull
 
+void cxMultiLineInput::setOnKeyFunction(const shared_ptr<cxFunction>& pFunction) {
+   for (const auto& input : mInputs) {
+      input->setOnKeyFunction(pFunction);
+   }
+} // setOnKeyFunction
+
 void cxMultiLineInput::setOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2,
                               void *p3, void *p4) {
    // Set the onKeyFunction for all of the single-line inputs
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setOnKeyFunction(pFunction, p1, p2, p3, p4);
+   for (const auto& input : mInputs) {
+      input->setOnKeyFunction(pFunction, p1, p2, p3, p4);
    }
 } // setOnKeyFunction
 
 void cxMultiLineInput::setOnKeyFunction(funcPtr2 pFunction, void *p1, void *p2) {
    // Set the onKeyFunction for all of the single-line inputs
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setOnKeyFunction(pFunction, p1, p2);
+   for (const auto& input : mInputs) {
+      input->setOnKeyFunction(pFunction, p1, p2);
    }
 } // setOnKeyFunction
 
 void cxMultiLineInput::setOnKeyFunction(funcPtr0 pFunction) {
    // Set the onKeyFunction for all of the single-line inputs
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setOnKeyFunction(pFunction);
+   for (const auto& input : mInputs) {
+      input->setOnKeyFunction(pFunction);
    }
 } // setOnKeyFunction
 
 void cxMultiLineInput::toggleOnKeyFunction(bool pRunOnKeyFunction) {
    // Toggle the onKey function for all of the single-line inputs
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->toggleOnKeyFunction(pRunOnKeyFunction);
+   for (const auto& input : mInputs) {
+      input->toggleOnKeyFunction(pRunOnKeyFunction);
    }
 } // toggleOnKeyFunction
 
 void cxMultiLineInput::clearOnKeyFunction() {
    // Clear the onKey function for all of the single-line inputs
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->clearOnKeyFunction();
+   for (const auto& input : mInputs) {
+      input->clearOnKeyFunction();
    }
 } // clearOnKeyFunction
 
@@ -1389,9 +1389,8 @@ bool cxMultiLineInput::enterAlwaysExits() const {
 int cxMultiLineInput::maxValueLen() const {
    int maxLen = 0;
 
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      maxLen += (*iter)->maxValueLen();
+   for (const auto& input : mInputs) {
+      maxLen += input->maxValueLen();
    }
 
    return(maxLen);
@@ -1403,9 +1402,8 @@ bool cxMultiLineInput::hasFocus() const {
    // Go through mInputs, and if any of them has
    //  focus, that means this multiLineInput has
    //  focus.
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      focus = (*iter)->hasFocus();
+   for (const auto& input : mInputs) {
+      focus = input->hasFocus();
       if (focus) {
          break;
       }
@@ -1431,9 +1429,8 @@ bool cxMultiLineInput::canBeEditable() const {
 } // canBeEditable
 
 void cxMultiLineInput::setCanBeEditable(bool pCanBeEditable) {
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setCanBeEditable(pCanBeEditable);
+   for (const auto& input : mInputs) {
+      input->setCanBeEditable(pCanBeEditable);
    }
 } // setCanBeEditable
 
@@ -1501,9 +1498,8 @@ void cxMultiLineInput::bringToTop(bool pRefresh) {
    // Bring the multi-line input window to the top
    cxWindow::bringToTop(false);
    // Bring the single-line inputs to the top
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->bringToTop(false);
+   for (const auto& input : mInputs) {
+      input->bringToTop(false);
    }
 
    if (pRefresh) {
@@ -1512,17 +1508,15 @@ void cxMultiLineInput::bringToTop(bool pRefresh) {
 } // bringToTop
 
 void cxMultiLineInput::refreshValue(bool pRefresh) {
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->refreshValue(pRefresh);
+   for (const auto& input : mInputs) {
+      input->refreshValue(pRefresh);
    }
 } // refreshValue
 
 void cxMultiLineInput::trapNonAssignedFKeys(bool pTrapNonAssignedFKeys) {
    // Set this for all inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->trapNonAssignedFKeys(pTrapNonAssignedFKeys);
+   for (const auto& input : mInputs) {
+      input->trapNonAssignedFKeys(pTrapNonAssignedFKeys);
    }
 } // trapNonAssignedFKeys
 
@@ -1571,9 +1565,8 @@ void cxMultiLineInput::runFieldFunction(int pKey) {
 int cxMultiLineInput::getInputLen() const {
    int inputLen = 0;
 
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      inputLen += (*iter)->getInputLen();
+   for (const auto& input : mInputs) {
+      inputLen += input->getInputLen();
    }
 
    return(inputLen);
@@ -1584,10 +1577,9 @@ bool cxMultiLineInput::addQuitKey(int pKey, bool pRunOnLeaveFunction, bool pOver
    //  list of exit keys
    bool added = cxWindow::addQuitKey(pKey, pRunOnLeaveFunction, pOverride);
    if (added) {
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
+      for (const auto& input : mInputs) {
          // Note: Purposefully passing false for the inputs' pRunOnLeaveFunction.
-         (*iter)->addQuitKey(pKey, false, pOverride);
+         input->addQuitKey(pKey, false, pOverride);
       }
    }
 
@@ -1598,9 +1590,8 @@ void cxMultiLineInput::removeQuitKey(int pKey) {
    mQuitKeys.erase(pKey);
    // Remove the key from each single-line input's
    //  list of exit keys.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->removeQuitKey(pKey);
+   for (const auto& input : mInputs) {
+      input->removeQuitKey(pKey);
    }
 } // removeQuitKey
 
@@ -1609,10 +1600,9 @@ bool cxMultiLineInput::addExitKey(int pKey, bool pRunOnLeaveFunction,
    // Add the exit key to the single-line inputs' //  list of exit keys
    bool added = cxWindow::addExitKey(pKey, pRunOnLeaveFunction, pOverride);
    if (added) {
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
+      for (const auto& input : mInputs) {
          // Note: Purposefully passing false for the inputs' pRunOnLeaveFunction.
-         (*iter)->addExitKey(pKey, false, pOverride);
+         input->addExitKey(pKey, false, pOverride);
       }
    }
 
@@ -1623,9 +1613,8 @@ void cxMultiLineInput::removeExitKey(int pKey) {
    mExitKeys.erase(pKey);
    // Remove the key from each single-line input's
    //  list of exit keys.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->removeExitKey(pKey);
+   for (const auto& input : mInputs) {
+      input->removeExitKey(pKey);
    }
 } // removeExitKey
 
@@ -1660,9 +1649,8 @@ void cxMultiLineInput::setAutoWrapAtBeginning(bool pWrapAtBeginning) {
    //  to set whether the cursor should be placed after the
    //  text in each single-line input.  This value should be
    //  the opposite of pWrapAtBeginning.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setCursorLeftAlign(pWrapAtBeginning);
+   for (const auto& input : mInputs) {
+      input->setCursorLeftAlign(pWrapAtBeginning);
    }
 } // setAutoWrapAtBeginning
 
@@ -1676,9 +1664,8 @@ void cxMultiLineInput::setSkipIfReadOnly(bool pSkipIfReadOnly) {
 
 void cxMultiLineInput::setDisableCursorOnShow(bool pDisableCursorOnShow) {
    cxWindow::setDisableCursorOnShow(pDisableCursorOnShow);
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setDisableCursorOnShow(pDisableCursorOnShow);
+   for (const auto& input : mInputs) {
+      input->setDisableCursorOnShow(pDisableCursorOnShow);
    }
 } // setDisableCursorOnShow
 
@@ -1711,9 +1698,8 @@ void cxMultiLineInput::setEnabled(bool pEnabled) {
    // Enable/disable this window, and enable/disable all the single-line
    //  inputs.
    cxWindow::setEnabled(pEnabled);
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setEnabled(pEnabled);
+   for (const auto& input : mInputs) {
+      input->setEnabled(pEnabled);
    }
    mDoInputLoop = pEnabled;
 
@@ -1741,9 +1727,8 @@ void cxMultiLineInput::quitNow(bool pMoveForward) {
 
 void cxMultiLineInput::quitNow() {
    cxWindow::quitNow();
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->quitNow();
+   for (const auto& input : mInputs) {
+      input->quitNow();
    }
 } // quitNow
 
@@ -1767,9 +1752,8 @@ void cxMultiLineInput::exitNow(bool pMoveForward) {
 
 void cxMultiLineInput::exitNow() {
    cxWindow::exitNow();
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->exitNow();
+   for (const auto& input : mInputs) {
+      input->exitNow();
    }
 } // exitNow
 
@@ -1801,33 +1785,29 @@ bool cxMultiLineInput::ranFunctionAndShouldExit() const {
 
 void cxMultiLineInput::addAttr(e_WidgetItems pItem, attr_t pAttr) {
    // Add the attribute to all the single-line inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->addAttr(pItem, pAttr);
+   for (const auto& input : mInputs) {
+      input->addAttr(pItem, pAttr);
    }
 } // addAttr
 
 void cxMultiLineInput::setAttr(e_WidgetItems pItem, attr_t pAttr) {
    // Set the attribute to all the single-line inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setAttr(pItem, pAttr);
+   for (const auto& input : mInputs) {
+      input->setAttr(pItem, pAttr);
    }
 } // setAttr
 
 void cxMultiLineInput::removeAttr(e_WidgetItems pItem, attr_t pAttr) {
    // Remove the attribute from all the single-line inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->removeAttr(pItem, pAttr);
+   for (const auto& input : mInputs) {
+      input->removeAttr(pItem, pAttr);
    }
 } // removeAttr
 
 void cxMultiLineInput::removeAttrs(e_WidgetItems pItem) {
    // Remove the attributes from all the single-line inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->removeAttrs(pItem);
+   for (const auto& input : mInputs) {
+      input->removeAttrs(pItem);
    }
 } // removeAttrs
 
@@ -1905,12 +1885,11 @@ void cxMultiLineInput::getNavKeys(set<int>& pNavKeys) const {
 } // getNavKeys
 
 void cxMultiLineInput::setTimeout(int pTimeout) {
-   for (std::shared_ptr<cxInput> input : mInputs)
+   for (const auto& input : mInputs)
       input->setTimeout(pTimeout);
    /*
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setTimeout(pTimeout);
+   for (const auto& input : mInputs) {
+      input->setTimeout(pTimeout);
    }
    */
 } // setTimeout
@@ -2137,7 +2116,7 @@ bool cxMultiLineInput::usingBuiltInOnKeyFunction() const {
 
    // Look at the first input's mOnKeyFunction (it should be the same for all
    // inputs)
-   std::shared_ptr<cxFunction> onKeyFunc = mInputs[0]->mOnKeyFunction;
+   shared_ptr<cxFunction> onKeyFunc = mInputs[0]->mOnKeyFunction;
    if (onKeyFunc != nullptr) {
       if (onKeyFunc->cxTypeStr() == "cxFunction2") {
          try {
@@ -2165,9 +2144,8 @@ bool cxMultiLineInput::validatorFuncMessageBox() const {
 void cxMultiLineInput::addValidOptions(const string& pValidOptions,
                                        bool pValidate) {
    // Add each character as a separate valid input string.
-   string::const_iterator iter = pValidOptions.begin();
-   for (; iter != pValidOptions.end(); ++iter) {
-      mValidOptionStrings[string(1, *iter)] = "";
+   for (const char& optionChar : pValidOptions) {
+      mValidOptionStrings[string(1, optionChar)] = "";
    }
 
    if (pValidate) {
@@ -2231,20 +2209,18 @@ void cxMultiLineInput::getValidOptionStrings(set<string>& pValidOptionStrings) c
    pValidOptionStrings.clear();
 
    // Add just the valid input strings from mValidOptions
-   map<string, string>::const_iterator iter = mValidOptionStrings.begin();
-   for (; iter != mValidOptionStrings.end(); ++iter) {
-      pValidOptionStrings.insert(iter->first);
+   for (const auto& optionStrPair : mValidOptionStrings) {
+      pValidOptionStrings.insert(optionStrPair.first);
    }
 } // getValidOptionStrings
 
 string cxMultiLineInput::getValidOptionStrings(const eMLIF& pMLIF) const {
    string retval;
    if (mValidOptionStrings.size() > 0) {
-      map<string, string>::const_iterator iter = mValidOptionStrings.begin();
-      for (; iter != mValidOptionStrings.end(); ++iter) {
-         retval += iter->first;
+      for (const auto& optionStrPair : mValidOptionStrings) {
+         retval += optionStrPair.first;
          if (pMLIF == eMLIF_COMMA_SEP_WITH_DESC) {
-            retval += "=" + iter->second;
+            retval += "=" + optionStrPair.second;
          }
          retval += ",";
          // add a space between the values
@@ -2297,25 +2273,24 @@ bool cxMultiLineInput::autoFillFromValidOptions(bool pRefresh) {
          //  is found in all matches.
          string value = getValue();
          int numMatches = 0;
-         map<string, string>::iterator iter = mValidOptionStrings.begin();
-         for (; iter != mValidOptionStrings.end(); ++iter) {
-            if (Find(iter->first, "^" + value)) {
+         for (const auto& optionStrPair : mValidOptionStrings) {
+            if (Find(optionStrPair.first, "^" + value)) {
                ++numMatches;
             }
             // If this is an exact match, then set retval to true.
-            if (iter->first == value) {
+            if (optionStrPair.first == value) {
                retval = true;
             }
          }
 
-         for (iter = mValidOptionStrings.begin(); iter != mValidOptionStrings.end(); ++iter) {
-            if (Find(iter->first, "^" + value)) {
+         for (const auto& optionStrPair : mValidOptionStrings) {
+            if (Find(optionStrPair.first, "^" + value)) {
                // If there is only one match, then use this one (this must be
                //  it).  But only if it was not a complete match (retval
                //  = false).
                if (numMatches == 1) {
                   if (!retval) {
-                     setValue(iter->first, pRefresh);
+                     setValue(optionStrPair.first, pRefresh);
                   }
                   break;
                }
@@ -2340,9 +2315,8 @@ bool cxMultiLineInput::autoFillFromValidOptions(bool pRefresh) {
 
 void cxMultiLineInput::setForceUpper(bool pForceUpper) {
    // Set it in all the single-line inputs.
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setForceUpper(pForceUpper);
+   for (const auto& input : mInputs) {
+      input->setForceUpper(pForceUpper);
    }
 } // forceUpper
 
@@ -2410,9 +2384,8 @@ void cxMultiLineInput::addExtendedHelpKey(int pKey) {
    // If mUseExtendedHelpKeys is true, then add the key as an exit key to all
    //  the single-line inputs.
    if (mUseExtendedHelpKeys) {
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->addExitKey(pKey, false, true);
+      for (const auto& input : mInputs) {
+         input->addExitKey(pKey, false, true);
       }
    }
 } // addExtendedHelpKey
@@ -2423,12 +2396,9 @@ void cxMultiLineInput::setExtendedHelpKeys(const set<int>& pKeys) {
    // If mUseExtendedHelpKeys is true, then add each key as an exit key to all
    //  the single-line inputs.
    if (mUseExtendedHelpKeys) {
-      set<int>::iterator setIter;
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         for (setIter = mExtendedHelpKeys.begin();
-              setIter != mExtendedHelpKeys.end(); ++setIter) {
-            (*iter)->addExitKey(*setIter, false, true);
+      for (const auto& input : mInputs) {
+         for (int helpKey : mExtendedHelpKeys) {
+            input->addExitKey(helpKey, false, true);
          }
       }
    }
@@ -2441,10 +2411,9 @@ set<int> cxMultiLineInput::getExtendedHelpKeys() const {
 string cxMultiLineInput::getExtendedHelpKeyStrings() const {
    string retval;
 
-   set<int>::iterator iter = mExtendedHelpKeys.begin();
-   for (; iter != mExtendedHelpKeys.end(); ++iter) {
+   for (int helpKey : mExtendedHelpKeys) {
       if (retval != "") { retval += ","; }
-      retval += cxBase::getKeyStr(*iter);
+      retval += cxBase::getKeyStr(helpKey);
    }
 
    return(retval);
@@ -2452,13 +2421,10 @@ string cxMultiLineInput::getExtendedHelpKeyStrings() const {
 
 void cxMultiLineInput::clearExtendedHelpKeys() {
    // Remove all extended help keys from the single-line inputs' lists of exit
-   //  keys.
-   set<int>::iterator setIter;
-   cxInputPtrContainer::iterator inputIter = mInputs.begin();
-   for (; inputIter != mInputs.end(); ++inputIter) {
-      for (setIter = mExtendedHelpKeys.begin();
-           setIter != mExtendedHelpKeys.end(); ++setIter) {
-         (*inputIter)->removeExitKey(*setIter);
+   // keys.
+   for (const auto& input : mInputs) {
+      for (int helpKey : mExtendedHelpKeys) {
+         input->removeExitKey(helpKey);
       }
    }
 
@@ -2473,20 +2439,17 @@ void cxMultiLineInput::setUseExtendedHelpKeys(bool pUseExtendedHelpKeys) {
       //  each single-line input as an exit key.  If mUseExtendedHelpKeys is
       //  false, then remove the keys from each input's list of exit keys.
       set<int>::iterator setIter;
-      cxInputPtrContainer::iterator inputIter = mInputs.begin();
       if (mUseExtendedHelpKeys) {
-         for (; inputIter != mInputs.end(); ++inputIter) {
-            for (setIter = mExtendedHelpKeys.begin();
-                 setIter != mExtendedHelpKeys.end(); ++setIter) {
-               (*inputIter)->addExitKey(*setIter);
+         for (const auto& input : mInputs) {
+            for (int helpKey : mExtendedHelpKeys) {
+               input->addExitKey(helpKey);
             }
          }
       }
       else {
-         for (; inputIter != mInputs.end(); ++inputIter) {
-            for (setIter = mExtendedHelpKeys.begin();
-                 setIter != mExtendedHelpKeys.end(); ++setIter) {
-               (*inputIter)->removeExitKey(*setIter);
+         for (const auto& input : mInputs) {
+            for (int helpKey : mExtendedHelpKeys) {
+               input->removeExitKey(helpKey);
             }
          }
       }
@@ -2597,14 +2560,13 @@ void cxMultiLineInput::setMaxInputLength(int pLength) {
       mMaxInputLength = pLength;
       // Spread the length across all the single-line inputs
       int length = pLength;
-      cxInputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         if (length >= (*iter)->maxValueLen()) {
-            (*iter)->setMaxInputLength((*iter)->maxValueLen());
-            length -= (*iter)->maxValueLen();
+      for (const auto& input : mInputs) {
+         if (length >= input->maxValueLen()) {
+            input->setMaxInputLength(input->maxValueLen());
+            length -= input->maxValueLen();
          }
          else {
-            (*iter)->setMaxInputLength(length);
+            input->setMaxInputLength(length);
             length = 0; // We've used up all the length
          }
       }
@@ -2710,7 +2672,7 @@ void cxMultiLineInput::copyCxMultiLineInputStuff(const cxMultiLineInput *pThatIn
       mRightLabel.setEnabled(pThatInput->mRightLabel.isEnabled());
 
       // Copy the other input's single-line inputs
-      for (std::shared_ptr<cxInput> input : mInputs) {
+      for (auto& input : mInputs) {
          shared_ptr<cxInput> myInput = make_shared<cxInput>(*input, this);
          if (mUseExtendedHelpKeys) {
             for (int helpKey : mExtendedHelpKeys) {
@@ -3048,7 +3010,7 @@ bool cxMultiLineInput::searchParentFormsForFKey(int pKey,
 } // searchParentFormsForFKey
 
 void cxMultiLineInput::freeInputs() {
-   for (std::shared_ptr<cxInput> input : mInputs)
+   for (auto& input : mInputs)
       input.reset();
    mInputs.clear();
 } // freeInputs
@@ -3106,17 +3068,15 @@ bool cxMultiLineInput::handleFunctionForLastKey(bool *pFunctionExists,
 
 void cxMultiLineInput::enableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    // Enable the attributes on all single-line inputs.
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->enableAttrs((*iter)->mWindow, pItem);
+   for (const auto& input : mInputs) {
+      input->enableAttrs(input->mWindow, pItem);
    }
 } // enableAttrs
 
 void cxMultiLineInput::disableAttrs(WINDOW *pWin, e_WidgetItems pItem) {
    // Disable the attributes on all single-line inputs.
-   cxInputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->disableAttrs((*iter)->mWindow, pItem);
+   for (const auto& input : mInputs) {
+      input->disableAttrs(input->mWindow, pItem);
    }
 } // disableAttrs
 
@@ -3141,9 +3101,8 @@ void cxMultiLineInput::draw() {
    }
 
    // Draw all the single-line inputs
-   cxInputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->draw();
+   for (const auto& input : mInputs) {
+      input->draw();
    }
 } // draw
 
@@ -3153,51 +3112,50 @@ bool cxMultiLineInput::scrDiff() {
    // Draw the input text (but don't show it yet)
    draw();
    // Grab what's on the screen and compare it to what's drawn in the
-   //  input window..  If there is a difference, then show what is drawn
-   //  in this input.
+   // input window..  If there is a difference, then show what is drawn
+   // in this input.
    // Populate a collection of lines currently on the physical screen.  Each
-   //  element is a pair, storing the number of characters and the line.
-   vector<pair<int, chtype*> > screenLines;
+   // element is a pair, storing the number of characters and the line.
+
+
+   vector<pair<int, unique_ptr<chtype[]>>> screenLines;
    for (int line = 0; line < height(); ++line) {
-      chtype *buffer = (chtype*)calloc(width()+1, sizeof(chtype));
-      int numChars = mvwinchnstr(stdscr, top()+line, left(), buffer, width());
-      screenLines.push_back(make_pair(numChars, buffer));
+      unique_ptr<chtype[]> buffer = make_unique<chtype[]>(width()+1);
+      int numChars = mvwinchnstr(stdscr, top()+line, left(), buffer.get(), width());
+      screenLines.push_back(make_pair(numChars, std::move(buffer)));
    }
    // Populate a collection of lines in the member window
-   vector<pair<int, chtype*> > memberLines;
+   vector<pair<int, unique_ptr<chtype[]> > > memberLines;
    int inputHeight = height();
    for (int line = 0; line < inputHeight; ++line) {
-      chtype *buffer = (chtype*)calloc(width()+1, sizeof(chtype));
-      int numChars = mvwinchnstr(mWindow, line, 0, buffer, width());
+      unique_ptr<chtype[]> buffer = make_unique<chtype[]>(width()+1);
+      int numChars = mvwinchnstr(mWindow, line, 0, buffer.get(), width());
       // We also have to deal with the fact that each single-line input is
-      //  its own separate window..  If there is a border, then we'll have to
-      //  separately grab its characters, between the borders; If there are
-      //  no borders, it will be a little easier.
+      // its own separate window..  If there is a border, then we'll have to
+      // separately grab its characters, between the borders; If there are
+      // no borders, it will be a little easier.
       if (getBorderStyle() != eBS_NOBORDER) {
          // There is a border.  If the current line# is within the top & bottom
-         //  borders, then grab the text of the single-line input at that
-         //  point.  Otherwise, grab the text in the multiLineInput window at
-         //  that point (which will be a border line).
+         // borders, then grab the text of the single-line input at that
+         // point.  Otherwise, grab the text in the multiLineInput window at
+         // that point (which will be a border line).
          if ((line > 0) && (line < inputHeight-1)) {
-            chtype *buffer2 = (chtype*)calloc(mInputs[line-1]->width()+1, sizeof(chtype));
-            int inputChars = mvwinchnstr(mInputs[line-1]->mWindow, 0, 0, buffer2,
-                  mInputs[line-1]->width());
+            unique_ptr buffer2 = make_unique<chtype[]>(mInputs[line-1]->width()+1);
+            int inputChars = mvwinchnstr(mInputs[line-1]->mWindow, 0, 0, buffer2.get(), mInputs[line-1]->width());
             for (int ch = 0; ch < inputChars; ++ch) {
                buffer[ch+1] = buffer2[ch];
             }
-            // Free the memory used by buffer2
-            free(buffer2);
          }
          else {
-            numChars = mvwinchnstr(mWindow, line, 0, buffer, width());
+            numChars = mvwinchnstr(mWindow, line, 0, buffer.get(), width());
          }
       }
       else {
          // There is no border - Grab the text of the single-line input at
          //  this location.
-         numChars = mvwinchnstr(mInputs[line]->mWindow, 0, 0, buffer, width());
+         numChars = mvwinchnstr(mInputs[line]->mWindow, 0, 0, buffer.get(), width());
       }
-      memberLines.push_back(make_pair(numChars, buffer));
+      memberLines.push_back(make_pair(numChars, std::move(buffer)));
    }
    // See if there's a difference in the member window vs. screen
    if (screenLines.size() == memberLines.size()) {
@@ -3208,8 +3166,8 @@ bool cxMultiLineInput::scrDiff() {
          // Compare each character if the number of characters in each
          //  line is the same
          if (screenLines[line].first == memberLines[line].first) {
-            screenBuffer = screenLines[line].second;
-            memberBuffer = memberLines[line].second;
+            screenBuffer = screenLines[line].second.get();
+            memberBuffer = memberLines[line].second.get();
             int lineLength = screenLines[line].first;
             for (int ch = 0; ch < lineLength; ++ch) {
                if (screenBuffer[ch] != memberBuffer[ch]) {
@@ -3229,16 +3187,6 @@ bool cxMultiLineInput::scrDiff() {
    }
    else {
       difference = true;
-   }
-
-   // Free the memory used by the lines in the collections
-   vector<pair<int, chtype*> >::iterator iter = screenLines.begin();
-   for (; iter != screenLines.end(); ++iter) {
-      free(iter->second);
-   }
-   iter = memberLines.begin();
-   for (; iter != memberLines.end(); ++iter) {
-      free(iter->second);
    }
 
    return(difference);
@@ -3344,12 +3292,11 @@ string cxMultiLineInput::onKeypressStatic(void *theInput, void *unused) {
 void cxMultiLineInput::generateExtendedHelp() {
    if (mValidOptionStrings.size() > 0) {
       mExtendedHelp = "";
-      map<string, string>::iterator iter = mValidOptionStrings.begin();
-      for (; iter != mValidOptionStrings.end(); ++iter) {
+      for (const auto& strPair : mValidOptionStrings) {
          if (mExtendedHelp != "") {
             mExtendedHelp += ", ";
          }
-         mExtendedHelp += iter->first + ": " + iter->second;
+         mExtendedHelp = strPair.first + ": " + strPair.second;
       }
    }
 } // generateExtendedHelp

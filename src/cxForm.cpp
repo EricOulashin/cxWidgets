@@ -732,9 +732,8 @@ void cxForm::append(shared_ptr<cxMultiLineInput>& pInput, int pRow, int pCol, bo
    if (pInput != nullptr) {
       // Only append the input if it isn't already in mInputs.
       bool alreadyExists = false;
-      inputPtrContainer::const_iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter) == pInput) {
+      for (const auto& input : mInputs) {
+         if (input == pInput) {
             alreadyExists = true;
             break;
          }
@@ -967,20 +966,19 @@ void cxForm::setFieldKeyFunction(const string& pLabel, int pFunctionKey,
                               bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2, p3, p4,
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2, p3, p4,
                                       pUseVal, pExitAfterRun);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2, p3, p4,
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2, p3, p4,
                                       pUseVal, pExitAfterRun);
          }
       }
@@ -1004,20 +1002,19 @@ void cxForm::setFieldKeyFunction(const string& pLabel, int pFunctionKey,
                               bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2,
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2,
                                       pUseVal, pExitAfterRun);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2,
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2,
                                       pUseVal, pExitAfterRun);
          }
       }
@@ -1033,24 +1030,52 @@ void cxForm::setFieldKeyFunction(unsigned pIndex, int pFunctionKey, funcPtr2 pFi
    }
 }
 
+void cxForm::setOnFocusFunction(const string& pLabel,
+                           const shared_ptr<cxFunction>& pFunction,
+                           bool pIsLabel)
+{
+   // If there are multiple inputs with the same label/name, all of them
+   //  will be affected.
+   if (pIsLabel) {
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnFocusFunction(pFunction);
+         }
+      }
+   }
+   else {
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnFocusFunction(pFunction);
+         }
+      }
+   }
+} // setOnFocusFunction
+
+void cxForm::setOnFocusFunction(unsigned pIndex, const shared_ptr<cxFunction>& pFunction) {
+   if ((pIndex >= 0) && (pIndex < mInputs.size())) {
+      mInputs[pIndex]->setOnFocusFunction(pFunction);
+   }
+} // setOnFocusFunction
+
 void cxForm::setOnFocusFunction(const string& pLabel, funcPtr4 pFunction, void *p1,
                                 void *p2, void *p3, void *p4, bool pUseVal,
                                 bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getLabel() == pLabel ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setOnFocusFunction(pFunction, p1, p2, p3, p4, pUseVal);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnFocusFunction(pFunction, p1, p2, p3, p4, pUseVal);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setOnFocusFunction(pFunction, p1, p2, p3, p4, pUseVal);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnFocusFunction(pFunction, p1, p2, p3, p4, pUseVal);
          }
       }
    }
@@ -1062,23 +1087,49 @@ void cxForm::setOnFocusFunction(unsigned pIndex, funcPtr4 pFunction, void *p1, v
    }
 } // setOnFocusFunction
 
-void cxForm::setOnLeaveFunction(const string& pLabel, funcPtr4 pFunction, void *p1,
-                                void *p2, void *p3, void *p4, bool pIsLabel) {
+void cxForm::setOnLeaveFunction(const string& pLabel, const shared_ptr<cxFunction>& pFunction,
+                                bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setOnLeaveFunction(pFunction, p1, p2, p3, p4);
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnLeaveFunction(pFunction);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setOnLeaveFunction(pFunction, p1, p2, p3, p4);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnLeaveFunction(pFunction);
+         }
+      }
+   }
+} // setOnLeaveFunction
+
+void cxForm::setOnLeaveFunction(unsigned pIndex, const shared_ptr<cxFunction>& pFunction) {
+   if ((pIndex >= 0) && (pIndex < mInputs.size())) {
+      mInputs[pIndex]->setOnLeaveFunction(pFunction);
+   }
+} // setOneLeaveFunction
+
+void cxForm::setOnLeaveFunction(const string& pLabel, funcPtr4 pFunction, void *p1,
+                                void *p2, void *p3, void *p4, bool pIsLabel) {
+   // If there are multiple inputs with the same label/name, all of them
+   //  will be affected.
+   if (pIsLabel) {
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnLeaveFunction(pFunction, p1, p2, p3, p4);
+         }
+      }
+   }
+   else {
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnLeaveFunction(pFunction, p1, p2, p3, p4);
          }
       }
    }
@@ -1097,10 +1148,9 @@ void cxForm::setFieldLabel(unsigned pIndex, const string& pLabel) {
 } // setFieldLabel
 
 void cxForm::setFieldLabel(const string& pName, const string& pLabel) {
-   inputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      if ((*iter)->getName() == pName) {
-         (*iter)->setLabel(pLabel);
+   for (const auto& input : mInputs) {
+      if (input->getName() == pName) {
+         input->setLabel(pLabel);
       }
    }
 } // setFieldLabel
@@ -1112,10 +1162,9 @@ void cxForm::setFieldName(unsigned pIndex, const string& pName) {
 } // setFieldName
 
 void cxForm::setFieldName(const string& pLabel, const string& pName) {
-   inputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      if ((*iter)->getLabel() == pLabel) {
-         (*iter)->setName(pName);
+   for (const auto& input : mInputs) {
+      if (input->getLabel() == pLabel) {
+         input->setName(pName);
       }
    }
 } // setFieldName
@@ -1123,19 +1172,18 @@ void cxForm::setFieldName(const string& pLabel, const string& pName) {
 void cxForm::enableInputLoop(const string& pLabel, bool pDoInputLoop, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->enableInputLoop(pDoInputLoop);
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->enableInputLoop(pDoInputLoop);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->enableInputLoop(pDoInputLoop);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->enableInputLoop(pDoInputLoop);
          }
       }
    }
@@ -1258,9 +1306,8 @@ void cxForm::hide(bool pHideSubwindows) {
    // Hide the main window
    cxWindow::hide(pHideSubwindows);
    // Hide the inputs
-   inputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->hide(false);
+   for (const auto& input : mInputs) {
+      input->hide(false);
    }
 } // hide
 
@@ -1270,17 +1317,16 @@ void cxForm::unhide(bool pUnhideSubwindows) {
    if (isEnabled()) {
       cxWindow::unhide(pUnhideSubwindows);
 
-      inputPtrContainer::iterator iter;
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
+      for (const auto& input : mInputs) {
          // If the form hasn't been shown yet, then the inputs wouldn't have
          //  been shown..  So tell the input to show itself, to make sure that
          //  text has been written into the input window before it gets shown.
          if (!mHasBeenShown) {
-            (*iter)->show(false, false);
+            input->show(false, false);
          }
          // TODO:  experiment!!!
          else {
-            (*iter)->unhide(pUnhideSubwindows);
+            input->unhide(pUnhideSubwindows);
          }
       }
    }
@@ -1373,19 +1419,17 @@ string cxForm::getValue(const string& pStr, bool pIsLabel) const {
    //  matching label/name, and if found, return the
    //  input's value.
    if (pIsLabel) {
-      inputPtrContainer::const_iterator iter;
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pStr) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pStr)) {
-            return((*iter)->getValue());
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pStr) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pStr)) {
+            return(input->getValue());
          }
       }
    }
    else {
-      inputPtrContainer::const_iterator iter;
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pStr) {
-            return((*iter)->getValue());
+      for (const auto& input : mInputs) {
+         if (input->getName() == pStr) {
+            return(input->getValue());
          }
       }
    }
@@ -1418,10 +1462,9 @@ string cxForm::getName(int pIndex) const {
 string cxForm::getName(const string& pLabel) const {
    string name;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      if ((*iter)->getLabel() == pLabel) {
-         name = (*iter)->getName();
+   for (const auto& input : mInputs) {
+      if (input->getLabel() == pLabel) {
+         name = input->getName();
          break;
       }
    }
@@ -1442,19 +1485,18 @@ string cxForm::getStatus(int pIndex) const {
 string cxForm::getStatus(const string& pLabel, bool pIsLabel) const {
    string status;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            status = (*iter)->getStatus();
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            status = input->getStatus();
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            status = (*iter)->getStatus();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            status = input->getStatus();
          }
       }
    }
@@ -1524,21 +1566,20 @@ int cxForm::refreshInput(unsigned pIndex) {
 int cxForm::refreshInput(const string& pStr, bool pIsLabel) {
    int returnVal = 0;
 
-   inputPtrContainer::iterator iter;
    // Check the input labels or names, depending on the
    //  value of pIsLabel.
    if (pIsLabel) {
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pStr) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pStr)) {
-            (*iter)->show(true, false);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pStr ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pStr)) {
+            input->show(true, false);
          }
       }
    }
    else {
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pStr) {
-            (*iter)->show(true, false);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pStr) {
+            input->show(true, false);
          }
       }
    }
@@ -1565,20 +1606,19 @@ bool cxForm::setMaskChar(const string& pLabel, char pMaskChar, bool pIsLabel) {
 
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setMaskChar(pMaskChar);
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setMaskChar(pMaskChar);
             returnVal = true;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setMaskChar(pMaskChar);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setMaskChar(pMaskChar);
             returnVal = true;
          }
       }
@@ -1601,10 +1641,10 @@ bool cxForm::getMasked(const string& pLabel, bool pIsLabel) {
    bool masked = false;
 
    inputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      if (((*iter)->getLabel() == pLabel) ||
-          (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-         masked = (*iter)->getMasked();
+   for (const auto& input : mInputs) {
+      if ((input->getLabel() == pLabel) ||
+          (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+         masked = input->getMasked();
          break;
       }
    }
@@ -1626,21 +1666,20 @@ bool cxForm::toggleMasking(int pIndex, bool pMasking) {
 bool cxForm::toggleMasking(const string& pLabel, bool pMasking, bool pIsLabel) {
    bool returnVal = false;
 
-   inputPtrContainer::iterator iter = mInputs.begin();
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getLabel() == pLabel) {
-            (*iter)->toggleMasking(pMasking);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel) {
+            input->toggleMasking(pMasking);
             returnVal = true;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->toggleMasking(pMasking);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->toggleMasking(pMasking);
             returnVal = true;
          }
       }
@@ -1734,6 +1773,25 @@ bool cxForm::setCurrentInputByPtr(const cxMultiLineInput* const pInput) {
    return(retval);
 } // setCurrentInputByPtr
 
+bool cxForm::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) {
+   bool setIt = cxForm::setKeyFunction(pKey, pFunction);
+   if (setIt) {
+      // Add the key to each input's list of keys that exit its input loop.
+      // Note that this passes (pKey, false, true) to the input -
+      // the false is so that the input does not run its onLeave function
+      // when it exits, and the true is to make sure that the exit key gets
+      // set.
+      for (const auto& input : mInputs) {
+         input->addExitKey(pKey, false, true);
+      }
+      // Make sure the key doesn't exist in the quitKey and exitKey lists.
+      removeQuitKey(pKey);
+      removeExitKey(pKey);
+   }
+
+   return(setIt);
+} // setKeyFunction
+
 bool cxForm::setKeyFunction(int pKey, funcPtr4 pFunction,
                             void *p1, void *p2, void *p3, void *p4,
                             bool pUseReturnVal, bool pExitAfterRun,
@@ -1743,13 +1801,12 @@ bool cxForm::setKeyFunction(int pKey, funcPtr4 pFunction,
                            pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each input's list of keys that exit its input loop.
-      //  Note that this passes (pKey, false, true) to the input -
-      //  the false is so that the input does not run its onLeave function
-      //  when it exits, and the true is to make sure that the exit key gets
-      //  set.
-      inputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->addExitKey(pKey, false, true);
+      // Note that this passes (pKey, false, true) to the input -
+      // the false is so that the input does not run its onLeave function
+      // when it exits, and the true is to make sure that the exit key gets
+      // set.
+      for (const auto& input : mInputs) {
+         input->addExitKey(pKey, false, true);
       }
       // Make sure the key doesn't exist in the quitKey and exitKey lists.
       removeQuitKey(pKey);
@@ -1770,9 +1827,8 @@ bool cxForm::setKeyFunction(int pKey, funcPtr2 pFunction,
       //  the false is so that the input does not run its onLeave function
       //  when it exits, and the true is to make sure that the exit key gets
       //  set.
-      inputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->addExitKey(pKey, false, true);
+      for (const auto& input : mInputs) {
+         input->addExitKey(pKey, false, true);
       }
 
       // Make sure the key doesn't exist in the quitKey and exitKey lists.
@@ -1791,18 +1847,49 @@ bool cxForm::setKeyFunction(int pKey, funcPtr0 pFunction,
                            pUseReturnVal, pExitAfterRun, pRunOnLeaveFunction);
    if (setIt) {
       // Add the key to each input's list of keys that exit its input loop.
-      //  Note that this passes (pKey, false, true) to the input -
-      //  the false is so that the input does not run its onLeave function
-      //  when it exits, and the true is to make sure that the exit key gets
-      //  set.
-      inputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->addExitKey(pKey, false, true);
+      // Note that this passes (pKey, false, true) to the input -
+      // the false is so that the input does not run its onLeave function
+      // when it exits, and the true is to make sure that the exit key gets
+      // set.
+      for (const auto& input : mInputs) {
+         input->addExitKey(pKey, false, true);
       }
 
       // Make sure the key doesn't exist in the quitKey and exitKey lists.
       removeQuitKey(pKey);
       removeExitKey(pKey);
+   }
+
+   return(setIt);
+} // setKeyFunction
+
+bool cxForm::setKeyFunction(int pIndex, int pKey, const shared_ptr<cxFunction>& pFunction) {
+   bool setIt = false;
+   if (pIndex >= 0 && pIndex < (int)(mInputs.size())) {
+      setIt = mInputs[pIndex]->setKeyFunction(pKey, pFunction);
+   }
+
+   return(setIt);
+} // setKeyFunction
+
+bool cxForm::setKeyFunction(const string& pLabel, int pKey, const shared_ptr<cxFunction>& pFunction, bool pIsLabel) {
+   bool setIt = false;
+
+   if (pIsLabel) {
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel) {
+            input->setKeyFunction(pKey, pFunction);
+            setIt = true;
+         }
+      }
+   }
+   else {
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setKeyFunction(pKey, pFunction);
+            setIt = true;
+         }
+      }
    }
 
    return(setIt);
@@ -1815,7 +1902,7 @@ bool cxForm::setKeyFunction(int pIndex, int pKey,
                             bool pRunValidator) {
    bool setIt = false;
 
-   if ((pIndex >= 0) && (pIndex < (int)(mInputs.size()))) {
+   if (pIndex >= 0 && pIndex < (int)(mInputs.size())) {
       setIt = mInputs[pIndex]->setKeyFunction(pKey, pFunction, p1, p2,
                                            p3, p4, pUseVal, pExitAfterRun,
                                            pRunOnLeaveFunction, pRunValidator);
@@ -1831,11 +1918,10 @@ bool cxForm::setKeyFunction(const string& pLabel, int pKey,
                             bool pRunValidator, bool pIsLabel) {
    bool setIt = false;
 
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getLabel() == pLabel) {
-            (*iter)->setKeyFunction(pKey, pFunction, p1, p2, p3, p4,
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel) {
+            input->setKeyFunction(pKey, pFunction, p1, p2, p3, p4,
                                     pUseVal, pExitAfterRun, pRunOnLeaveFunction,
                                     pRunValidator);
             setIt = true;
@@ -1843,9 +1929,9 @@ bool cxForm::setKeyFunction(const string& pLabel, int pKey,
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setKeyFunction(pKey, pFunction, p1, p2, p3, p4,
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setKeyFunction(pKey, pFunction, p1, p2, p3, p4,
                                     pUseVal, pExitAfterRun, pRunOnLeaveFunction,
                                     pRunValidator);
             setIt = true;
@@ -1878,11 +1964,10 @@ bool cxForm::setKeyFunction(const string& pLabel, int pKey,
                             bool pIsLabel) {
    bool setIt = false;
 
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getLabel() == pLabel) {
-            (*iter)->setKeyFunction(pKey, pFunction, p1, p2, pUseVal,
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel) {
+            input->setKeyFunction(pKey, pFunction, p1, p2, pUseVal,
                                     pExitAfterRun, pRunOnLeaveFunction,
                                     pRunValidator);
             setIt = true;
@@ -1890,9 +1975,9 @@ bool cxForm::setKeyFunction(const string& pLabel, int pKey,
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setKeyFunction(pKey, pFunction, p1, p2, pUseVal,
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setKeyFunction(pKey, pFunction, p1, p2, pUseVal,
                                     pExitAfterRun, pRunOnLeaveFunction,
                                     pRunValidator);
             setIt = true;
@@ -1923,20 +2008,19 @@ bool cxForm::setKeyFunction(const string& pLabel, int pKey, funcPtr0 pFunction,
                             bool pIsLabel) {
    bool setIt = false;
 
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getLabel() == pLabel) {
-            setIt = (*iter)->setKeyFunction(pKey, pFunction, pUseVal,
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel) {
+            setIt = input->setKeyFunction(pKey, pFunction, pUseVal,
                                     pExitAfterRun, pRunOnLeaveFunction,
                                     pRunValidator);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            setIt = (*iter)->setKeyFunction(pKey, pFunction, pUseVal,
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            setIt = input->setKeyFunction(pKey, pFunction, pUseVal,
                                     pExitAfterRun, pRunOnLeaveFunction,
                                     pRunValidator);
          }
@@ -1949,9 +2033,8 @@ bool cxForm::setKeyFunction(const string& pLabel, int pKey, funcPtr0 pFunction,
 bool cxForm::allFieldsBlank() const {
    bool allBlank = true;
 
-   inputPtrContainer::const_iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      if ((*iter)->getValue() != "") {
+   for (const auto& input : mInputs) {
+      if (input->getValue() != "") {
          allBlank = false;
          break;
       }
@@ -1969,28 +2052,26 @@ void cxForm::setLabelColor(const int& pIndex, e_cxColors pColor) {
 void cxForm::setLabelColor(const string& pLabel, e_cxColors pColor, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setLabelColor(pColor);
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setLabelColor(pColor);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setLabelColor(pColor);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setLabelColor(pColor);
          }
       }
    }
 } // setLabelColor
 
 void cxForm::setAllLabelColor(e_cxColors pColor) {
-   inputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->setLabelColor(pColor);
+   for (const auto& input : mInputs) {
+      input->setLabelColor(pColor);
    }
 } // setAllLabelColor
 
@@ -2007,20 +2088,19 @@ int cxForm::getLabelColor(const int& pIndex) const {
 int cxForm::getLabelColor(const string& pLabel, bool pIsLabel) const {
    int labelColor = eDEFAULT;
 
-   inputPtrContainer::const_iterator iter;
    if (pIsLabel) {
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            labelColor = (*iter)->getLabelColor();
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            labelColor = input->getLabelColor();
             break;
          }
       }
    }
    else {
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            labelColor = (*iter)->getLabelColor();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            labelColor = input->getLabelColor();
             break;
          }
       }
@@ -2038,28 +2118,26 @@ void cxForm::setValueColor(const int& pIndex, e_cxColors pColor) {
 void cxForm::setValueColor(const string& pLabel, e_cxColors pColor, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setValueColor(pColor);
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setValueColor(pColor);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setValueColor(pColor);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setValueColor(pColor);
          }
       }
    }
 } // setValueColor
 
 void cxForm::setAllValueColor(e_cxColors pColor) {
-   inputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->setValueColor(pColor);
+   for (const auto& input : mInputs) {
+      input->setValueColor(pColor);
    }
 } // setAllValueColor
 
@@ -2076,20 +2154,19 @@ int cxForm::getValueColor(const int& pIndex) const {
 int cxForm::getValueColor(const string& pLabel, bool pIsLabel) const {
    int valueColor = eDEFAULT;
 
-   inputPtrContainer::const_iterator iter;
    if (pIsLabel) {
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            valueColor = (*iter)->getValueColor();
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            valueColor = input->getValueColor();
             break;
          }
       }
    }
    else {
-      for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            valueColor = (*iter)->getValueColor();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            valueColor = input->getValueColor();
             break;
          }
       }
@@ -2099,10 +2176,9 @@ int cxForm::getValueColor(const string& pLabel, bool pIsLabel) const {
 } // getValueColor
 
 void cxForm::setAllColors(e_cxColors pLabelColor, e_cxColors pValueColor) {
-   inputPtrContainer::iterator iter;
-   for (iter = mInputs.begin(); iter != mInputs.end(); ++iter) {
-      (*iter)->setColor(eLABEL, pLabelColor);
-      (*iter)->setColor(eDATA, pValueColor);
+   for (const auto& input : mInputs) {
+      input->setColor(eLABEL, pLabelColor);
+      input->setColor(eDATA, pValueColor);
    }
 } // setAllColors
 
@@ -2112,9 +2188,8 @@ void cxForm::setColor(e_WidgetItems pItem, e_cxColors pColor) {
    if ((pItem == eLABEL) && (pItem == eDATA_READONLY) &&
        (pItem == eDATA_EDITABLE) && (pItem == eDATA)) {
       // Label & value colors - Set these on all inputs on the form
-      inputPtrContainer::iterator iter = mInputs.begin();
-      for (; iter != mInputs.end(); ++iter) {
-         (*iter)->setColor(pItem, pColor);
+      for (const auto& input : mInputs) {
+         input->setColor(pItem, pColor);
       }
    }
    else {
@@ -2135,20 +2210,19 @@ int cxForm::inputTopRow(int pIndex) const {
 int cxForm::inputTopRow(const string& pLabel, bool pIsLabel) const {
    int returnVal = -1;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            returnVal = (*iter)->top();
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            returnVal = input->top();
             break;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            returnVal = (*iter)->top();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            returnVal = input->top();
             break;
          }
       }
@@ -2170,20 +2244,19 @@ int cxForm::inputLeftCol(int pIndex) const {
 int cxForm::inputLeftCol(const string& pLabel, bool pIsLabel) const {
    int returnVal = -1;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            returnVal = (*iter)->left();
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            returnVal = input->left();
             break;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            returnVal = (*iter)->left();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            returnVal = input->left();
             break;
          }
       }
@@ -2205,20 +2278,19 @@ int cxForm::inputHeight(int pIndex) const {
 int cxForm::inputHeight(const string& pLabel, bool pIsLabel) const {
    int returnVal = -1;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            returnVal = (*iter)->height();
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            returnVal = input->height();
             break;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            returnVal = (*iter)->height();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            returnVal = input->height();
             break;
          }
       }
@@ -2240,20 +2312,19 @@ int cxForm::inputWidth(int pIndex) const {
 int cxForm::inputWidth(const string& pLabel, bool pIsLabel) const {
    int returnVal = -1;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            returnVal = (*iter)->width();
+      for (const auto& input : mInputs) {
+         if ((input->getLabel() == pLabel) ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            returnVal = input->width();
             break;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            returnVal = (*iter)->width();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            returnVal = input->width();
             break;
          }
       }
@@ -2275,20 +2346,19 @@ int cxForm::maxInputLen(int pIndex) const {
 int cxForm::maxInputLen(const string& pLabel, bool pIsLabel) const {
    int length = 0;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            length = (*iter)->getInputLen();
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            length = input->getInputLen();
             break;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            length = (*iter)->getInputLen();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            length = input->getInputLen();
             break;
          }
       }
@@ -2309,10 +2379,9 @@ string cxForm::inputLabel(int pIndex) const {
 string cxForm::inputLabel(const string& pName) const {
    string retval;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      if ((*iter)->getName() == pName) {
-         retval = (*iter)->getName();
+   for (const auto& input : mInputs) {
+      if (input->getName() == pName) {
+         retval = input->getName();
          break;
       }
    }
@@ -2333,10 +2402,9 @@ string cxForm::inputName(int pIndex) const {
 string cxForm::inputName(const string& pLabel) const {
    string retval;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      if ((*iter)->getLabel() == pLabel) {
-         retval = (*iter)->getLabel();
+   for (const auto& input : mInputs) {
+      if (input->getLabel() == pLabel) {
+         retval = input->getLabel();
          break;
       }
    }
@@ -2452,28 +2520,26 @@ void cxForm::toggleCursor(int pIndex, bool pShowCursor) {
 void cxForm::toggleCursor(const string& pLabel, bool pShowCursor, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->toggleCursor(pShowCursor);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->toggleCursor(pShowCursor);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->toggleCursor(pShowCursor);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->toggleCursor(pShowCursor);
          }
       }
    }
 } // toggleCursor
 
 void cxForm::toggleCursor(bool pShowCursor) {
-   inputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->toggleCursor(pShowCursor);
+   for (const auto& input : mInputs) {
+      input->toggleCursor(pShowCursor);
    }
 } // toggleCursor
 
@@ -2489,20 +2555,19 @@ const shared_ptr<cxMultiLineInput>& cxForm::getInput(int pIndex) const {
 const shared_ptr<cxMultiLineInput>& cxForm::getInput(const string& pLabel, bool pIsLabel) const {
    shared_ptr<cxMultiLineInput> retval;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            retval = *iter;
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            retval = input;
             break;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            retval = *iter;
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            retval = input;
             break;
          }
       }
@@ -2535,20 +2600,19 @@ int cxForm::getInputOption(int pIndex) const {
 int cxForm::getInputOption(const string& pLabel, bool pIsLabel) const {
    int kind = eINPUT_READONLY;
 
-   inputPtrContainer::const_iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            kind = (*iter)->getInputOption();
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            kind = input->getInputOption();
             break;
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            kind = (*iter)->getInputOption();
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            kind = input->getInputOption();
             break;
          }
       }
@@ -2597,19 +2661,18 @@ void cxForm::setInputOption(const string& pLabel, eInputOptions pInputOption,
                      bool pIsLabel, bool pRefresh) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    eInputOptions oldInputOption=eINPUT_EDITABLE;
    eInputOptions currentKind=eINPUT_EDITABLE;
    bool inputIsEnabled = false;
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
+      for (auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
             // Save the current input kind
-            oldInputOption = (eInputOptions)((*iter)->getInputOption());
+            oldInputOption = (eInputOptions)(input->getInputOption());
             // Set the new input kind
-            (*iter)->setInputOption(pInputOption);
-            currentKind = (eInputOptions)(*iter)->getInputOption();
+            input->setInputOption(pInputOption);
+            currentKind = (eInputOptions)input->getInputOption();
 
             // If the default attributes are to be applied,
             //  then for a 'normal' input, remove the bold
@@ -2619,30 +2682,30 @@ void cxForm::setInputOption(const string& pLabel, eInputOptions pInputOption,
             if (mApplyAttrDefaults) {
                // Remove the input's current editable & read-only attributes..  The
                //  defaults will then be applied using applyAttrDefaults().
-               (*iter)->removeAttrs(eDATA_EDITABLE);
-               (*iter)->removeAttrs(eDATA_READONLY);
-               applyAttrDefaults(*iter);
+               input->removeAttrs(eDATA_EDITABLE);
+               input->removeAttrs(eDATA_READONLY);
+               applyAttrDefaults(input);
             }
 
             // If the current input kind is different from the old input kind
             //  and pRefresh is true, refresh the input.
             if ((currentKind != oldInputOption) && pRefresh) {
-               (*iter)->show(false, false);
+               input->show(false, false);
             }
 
             // Update inputIsEnabled
-            inputIsEnabled = (*iter)->isEnabled();
+            inputIsEnabled = input->isEnabled();
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
+      for (auto& input : mInputs) {
+         if (input->getName() == pLabel) {
             // Save the current input kind
-            oldInputOption = (eInputOptions)((*iter)->getInputOption());
+            oldInputOption = (eInputOptions)(input->getInputOption());
             // Set the new input kind
-            (*iter)->setInputOption(pInputOption);
-            currentKind = (eInputOptions)((*iter)->getInputOption());
+            input->setInputOption(pInputOption);
+            currentKind = (eInputOptions)(input->getInputOption());
 
             // If the default attributes are to be applied,
             //  then for a 'normal' input, remove the bold
@@ -2652,19 +2715,19 @@ void cxForm::setInputOption(const string& pLabel, eInputOptions pInputOption,
             if (mApplyAttrDefaults) {
                // Remove the input's current editable & read-only attributes..  The
                //  defaults will then be applied using applyAttrDefaults().
-               (*iter)->removeAttrs(eDATA_EDITABLE);
-               (*iter)->removeAttrs(eDATA_READONLY);
-               applyAttrDefaults(*iter);
+               input->removeAttrs(eDATA_EDITABLE);
+               input->removeAttrs(eDATA_READONLY);
+               applyAttrDefaults(input);
             }
 
             // If the current input kind is different from the old input kind
             //  and pRefresh is true, refresh the input.
             if ((currentKind != oldInputOption) && pRefresh) {
-               (*iter)->show(false, false);
+               input->show(false, false);
             }
 
             // Update inputIsEnabled
-            inputIsEnabled = (*iter)->isEnabled();
+            inputIsEnabled = input->isEnabled();
          }
       }
    }
@@ -2684,14 +2747,13 @@ void cxForm::setInputOption(const string& pLabel, eInputOptions pInputOption,
 } // setKind
 
 void cxForm::setAllInputOption(eInputOptions pInputOption, bool pRefresh) {
-   inputPtrContainer::iterator iter = mInputs.begin();
    eInputOptions inputKind;
    bool inputIsEnabled = false;
-   for (; iter != mInputs.end(); ++iter) {
+   for (auto& input : mInputs) {
       // Save the current input kind
-      inputKind = (eInputOptions)((*iter)->getInputOption());
+      inputKind = (eInputOptions)(input->getInputOption());
       // Set the input's kind
-      (*iter)->setInputOption(pInputOption);
+      input->setInputOption(pInputOption);
       // If the default attributes are to be applied,
       //  then for a 'normal' input, remove the bold
       //  attribute and apply the standout attribute.
@@ -2700,18 +2762,18 @@ void cxForm::setAllInputOption(eInputOptions pInputOption, bool pRefresh) {
       if (mApplyAttrDefaults) {
          // Remove the input's current editable & read-only attributes..  The
          //  defaults will then be applied using applyAttrDefaults().
-         (*iter)->removeAttrs(eDATA_EDITABLE);
-         (*iter)->removeAttrs(eDATA_READONLY);
-         applyAttrDefaults(*iter);
+         input->removeAttrs(eDATA_EDITABLE);
+         input->removeAttrs(eDATA_READONLY);
+         applyAttrDefaults(input);
       }
 
       // If pInputOption is different from the old input kind and pRefresh is
       //  true, then refresh the input.
       if ((pInputOption != inputKind) && pRefresh) {
-         (*iter)->show(false, false);
+         input->show(false, false);
       }
 
-      inputIsEnabled = (*iter)->isEnabled();
+      inputIsEnabled = input->isEnabled();
    }
 
    // Update mEditableInputsExist
@@ -2740,19 +2802,18 @@ void cxForm::setValidatorFunction(const string& pLabel, funcPtr4 pFunction,
                      void *p1, void *p2, void *p3, void *p4, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setValidatorFunction(pFunction, p1, p2, p3, p4);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setValidatorFunction(pFunction, p1, p2, p3, p4);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setValidatorFunction(pFunction, p1, p2, p3, p4);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setValidatorFunction(pFunction, p1, p2, p3, p4);
          }
       }
    }
@@ -2780,19 +2841,18 @@ void cxForm::setOnKeyFunction(const string& pLabel, funcPtr4 pFunction, void *p1
                               void *p2, void *p3, void *p4, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setOnKeyFunction(pFunction, p1, p2, p3, p4);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnKeyFunction(pFunction, p1, p2, p3, p4);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setOnKeyFunction(pFunction, p1, p2, p3, p4);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnKeyFunction(pFunction, p1, p2, p3, p4);
          }
       }
    }
@@ -2809,19 +2869,18 @@ void cxForm::setOnKeyFunction(const string& pLabel, funcPtr2 pFunction, void *p1
                               void *p2, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setOnKeyFunction(pFunction, p1, p2);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnKeyFunction(pFunction, p1, p2);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setOnKeyFunction(pFunction, p1, p2);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnKeyFunction(pFunction, p1, p2);
          }
       }
    }
@@ -2837,36 +2896,39 @@ void cxForm::setOnKeyFunction(const string& pLabel, funcPtr0 pFunction,
                               bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
-   inputPtrContainer::iterator iter = mInputs.begin();
    if (pIsLabel) {
-      for (; iter != mInputs.end(); ++iter) {
-         if (((*iter)->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars((*iter)->getLabel()) == pLabel)) {
-            (*iter)->setOnKeyFunction(pFunction);
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel ||
+             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnKeyFunction(pFunction);
          }
       }
    }
    else {
-      for (; iter != mInputs.end(); ++iter) {
-         if ((*iter)->getName() == pLabel) {
-            (*iter)->setOnKeyFunction(pFunction);
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnKeyFunction(pFunction);
          }
       }
    }
 } // setOnKeyFunction
 
+void cxForm::setAllOnKeyFunction(const shared_ptr<cxFunction>& pFunction) {
+   for (const auto& input : mInputs) {
+      input->setOnKeyFunction(pFunction);
+   }
+} // setAllOnKeyFunction
+
 void cxForm::setAllOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2, void *p3,
                                  void *p4) {
-   inputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setOnKeyFunction(pFunction, p1, p2, p3, p4);
+   for (const auto& input : mInputs) {
+      input->setOnKeyFunction(pFunction, p1, p2, p3, p4);
    }
 } // setAllOnKeyFunction
 
 void cxForm::setAllOnKeyFunction(funcPtr2 pFunction, void *p1, void *p2) {
-   inputPtrContainer::iterator iter = mInputs.begin();
-   for (; iter != mInputs.end(); ++iter) {
-      (*iter)->setOnKeyFunction(pFunction, p1, p2);
+   for (const auto& input : mInputs) {
+      input->setOnKeyFunction(pFunction, p1, p2);
    }
 } // setAllOnKeyFunction
 
@@ -3909,7 +3971,7 @@ void cxForm::setLastKey(int pLastKey) {
 void cxForm::quitNow() {
    // Tell the form to quit, as well as the current input.
    cxWindow::quitNow();
-   std::shared_ptr<cxMultiLineInput> input = getInput(getCurrentInputIndex());
+   shared_ptr<cxMultiLineInput> input = getInput(getCurrentInputIndex());
    if (nullptr != input) {
       input->quitNow();
    }
@@ -3918,7 +3980,7 @@ void cxForm::quitNow() {
 void cxForm::exitNow() {
    // Tell the form to exit, as well as the current input.
    cxWindow::exitNow();
-   std::shared_ptr<cxMultiLineInput> input = getInput(getCurrentInputIndex());
+   shared_ptr<cxMultiLineInput> input = getInput(getCurrentInputIndex());
    if (nullptr != input) {
       input->exitNow();
    }
