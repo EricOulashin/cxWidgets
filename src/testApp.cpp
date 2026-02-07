@@ -585,6 +585,7 @@ void cxWindowAddMessageLinesAbove();
 // Functions for use with forms & fields
 string someFunction(void *int1, void *int2);
 string someFunction2(void *int1, void *int2);
+string someFunction2x(cxMultiLineInput& input);
 string someFunction3(void *p1, void *p2, void *p3, void *p4);
 string hello(void *unused, void *unused2);
 string genericMessageFunction(void *p1, void *p2, void *p3, void *p4);
@@ -1961,7 +1962,9 @@ void inputsWithFKeys() {
    iInput.setKeyFunction(KEY_F(2), someFunction, &x, &y, true);
    // Use 2 keys to run the same function
    iInput.setKeyFunction(KEY_F(3), someFunction2, &x, &y, true);
-   iInput.setKeyFunction('/', someFunction2, &x, &y, true);
+   //iInput.setKeyFunction('/', someFunction2, &x, &y, true);
+   auto inputFunc = cxFunction1RefTemplated<cxMultiLineInput>::create(someFunction2x, iInput, false, false, true);
+   iInput.setKeyFunction('/', inputFunc);
    iInput.showModal();
    messageBox(iInput.getValue());
 }
@@ -2019,6 +2022,11 @@ string someFunction(void *int1, void *int2) {
 string someFunction2(void *int1, void *int2) {
    return("b'bye");
 } // someFunction2
+
+string someFunction2x(cxMultiLineInput& input) {
+   input.setValue("Yep", true);
+   return "";
+} // someFunction2x
 
 string someFunction3(void *p1, void *p2, void *p3, void *p4) {
    string retval;
