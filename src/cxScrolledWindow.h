@@ -248,7 +248,7 @@ class cxScrolledWindow : public cxWindow {
        *
        * @return The current cxScrolledWindow
        */
-      virtual cxScrolledWindow& operator =(const cxScrolledWindow& pThatWindow);
+      cxScrolledWindow& operator =(const cxScrolledWindow& pThatWindow);
 
       /**
        * \brief Sets the key to use for searching
@@ -356,10 +356,10 @@ class cxScrolledWindow : public cxWindow {
        *  all the message text shows (defaults to false).
        */
       virtual void init(int pRow, int pCol, int pHeight, int pWidth,
-                        const std::string& pTitle, std::string pMessage,
+                        const std::string& pTitle, const std::string& pMessage,
                         const std::string& pStatus,
                         cxWindow *pParentWindow = nullptr,
-                        bool pResizeVertically = false);
+                        bool pResizeVertically = false) override;
 
       /**
        * \brief Makes a copy of a cxScrolledWindow's member variables

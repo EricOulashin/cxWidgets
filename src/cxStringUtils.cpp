@@ -527,7 +527,7 @@ void cxStringUtils::TrimSpaces(string& str) {
    if (str.size() > 0) {
       // Find the last index of a space in str, and
       //  if there are any leading spaces, then erase them.
-      unsigned pos = string::npos;
+      size_t pos = string::npos;
       unsigned i = 0;
       while (str[i] == ' ') {
          pos = i;
@@ -556,7 +556,7 @@ void cxStringUtils::splitStringOnNewlines(const string& pStr, list<string>& pStr
    if (pStr != "") {
       unsigned startPos = 0; // Starting position for substrings
       unsigned len = 0;      // Length of substrings
-      unsigned pos = 0;      // Index of a newline
+      size_t pos = 0;        // Index of a newline
       while ((pos = pStr.find('\n', startPos)) != string::npos) {
          len = pos - startPos;
          pStrings.push_back(pStr.substr(startPos, len));

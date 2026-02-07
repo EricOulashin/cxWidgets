@@ -459,7 +459,7 @@ void cxScrolledWindow::reCreateSubWindow() {
 } // reCreateSubWindow
 
 void cxScrolledWindow::init(int pRow, int pCol, int pHeight, int pWidth,
-                        const string& pTitle, string pMessage,
+                        const string& pTitle, const string& pMessage,
                         const string& pStatus, cxWindow *pParentWindow,
                         bool pResizeVertically) {
    cxWindow::init(pRow, pCol, pHeight, pWidth, pTitle, pMessage,

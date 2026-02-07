@@ -34,15 +34,21 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
                  int pRightLabelWidth, bool pShowRightLabel)
    : cxWindow(pParentWindow, pRow, pCol, (pHeight > 0) ? pHeight : 1, pWidth,
               "", "", "", pBorderStyle, nullptr, nullptr),
-     mRightLabel(nullptr, (hasBorder() ? pRow + 1 : pRow),
-                 right() + 1 + pRightLabelOffset, pRightLabelHeight,
-                 pRightLabelWidth, "", "", "", eBS_NOBORDER, nullptr, nullptr, false),
      mExtValue(pExtValue),
      mInputType(pInputType),
      mExtendedHelpColor(cxBase::getDefaultMessageColor()),
+     /*
+     mRightLabel(nullptr, (hasBorder() ? pRow + 1 : pRow),
+                 right() + 1 + pRightLabelOffset, pRightLabelHeight,
+                 pRightLabelWidth, "", "", "", eBS_NOBORDER, nullptr, nullptr, false),
+     */
      mRightLabelOffset(pRightLabelOffset),
      mShowRightLabel(pShowRightLabel)
 {
+   mRightLabel = make_unique<cxWindow>(nullptr, (hasBorder() ? pRow + 1 : pRow),
+                                       right() + 1 + pRightLabelOffset, pRightLabelHeight,
+                                       pRightLabelWidth, "", "", "", eBS_NOBORDER, nullptr, nullptr, false);
+
    // The height must be at least 3 (with borders) or 1 (w/o borders)
    //  to add single-line inputs.
    // If there's a border, then the number of single-line inputs
@@ -140,7 +146,7 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
    toggleOnKeyFunction(true);
 
    // Enable/disable the right label window
-   mRightLabel.setEnabled(pShowRightLabel);
+   mRightLabel->setEnabled(pShowRightLabel);
 
    // Set up F1 as an extended help key by default
    addExtendedHelpKey(KEY_F(1));
@@ -177,12 +183,14 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
      mExtendedHelp(pThatInput.mExtendedHelp),
      mExtendedHelpKeys(pThatInput.mExtendedHelpKeys),
      mUseExtendedHelpKeys(pThatInput.mUseExtendedHelpKeys),
-     mRightLabel(pThatInput.mRightLabel),
+     //mRightLabel(pThatInput.mRightLabel),
      mRightLabelOffset(pThatInput.mRightLabelOffset),
      mShowRightLabel(pThatInput.mShowRightLabel),
      mMaxInputLength(pThatInput.mMaxInputLength),
      mErrorState(pThatInput.mErrorState)
 {
+   mRightLabel = make_unique<cxWindow>(*pThatInput.mRightLabel);
+
    // Copy the other input's single-line inputs
    shared_ptr<cxInput> myInput;
    for (const auto& input : pThatInput.mInputs) {
@@ -210,7 +218,7 @@ cxMultiLineInput::cxMultiLineInput(const cxMultiLineInput& pThatInput)
 
    toggleMessage(pThatInput.messageWillDraw());
 
-   mRightLabel.setEnabled(pThatInput.mRightLabel.isEnabled());
+   mRightLabel->setEnabled(pThatInput.mRightLabel->isEnabled());
 } // Copy constructor
 
 cxMultiLineInput::~cxMultiLineInput() {
@@ -270,15 +278,15 @@ long cxMultiLineInput::show(bool pBringToTop, bool pShowSubwindows) {
 
       // Show the right label
       if (mShowRightLabel) {
-         mRightLabel.show(pBringToTop, false);
+         mRightLabel->show(pBringToTop, false);
       }
       else {
-         mRightLabel.hide(false);
+         mRightLabel->hide(false);
       }
    }
    else {
       hide(false);
-      mRightLabel.hide(false);
+      mRightLabel->hide(false);
    }
 
    return(returnVal);
@@ -860,8 +868,8 @@ bool cxMultiLineInput::move(int pNewRow, int pNewCol, bool pRefresh) {
       }
 
       // Move mRightLabel
-      mRightLabel.move((hasBorder() ? top()+1 : top()),
-                       right() + mRightLabelOffset + 1, false);
+      mRightLabel->move((hasBorder() ? top()+1 : top()),
+                        right() + mRightLabelOffset + 1, false);
    }
 
    // If the move was successful, refresh the window
@@ -1704,7 +1712,7 @@ void cxMultiLineInput::setEnabled(bool pEnabled) {
    mDoInputLoop = pEnabled;
 
    // Enable/disable mRightLabel
-   mRightLabel.setEnabled(pEnabled && mShowRightLabel);
+   mRightLabel->setEnabled(pEnabled && mShowRightLabel);
 } // setEnabled
 
 void cxMultiLineInput::quitNow(bool pMoveForward) {
@@ -2466,7 +2474,7 @@ bool cxMultiLineInput::keyIsExtendedHelpKey(int pKey) const {
 
 void cxMultiLineInput::setShowRightLabel(bool pShowRightLabel) {
    mShowRightLabel = pShowRightLabel;
-   mRightLabel.setEnabled(mShowRightLabel);
+   mRightLabel->setEnabled(mShowRightLabel);
 } // setShowRightLabel
 
 bool cxMultiLineInput::getShowRightLabel() const {
@@ -2475,8 +2483,8 @@ bool cxMultiLineInput::getShowRightLabel() const {
 
 void cxMultiLineInput::setRightLabelOffset(int pOffset, bool pRefresh) {
    mRightLabelOffset = pOffset;
-   mRightLabel.move(mRightLabel.top(), right() + 1 + mRightLabelOffset,
-                    pRefresh);
+   mRightLabel->move(mRightLabel->top(), right() + 1 + mRightLabelOffset,
+                     pRefresh);
 } // setRightLabelOffset
 
 int cxMultiLineInput::getRightLabelOffset() const {
@@ -2484,75 +2492,75 @@ int cxMultiLineInput::getRightLabelOffset() const {
 } // getRightLabelOffset
 
 int cxMultiLineInput::getRightLabelTop() const {
-   return(mRightLabel.top());
+   return(mRightLabel->top());
 } // getRightLabelTop
 
 int cxMultiLineInput::getRightLabelLeft() const {
-   return(mRightLabel.left());
+   return(mRightLabel->left());
 } // getRightLabelLeft()
 
 int cxMultiLineInput::getRightLabelBottom() const {
-   return(mRightLabel.bottom());
+   return(mRightLabel->bottom());
 } // getRightLabelBottom
 
 int cxMultiLineInput::getRightLabelRight() const {
-   return(mRightLabel.right());
+   return(mRightLabel->right());
 } // getRightLabelRight
 
 int cxMultiLineInput::getRightLabelHeight() const {
-   return(mRightLabel.height());
+   return(mRightLabel->height());
 } // getRightLabelHeight()
 
 int cxMultiLineInput::getRightLabelWidth() const {
-   return(mRightLabel.width());
+   return(mRightLabel->width());
 } // getRightLabelHeight()
 
 void cxMultiLineInput::setRightLabelWidth(int pWidth, bool pRefresh) {
-   mRightLabel.resize(mRightLabel.height(), pWidth, pRefresh);
+   mRightLabel->resize(mRightLabel->height(), pWidth, pRefresh);
 } // setRightlabelWidth
 
 void cxMultiLineInput::setRightLabelHeight(int pHeight, bool pRefresh) {
-   mRightLabel.resize(pHeight, mRightLabel.width(), pRefresh);
+   mRightLabel->resize(pHeight, mRightLabel->width(), pRefresh);
 } // setRightLabelHeight
 
 void cxMultiLineInput::resizeRightLabel(int pHeight, int pWidth, bool pRefresh) {
-   mRightLabel.resize(pHeight, pWidth, pRefresh);
+   mRightLabel->resize(pHeight, pWidth, pRefresh);
 } // resizeRightLabel
 
 void cxMultiLineInput::setRightLabel(const string& pText, bool pRefresh) {
-   mRightLabel.setMessage(pText);
+   mRightLabel->setMessage(pText);
    if (pRefresh) {
-      mRightLabel.show(false, false);
+      mRightLabel->show(false, false);
    }
 } // setRightLabelText
 
 void cxMultiLineInput::setRightLabel(int pOffset, const string& pText, bool pRefresh) {
-   mRightLabel.setMessage(pText);
-   mRightLabel.move(mRightLabel.top(), right() + 1 + pOffset, false);
+   mRightLabel->setMessage(pText);
+   mRightLabel->move(mRightLabel->top(), right() + 1 + pOffset, false);
    if (pRefresh) {
-      mRightLabel.show(false, false);
+      mRightLabel->show(false, false);
    }
 } // setRightLabelText
 
 string cxMultiLineInput::getRightLabel() const {
-   return(mRightLabel.getMessage());
+   return(mRightLabel->getMessage());
 } // getRightLabelText
 
 void cxMultiLineInput::getRightLabelSize(int& pHeight, int& pWidth) {
-   pHeight = mRightLabel.height();
-   pWidth = mRightLabel.width();
+   pHeight = mRightLabel->height();
+   pWidth = mRightLabel->width();
 } // getRightLabelSize
 
 e_cxColors cxMultiLineInput::getRightLabelColor() const {
-   return(mRightLabel.getItemColor(eMESSAGE));
+   return(mRightLabel->getItemColor(eMESSAGE));
 } // getRightLabelColor
 
 void cxMultiLineInput::setRightLabelColor(e_cxColors pColor) {
-   mRightLabel.setMessageColor(pColor);
+   mRightLabel->setMessageColor(pColor);
 } // setRightLabelColor
 
 void cxMultiLineInput::setRightLabelAttr(attr_t pAttr) {
-   mRightLabel.setAttr(eMESSAGE, pAttr);
+   mRightLabel->setAttr(eMESSAGE, pAttr);
 } // setRightLabelAttr
 
 void cxMultiLineInput::setMaxInputLength(int pLength) {
@@ -2599,7 +2607,7 @@ void cxMultiLineInput::additionalOnClear() {
 } // additionalOnClear
 
 bool cxMultiLineInput::rightLabelEnabled() const {
-   return(mRightLabel.isEnabled());
+   return(mRightLabel->isEnabled());
 } // rightLabelEnabled
 
 bool cxMultiLineInput::validatorFunctionIsSet() const {
@@ -2647,7 +2655,7 @@ void cxMultiLineInput::copyCxMultiLineInputStuff(const cxMultiLineInput *pThatIn
       mRunFocusFunctions = pThatInput->mRunFocusFunctions;
       mValidateOnReverse = pThatInput->mValidateOnReverse;
       // Note: Purposefully not copying mParentForm.  Otherwise, segfaults
-      //  could ensue.
+      // could ensue.
       //mParentForm = pThatInput->mParentForm;
       mApplyAttrDefaults = pThatInput->mApplyAttrDefaults;
       mRanFunctionAndShouldExit = false;
@@ -2665,11 +2673,12 @@ void cxMultiLineInput::copyCxMultiLineInputStuff(const cxMultiLineInput *pThatIn
       mExtendedHelp = pThatInput->mExtendedHelp;
       mExtendedHelpKeys = pThatInput->mExtendedHelpKeys;
       mUseExtendedHelpKeys = pThatInput->mUseExtendedHelpKeys;
-      mRightLabel = pThatInput->mRightLabel;
+      //mRightLabel = pThatInput->mRightLabel;
+      mRightLabel = make_unique<cxWindow>(*(pThatInput->mRightLabel));
       mRightLabelOffset = pThatInput->mRightLabelOffset;
       mShowRightLabel = pThatInput->mShowRightLabel;
       mErrorState = pThatInput->mErrorState;
-      mRightLabel.setEnabled(pThatInput->mRightLabel.isEnabled());
+      mRightLabel->setEnabled(pThatInput->mRightLabel->isEnabled());
 
       // Copy the other input's single-line inputs
       for (auto& input : mInputs) {

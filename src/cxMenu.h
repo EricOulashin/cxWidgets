@@ -321,7 +321,7 @@ class cxMenu : public cxWindow {
       /**
        * Erases the window
        */
-      virtual void erase();
+      virtual void erase(bool pEraseSubwindows = true) override;
 
       /**
        * Returns the width of the submenu
@@ -508,7 +508,7 @@ class cxMenu : public cxWindow {
        *
        * @return The current cxMenu
        */
-      virtual cxMenu& operator =(const cxMenu& pThatMenu);
+      cxMenu& operator =(const cxMenu& pThatMenu);
 
       /**
        * \brief Refreshes the list of menu items.

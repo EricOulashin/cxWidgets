@@ -2340,7 +2340,8 @@ class cxMultiLineInput : public cxWindow {
       // mRightLabel is a window that will display an additional label to
       //  the right of the input.  mRightLabelOffset is the distance between
       //  the input and mRightLabel.
-      cxWindow mRightLabel;
+      //cxWindow mRightLabel;
+      std::unique_ptr<cxWindow> mRightLabel;
       int mRightLabelOffset;
       bool mShowRightLabel; // Whether or not to display the right label
 

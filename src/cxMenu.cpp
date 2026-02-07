@@ -736,9 +736,9 @@ long cxMenu::show(bool pBringToTop, bool pShowSubwindows) {
    return(returnCode);
 } // show
 
-void cxMenu::erase() {
-   cxWindow::erase();
-   if (mSubWindow != nullptr) {
+void cxMenu::erase(bool pEraseSubwindows) {
+   cxWindow::erase(pEraseSubwindows);
+   if (pEraseSubwindows && mSubWindow != nullptr) {
       werase(mSubWindow);
       wrefresh(mSubWindow);
    }

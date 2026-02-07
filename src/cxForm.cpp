@@ -208,7 +208,7 @@ shared_ptr<cxMultiLineInput> cxForm::append(int pRow, int pCol, int pHeight, int
          // to the input - the false is so that the input does not run its
          // onLeave function when it exits, and the true is to make sure that
          // the exit key gets set.
-         for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+         for (const pair<const int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
             input->addExitKey(funcPair.first, false, true);
          }
 
@@ -594,7 +594,7 @@ shared_ptr<cxMultiLineInput> cxForm::append(int pHeight, int pWidth,
       // to the input - the false is so that the input does not run its
       // onLeave function when it exits, and the true is to make sure that
       // the exit key gets set.
-      for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+      for (const pair<const int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
          input->addExitKey(funcPair.first, false, true);
       }
 
@@ -675,7 +675,7 @@ shared_ptr<cxMultiLineInput> cxForm::append(const cxMultiLineInput& input) {
 
    // Add all form function keys to the input's list of
    // keys that stop its input loop.
-   for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+   for (const pair<const int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       iInput->addExitKey(funcPair.first, false, true);
    }
 
@@ -764,15 +764,15 @@ void cxForm::append(shared_ptr<cxMultiLineInput>& pInput, int pRow, int pCol, bo
          // to the input - the false is so that the input does not run its
          // onLeave function when it exits, and the true is to make sure that
          // the exit key gets set.
-         for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+         for (const pair<const int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
             pInput->addExitKey(funcPair.first, false, true);
          }
 
          // Add all the form's quit keys & exit keys to the input.
-         for (const pair<int, bool>& keyPair : mQuitKeys) {
+         for (const pair<const int, bool>& keyPair : mQuitKeys) {
             pInput->addQuitKey(keyPair.first, keyPair.second);
          }
-         for (const pair<int, bool>& keyPair : mExitKeys) {
+         for (const pair<const int, bool>& keyPair : mExitKeys) {
             pInput->addExitKey(keyPair.first, keyPair.second);
          }
 
@@ -1030,9 +1030,11 @@ void cxForm::setFieldKeyFunction(unsigned pIndex, int pFunctionKey, funcPtr2 pFi
    }
 }
 
-void cxForm::setOnFocusFunction(const string& pLabel,
-                           const shared_ptr<cxFunction>& pFunction,
-                           bool pIsLabel)
+void cxForm::setOnFocusFunction(const std::shared_ptr<cxFunction>& pFunction) {
+   cxWindow::setOnFocusFunction(pFunction);
+}
+
+void cxForm::setOnFocusFunction(const string& pLabel, const shared_ptr<cxFunction>& pFunction, bool pIsLabel)
 {
    // If there are multiple inputs with the same label/name, all of them
    //  will be affected.
@@ -1086,6 +1088,10 @@ void cxForm::setOnFocusFunction(unsigned pIndex, funcPtr4 pFunction, void *p1, v
       mInputs[pIndex]->setOnFocusFunction(pFunction, p1, p2, p3, p4, pUseVal);
    }
 } // setOnFocusFunction
+
+void cxForm::setOnLeaveFunction(const std::shared_ptr<cxFunction>& pFunction) {
+   cxWindow::setOnLeaveFunction(pFunction);
+}
 
 void cxForm::setOnLeaveFunction(const string& pLabel, const shared_ptr<cxFunction>& pFunction,
                                 bool pIsLabel) {
@@ -1774,7 +1780,7 @@ bool cxForm::setCurrentInputByPtr(const cxMultiLineInput* const pInput) {
 } // setCurrentInputByPtr
 
 bool cxForm::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) {
-   bool setIt = cxForm::setKeyFunction(pKey, pFunction);
+   bool setIt = cxWindow::setKeyFunction(pKey, pFunction);
    if (setIt) {
       // Add the key to each input's list of keys that exit its input loop.
       // Note that this passes (pKey, false, true) to the input -
@@ -2543,7 +2549,7 @@ void cxForm::toggleCursor(bool pShowCursor) {
    }
 } // toggleCursor
 
-const shared_ptr<cxMultiLineInput>& cxForm::getInput(int pIndex) const {
+shared_ptr<cxMultiLineInput> cxForm::getInput(int pIndex) const {
    if ((pIndex >= 0) && (pIndex < (int)mInputs.size())) {
       return mInputs[pIndex];
    }
@@ -2552,7 +2558,7 @@ const shared_ptr<cxMultiLineInput>& cxForm::getInput(int pIndex) const {
    }
 } // getInput
 
-const shared_ptr<cxMultiLineInput>& cxForm::getInput(const string& pLabel, bool pIsLabel) const {
+shared_ptr<cxMultiLineInput> cxForm::getInput(const string& pLabel, bool pIsLabel) const {
    shared_ptr<cxMultiLineInput> retval;
 
    if (pIsLabel) {
@@ -2576,7 +2582,7 @@ const shared_ptr<cxMultiLineInput>& cxForm::getInput(const string& pLabel, bool 
    return retval;
 } // getInput
 
-const shared_ptr<cxMultiLineInput>& cxForm::getCurrentInput() const {
+shared_ptr<cxMultiLineInput> cxForm::getCurrentInput() const {
    if (mInputs.size() > 0) {
       // Note: getCurrentInputIndex() does bounds checking and won't return
       // an invalid index.
@@ -3455,7 +3461,7 @@ bool cxForm::formKeyIsSet(int pKey) const {
 
    // If the key isn't mInputJumpKey, look in mKeyFunctions
    if (!keyIsSet) {
-      for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+      for (const pair<const int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
          if (funcPair.first == pKey) {
             keyIsSet = true;
             break;

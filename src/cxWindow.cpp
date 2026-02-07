@@ -2185,7 +2185,7 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr4 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   for (const pair<int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+   for (const pair<const int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       try {
          shared_ptr<cxFunction4> func4 = dynamic_pointer_cast<cxFunction4>(funcPair.second);
          if (func4 != nullptr && func4->getFunction() == pFunction) {
@@ -2209,7 +2209,7 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr2 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   for (const pair<int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+   for (const pair<const int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       try {
          shared_ptr<cxFunction2> func2 = dynamic_pointer_cast<cxFunction2>(funcPair.second);
          if (func2 != nullptr && func2->getFunction() == pFunction) {
@@ -2233,7 +2233,7 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr0 pFunction) {
    // Create a set of keys that fire the function, and then call
    //  the other clearKeyFunction() for each key.
    set<int> keys;
-   for (const pair<int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+   for (const pair<const int, std::shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       try {
          shared_ptr<cxFunction0> func0 = dynamic_pointer_cast<cxFunction0>(funcPair.second);
          if (func0 != nullptr && func0->getFunction() == pFunction) {
@@ -3051,52 +3051,49 @@ shared_ptr<cxFunction> cxWindow::getKeyFunction(int pKey) const {
    }
 }
 
-std::shared_ptr<cxFunction0> cxWindow::getKeyFunctionAsFunction0(int pKey) const {
+shared_ptr<cxFunction0> cxWindow::getKeyFunctionAsFunction0(int pKey) const {
+   shared_ptr<cxFunction0> funcToReturn = nullptr;
    shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
    if (funcPtr != nullptr) {
       if (funcPtr->cxTypeStr() == "cxFunction0") {
          try {
-            return dynamic_pointer_cast<cxFunction0>(funcPtr);
+            funcToReturn = dynamic_pointer_cast<cxFunction0>(funcPtr);
          }
          catch (...) {
          }
       }
    }
-   else {
-      return nullptr;
-   }
+   return funcToReturn;
 } // getKeyFunction2
 
 std::shared_ptr<cxFunction2> cxWindow::getKeyFunctionAsFunction2(int pKey) const {
+   shared_ptr<cxFunction2> funcToReturn = nullptr;
    shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
    if (funcPtr != nullptr) {
       if (funcPtr->cxTypeStr() == "cxFunction2") {
          try {
-            return dynamic_pointer_cast<cxFunction2>(funcPtr);
+            funcToReturn = dynamic_pointer_cast<cxFunction2>(funcPtr);
          }
          catch (...) {
          }
       }
    }
-   else {
-      return nullptr;
-   }
+   return funcToReturn;
 } // getKeyFunction2
 
 std::shared_ptr<cxFunction4> cxWindow::getKeyFunctionAsFunction4(int pKey) const {
-  shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
+   shared_ptr<cxFunction4> funcToReturn = nullptr;
+   shared_ptr<cxFunction> funcPtr = getKeyFunction(pKey);
    if (funcPtr != nullptr) {
       if (funcPtr->cxTypeStr() == "cxFunction4") {
          try {
-            return dynamic_pointer_cast<cxFunction4>(funcPtr);
+            funcToReturn = dynamic_pointer_cast<cxFunction4>(funcPtr);
          }
          catch (...) {
          }
       }
    }
-   else {
-      return nullptr;
-   }
+   return funcToReturn;
 } // getKeyFunction4
 
 bool cxWindow::mouseButton1Pressed() const {
@@ -3645,8 +3642,9 @@ void cxWindow::setSubWinMessage(const string& pTitle, const string& pMessage) {
 
 // Initializes the window parameters and mWindow
 void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
-                    string pTitle, string pMessage, string pStatus,
-                    cxWindow *pParentWindow, bool pResizeVertically) {
+                    const string& pTitle, const string& pMessage,
+                    const string& pStatus, cxWindow *pParentWindow,
+                    bool pResizeVertically) {
    // If pHeight and pWidth are <= 0, this is probably unacceptable..
    if (pHeight <= 0) {
       pHeight = 1;
@@ -3668,24 +3666,24 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
    const int maxWidth = (int)(cxBase::width()) - pCol;
 
    // Strip newlines from pMessage (if it has newlines,
-   //  the message won't display correctly)
-   pMessage = cxStringUtils::stripNewlines(pMessage);
-   // If pMessage is at least 15 characters, then set the width
-   //  of the window to an arbitrary large width.  This should
-   //  avoid having each word on its own line in the window.
+   // the message won't display correctly)
+   string message = cxStringUtils::stripNewlines(pMessage);
+   // If message is at least 15 characters, then set the width
+   // of the window to an arbitrary large width.  This should
+   // avoid having each word on its own line in the window.
    const int someWidth = (cxBase::width() >= 30 ? 30 : cxBase::width());
-   if (pMessage.length() >= 15) {
+   if (message.length() >= 15) {
       if (!hasBorder()) {
-         if ((int)pMessage.length() >= someWidth) {
+         if ((int)message.length() >= someWidth) {
             newWidth = someWidth;
          }
       }
       else {
-         if ((int)pMessage.length() >= someWidth) {
+         if ((int)message.length() >= someWidth) {
             newWidth = someWidth + 2;
          }
          else {
-            newWidth=pMessage.length() + 2;
+            newWidth = message.length() + 2;
          }
       }
    }
@@ -3697,30 +3695,32 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
    // we might have to override the width of the window
    // if the title+2 is longer than the message
    // (2 for the borders)
+   string title = pTitle;
+   string status = pStatus;
    if (hasBorder()) {
-      if (((int)(pTitle.length())+2) <= maxWidth) {
-         if (((int)(pTitle.length())+2) > newWidth) {
+      if (((int)(title.length())+2) <= maxWidth) {
+         if (((int)(title.length())+2) > newWidth) {
             // Yeah, we fit! Override the width
-            newWidth=pTitle.length()+2;
+            newWidth = title.length()+2;
          }
       }
       else {
          // Crap. Need to shorten the title
-         pTitle = pTitle.substr(0,newWidth-2);
+         title = title.substr(0,newWidth-2);
       }
 
       // Widen the window (if needed) based on
       //  the status text
-      if (pStatus.length() > pTitle.length()) {
-         if (((int)(pStatus.length())+2) <= maxWidth) {
-            if (((int)(pStatus.length())+2) > newWidth) {
+      if (status.length() > title.length()) {
+         if (((int)(status.length())+2) <= maxWidth) {
+            if (((int)(status.length())+2) > newWidth) {
                // Yeah, we fit! Override the width
-               newWidth=pStatus.length()+2;
+               newWidth = status.length()+2;
             }
          }
          else {
             // Crap. Need to shorten the title
-            pStatus = pStatus.substr(0,newWidth-2);
+            status = status.substr(0,newWidth-2);
          }
       }
 
@@ -3748,7 +3748,7 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
    // Calculate the height based on the message, and also
    //  find where we need to split the message based on
    //  the width of the window.
-   if (pMessage != "") {
+   if (message != "") {
       int innerWidth; // Inner window width
       if (hasBorder()) {
          innerWidth = newWidth - 2;
@@ -3757,12 +3757,12 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
          innerWidth = newWidth;
       }
 
-      // Split pMessage on newlines (\n)
+      // Split message on newlines (\n)
       unsigned stringLen = 0;
       vector<string> iMessageLines;
       // Note: We should be able to split on newlines using SplitStringRegex(),
       //  but it doesn't seem to be working.
-      SplitStringRegex(pMessage, "\n", iMessageLines);
+      SplitStringRegex(message, "\n", iMessageLines);
       vector<string>::iterator msgLineIter = iMessageLines.begin();
       for (; msgLineIter != iMessageLines.end(); ++msgLineIter) {
          // If the current line is short enough to fit inside the window by
@@ -3910,8 +3910,8 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
    }
 
    // Set the title & status
-   setTitle(pTitle, false);
-   setStatus(pStatus, false);
+   setTitle(title, false);
+   setStatus(status, false);
 } // init
 
 //// Helper functions

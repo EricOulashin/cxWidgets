@@ -992,7 +992,7 @@ class cxWindow : public cxObject {
        *
        * @return The current window
        */
-      virtual cxWindow& operator =(const cxWindow& pThatWindow);
+      cxWindow& operator =(const cxWindow& pThatWindow);
 
       /**
        * \brief Writes text on the window.  Note that the text is not permanant, so
@@ -1117,8 +1117,7 @@ class cxWindow : public cxObject {
       virtual void setChangeColorsOnFocus(bool pChangeColorsOnFocus);
 
       /**
-       * \brief Sets the "on focus" function pointer
-       * \brief The function must have this signature: string func(void*, void*, void*, void*).
+       * \brief Sets the window's "on focus" function
        *
        * @param pFunction The function to be run
        */
@@ -1174,8 +1173,7 @@ class cxWindow : public cxObject {
                                       bool pExitAfterRun = false);
 
       /**
-       * \brief Sets the "on leave" function pointer
-       * \brief The function must have this signature: string func(void*, void*, void*, void*).
+       * \brief Sets the window's "on leave" function
        *
        * @param pFunction The function to be run
        */
@@ -2593,14 +2591,14 @@ class cxWindow : public cxObject {
        *  all the message text shows (defaults to true).
        */
       virtual void init(int pRow, int pCol, int pHeight, int pWidth,
-                        std::string pTitle, std::string pMessage,
-                        std::string pStatus, cxWindow *pParentWindow = nullptr,
+                        const std::string& pTitle, const std::string& pMessage,
+                        const std::string& pStatus, cxWindow *pParentWindow = nullptr,
                         bool pResizeVertically = true);
 
       /**
        * \brief Removes all subwindow pointers
        */
-      void removeAllSubwindows();
+      virtual void removeAllSubwindows();
 
       /**
        * \brief Adds a subwindow to the window.  Subwindows of a
@@ -2608,14 +2606,14 @@ class cxWindow : public cxObject {
        *
        * @param pSubWindow A pointer to another cxWindow to be added as a subwindow.
        */
-      void addSubwindow(cxWindow *pSubWindow);
+      virtual void addSubwindow(cxWindow *pSubWindow);
 
       /**
        * \brief Removes a window from the subwindow list
        *
        * @param pSubWindow A pointer to the window to remove
        */
-      void removeSubWindow(const cxWindow *pSubWindow);
+      virtual void removeSubWindow(const cxWindow *pSubWindow);
 
       /**
        * \brief Sets the color (and attribute, if necessary) of a color element.
@@ -2627,7 +2625,7 @@ class cxWindow : public cxObject {
        * @param pColor The color to set - See the e_cxColors enumeration (defined
        *  in cxColors.h)
        */
-      void setElementColor(short& pColorPair, attr_t& pElementAttr, e_cxColors pColor);
+      virtual void setElementColor(short& pColorPair, attr_t& pElementAttr, e_cxColors pColor);
 
       /**
        * \brief Enables the attributes for one of the m*Attrs sets for an ncurses window.
@@ -2681,7 +2679,7 @@ class cxWindow : public cxObject {
        * @param pRecreateWin If true (default), this will re-create the mWindow
        *  member in the size of the other cxWindow.
        */
-      void copyCxWinStuff(const cxWindow* pThatWindow, bool pRecreateWin = true);
+      virtual void copyCxWinStuff(const cxWindow* pThatWindow, bool pRecreateWin = true);
 
       /**
        * \brief Figures out how to align text based on a title & message

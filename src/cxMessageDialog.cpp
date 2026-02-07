@@ -246,6 +246,10 @@ bool cxMessageDialog::move(int pNewRow, int pNewCol, bool pRefresh) {
    return(moved);
 } // move
 
+long cxMessageDialog::setFocus(bool pShowSelf, bool pBringToTop, bool pShowSubwindows) {
+   return cxWindow::setFocus(pShowSelf, pBringToTop, pShowSubwindows);
+}
+
 void cxMessageDialog::setFocus(const std::shared_ptr<cxButton>& pButton, bool pShow) {
    if (pButton != nullptr) {
 

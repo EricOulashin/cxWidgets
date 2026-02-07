@@ -240,6 +240,18 @@ class cxMultiForm : public cxForm {
       virtual std::string getValue(unsigned pFormIndex, int pInputIndex) const;
 
       /**
+       * \brief Returns the value associated with a particular input (by index).
+       * \brief Overridden from cxForm to prevent hiding.
+       */
+      virtual std::string getValue(int pIndex) const override;
+
+      /**
+       * \brief Returns the value associated with a particular input (by label or name).
+       * \brief Overridden from cxForm to prevent hiding.
+       */
+      virtual std::string getValue(const std::string& pStr, bool pIsLabel = true) const override;
+
+      /**
        * \brief Gets the value of an input on one of the subforms (by
        * \brief index & label/name)
        *

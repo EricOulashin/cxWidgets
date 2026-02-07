@@ -121,8 +121,11 @@ class cxMessageDialog : public cxDialog {
        */
       virtual std::shared_ptr<cxButton> getCancelButton() const { return(mCancelBtn); }
 
+      // Overridden from cxWindow so that this function doesn't get hidden
+      virtual long setFocus(bool pShowSelf = true, bool pBringToTop = true, bool pShowSubwindows = true) override;
+
       /** 
-       * @brief set the focus the the cxButton
+       * @brief set the focus on the cxButton
        * @param pButton the button to set the focus to
        * @param pShow show the buttons
        */

@@ -27,11 +27,11 @@ cxNotebook::cxNotebook(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
      mLabelsOnTop(pLabelsOnTop),
      mLeftLabelSpace(pLeftLabelSpace),
      mRightLabelSpace(pRightLabelSpace),
+     mTabNavKey(KEY_F(5)),
      mAllDisabledMsg("All windows in this notebook are disabled."),
      mNoWindowsMsg("This notebook has no windows."),
      mWindowDisabledMsg("That window is currently disabled."),
      mTabSpacing(pTabSpacing),
-     mTabNavKey(KEY_F(5)),
      mTabNavWrap(pTabNavWrap)
 {
    // For a screen optimization, don't show the notebook's window when showing
@@ -555,6 +555,10 @@ void cxNotebook::setShowPanelWindow(const string& pID, bool pShowPanelWindow,
    }
 } // setShowPanelWindow
 
+bool cxNotebook::getShowPanelWindow() const {
+   return cxPanel::getShowPanelWindow();
+} // getShowPanelWindow
+
 bool cxNotebook::getShowPanelWindow(unsigned int pIndex) const {
    bool retval = false;
 
@@ -934,6 +938,10 @@ void cxNotebook::removeWindow(cxWindow *pWindow) {
    removeWindow(getWindowIndex(pWindow));
 } // removeWindow
 
+void cxNotebook::removeWindow(const std::shared_ptr<cxWindow>& pWindow) {
+   cxPanel::removeWindow(pWindow);
+} // removeWindow
+
 void cxNotebook::delWindow(unsigned int pIndex) {
    // TODO: This is simply a duplicate of removeWindow() now that we don't need to manually
    // free the memory here, due to the update to use std::shared_ptr
@@ -945,6 +953,10 @@ void cxNotebook::delWindow(cxWindow *pWindow) {
    // free the memory here, due to the update to use std::shared_ptr
    // Call the other removeWindow that takes an index
    removeWindow(getWindowIndex(pWindow));
+} // delWindow
+
+void cxNotebook::delWindow(const std::shared_ptr<cxWindow>& pWindow) {
+   cxPanel::delWindow(pWindow);
 } // delWindow
 
 bool cxNotebook::setCurrentWindow(unsigned int pIndex) {
@@ -1022,6 +1034,10 @@ bool cxNotebook::setCurrentWindowByPtr(cxWindow *pWindow) {
    }
 
    return(retval);
+} // setCurrentWindowByPtr
+
+bool cxNotebook::setCurrentWindowByPtr(const std::shared_ptr<cxWindow>& pWindow) {
+   return cxPanel::setCurrentWindowByPtr(pWindow);
 } // setCurrentWindowByPtr
 
 int cxNotebook::lastClickTabIndex() const {
@@ -1622,8 +1638,12 @@ void cxNotebook::setExitOnLeaveFirst(bool pExitOnLeaveFirst) {
    cxPanel::setExitOnLeaveFirst(pExitOnLeaveFirst);
 } // setExitOnLeaveFirst
 
-bool cxNotebook::cxNotebook::windowIsInPanel(cxWindow *pWindow) const {
+bool cxNotebook::windowIsInPanel(cxWindow *pWindow) const {
    return(cxPanel::windowIsInPanel(pWindow));
+} // windowIsInPanel
+
+bool cxNotebook::windowIsInPanel(const std::shared_ptr<cxWindow>& pWindow) const {
+   return cxPanel::windowIsInPanel(pWindow);
 } // windowIsInPanel
 
 bool cxNotebook::append(const shared_ptr<cxWindow>& pWindow) {

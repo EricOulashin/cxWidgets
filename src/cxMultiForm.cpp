@@ -301,6 +301,14 @@ bool cxMultiForm::removeSubform(unsigned pIndex) {
    return(removed);
 } // removeSubform
 
+string cxMultiForm::getValue(int pIndex) const {
+   return cxForm::getValue(pIndex);
+} // getValue
+
+string cxMultiForm::getValue(const string& pStr, bool pIsLabel) const {
+   return cxForm::getValue(pStr, pIsLabel);
+} // getValue
+
 string cxMultiForm::getValue(unsigned pFormIndex, int pInputIndex) const {
    string retval;
 
@@ -1457,16 +1465,16 @@ bool cxMultiForm::selectPrevForm() {
 } // selectPrevForm
 
 void cxMultiForm::addFormFunctionKeysToSubform(std::shared_ptr<cxForm>& pForm) {
-   for (const pair<int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
+   for (const pair<const int, shared_ptr<cxFunction> >& funcPair : mKeyFunctions) {
       pForm->addExitKey(funcPair.first, false, true);
    }
 } // addFormFunctionKeysToSubform
 
 void cxMultiForm::addQuitAndExitKeysToSubform(std::shared_ptr<cxForm>& pForm) {
-   for (const pair<int, bool>& quitKeyPair : mQuitKeys) {
+   for (const pair<const int, bool>& quitKeyPair : mQuitKeys) {
       pForm->addQuitKey(quitKeyPair.first, false, true);
    }
-   for (const pair<int, bool>& exitKeyPair : mExitKeys) {
+   for (const pair<const int, bool>& exitKeyPair : mExitKeys) {
       pForm->addQuitKey(exitKeyPair.first, false, true);
    }
 } // addQuitAndExitKeysToSubform

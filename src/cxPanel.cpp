@@ -105,7 +105,7 @@ unsigned int cxPanel::numWindows() const {
    return(mWindows.size());
 } // numWindows
 
-const shared_ptr<cxWindow>& cxPanel::getWindow(unsigned int pIndex) const {
+shared_ptr<cxWindow> cxPanel::getWindow(unsigned int pIndex) const {
    if ((pIndex >= 0) && (pIndex < mWindows.size())) {
       return mWindows[pIndex];
    }
@@ -943,7 +943,7 @@ bool cxPanel::addWindowPtr(const shared_ptr<cxWindow>& pWindow) {
       map<int, cxFunction*>::const_iterator funcIter;
       for (auto& window : mWindows) {
          // Add the keys in mKeyFunctions as exit keys
-         for (const pair<int, shared_ptr<cxFunction>>& keyFuncPair : mKeyFunctions) {
+         for (const pair<const int, shared_ptr<cxFunction>>& keyFuncPair : mKeyFunctions) {
             // Have the window not run its onLeave function, and not
             // override if the window already has that key set up as a
             // keypress function.
@@ -951,11 +951,11 @@ bool cxPanel::addWindowPtr(const shared_ptr<cxWindow>& pWindow) {
          }
 
          // Add the exit keys from mExitKeys
-         for (const pair<int, bool>& exitKeyPair : mExitKeys) {
+         for (const pair<const int, bool>& exitKeyPair : mExitKeys) {
             addExitKeyToWindow(window, exitKeyPair.first, false, false);
          }
          // Add the quit keys from mQuitKeys
-         for (const pair<int, bool>& quitKeyPair : mQuitKeys) {
+         for (const pair<const int, bool>& quitKeyPair : mQuitKeys) {
             addQuitKeyToWindow(window, quitKeyPair.first, false, false);
          }
       }

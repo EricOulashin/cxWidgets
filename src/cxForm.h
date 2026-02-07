@@ -607,6 +607,13 @@ class cxForm : public cxWindow {
                                bool pUseVal, bool pExitAfterRun = false);
 
       /**
+       * \brief Sets the form window's "on focus" function
+       *
+       * @param pFunction The function to be run
+       */
+      virtual void setOnFocusFunction(const std::shared_ptr<cxFunction>& pFunction);
+
+      /**
        * Sets the "on focus" function pointer for a field (by label).
        * The function must have this signature: string func(void*, void*, void*, void*).
        * @param pLabel The label of the field
@@ -659,6 +666,13 @@ class cxForm : public cxWindow {
        */
       virtual void setOnFocusFunction(unsigned pIndex, funcPtr4 pFunction,
                          void *p1, void *p2, void *p3, void *p4, bool pUseVal);
+
+      /**
+       * \brief Sets the form window's "on leave" function
+       *
+       * @param pFunction The function to be run
+       */
+      virtual void setOnLeaveFunction(const std::shared_ptr<cxFunction>& pFunction) override;
 
       /**
        * Sets the "on leave" function pointer for a field (by label/name).
@@ -1672,7 +1686,7 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the input at pIndex, or nullptr if the input is not valid
        */
-      const std::shared_ptr<cxMultiLineInput>& getInput(int pIndex) const;
+      std::shared_ptr<cxMultiLineInput> getInput(int pIndex) const;
 
       /**
        * \brief Returns a pointer to an input with a given label/name, or
@@ -1689,7 +1703,7 @@ class cxForm : public cxWindow {
        *
        * @return A pointer to the input with the given label/name, or nullptr if none is found
        */
-      const std::shared_ptr<cxMultiLineInput>& getInput(const std::string& pLabel, bool pIsLabel = true) const;
+      std::shared_ptr<cxMultiLineInput> getInput(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns a pointer to the current input.  If there are no inputs
@@ -1699,7 +1713,7 @@ class cxForm : public cxWindow {
        * @return A pointer to the current input on the form, or nullptr if there
        *  are no inputs or if there is an error.
        */
-      const std::shared_ptr<cxMultiLineInput>& getCurrentInput() const;
+      std::shared_ptr<cxMultiLineInput> getCurrentInput() const;
 
       /**
        * \brief Returns the editability option for an input (by index).

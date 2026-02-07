@@ -673,13 +673,12 @@ int main(int argc, char* argv[]) {
    /*
    cxPanel mainPanel(nullptr, 1, 0, 20, 80, "Main panel", "", "Main status",
                      eBS_SINGLE_LINE);
-   //cxPanel *subPanel = new cxPanel(nullptr, 0, 0, 20, 80, "Subpanel", "",
-   //                           "Subpanel status", eBS_SINGLE_LINE);
+   //shared_ptr<cxPanel> subPanel = make_shared<cxPanel>(nullptr, 0, 0, 20, 80, "Subpanel", "",
+   //                                                    "Subpanel status", eBS_SINGLE_LINE);
    //mainPanel.append(subPanel, 0, 0, false);
-   cxMultiForm *multiForm = new cxMultiForm(nullptr, 0, 0, 20, 80, "MultiForm");
+   shared_ptr<cxMultiForm> multiForm = make_shared<cxMultiForm>(nullptr, 0, 0, 20, 80, "MultiForm");
    mainPanel.append(multiForm, 0, 0, false);
-   cxForm *searchForm = new cxForm(nullptr, 0, 0, 5, 18, "Search form",
-                                   eBS_NOBORDER);
+   shared_ptr<cxForm> searchForm = make_shared<cxForm>(nullptr, 0, 0, 5, 18, "Search form", eBS_NOBORDER);
    searchForm->append(0, 0, 1, 18, "Input 1:");
    searchForm->append(1, 0, 1, 18, "Input 2:");
    searchForm->append(2, 0, 1, 18, "Input 3:");
@@ -687,8 +686,7 @@ int main(int argc, char* argv[]) {
    searchForm->append(4, 0, 1, 18, "Input 5:");
    multiForm->appendForm(searchForm, 1, 1);
    //subPanel->append(searchForm, 1, 1, false);
-   cxForm *dataForm = new cxForm(nullptr, 0, 0, 5, 18, "Data form",
-                                 eBS_NOBORDER);
+   shared_ptr<cxForm> dataForm = make_shared<cxForm>(nullptr, 0, 0, 5, 18, "Data form", eBS_NOBORDER);
    dataForm->append(0, 0, 1, 18, "Input 1:");
    dataForm->append(1, 0, 1, 18, "Input 2:");
    dataForm->append(2, 0, 1, 18, "Input 3:");

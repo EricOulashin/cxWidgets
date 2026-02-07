@@ -160,7 +160,7 @@ class cxPanel : public cxWindow {
        * @return A pointer to one of the subwindows, or nullptr
        *  if pIndex is out of bounds.
        */
-      virtual const std::shared_ptr<cxWindow>& getWindow(unsigned pIndex) const;
+      virtual std::shared_ptr<cxWindow> getWindow(unsigned pIndex) const;
 
       /**
        * \brief Adds a window to the panel.  Note: The cxWindow

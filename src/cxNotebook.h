@@ -319,6 +319,14 @@ class cxNotebook: public cxPanel {
                                       bool pIsLabel = true);
 
       /**
+       * \brief Returns whether or not the panel window will be shown.
+       * \brief Overridden from cxPanel to prevent hiding.
+       *
+       * @return Whether or not the panel window will be shown
+       */
+      virtual bool getShowPanelWindow() const override;
+
+      /**
        * \brief Returns whether or not one of the panels in the notebook will
        * \brief show its window when it gets focus (by index).
        *
@@ -567,6 +575,14 @@ class cxNotebook: public cxPanel {
       virtual void removeWindow(cxWindow *pWindow) override;
 
       /**
+       * \brief Removes a panel from the notebook (by shared_ptr), without
+       * \brief freeing its memory.  Overridden from cxPanel to prevent hiding.
+       *
+       * @param pWindow A shared_ptr to a panel to be removed from the notebook
+       */
+      virtual void removeWindow(const std::shared_ptr<cxWindow>& pWindow) override;
+
+      /**
        * \brief Removes a panel from the notebook (by index) and frees up its
        * \brief memory.  Does nothing if the index is out of bounds.  Note:
        * \brief If you want to re-use the window, you can use removeWindow()
@@ -584,6 +600,14 @@ class cxNotebook: public cxPanel {
        * @param pWindow A pointer to a panel to remove from the notebook
        */
       virtual void delWindow(cxWindow *pWindow);
+
+      /**
+       * \brief Removes a panel from the notebook (by shared_ptr).
+       * \brief Overridden from cxPanel to prevent hiding.
+       *
+       * @param pWindow A shared_ptr to a panel to remove from the notebook
+       */
+      virtual void delWindow(const std::shared_ptr<cxWindow>& pWindow) override;
 
       /**
        * \brief Sets which panel will get focus in the next call to
@@ -632,6 +656,27 @@ class cxNotebook: public cxPanel {
        * @return True if successful or false if not
        */
       virtual bool setCurrentWindowByPtr(cxWindow *pWindow) override;
+
+      /**
+       * \brief Sets which window will get focus in the next
+       * \brief cycle through showModal() (by shared_ptr).
+       * \brief Overridden from cxPanel to prevent hiding.
+       *
+       * @param pWindow A shared_ptr to a cxWindow (if it exists
+       *  in the panel, it will then be the current window).
+       * @return True if successful or false if not
+       */
+      virtual bool setCurrentWindowByPtr(const std::shared_ptr<cxWindow>& pWindow) override;
+
+      /**
+       * \brief Returns whether a cxWindow object is contained in the notebook.
+       * \brief Overridden from cxPanel to prevent hiding.
+       *
+       * @param pWindow A shared_ptr to a cxWindow object
+       *
+       * @return Whether or not the cxWindow is contained in the notebook
+       */
+      virtual bool windowIsInPanel(const std::shared_ptr<cxWindow>& pWindow) const override;
 
       /**
        * \brief Returns the index of the tab (label window) that was clicked
