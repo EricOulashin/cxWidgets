@@ -1,0 +1,127 @@
+/* cxWidgets UML Class Diagram - GraphViz format
+ * Source: ../src/
+ * Generated from C++ classes in ../src/*.h
+ *
+ * To regenerate PNG from this directory:
+ *   dot -Tpng -o cxWidgets_class_diagram.png cxWidgets_classes.dot
+ */
+digraph cxWidgets_UML {
+    rankdir=BT;
+    node [shape=record, fontname="Helvetica", fontsize=10];
+    edge [arrowhead=empty];
+
+    /* Core Base */
+    cxObject [label="{cxObject|+ UseColors() : bool\l+ UseBeeps() : bool\l+ beep()\l}"];
+    cxApp [label="{cxApp|}"];
+    cxApp -> cxObject;
+
+    /* Main Window Hierarchy */
+    cxWindow [label="{cxWindow|+ show()\l+ showModal()\l+ setFocus()\l+ move()\l+ resize()\l}"];
+    cxWindow -> cxObject;
+
+    cxButton [label="{cxButton|}"];
+    cxButton -> cxWindow;
+
+    cxDialog [label="{cxDialog|+ showModal()\l}"];
+    cxDialog -> cxWindow;
+
+    cxMessageDialog [label="{cxMessageDialog|}"];
+    cxMessageDialog -> cxDialog;
+
+    cxFrame [label="{cxFrame|}"];
+    cxFrame -> cxWindow;
+
+    cxPanel [label="{cxPanel|+ append()\l+ removeWindow()\l+ delWindow()\l}"];
+    cxPanel -> cxWindow;
+
+    cxNotebook [label="{cxNotebook|}"];
+    cxNotebook -> cxPanel;
+
+    cxSearchPanel [label="{cxSearchPanel|}"];
+    cxSearchPanel -> cxPanel;
+
+    cxForm [label="{cxForm|+ append()\l+ remove()\l+ getValue()\l}"];
+    cxForm -> cxWindow;
+
+    cxMultiForm [label="{cxMultiForm|}"];
+    cxMultiForm -> cxForm;
+
+    cxMenu [label="{cxMenu|+ append()\l+ remove()\l+ showModal()\l}"];
+    cxMenu -> cxWindow;
+
+    cxScrolledWindow [label="{cxScrolledWindow|+ scrollWin()\l}"];
+    cxScrolledWindow -> cxWindow;
+
+    cxFileViewer [label="{cxFileViewer|}"];
+    cxFileViewer -> cxScrolledWindow;
+
+    /* Input Hierarchy */
+    cxMultiLineInput [label="{cxMultiLineInput|+ getValue()\l+ setValue()\l}"];
+    cxMultiLineInput -> cxWindow;
+
+    cxInput [label="{cxInput|}"];
+    cxInput -> cxWindow;
+
+    cxComboBox [label="{cxComboBox|}"];
+    cxComboBox -> cxMultiLineInput;
+
+    floatingPtInputWithRightLabel [label="{floatingPtInputWithRightLabel|}"];
+    floatingPtInputWithRightLabel -> cxMultiLineInput;
+
+    /* Function Callback Hierarchy */
+    cxFunction [label="{«abstract»\ncxFunction|+ runFunction()\l+ functionIsSet()\l}", style=filled, fillcolor=lightgray];
+    cxFunction0 [label="{cxFunction0|}"];
+    cxFunction0 -> cxFunction;
+    cxFunction2 [label="{cxFunction2|}"];
+    cxFunction2 -> cxFunction;
+    cxFunction4 [label="{cxFunction4|}"];
+    cxFunction4 -> cxFunction;
+
+    /* Standalone classes */
+    cxWidgetsException [label="{cxWidgetsException|}", style=filled, fillcolor=lightyellow];
+    cxTimer [label="{cxTimer|+ start()\l+ wait()\l}", style=filled, fillcolor=lightyellow];
+    cxTextValidator [label="{cxTextValidator|}", style=filled, fillcolor=lightyellow];
+
+    /* Subgraphs for grouping */
+    subgraph cluster_core {
+        label="Core";
+        cxObject;
+        cxApp;
+    }
+    subgraph cluster_windows {
+        label="Window Hierarchy";
+        cxWindow;
+        cxButton;
+        cxDialog;
+        cxMessageDialog;
+        cxFrame;
+        cxPanel;
+        cxNotebook;
+        cxSearchPanel;
+        cxForm;
+        cxMultiForm;
+        cxMenu;
+        cxScrolledWindow;
+        cxFileViewer;
+    }
+    subgraph cluster_inputs {
+        label="Input Controls";
+        cxMultiLineInput;
+        cxInput;
+        cxComboBox;
+        floatingPtInputWithRightLabel;
+    }
+    subgraph cluster_functions {
+        label="Callbacks";
+        cxFunction;
+        cxFunction0;
+        cxFunction2;
+        cxFunction4;
+    }
+    subgraph cluster_util {
+        label="Utility";
+        cxWidgetsException;
+        cxTimer;
+        cxTextValidator;
+    }
+}

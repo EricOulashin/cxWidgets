@@ -1,0 +1,149 @@
+@startuml cxWidgets Class Diagram
+' cxWidgets UML Class Diagram - PlantUML format
+' Source: ../src/
+' Generated from C++ classes in ../src/*.h
+'
+' To regenerate PNG from this directory (requires PlantUML):
+'   plantuml -tpng cxWidgets_classes.puml
+
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam backgroundColor #FEFEFE
+
+title cxWidgets - C++ Class Hierarchy
+
+package "Core Base" {
+  class cxObject {
+    + UseColors() : bool
+    + UseBeeps() : bool
+    + beep()
+  }
+
+  class cxApp {
+  }
+  cxApp --|> cxObject
+}
+
+package "Main Window Hierarchy" {
+  class cxWindow {
+    + show()
+    + showModal()
+    + setFocus()
+    + move()
+    + resize()
+  }
+  cxWindow --|> cxObject
+
+  class cxButton {
+  }
+  cxButton --|> cxWindow
+
+  class cxDialog {
+    + showModal()
+  }
+  cxDialog --|> cxWindow
+
+  class cxMessageDialog {
+  }
+  cxMessageDialog --|> cxDialog
+
+  class cxFrame {
+  }
+  cxFrame --|> cxWindow
+
+  class cxPanel {
+    + append()
+    + removeWindow()
+    + delWindow()
+  }
+  cxPanel --|> cxWindow
+
+  class cxNotebook {
+  }
+  cxNotebook --|> cxPanel
+
+  class cxSearchPanel {
+  }
+  cxSearchPanel --|> cxPanel
+
+  class cxForm {
+    + append()
+    + remove()
+    + getValue()
+  }
+  cxForm --|> cxWindow
+
+  class cxMultiForm {
+  }
+  cxMultiForm --|> cxForm
+
+  class cxMenu {
+    + append()
+    + remove()
+    + showModal()
+  }
+  cxMenu --|> cxWindow
+
+  class cxScrolledWindow {
+    + scrollWin()
+  }
+  cxScrolledWindow --|> cxWindow
+
+  class cxFileViewer {
+  }
+  cxFileViewer --|> cxScrolledWindow
+}
+
+package "Input Hierarchy" {
+  class cxMultiLineInput {
+    + getValue()
+    + setValue()
+  }
+  cxMultiLineInput --|> cxWindow
+
+  class cxInput {
+  }
+  cxInput --|> cxWindow
+
+  class cxComboBox {
+  }
+  cxComboBox --|> cxMultiLineInput
+
+  class floatingPtInputWithRightLabel {
+  }
+  floatingPtInputWithRightLabel --|> cxMultiLineInput
+}
+
+package "Function Callback Hierarchy" {
+  abstract class cxFunction {
+    + runFunction()
+    + functionIsSet()
+  }
+
+  class cxFunction0 {
+  }
+  cxFunction0 --|> cxFunction
+
+  class cxFunction2 {
+  }
+  cxFunction2 --|> cxFunction
+
+  class cxFunction4 {
+  }
+  cxFunction4 --|> cxFunction
+}
+
+package "Standalone / Utility" {
+  class cxWidgetsException {
+  }
+
+  class cxTimer {
+    + start()
+    + wait()
+  }
+
+  class cxTextValidator {
+  }
+}
+
+@enduml
