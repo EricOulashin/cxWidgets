@@ -583,7 +583,8 @@ void cxMultiLineInputOverrideOnKeypress();
 void cxWindowAddMessageLinesAbove();
 
 // Functions for use with forms & fields
-string someFunction(void *int1, void *int2);
+string someFunction_2voidIntPtrs(void *int1, void *int2);
+string someFunction(int& int1, int& int2);
 string someFunction2(void *int1, void *int2);
 string someFunction2x(cxMultiLineInput& input);
 string someFunction3(void *p1, void *p2, void *p3, void *p4);
@@ -1959,10 +1960,10 @@ void inputsWithFKeys() {
    int y = 73;
 
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 20, "Prompt:");
-   iInput.setKeyFunction(KEY_F(2), someFunction, &x, &y, true);
+   auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
+   iInput.setKeyFunction(KEY_F(2), keyFunc1);
    // Use 2 keys to run the same function
    iInput.setKeyFunction(KEY_F(3), someFunction2, &x, &y, true);
-   //iInput.setKeyFunction('/', someFunction2, &x, &y, true);
    auto inputFunc = cxFunction1RefTemplated<cxMultiLineInput>::create(someFunction2x, iInput, false, false, true);
    iInput.setKeyFunction('/', inputFunc);
    iInput.showModal();
@@ -1980,11 +1981,13 @@ void formWithFKeys() {
    iForm.append(1, 1, 2, 15, "Name:");
    iForm.append(3, 1, 1, 25, "City:");
 
-   iForm.setFieldKeyFunction("Name:", KEY_F(2), someFunction, &x, &y, true, true);
-   iForm.setFieldKeyFunction("Name:", '/', someFunction, &x, &y, true, true);
+   auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
+
+   iForm.setFieldKeyFunction("Name:", KEY_F(2), keyFunc1);
+   iForm.setFieldKeyFunction("Name:", '/', keyFunc1);
    iForm.setFieldKeyFunction("City:", KEY_F(3), someFunction2, &x, &y, true, false);
-   iForm.setKeyFunction(KEY_F(4), someFunction, &x, &y, false);
-   iForm.setKeyFunction(KEY_F(5), someFunction, &x, &y, true);
+   iForm.setKeyFunction(KEY_F(4), someFunction_2voidIntPtrs, &x, &y, false);
+   iForm.setKeyFunction(KEY_F(5), someFunction_2voidIntPtrs, &x, &y, true);
    iForm.setOnLeaveFunction(0, genericMessageFunction, nullptr, nullptr, nullptr, nullptr);
    iForm.showModal();
 
@@ -2012,9 +2015,16 @@ void cxMultiLineInputMasking() {
    messageBox("You entered:" + iInput.getValue() + ":");
 } // cxMultiLineInputMasking
 
-string someFunction(void *int1, void *int2) {
+string someFunction_2voidIntPtrs(void *int1, void *int2) {
    ostringstream os;
    os << "1: " << *((int*)int1) << ", 2: " << *((int*)int2);
+   messageBox(2, 31, 3, 18, "Test", os.str());
+   return("hello");
+} // someFunction
+
+string someFunction(int& int1, int& int2) {
+   ostringstream os;
+   os << "1: " << int1 << ", 2: " << int2;
    messageBox(2, 31, 3, 18, "Test", os.str());
    return("hello");
 } // someFunction
@@ -2798,11 +2808,12 @@ void getFormKeys() {
    iForm.append(3, 1, 1, 25, "City:");
 
    int x = 0, y = 0;
-   iForm.setKeyFunction(KEY_F(4), someFunction, &x, &y, false);
-   iForm.setKeyFunction(KEY_F(5), someFunction, &x, &y, true);
-   iForm.setKeyFunction(KEY_NPAGE, someFunction, &x, &y, true);
-   iForm.setKeyFunction(KEY_PPAGE, someFunction, &x, &y, true);
-   iForm.setKeyFunction('/', someFunction, &x, &y, true);
+   auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
+   iForm.setKeyFunction(KEY_F(4), keyFunc1);
+   iForm.setKeyFunction(KEY_F(5), someFunction_2voidIntPtrs, &x, &y, true);
+   iForm.setKeyFunction(KEY_NPAGE, someFunction_2voidIntPtrs, &x, &y, true);
+   iForm.setKeyFunction(KEY_PPAGE, someFunction_2voidIntPtrs, &x, &y, true);
+   iForm.setKeyFunction('/', someFunction_2voidIntPtrs, &x, &y, true);
 
    vector<string> formKeys;
    iForm.getFunctionKeyStrings(formKeys);

@@ -960,16 +960,36 @@ void cxForm::removeAll() {
    mCurrentInput = 0;
 } // removeAll
 
+void cxForm::setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
+                            const std::shared_ptr<cxFunction>& pFieldFunction,
+                            bool pIsLabel) {
+   // If there are multiple inputs with the same label/name, all of them
+   // will be affected.
+   if (pIsLabel) {
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel || stringWithoutHotkeyChars(input->getLabel()) == pLabel) {
+            input->setKeyFunction(pFunctionKey, pFieldFunction);
+         }
+      }
+   }
+   else {
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setKeyFunction(pFunctionKey, pFieldFunction);
+         }
+      }
+   }
+} // setFieldKeyFunction
+
 void cxForm::setFieldKeyFunction(const string& pLabel, int pFunctionKey,
                               funcPtr4 pFieldFunction, void *p1, void *p2,
                               void *p3, void *p4, bool pUseVal, bool pExitAfterRun,
                               bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
-   //  will be affected.
+   // will be affected.
    if (pIsLabel) {
       for (const auto& input : mInputs) {
-         if ((input->getLabel() == pLabel) ||
-             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+         if (input->getLabel() == pLabel || (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
             input->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2, p3, p4,
                                       pUseVal, pExitAfterRun);
          }
@@ -983,15 +1003,20 @@ void cxForm::setFieldKeyFunction(const string& pLabel, int pFunctionKey,
          }
       }
    }
-}
+} // setFieldKeyFunction
 
-// Sets a function to be executed via a keypress for
-//  one of the fields (by index).
-void cxForm::setFieldKeyFunction(unsigned pIndex, int pFunctionKey,
+void cxForm::setFieldKeyFunction(unsigned int pIndex, int pFunctionKey,
+                         const std::shared_ptr<cxFunction>& pFieldFunction) {
+   if (pIndex >= 0 && pIndex < mInputs.size()) {
+      mInputs[pIndex]->setKeyFunction(pFunctionKey, pFieldFunction);
+   }
+} // setFieldKeyFunction
+
+void cxForm::setFieldKeyFunction(unsigned int pIndex, int pFunctionKey,
                               funcPtr4 pFieldFunction,
                               void *p1, void *p2, void *p3, void *p4,
                               bool pUseVal, bool pExitAfterRun) {
-   if ((pIndex >= 0) && (pIndex < mInputs.size())) {
+   if (pIndex >= 0 && pIndex < mInputs.size()) {
       mInputs[pIndex]->setKeyFunction(pFunctionKey, pFieldFunction, p1, p2, p3, p4, pUseVal, pExitAfterRun);
    }
 } // setFieldKeyFunction

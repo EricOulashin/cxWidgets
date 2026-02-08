@@ -530,6 +530,21 @@ class cxForm : public cxWindow {
        */
       virtual void removeAll();
 
+       /**
+       * Sets a function to be executed via a keypress for one of the fields (by label).
+       * This version adds a pointer to a function with this signature: string func(void*, void*, void*, void*).
+       * Note that functions added with this method take precedence over functions with 2 void parameters.
+       * @param pLabel The label of the input to add the function to
+       * @param pFunctionKey The key for the input to use to fire the function.
+       * @param pFieldFunction The function to add.
+       * @param pExitAfterRun Whether or not this field should exit from the input loop once the function is done.
+       * @param pIsLabel If true (default), pLabel specifies the input label.
+       *     If false, pLabel specifies the name of the input.
+       */
+      virtual void setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
+                            const std::shared_ptr<cxFunction>& pFieldFunction,
+                            bool pIsLabel = true);
+
       /**
        * Sets a function to be executed via a keypress for one of the fields (by label).
        * This version adds a pointer to a function with this signature: string func(void*, void*, void*, void*).
@@ -547,7 +562,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
+      virtual void setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
                             funcPtr4 pFieldFunction, void *p1, void *p2,
                             void *p3, void *p4, bool pUseVal,
                             bool pExitAfterRun = false,
@@ -568,7 +583,7 @@ class cxForm : public cxWindow {
        * @param pUseVal Whether or not the function's return value should be set as the value in the field.
        * @param pExitAfterRun Whether or not this field should exit from the input loop once the function is done.
        */
-      void setFieldKeyFunction(unsigned pIndex, int pFunctionKey,
+      virtual void setFieldKeyFunction(unsigned pIndex, int pFunctionKey,
                             funcPtr4 pFieldFunction, void *p1, void *p2,
                             void *p3, void *p4, bool pUseVal,
                             bool pExitAfterRun = false);
@@ -586,10 +601,21 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
+      virtual void setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
                             funcPtr2 pFieldFunction, void *p1, void *p2,
                             bool pUseVal, bool pExitAfterRun = false,
                             bool pIsLabel = true);
+
+
+       /**
+       * Sets a function to be executed via a keypress for one of the fields (by index).
+       * @param pIndex The index of the input to add the function to
+       * @param pFunctionKey The key for the input to use to fire the function.
+       * @param pFieldFunction The function to add.
+       */
+      virtual void setFieldKeyFunction(unsigned int pIndex, int pFunctionKey,
+                               const std::shared_ptr<cxFunction>& pFieldFunction);
+
 
        /**
        * Sets a function to be executed via a keypress for one of the fields (by index).
@@ -602,7 +628,7 @@ class cxForm : public cxWindow {
        * @param pUseVal Whether or not the function's return value should be set as the value in the field.
        * @param pExitAfterRun Whether or not this field should exit from the input loop once the function is done.
        */
-      void setFieldKeyFunction(unsigned pIndex, int pFunctionKey,
+      virtual void setFieldKeyFunction(unsigned int pIndex, int pFunctionKey,
                                funcPtr2 pFieldFunction, void *p1, void *p2,
                                bool pUseVal, bool pExitAfterRun = false);
 
@@ -731,21 +757,21 @@ class cxForm : public cxWindow {
        * @param pIndex The index of the field
        * @param pLabel The label to be set in the field
        */
-      void setFieldLabel(unsigned pIndex, const std::string& pLabel);
+      virtual void setFieldLabel(unsigned pIndex, const std::string& pLabel);
 
       /**
        * Sets a field label (by name)
        * @param pName The name of the field
        * @param pLabel The label to be set in the field
        */
-      void setFieldLabel(const std::string& pName, const std::string& pLabel);
+      virtual void setFieldLabel(const std::string& pName, const std::string& pLabel);
 
       /**
        * Sets a field name (by index)
        * @param pIndex The index of the field
        * @param pName The name to be set in the field
        */
-      void setFieldName(unsigned pIndex, const std::string& pName);
+      virtual void setFieldName(unsigned pIndex, const std::string& pName);
 
       /**
        * \brief Sets a field name (by label)
