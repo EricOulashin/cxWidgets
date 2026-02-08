@@ -26,7 +26,7 @@ part of <a href='https://graphviz.org' target='_blank'>Graphviz</a> (open-source
 software). In the uml directory, there are also the files cxWidgets_classes.dot and cxWidgets_classes.puml
 for use with the dot utility. Also, the genUMLDiagram.sh script in the cxWidgets directory can be run
 to re-generate the UML class diagram.<br/>
-a href='uml/cxWidgets_class_diagram.png' target='_blank'><img src="uml/cxWidgets_class_diagram.png" alt="cxWidgets class diagram (UML)" width="500"></a>
+<a href='uml/cxWidgets_class_diagram.png' target='_blank'><img src="uml/cxWidgets_class_diagram.png" alt="cxWidgets class diagram (UML)" width="500"></a>
 
 In addition to the class library, there are also test tools:
 <ul>
