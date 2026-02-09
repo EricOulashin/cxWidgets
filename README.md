@@ -111,7 +111,7 @@ Some notable make commands
 The makefile supports using ccache if it's available on the system.
 
 ## Screenshots
-These are some screenshots of the 
+These are some screenshots of the test app, showing examples of what you can do with cxWidgets:
 <p align="center">
 	<img src="screenshots/cxWidgets_menu.png" alt="cxMenu" width="800">
 	<img src="screenshots/cxWidgets_input_box.png" alt="Text input box" width="800">
