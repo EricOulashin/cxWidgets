@@ -19,12 +19,13 @@ cxFileViewer::cxFileViewer(cxWindow *pParentWindow, const string& pFilename,
 
    // Set the status text to display the number of file lines.
    // Note: This adds the text in position 2 because the left scroll arrow will
-   //  be drawn in position 1 of the border.
+   // be drawn in position 1 of the border.
    addStatusString(2, "Lines: " + cxStringUtils::toString(mMessageLines.size()));
 
    // Make sure that the line numbers get updated after each cycle
-   //  through the input loop
-   setLoopEndFunction(cxFileViewer::updateLineNumbers, this, nullptr, nullptr, nullptr, false);
+   // through the input loop
+   auto loopEndFunc = cxFunction1RefTemplated<cxFileViewer>::create(cxFileViewer::updateLineNumbers, *this);
+   setLoopEndFunction(loopEndFunc);
 }
 
 cxFileViewer::cxFileViewer(const cxFileViewer& pThatFileViewer)
@@ -42,12 +43,13 @@ cxFileViewer::cxFileViewer(const cxFileViewer& pThatFileViewer)
 
    // Set the status text to display the number of file lines.
    // Note: This adds the text in position 2 because the left scroll arrow will
-   //  be drawn in position 1 of the border.
+   // be drawn in position 1 of the border.
    addStatusString(2, "Lines: " + cxStringUtils::toString(mMessageLines.size()));
 
    // Make sure that the line numbers get updated after each cycle
-   //  through the input loop
-   setLoopEndFunction(cxFileViewer::updateLineNumbers, this, nullptr, nullptr, nullptr, false);
+   // through the input loop
+   auto loopEndFunc = cxFunction1RefTemplated<cxFileViewer>::create(cxFileViewer::updateLineNumbers, *this);
+   setLoopEndFunction(loopEndFunc);
 }
 
 cxFileViewer::~cxFileViewer() {
@@ -152,20 +154,12 @@ void cxFileViewer::displayLineNumbers() {
    wrefresh(mWindow);
 } // displayLineNumbers
 
-string cxFileViewer::updateLineNumbers(void *theFileViewer, void *unused,
-                            void *unused2, void *unused3) {
-   if (theFileViewer == nullptr) {
-      return("");
-   }
-
-   cxFileViewer *pFileViewer = (cxFileViewer*)theFileViewer;
-   pFileViewer->displayLineNumbers();
-
+string cxFileViewer::updateLineNumbers(cxFileViewer& pFileViewer) {
+   pFileViewer.displayLineNumbers();
    return("");
 } // updateLineNumbers
 
 // This is private so that it can't be called from the outside
-void cxFileViewer::setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                                 void *p3, void *p4, bool pExitAfterRun) {
-   cxScrolledWindow::setLoopEndFunction(pFuncPtr, p1, p2, p3, p4, pExitAfterRun);
+void cxFileViewer::setLoopEndFunction(const std::shared_ptr<cxFunction>& pFuncPtr) {
+   cxScrolledWindow::setLoopEndFunction(pFuncPtr);
 } // setLoopEndFunction

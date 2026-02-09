@@ -620,35 +620,18 @@ class cxMenu : public cxWindow {
        * \brief input loop.  The return value of the function is
        * \brief not used.
        *
-       * @param pFuncPtr A pointer to the function - Must have the
-       *  signature string someFunc(void*, void*, void*, void).
-       * @param p1 A pointer to the first argument
-       * @param p2 A pointer to the 2nd argument
-       * @param p3 A pointer to the 3rd argument
-       * @param p4 A pointer to the 4th argument
-       * @param pExitAfterRun Whether or not to exit after
-       *  the function runs (defaults to false; if true, the input
-       *  loop won't continue and will never take input).
+       * @param pFuncPtr A pointer to the function
        */
-      void setLoopStartFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun = false);
+      void setLoopStartFunction(const std::shared_ptr<cxFunction>& pFuncPtr);
 
       /**
        * \brief Sets a function to be run at the end of each
        * \brief cycle through the input loop.  The return value
        * \brief of the function is not used.
        *
-       * @param pFuncPtr A pointer to the function - Must have the
-       *  signature string someFunc(void*, void*, void*, void).
-       * @param p1 A pointer to the first argument
-       * @param p2 A pointer to the 2nd argument
-       * @param p3 A pointer to the 3rd argument
-       * @param p4 A pointer to the 4th argument
-       * @param pExitAfterRun Whether or not to exit the input loop after
-       *  the function runs (defaults to false).
+       * @param pFuncPtr A pointer to the function
        */
-      void setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun = false);
+      void setLoopEndFunction(const std::shared_ptr<cxFunction>& pFuncPtr);
 
       /**
        * \brief Runs the loop start function, if it's set.
@@ -1060,8 +1043,8 @@ class cxMenu : public cxWindow {
       std::set<unsigned> mUnselectableItems; // Contains indexes of unselectable items
 
       // Functions to be run at various points in the input loop
-      cxFunction4 mLoopStartFunction; // At the start of each input loop iteration
-      cxFunction4 mLoopEndFunction;   // At the end of each input loop iteration
+      std::shared_ptr<cxFunction> mLoopStartFunction; // At the start of each input loop iteration
+      std::shared_ptr<cxFunction> mLoopEndFunction;   // At the end of each input loop iteration
 
       // mOnSelectItemFunction is a function that can be fired when the user
       // selects an item.

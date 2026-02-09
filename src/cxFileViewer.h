@@ -7,7 +7,9 @@
 // displays it in that window.
 
 #include "cxScrolledWindow.h"
+#include "cxFunction.h"
 #include <string>
+#include <memory>
 
 /** \class cxFileViewer
  * \brief Represents a window that displays a file.
@@ -102,15 +104,13 @@ class cxFileViewer : public cxScrolledWindow {
       void displayLineNumbers();
 
       // Calls displayLineNumbers() on a cxFileViewer.  This
-      //  function is to be used as the 'loop function' to be
-      //  run at the end of each cycle through the input loop
-      //  in the parent class.
-      static std::string updateLineNumbers(void *theFileViewer, void *unused,
-                             void *unused2, void *unused3);
+      // function is to be used as the 'loop function' to be
+      // run at the end of each cycle through the input loop
+      // in the parent class.
+      static std::string updateLineNumbers(cxFileViewer& pFileViewer);
 
       // Disable the use of setLoopEndFunction from the outside
-      void setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun = false);
+      void setLoopEndFunction(const std::shared_ptr<cxFunction>& pFuncPtr) override;
 };
 
 #endif

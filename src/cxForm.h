@@ -637,7 +637,7 @@ class cxForm : public cxWindow {
        *
        * @param pFunction The function to be run
        */
-      virtual void setOnFocusFunction(const std::shared_ptr<cxFunction>& pFunction);
+      virtual void setOnFocusFunction(const std::shared_ptr<cxFunction>& pFunction) override;
 
       /**
        * Sets the "on focus" function pointer for a field (by label).
@@ -1815,7 +1815,15 @@ class cxForm : public cxWindow {
        * @param pRefreshStatus Whether or not to refresh the status area (defaults to true)
        *
        */
-      void disableCustomStatus(bool pRefreshStatus = true);
+      virtual void disableCustomStatus(bool pRefreshStatus = true);
+
+      /**
+       * \brief Sets a validator function to be run before focus is lost for one
+       * \brief of the inputs (by index).
+       * @param pIndex The index of the input
+       * @param pFunction The function to be run
+       */
+      virtual void setValidatorFunction(int pIndex, const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * \brief Sets a validator function to be run before focus is lost for one
@@ -1827,8 +1835,19 @@ class cxForm : public cxWindow {
        * @param p3 Pointer to the 3rd parameter to be used for the function
        * @param p4 Pointer to the 4th parameter to be used for the function
        */
-      void setValidatorFunction(int pIndex, funcPtr4 pFunction, void *p1, void *p2,
-                                void *p3, void *p4);
+      virtual void setValidatorFunction(int pIndex, funcPtr4 pFunction, void *p1, void *p2,
+                                        void *p3, void *p4);
+
+      /**
+       * \brief Sets a validator function to be run before focus is lost for one
+       * \brief of the inputs (by label/name).
+       * @param pLabel The label/name of the input
+       * @param pFunction The function to be run
+       * @param pIsLabel If true (default), pLabel specifies the input label.
+       *     If false, pLabel specifies the name of the input.
+       */
+      virtual void setValidatorFunction(const std::string& pLabel, const std::shared_ptr<cxFunction>& pFunction,
+                                        bool pIsLabel = true);
 
       /**
        * \brief Sets a validator function to be run before focus is lost for one
@@ -1842,9 +1861,9 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setValidatorFunction(const std::string& pLabel, funcPtr4 pFunction,
-                                void *p1, void *p2, void *p3, void *p4,
-                                bool pIsLabel = true);
+      virtual void setValidatorFunction(const std::string& pLabel, funcPtr4 pFunction,
+                                        void *p1, void *p2, void *p3, void *p4,
+                                        bool pIsLabel = true);
 
       /**
        * \brief Toggles whether to show inputs if they're on
@@ -1853,7 +1872,14 @@ class cxForm : public cxWindow {
        * @param pShowInputsOnBorder Whether or not to show inputs
        *     if they're on a border
        */
-      void showInputsOnBorder(bool pShowInputsOnBorder);
+      virtual void showInputsOnBorder(bool pShowInputsOnBorder);
+
+      /**
+       * \brief Sets a function to be run whenever a key is pressed in an input (by index).
+       * @param pIndex The index of the input
+       * @param pFunction The function to be run
+       */
+      virtual void setOnKeyFunction(int pIndex, const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed in an input (by index).
@@ -1865,8 +1891,21 @@ class cxForm : public cxWindow {
        * @param p3 Pointer to the 3rd parameter to be used for the function
        * @param p4 Pointer to the 4th parameter to be used for the function
        */
-      void setOnKeyFunction(int pIndex, funcPtr4 pFunction, void *p1,
-                            void *p2, void *p3, void *p4);
+      virtual void setOnKeyFunction(int pIndex, funcPtr4 pFunction, void *p1,
+                                   void *p2, void *p3, void *p4);
+
+      /**
+       * \brief Sets a function to be run whenever a key is pressed in an
+       * \brief input (by label/name).  Note: If there are multiple inputs with
+       * \brief the same label/name, all of them will be affected.
+       *
+       * @param pLabel The label/name of the input
+       * @param pFunction The function to be run
+       * @param pIsLabel If true (default), pLabel specifies the input label.
+       *     If false, pLabel specifies the name of the input.
+       */
+      virtual void setOnKeyFunction(const std::string& pLabel, const std::shared_ptr<cxFunction>& pFunction,
+                                    bool pIsLabel = true);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed in an
@@ -1883,8 +1922,8 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setOnKeyFunction(const std::string& pLabel, funcPtr4 pFunction, void *p1,
-                            void *p2, void *p3, void *p4, bool pIsLabel = true);
+      virtual void setOnKeyFunction(const std::string& pLabel, funcPtr4 pFunction, void *p1,
+                                    void *p2, void *p3, void *p4, bool pIsLabel = true);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed in an input (by index).
@@ -1894,7 +1933,7 @@ class cxForm : public cxWindow {
        * @param p1 Pointer to the first parameter to be used for the function
        * @param p2 Pointer to the second parameter to be used for the function
        */
-      void setOnKeyFunction(int pIndex, funcPtr2 pFunction, void *p1, void *p2);
+      virtual void setOnKeyFunction(int pIndex, funcPtr2 pFunction, void *p1, void *p2);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed in an
@@ -1909,8 +1948,8 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setOnKeyFunction(const std::string& pLabel, funcPtr2 pFunction, void *p1,
-                            void *p2, bool pIsLabel = true);
+      virtual void setOnKeyFunction(const std::string& pLabel, funcPtr2 pFunction, void *p1,
+                                    void *p2, bool pIsLabel = true);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed in an input (by index).
@@ -1920,7 +1959,7 @@ class cxForm : public cxWindow {
        * @param p1 Pointer to the first parameter to be used for the function
        * @param p2 Pointer to the second parameter to be used for the function
        */
-      void setOnKeyFunction(int pIndex, funcPtr0 pFunction);
+      virtual void setOnKeyFunction(int pIndex, funcPtr0 pFunction);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed in an
@@ -1933,9 +1972,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setOnKeyFunction(const std::string& pLabel, funcPtr0 pFunction,
-                            bool pIsLabel = true);
-
+      virtual void setOnKeyFunction(const std::string& pLabel, funcPtr0 pFunction, bool pIsLabel = true);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed, in all
@@ -1943,7 +1980,7 @@ class cxForm : public cxWindow {
        *
        * @param pFunction The function to be run
        */
-      void setAllOnKeyFunction(const std::shared_ptr<cxFunction>& pFunction);
+      virtual void setAllOnKeyFunction(const std::shared_ptr<cxFunction>& pFunction);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed, in all
@@ -1956,7 +1993,7 @@ class cxForm : public cxWindow {
        * @param p3 Pointer to the 3rd parameter to be used for the function
        * @param p4 Pointer to the 4th parameter to be used for the function
        */
-      void setAllOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2, void *p3, void *p4);
+      virtual void setAllOnKeyFunction(funcPtr4 pFunction, void *p1, void *p2, void *p3, void *p4);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed, in all
@@ -1967,7 +2004,7 @@ class cxForm : public cxWindow {
        * @param p1 Pointer to the first parameter to be used for the function
        * @param p2 Pointer to the second parameter to be used for the function
        */
-      void setAllOnKeyFunction(funcPtr2 pFunction, void *p1, void *p2);
+      virtual void setAllOnKeyFunction(funcPtr2 pFunction, void *p1, void *p2);
 
       /**
        * \brief Sets a function to be run whenever a key is pressed, in all
@@ -1976,7 +2013,7 @@ class cxForm : public cxWindow {
        * @param pFunction The function to be run - Must have this signature:
        *  string func()
        */
-      void setAllOnKeyFunction(funcPtr0 pFunction);
+      virtual void setAllOnKeyFunction(funcPtr0 pFunction);
 
       /**
        * \brief Sets whether or not an onKey function should run for one of the
@@ -1986,7 +2023,7 @@ class cxForm : public cxWindow {
        * @param pRunOnKeyFunction Whether or not the input's onKey function
        *  should run
        */
-      void toggleOnKeyFunction(int pIndex, bool pRunOnKeyFunction);
+      virtual void toggleOnKeyFunction(int pIndex, bool pRunOnKeyFunction);
 
       /**
        * \brief Sets whether or not an onKey function should run for one of the
@@ -2000,8 +2037,7 @@ class cxForm : public cxWindow {
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *  If false, pLabel specifies the name of the input.
        */
-      void toggleOnKeyFunction(const std::string& pLabel, bool pRunOnKeyFunction,
-                               bool pIsLabel = true);
+      virtual void toggleOnKeyFunction(const std::string& pLabel, bool pRunOnKeyFunction, bool pIsLabel = true);
 
       /**
        * \brief Sets whether or not the onKey function for all inputs should
@@ -2010,7 +2046,7 @@ class cxForm : public cxWindow {
        * @param pRunOnKeyFunction Whether or not the onKey function should run
        *  (for all inputs)
        */
-      void toggleAllOnKeyFunction(bool pRunOnKeyFunction);
+      virtual void toggleAllOnKeyFunction(bool pRunOnKeyFunction);
 
       /**
        * \brief Returns whether the onKey function is enabled for one of the
@@ -2022,7 +2058,7 @@ class cxForm : public cxWindow {
        *  If pIndex is out of bounds (< 0 or more than the number of inputs),
        *  this function will return false.
        */
-      bool onKeyFunctionEnabled(int pIndex) const;
+      virtual bool onKeyFunctionEnabled(int pIndex) const;
 
       /**
        * \brief Returns whether the onKey function is enabled for one of the
@@ -2038,7 +2074,7 @@ class cxForm : public cxWindow {
        *  If there is no input with the given label/name, this function will
        *  return false.
        */
-      bool onKeyFunctionEnabled(const std::string& pLabel, bool pIsLabel = true) const;
+      virtual bool onKeyFunctionEnabled(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Assignment operator
@@ -2108,21 +2144,21 @@ when the user presses the 'n' key.
        *
        * @return The index of the input that currently has focus
        */
-      int getCurrentInputIndex() const;
+      virtual int getCurrentInputIndex() const;
 
       /**
        * \brief Returns the label of the input that currently has focus.
        *
        * @return The label of the input taht currently has focus
        */
-      std::string getCurrentInputLabel() const;
+      virtual std::string getCurrentInputLabel() const;
 
       /**
        * \brief Returns the name of the input that currently has focus.
        *
        * @return The name of the input taht currently has focus
        */
-      std::string getCurrentInputName() const;
+      virtual std::string getCurrentInputName() const;
 
       /**
        * \brief Returns the index of an input, based on its label or name.
@@ -2134,7 +2170,7 @@ when the user presses the 'n' key.
        * @return The index of the input, or -1 if there was no input with the
        *         given label/name.
        */
-      int getInputIndex(const std::string& pLabel, bool pIsLabel = true) const;
+      virtual int getInputIndex(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns the index of an input based on a pointer.  May
@@ -2145,8 +2181,8 @@ when the user presses the 'n' key.
        * @return The index of the input on the form, or -1 if the input is
        *  not in the form.
        */
-      int getInputIndex(const std::shared_ptr<cxMultiLineInput>& pInput) const;
-      int getInputIndex(const cxMultiLineInput *pInput) const;
+      virtual int getInputIndex(const std::shared_ptr<cxMultiLineInput>& pInput) const;
+      virtual int getInputIndex(const cxMultiLineInput *pInput) const;
 
       /**
        * \brief Sets the hotkey to be used to bring up the menu to choose
@@ -2154,14 +2190,14 @@ when the user presses the 'n' key.
        *
        * @param pInputJumpKey The hotkey to use
        */
-      void setInputJumpKey(int pInputJumpKey);
+      virtual void setInputJumpKey(int pInputJumpKey);
 
       /**
        * \brief Returns which key is being used as the jump hotkey
        *
        * @return The key currently being used as the jump hotkey
        */
-      int getInputJumpKey() const;
+      virtual int getInputJumpKey() const;
 
       /**
        * \brief Sets whether an input can be set editable (by index).  If
@@ -2173,7 +2209,7 @@ when the user presses the 'n' key.
        * @param pCanBeEditable If true, the can be set editable.  If false, the
        *  input will always be read-only.
        */
-      void setCanBeEditable(int pIndex, bool pCanBeEditable);
+      virtual void setCanBeEditable(int pIndex, bool pCanBeEditable);
 
       /**
        * \brief Sets whether an input can be set editable (by label/name).  For
@@ -2187,7 +2223,7 @@ when the user presses the 'n' key.
        * @param pIsLabel If true (default), pLabel specifies the input label.
        *     If false, pLabel specifies the name of the input.
        */
-      void setCanBeEditable(const std::string& pLabel, bool pCanBeEditable, bool pIsLabel = true);
+      virtual void setCanBeEditable(const std::string& pLabel, bool pCanBeEditable, bool pIsLabel = true);
 
       /**
        * \brief Sets the ability of all inputs to be able to be editable.
@@ -2195,7 +2231,7 @@ when the user presses the 'n' key.
        * @param pCanBeEditable If true, all inputs can be set editable. If
        *  false, all inputs will always be read-only.
        */
-      void setAllCanBeEditable(bool pCanBeEditable);
+      virtual void setAllCanBeEditable(bool pCanBeEditable);
 
       /**
        * \brief Returns whether or not an input can be set editable.
@@ -2204,7 +2240,7 @@ when the user presses the 'n' key.
        *
        * @return Whether or not the input can be set editable
        */
-      bool canBeEditable(int pIndex) const;
+      virtual bool canBeEditable(int pIndex) const;
 
       /**
        * \brief Returns whether or not an input can be set editable.
@@ -2215,14 +2251,14 @@ when the user presses the 'n' key.
        *
        * @return Whether or not the input can be set editable
        */
-      bool canBeEditable(const std::string& pLabel, bool pIsLabel = true) const;
+      virtual bool canBeEditable(const std::string& pLabel, bool pIsLabel = true) const;
 
       /**
        * \brief Returns whether any input on the form (at least 1) can be set editable.
        *
        * @return Whether or not at least 1 input on the form can be set editable.
        */
-      bool anyInputsCanBeEditable() const;
+      virtual bool anyInputsCanBeEditable() const;
 
       /**
        * \brief Sets whether the form should allow the user to quit.
@@ -2366,35 +2402,18 @@ when the user presses the 'n' key.
        * \brief input loop.  The return value of the function is
        * \brief not used.
        *
-       * @param pFuncPtr A pointer to the function - Must have the
-       *  signature string someFunc(void*, void*, void*, void).
-       * @param p1 A pointer to the first argument
-       * @param p2 A pointer to the 2nd argument
-       * @param p3 A pointer to the 3rd argument
-       * @param p4 A pointer to the 4th argument
-       * @param pExitAfterRun Whether or not to exit after
-       *  the function runs (defaults to false; if true, the input
-       *  loop won't continue and will never take input).
+       * @param pFuncPtr A pointer to the function
        */
-      void setLoopStartFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun = false);
+      virtual void setLoopStartFunction(const std::shared_ptr<cxFunction>& pFuncPtr);
 
       /**
        * \brief Sets a function to be run at the end of each
        * \brief cycle through the input loop.  The return value
        * \brief of the function is not used.
        *
-       * @param pFuncPtr A pointer to the function - Must have the
-       *  signature string someFunc(void*, void*, void*, void).
-       * @param p1 A pointer to the first argument
-       * @param p2 A pointer to the 2nd argument
-       * @param p3 A pointer to the 3rd argument
-       * @param p4 A pointer to the 4th argument
-       * @param pExitAfterRun Whether or not to exit the input loop after
-       *  the function runs (defaults to false).
+       * @param pFuncPtr A pointer to the function
        */
-      void setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun = false);
+      virtual void setLoopEndFunction(const std::shared_ptr<cxFunction>& pFuncPtr);
 
       /**
        * \brief Sets a function to be run when focus is lost.
@@ -2450,7 +2469,7 @@ when the user presses the 'n' key.
        * @return true/false, whether or not pKey is associated
        *  with a function on the form (not on the inputs).
        */
-      bool formKeyIsSet(int pKey) const;
+      virtual bool formKeyIsSet(int pKey) const;
 
       /**
        * \brief Returns whether or not the form is in 'stacked'
@@ -2458,7 +2477,7 @@ when the user presses the 'n' key.
        *
        * @return Whether or not the form is in 'stacked' mode
        */
-      bool isStacked() const;
+      virtual bool isStacked() const;
 
       /**
        * \brief Returns whether the form is set to exit its showModal() when
@@ -2467,7 +2486,7 @@ when the user presses the 'n' key.
        * @return Whether or not the form is set to exit its showModal() when
        *  the user leaves the first input going backwards
        */
-      bool getExitOnLeaveFirst() const;
+      virtual bool getExitOnLeaveFirst() const;
 
       /**
        * \brief Sets whether the form should exit when the user leaves
@@ -2477,7 +2496,7 @@ when the user presses the 'n' key.
        *  when the user leaves the first input going backwards (normally, the
        *  form doesn't exit).
        */
-      void setExitOnLeaveFirst(bool pExitOnLeaveFirst);
+      virtual void setExitOnLeaveFirst(bool pExitOnLeaveFirst);
 
       /**
        * \brief Returns whether the form has any inputs that are
@@ -2538,7 +2557,7 @@ when the user presses the 'n' key.
        *  If false, pressing non-assigned function keys while
        *  focus is set will cause the input to exit the input loop.
        */
-      void trapNonAssignedFKeys(bool pTrapNonAssignedFKeys);
+      virtual void trapNonAssignedFKeys(bool pTrapNonAssignedFKeys);
 
       /**
        * \brief Returns the parent cxMultiForm pointer
@@ -2553,7 +2572,7 @@ when the user presses the 'n' key.
        * @param pParentMultiForm A pointer to the form's parent cxMultiForm
        *  (or nullptr if there is no parent cxMultiForm)
        */
-      void setParentMultiForm(cxMultiForm *pParentMultiForm);
+      virtual void setParentMultiForm(cxMultiForm *pParentMultiForm);
 
       /**
        * \brief Runs the loop start function, if it's set.
@@ -3173,8 +3192,8 @@ when the user presses the 'n' key.
       bool mDataChanged = false;        // Whether or not any data has changed
 
       // Functions to be run at various points in the input loop
-      cxFunction4 mLoopStartFunction; // At the start of each cycle
-      cxFunction4 mLoopEndFunction;   // At the end of each cycle
+      std::shared_ptr<cxFunction> mLoopStartFunction; // At the start of each cycle
+      std::shared_ptr<cxFunction> mLoopEndFunction;   // At the end of each cycle
 
       // mParentMultiForm is a pointer to a cxMultiForm, in
       // case the form appears on a cxMultiForm (it can be

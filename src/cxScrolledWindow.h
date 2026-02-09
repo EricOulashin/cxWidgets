@@ -255,70 +255,53 @@ class cxScrolledWindow : public cxWindow {
        *
        * @param pKey The key to use for searching
        */
-      void setSearchKey(int pKey);
+      virtual void setSearchKey(int pKey);
 
       /**
        * \brief Sets the key to use for going to a specific line#
        *
        * @param pKey The key to use for going to a spefific line#
        */
-      void setGoToKey(int pKey);
+      virtual void setGoToKey(int pKey);
 
       /**
        * \brief Sets whether to use the last keyword in new searches
        *
        * @param pUseLastKeyword Whether or not to use the last keyword in new searches
        */
-      void useLastKeyword(bool pUseLastKeyword);
+      virtual void useLastKeyword(bool pUseLastKeyword);
 
       /**
        * \brief Sets the alternate pageUp key
        *
        * @param pPgUpKey The new alternate pageUp key
        */
-      void setAltPgUpKey(int pKey);
+      virtual void setAltPgUpKey(int pKey);
 
       /**
        * \brief Sets the new alternate pageDown key
        *
        * @param pPgDownKey The new alternate pageDown key
        */
-      void setAltPgDownKey(int pKey);
+      virtual void setAltPgDownKey(int pKey);
 
       /**
        * \brief Sets a function to be run at the start of each
        * \brief input loop.  The return value of the function is
        * \brief not used.
        *
-       * @param pFuncPtr A pointer to the function - Must have the
-       *  signature string someFunc(void*, void*, void*, void).
-       * @param p1 A pointer to the first argument
-       * @param p2 A pointer to the 2nd argument
-       * @param p3 A pointer to the 3rd argument
-       * @param p4 A pointer to the 4th argument
-       * @param pExitAfterRun Whether or not to exit after
-       *  the function runs (defaults to false; if true, the input
-       *  loop won't continue and will never take input).
+       * @param pFuncPtr A pointer to the function
        */
-      void setLoopStartFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun = false);
+      virtual void setLoopStartFunction(const std::shared_ptr<cxFunction>& pFuncPtr);
 
       /**
        * \brief Sets a function to be run at the end of each
        * \brief cycle through the input loop.  The return value
        * \brief of the function is not used.
        *
-       * @param pFuncPtr A pointer to the function - Must have the
-       *  signature string someFunc(void*, void*, void*, void).
-       * @param p1 A pointer to the first argument
-       * @param p2 A pointer to the 2nd argument
-       * @param p3 A pointer to the 3rd argument
-       * @param p4 A pointer to the 4th argument
-       * @param pExitAfterRun Whether or not to exit the input loop after
-       *  the function runs (defaults to false).
+       * @param pFuncPtr A pointer to the function
        */
-      void setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun = false);
+      virtual void setLoopEndFunction(const std::shared_ptr<cxFunction>& pFuncPtr);
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to
@@ -404,8 +387,8 @@ class cxScrolledWindow : public cxWindow {
       bool mUseLastKeyword = true;  // Whether or not to use mSearchKeyword for searching
 
       // Functions to be run at various points in the input loop
-      cxFunction4 mLoopStartFunction; // At the start of each cycle
-      cxFunction4 mLoopEndFunction;   // At the end of each cycle
+      std::shared_ptr<cxFunction> mLoopStartFunction; // At the start of each cycle
+      std::shared_ptr<cxFunction> mLoopEndFunction;   // At the end of each cycle
 
       // Handles the input loop.  Returns a return code based on the
       //  user's input.

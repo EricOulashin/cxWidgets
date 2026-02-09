@@ -960,8 +960,8 @@ void cxForm::removeAll() {
    mCurrentInput = 0;
 } // removeAll
 
-void cxForm::setFieldKeyFunction(const std::string& pLabel, int pFunctionKey,
-                            const std::shared_ptr<cxFunction>& pFieldFunction,
+void cxForm::setFieldKeyFunction(const string& pLabel, int pFunctionKey,
+                            const shared_ptr<cxFunction>& pFieldFunction,
                             bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
    // will be affected.
@@ -1006,7 +1006,7 @@ void cxForm::setFieldKeyFunction(const string& pLabel, int pFunctionKey,
 } // setFieldKeyFunction
 
 void cxForm::setFieldKeyFunction(unsigned int pIndex, int pFunctionKey,
-                         const std::shared_ptr<cxFunction>& pFieldFunction) {
+                                 const shared_ptr<cxFunction>& pFieldFunction) {
    if (pIndex >= 0 && pIndex < mInputs.size()) {
       mInputs[pIndex]->setKeyFunction(pFunctionKey, pFieldFunction);
    }
@@ -1055,7 +1055,7 @@ void cxForm::setFieldKeyFunction(unsigned pIndex, int pFunctionKey, funcPtr2 pFi
    }
 }
 
-void cxForm::setOnFocusFunction(const std::shared_ptr<cxFunction>& pFunction) {
+void cxForm::setOnFocusFunction(const shared_ptr<cxFunction>& pFunction) {
    cxWindow::setOnFocusFunction(pFunction);
 }
 
@@ -1114,9 +1114,9 @@ void cxForm::setOnFocusFunction(unsigned pIndex, funcPtr4 pFunction, void *p1, v
    }
 } // setOnFocusFunction
 
-void cxForm::setOnLeaveFunction(const std::shared_ptr<cxFunction>& pFunction) {
+void cxForm::setOnLeaveFunction(const shared_ptr<cxFunction>& pFunction) {
    cxWindow::setOnLeaveFunction(pFunction);
-}
+} // setOnLeaveFunction
 
 void cxForm::setOnLeaveFunction(const string& pLabel, const shared_ptr<cxFunction>& pFunction,
                                 bool pIsLabel) {
@@ -1815,9 +1815,15 @@ bool cxForm::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) {
       for (const auto& input : mInputs) {
          input->addExitKey(pKey, false, true);
       }
-      // Make sure the key doesn't exist in the quitKey and exitKey lists.
+      // Make sure the key doesn't exist in the quitKey list. Also,
+      // make sure it doesn't exist in this window's exit key list
+      // (but we want to keep it in each single-line input's exit
+      // key list). Don't call removeExitKey() on this window
+      // because that will remove it from this window's exit key
+      // list as well as each of the single-line inputs
       removeQuitKey(pKey);
-      removeExitKey(pKey);
+      //removeExitKey(pKey);
+      cxWindow::removeExitKey(pKey);
    }
 
    return(setIt);
@@ -2822,6 +2828,12 @@ void cxForm::disableCustomStatus(bool pRefreshStatus) {
    useInputStatusAsFormStatus(pRefreshStatus);
 } // disableCustomStatus
 
+void cxForm::setValidatorFunction(int pIndex, const shared_ptr<cxFunction>& pFunction) {
+   if ((pIndex >= 0) && (pIndex < (int)mInputs.size())) {
+      mInputs[pIndex]->setValidatorFunction(pFunction);
+   }
+} // setValidatorFunction
+
 void cxForm::setValidatorFunction(int pIndex, funcPtr4 pFunction, void *p1,
                      void *p2, void *p3, void *p4) {
    if ((pIndex >= 0) && (pIndex < (int)mInputs.size())) {
@@ -2829,14 +2841,33 @@ void cxForm::setValidatorFunction(int pIndex, funcPtr4 pFunction, void *p1,
    }
 } // setValidatorFunction
 
+void cxForm::setValidatorFunction(const string& pLabel, const shared_ptr<cxFunction>& pFunction,
+                                  bool pIsLabel) {
+   // If there are multiple inputs with the same label/name, all of them
+   // will be affected.
+   if (pIsLabel) {
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel || (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setValidatorFunction(pFunction);
+         }
+      }
+   }
+   else {
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setValidatorFunction(pFunction);
+         }
+      }
+   }
+} // setValidatorFunction
+
 void cxForm::setValidatorFunction(const string& pLabel, funcPtr4 pFunction,
                      void *p1, void *p2, void *p3, void *p4, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
-   //  will be affected.
+   // will be affected.
    if (pIsLabel) {
       for (const auto& input : mInputs) {
-         if (input->getLabel() == pLabel ||
-             (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+         if (input->getLabel() == pLabel || (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
             input->setValidatorFunction(pFunction, p1, p2, p3, p4);
          }
       }
@@ -2861,17 +2892,42 @@ void cxForm::showInputsOnBorder(bool pShowInputsOnBorder) {
    }
 } // showInputsOnBorder
 
+void cxForm::setOnKeyFunction(int pIndex, const shared_ptr<cxFunction>& pFunction) {
+   if (pIndex >= 0 && pIndex < (int)mInputs.size()) {
+      mInputs[pIndex]->setOnKeyFunction(pFunction);
+   }
+} // setOnKeyFunction
+
 void cxForm::setOnKeyFunction(int pIndex, funcPtr4 pFunction, void *p1,
                               void *p2, void *p3, void *p4) {
-   if ((pIndex >= 0) && (pIndex < (int)mInputs.size())) {
+   if (pIndex >= 0 && pIndex < (int)mInputs.size()) {
       mInputs[pIndex]->setOnKeyFunction(pFunction, p1, p2, p3, p4);
+   }
+} // setOnKeyFunction
+
+void cxForm::setOnKeyFunction(const string& pLabel, const shared_ptr<cxFunction>& pFunction, bool pIsLabel) {
+   // If there are multiple inputs with the same label/name, all of them
+   // will be affected.
+   if (pIsLabel) {
+      for (const auto& input : mInputs) {
+         if (input->getLabel() == pLabel || (stringWithoutHotkeyChars(input->getLabel()) == pLabel)) {
+            input->setOnKeyFunction(pFunction);
+         }
+      }
+   }
+   else {
+      for (const auto& input : mInputs) {
+         if (input->getName() == pLabel) {
+            input->setOnKeyFunction(pFunction);
+         }
+      }
    }
 } // setOnKeyFunction
 
 void cxForm::setOnKeyFunction(const string& pLabel, funcPtr4 pFunction, void *p1,
                               void *p2, void *p3, void *p4, bool pIsLabel) {
    // If there are multiple inputs with the same label/name, all of them
-   //  will be affected.
+   // will be affected.
    if (pIsLabel) {
       for (const auto& input : mInputs) {
          if (input->getLabel() == pLabel ||
@@ -3372,18 +3428,12 @@ void cxForm::setOnFocusFunction(funcPtr0 pFuncPtr, bool pUseVal,
    cxWindow::setOnFocusFunction(pFuncPtr, pUseVal, pExitAfterRun);
 } // setOnFocusFunction
 
-void cxForm::setLoopStartFunction(funcPtr4 pFuncPtr, void *p1,
-                           void *p2, void *p3, void *p4, bool pExitAfterRun) {
-   mLoopStartFunction.setFunction(pFuncPtr);
-   mLoopStartFunction.setParams(p1, p2, p3, p4);
-   mLoopStartFunction.setExitAfterRun(pExitAfterRun);
+void cxForm::setLoopStartFunction(const shared_ptr<cxFunction>& pFuncPtr) {
+   mLoopStartFunction = pFuncPtr;
 } // setLoopStartFunction
 
-void cxForm::setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun) {
-   mLoopEndFunction.setFunction(pFuncPtr);
-   mLoopEndFunction.setParams(p1, p2, p3, p4);
-   mLoopEndFunction.setExitAfterRun(pExitAfterRun);
+void cxForm::setLoopEndFunction(const shared_ptr<cxFunction>& pFuncPtr) {
+   mLoopEndFunction = pFuncPtr;
 } // setLoopEndFunction
 
 void cxForm::setOnLeaveFunction(funcPtr4 pFuncPtr, void *p1,
@@ -3591,9 +3641,9 @@ void cxForm::setParentMultiForm(cxMultiForm *pParentMultiForm) {
 bool cxForm::runLoopStartFunction() {
    bool exitAfterRun = false;
 
-   if (mLoopStartFunction.functionIsSet()) {
-      exitAfterRun = mLoopStartFunction.getExitAfterRun();
-      mLoopStartFunction.runFunction();
+   if (mLoopStartFunction != nullptr && mLoopStartFunction->functionIsSet()) {
+      exitAfterRun = mLoopStartFunction->getExitAfterRun();
+      mLoopStartFunction->runFunction();
    }
 
    return(exitAfterRun);
@@ -3602,9 +3652,9 @@ bool cxForm::runLoopStartFunction() {
 bool cxForm::runLoopEndFunction() {
    bool exitAfterRun = false;
 
-   if (mLoopEndFunction.functionIsSet()) {
-      exitAfterRun = mLoopEndFunction.getExitAfterRun();
-      mLoopEndFunction.runFunction();
+   if (mLoopEndFunction != nullptr && mLoopEndFunction->functionIsSet()) {
+      exitAfterRun = mLoopEndFunction->getExitAfterRun();
+      mLoopEndFunction->runFunction();
    }
 
    return(exitAfterRun);
@@ -4893,8 +4943,8 @@ long cxForm::doInputLoop(bool& pRunOnLeaveFunction) {
       //  is true).
 
       //  The loop start & end functions should still be run.
-      if (mLoopStartFunction.functionIsSet()) {
-         mLoopStartFunction.runFunction();
+      if (mLoopStartFunction != nullptr && mLoopStartFunction->functionIsSet()) {
+         mLoopStartFunction->runFunction();
       }
 
       // Wait for input from the user if mWaitForInputIfEmpty
@@ -4968,8 +5018,8 @@ long cxForm::doInputLoop(bool& pRunOnLeaveFunction) {
          cxBase::toggleCursor(prevCursorState);
       }
 
-      if (mLoopEndFunction.functionIsSet()) {
-         mLoopEndFunction.runFunction();
+      if (mLoopEndFunction != nullptr && mLoopEndFunction->functionIsSet()) {
+         mLoopEndFunction->runFunction();
       }
    }
 

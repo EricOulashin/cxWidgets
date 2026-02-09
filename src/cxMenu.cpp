@@ -1096,26 +1096,20 @@ string cxMenu::getItemTextByReturnCode(long pReturnCode, bool pGetDisplayText) {
    return(itemText);
 } // getItemTextByReturnCode
 
-void cxMenu::setLoopStartFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                                 void *p3, void *p4, bool pExitAfterRun) {
-   mLoopStartFunction.setFunction(pFuncPtr);
-   mLoopStartFunction.setParams(p1, p2, p3, p4);
-   mLoopStartFunction.setExitAfterRun(pExitAfterRun);
+void cxMenu::setLoopStartFunction(const shared_ptr<cxFunction>& pFuncPtr) {
+   mLoopStartFunction= pFuncPtr;
 } // setLoopStartFunction
 
-void cxMenu::setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                                 void *p3, void *p4, bool pExitAfterRun) {
-   mLoopEndFunction.setFunction(pFuncPtr);
-   mLoopEndFunction.setParams(p1, p2, p3, p4);
-   mLoopEndFunction.setExitAfterRun(pExitAfterRun);
+void cxMenu::setLoopEndFunction(const shared_ptr<cxFunction>& pFuncPtr) {
+   mLoopEndFunction = pFuncPtr;
 } // setLoopEndFunction
 
 bool cxMenu::runLoopStartFunction() {
    bool exitAfterRun = false;
 
-   if (mLoopStartFunction.functionIsSet()) {
-      exitAfterRun = mLoopStartFunction.getExitAfterRun();
-      mLoopStartFunction.runFunction();
+   if (mLoopStartFunction != nullptr && mLoopStartFunction->functionIsSet()) {
+      exitAfterRun = mLoopStartFunction->getExitAfterRun();
+      mLoopStartFunction->runFunction();
    }
 
    return(exitAfterRun);
@@ -1124,9 +1118,9 @@ bool cxMenu::runLoopStartFunction() {
 bool cxMenu::runLoopEndFunction() {
    bool exitAfterRun = false;
 
-   if (mLoopEndFunction.functionIsSet()) {
-      exitAfterRun = mLoopEndFunction.getExitAfterRun();
-      mLoopEndFunction.runFunction();
+   if (mLoopEndFunction != nullptr && mLoopEndFunction->functionIsSet()) {
+      exitAfterRun = mLoopEndFunction->getExitAfterRun();
+      mLoopEndFunction->runFunction();
    }
 
    return(exitAfterRun);
@@ -1629,7 +1623,7 @@ bool cxMenu::setOnSelectItemFunction(funcPtr0 pFunction, bool pExitAfterRun,
    return(mOnSelectItemFunction != nullptr);
 } // setOnSelectItemFunction
 
-std::shared_ptr<cxFunction> cxMenu::getOnSelectItemFunction() const {
+shared_ptr<cxFunction> cxMenu::getOnSelectItemFunction() const {
    return(mOnSelectItemFunction);
 } // getOnSelectItemFunction
 

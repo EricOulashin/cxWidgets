@@ -12,6 +12,7 @@
 #include "cxValidators.h"
 using cxStringUtils::strToLower;
 using std::string;
+using std::shared_ptr;
 
 cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
              int pRow, int pCol, int pHeight, int pWidth,
@@ -21,9 +22,7 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
              bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pRow, pCol, pHeight, pWidth,
               pTitle, pMessage, pStatus, pBorderStyle,
-              pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting),
-     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
-     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
+              pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting)
 {
    // Note: cxWindow may change the height and width if they
    //  are <= 0..
@@ -47,9 +46,7 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
                bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pRow, pCol, pTitle, pMessage,
               pStatus, pExtTitleWindow, pExtStatusWindow,
-              pHotkeyHighlighting),
-     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
-     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
+              pHotkeyHighlighting)
 {
    // Note: For some reason, this class' overridden init() doesn't
    //  get called by cxWindow, even though it's virtual in cxWindow,
@@ -67,9 +64,7 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
                cxWindow *pExtStatusWindow,
                bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pTitle, pMessage, pStatus,
-              pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting),
-     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
-     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
+              pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting)
 {
    init(0, 0, 0, 0, pTitle, pMessage, pStatus);
    center();
@@ -82,9 +77,7 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
                cxWindow *pExtStatusWindow,
                bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pMessage, pStatus, pExtTitleWindow,
-              pExtStatusWindow, pHotkeyHighlighting),
-     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
-     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
+              pExtStatusWindow, pHotkeyHighlighting)
 {
    init(0, 0, 0, 0, "", pMessage, pStatus);
    center();
@@ -95,9 +88,7 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
                const string& pMessage, cxWindow *pExtTitleWindow,
                cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pMessage, pExtTitleWindow, pExtStatusWindow,
-              pHotkeyHighlighting),
-     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
-     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
+              pHotkeyHighlighting)
 {
    init(0, 0, 0, 0, "", pMessage, "");
    center();
@@ -109,9 +100,7 @@ cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow, eHPosition pHPositio
                const string& pStatus, cxWindow *pExtTitleWindow,
                cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
    : cxWindow(pParentWindow, pHPosition, pTitle, pMessage,
-              pStatus, pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting),
-     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
-     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
+              pStatus, pExtTitleWindow, pExtStatusWindow, pHotkeyHighlighting)
 {
    int newRow, newCol;
 
@@ -126,9 +115,7 @@ cxScrolledWindow::cxScrolledWindow(const cxScrolledWindow& pThatWindow)
               pThatWindow.height(), pThatWindow.width(), pThatWindow.getTitle(),
               "", pThatWindow.getStatus(), pThatWindow.getBorderStyle(),
               pThatWindow.getExtTitleWindow(), pThatWindow.getExtStatusWindow(),
-              pThatWindow.getHotkeyHighlighting()),
-     mLoopStartFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false),
-     mLoopEndFunction(nullptr, nullptr, nullptr, nullptr, nullptr, false, false, false)
+              pThatWindow.getHotkeyHighlighting())
 {
    init(pThatWindow.top(), pThatWindow.left(), pThatWindow.height(),
         pThatWindow.width(), pThatWindow.getTitle(), pThatWindow.getMessage(),
@@ -377,18 +364,12 @@ void cxScrolledWindow::setAltPgDownKey(int pKey) {
    mAltPgDownKey = pKey;
 } // setAltPgDownKey
 
-void cxScrolledWindow::setLoopStartFunction(funcPtr4 pFuncPtr, void *p1,
-                           void *p2, void *p3, void *p4, bool pExitAfterRun) {
-   mLoopStartFunction.setFunction(pFuncPtr);
-   mLoopStartFunction.setParams(p1, p2, p3, p4);
-   mLoopStartFunction.setExitAfterRun(pExitAfterRun);
+void cxScrolledWindow::setLoopStartFunction(const shared_ptr<cxFunction>& pFuncPtr) {
+   mLoopStartFunction = pFuncPtr;
 } // setLoopStartFunction
 
-void cxScrolledWindow::setLoopEndFunction(funcPtr4 pFuncPtr, void *p1, void *p2,
-                           void *p3, void *p4, bool pExitAfterRun) {
-   mLoopEndFunction.setFunction(pFuncPtr);
-   mLoopEndFunction.setParams(p1, p2, p3, p4);
-   mLoopEndFunction.setExitAfterRun(pExitAfterRun);
+void cxScrolledWindow::setLoopEndFunction(const shared_ptr<cxFunction>& pFuncPtr) {
+   mLoopEndFunction = pFuncPtr;
 } // setLoopEndFunction
 
 string cxScrolledWindow::cxTypeStr() const {
@@ -541,9 +522,9 @@ long cxScrolledWindow::doInputLoop(bool& pRunOnLeaveFunction) {
    bool continueOn = true;
    while (continueOn) {
       // Run the loop start function, if it's set
-      if (mLoopStartFunction.functionIsSet()) {
-         mLoopStartFunction.runFunction();
-         if (mLoopStartFunction.getExitAfterRun()) {
+      if (mLoopStartFunction != nullptr && mLoopStartFunction->functionIsSet()) {
+         mLoopStartFunction->runFunction();
+         if (mLoopStartFunction->getExitAfterRun()) {
             break;
          }
       }
@@ -780,9 +761,9 @@ long cxScrolledWindow::doInputLoop(bool& pRunOnLeaveFunction) {
       }
 
       // Run the end loop function, if it's set
-      if (mLoopEndFunction.functionIsSet()) {
-         mLoopEndFunction.runFunction();
-         continueOn = (continueOn && !(mLoopEndFunction.getExitAfterRun()));
+      if (mLoopEndFunction != nullptr && mLoopEndFunction->functionIsSet()) {
+         mLoopEndFunction->runFunction();
+         continueOn = (continueOn && !(mLoopEndFunction->getExitAfterRun()));
       }
    } // while
 

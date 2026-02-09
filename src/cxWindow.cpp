@@ -441,12 +441,21 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
      mHorizStatusAlignment(pThatWindow.mHorizStatusAlignment),
      mDrawMessage(pThatWindow.mDrawMessage),
      mDrawSpecialChars(pThatWindow.mDrawSpecialChars),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
+     // Note: The onFocus and onLeave functions are copied straight across
+     // here, but before we were using shared_ptr objects for them, we
+     // called setFocusFunctions() to copy them from the other window.
+     mOnFocusFunction(pThatWindow.mOnFocusFunction),
+     mOnLeaveFunction(pThatWindow.mOnLeaveFunction),
+     //mOnFocusFunction(nullptr),
+     //mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
-     // Note: mKeyFunctions and mMouseFunctions are not initialized in this
-     //  list.  They are copied with setKeyFunctions().
+     // Note: mKeyFunctions and mMouseFunctions are copied straight across
+     // here, but before we were using shared_ptr objects for them, we called
+     // setKeyFunctions() and setMouseFunctions() to copy them from the other
+     // window.
+     mKeyFunctions(pThatWindow.mKeyFunctions),
+     mMouseFunctions(pThatWindow.mMouseFunctions),
      mQuitKeys(pThatWindow.mQuitKeys),
      mExitKeys(pThatWindow.mExitKeys),
      mHotkeyHighlighting(pThatWindow.mHotkeyHighlighting),
@@ -476,11 +485,6 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
      mBorderLeft(pThatWindow.mBorderLeft),
      mBorderRight(pThatWindow.mBorderRight)
 {
-   // Copy the other window's message lines
-   messageLineContainer::const_iterator iter = pThatWindow.mMessageLines.begin();
-   for (; iter != pThatWindow.mMessageLines.end(); ++iter) {
-      mMessageLines.push_back(*iter);
-   }
    // Create mWindow and mPanel
    mWindow = newwin(pThatWindow.height(), pThatWindow.width(), pThatWindow.top(), pThatWindow.left());
    // If mWindow is nullptr, that means newwin() had an error..
@@ -495,16 +499,18 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
       mParentWindow->addSubwindow(this);
    }
    // Note: If the other window's parent window is a cxPanel, we shouldn't
-   //  add this window to its other collection of windows (with addWindow()),
-   //  since it assumes the other windows are created dynamically and will
-   //  try to free the memory in its destructor.  Since we don't know if this
-   //  object was dynamically created, we shouldn't add it to a parent
-   //  cxPanel's window list.
+   // add this window to its other collection of windows (with addWindow()),
+   // since it assumes the other windows are created dynamically and will
+   // try to free the memory in its destructor.  Since we don't know if this
+   // object was dynamically created, we shouldn't add it to a parent
+   // cxPanel's window list.
 
-   // Copy the other window's key functions
-   setKeyFunctions(pThatWindow);
-   // Copy the other window's focus functions
-   setFocusFunctions(pThatWindow);
+   // Note: mKeyFunctions and mMouseFunctions are copied straight across
+   // in the initializer list, but before we were using shared_ptrs for them,we called
+   // we called setKeyFunctions() and setMouseFunctions() to copy them from the other
+   // window.
+   //setKeyFunctions(pThatWindow);
+   //setFocusFunctions(pThatWindow);
 
    // If the other window is hidden, hide this one too.
    if (pThatWindow.isHidden()) {
@@ -555,19 +561,18 @@ cxWindow::~cxWindow() {
    // Remove this window from the parent window's subwindow list.
    if (mParentWindow != nullptr) {
       // If the parent window is a cxPanel or something deriving from cxPanel,
-      //  remove this window from the cxPanel's mWindows.
+      // remove this window from the cxPanel's mWindows.
       try {
          string parentType = mParentWindow->cxTypeStr();
          if ((parentType == "cxPanel") || (parentType == "cxSearchPanel")) {
             cxPanel *parentPanel = dynamic_cast<cxPanel*>(mParentWindow);
-            cxPanel::cxWindowPtrCollection::iterator iter =
-                       parentPanel->mWindows.begin();
+            cxPanel::cxWindowPtrCollection::iterator iter = parentPanel->mWindows.begin();
             for (; iter != parentPanel->mWindows.end(); ++iter) {
                if (iter->get() == this) {
                   // A pointer to this window was found in the
-                  //  panel's mWindows..  Remove it from its
-                  //  mWindows (note: there should be only 1 pointer
-                  //  to this window in a parent window).
+                  // panel's mWindows..  Remove it from its
+                  // mWindows (note: there should be only 1 pointer
+                  // to this window in a parent window).
                   parentPanel->mWindows.erase(iter);
                   break;
                }
@@ -588,21 +593,18 @@ cxWindow::~cxWindow() {
    //  while loop surrounding the for loop, because each time we remove a
    //  window from mSubWindows, the iterator gets invalidated, so we need
    //  to make sure it's set correctly.
-   cxWindowPtrContainer::iterator iter;
    while (anySubwinHasThisParent()) {
-      for (iter = mSubWindows.begin(); iter != mSubWindows.end(); ++iter) {
-         if ((*iter)->mParentWindow != nullptr) {
-            if ((*iter)->mParentWindow == this) {
-               //(*iter)->setParent(nullptr);
-               (*iter)->mParentWindow = nullptr;
-               break; // Exit the for loop; continue with the while loop
-            }
+      for (cxWindow*& subWin : mSubWindows) {
+         if (subWin->mParentWindow == this) {
+            //subWin->setParent(nullptr);
+            subWin->mParentWindow = nullptr;
+            break; // Exit the for loop; continue with the while loop
          }
       }
    }
 
    // Hide the window (to make sure it doesn't show anymore), and then free
-   //  the memory used by mWindow and mPanel.
+   // the memory used by mWindow and mPanel.
    if (cxBase::cxInitialized()) {
       hide();
    }
@@ -805,9 +807,8 @@ void cxWindow::setStatus(const string& pStatus, bool pRefreshStatus) {
 string cxWindow::getMessage() const {
    string returnVal;
 
-   messageLineContainer::const_iterator iter;
-   for (iter = mMessageLines.begin(); iter != mMessageLines.end(); ++iter) {
-      returnVal += (*iter);
+   for (const string& msgLine : mMessageLines) {
+      returnVal += msgLine;
    }
 
    return(returnVal);
@@ -1077,11 +1078,11 @@ bool cxWindow::isHidden() const {
 
 long cxWindow::show(bool pBringToTop, bool pShowSubwindows) {
    // Only do this if mWindow and mPanel are both non-nullptr
-   //  and the window is enabled.
+   // and the window is enabled.
    if ((mWindow != nullptr) && (mPanel != nullptr)) {
       if (mEnabled) {
          // Show the subwindows now, if pShowSubwindows is true and
-         //  mShowSelfBeforeSubwins is false.
+         // mShowSelfBeforeSubwins is false.
          if (pShowSubwindows && !mShowSelfBeforeSubwins) {
             showSubwindows(pBringToTop, pShowSubwindows);
          }
@@ -1090,12 +1091,12 @@ long cxWindow::show(bool pBringToTop, bool pShowSubwindows) {
          draw();
 
          // Call unhide() to make sure this window is not hidden.  unhide()
-         //  calls show_panel(mPanel) and update_pannels() to refresh the
-         //  window & update the panel).  Note that this is calling cxWindow's
-         //  unhide specifically; In testing, we found that because other
-         //  cxWindow-based classes override unhide() if they have other
-         //  windows to unhide, that could cause undesired screen repaints
-         //  when other derived class methods call show(), etc.
+         // calls show_panel(mPanel) and update_pannels() to refresh the
+         // window & update the panel).  Note that this is calling cxWindow's
+         // unhide specifically; In testing, we found that because other
+         // cxWindow-based classes override unhide() if they have other
+         // windows to unhide, that could cause undesired screen repaints
+         // when other derived class methods call show(), etc.
          cxWindow::unhide();
 
          // Bring this window to the top of the stack if
@@ -1314,9 +1315,8 @@ void cxWindow::erase(bool pEraseSubwindows) {
 
    // Tell each subwindow to erase itself
    if (pEraseSubwindows) {
-      cxWindowPtrContainer::iterator iter = mSubWindows.begin();
-      for (; iter != mSubWindows.end(); ++iter) {
-         (*iter)->erase(pEraseSubwindows);
+      for (cxWindow*& subWin : mSubWindows) {
+         subWin->erase(pEraseSubwindows);
       }
    }
 
@@ -1406,9 +1406,8 @@ void cxWindow::hide(bool pHideSubwindows) {
 
    // Tell each subwindow to hide itself
    if (pHideSubwindows) {
-      cxWindowPtrContainer::iterator iter = mSubWindows.begin();
-      for (; iter != mSubWindows.end(); ++iter) {
-         (*iter)->hide(pHideSubwindows);
+      for (cxWindow*& subWin : mSubWindows) {
+         subWin->hide(pHideSubwindows);
       }
    }
 
@@ -1424,9 +1423,8 @@ void cxWindow::unhide(bool pUnhideSubwindows) {
 
       // Tell each subwindow to unhide itself
       if (pUnhideSubwindows) {
-         cxWindowPtrContainer::iterator iter = mSubWindows.begin();
-         for (; iter != mSubWindows.end(); ++iter) {
-            (*iter)->unhide(pUnhideSubwindows);
+         for (cxWindow*& subWin : mSubWindows) {
+            subWin->unhide(pUnhideSubwindows);
          }
       }
 
@@ -1752,9 +1750,8 @@ void cxWindow::showSubwindows(bool pBringToTop, bool pShowSubwindows) {
    // If mShowSubwinsForward is true, then show them in forward order;
    //  otherwise, show them in reverse order.
    if (mShowSubwinsForward) {
-      cxWindowPtrContainer::iterator iter = mSubWindows.begin();
-      for (; iter != mSubWindows.end(); ++iter) {
-         (*iter)->show(pBringToTop, pShowSubwindows);
+      for (cxWindow*& subWin : mSubWindows) {
+         subWin->show(pBringToTop, pShowSubwindows);
       }
    }
    else {
@@ -2035,7 +2032,20 @@ bool cxWindow::isModal() const {
 } // isModal
 
 bool cxWindow::setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) {
-   mKeyFunctions[pKey] = pFunction;
+   if (pFunction != nullptr) {
+      mKeyFunctions[pKey] = pFunction;
+      // Remove the key from the lists of exit keys and quit keys so that we
+      // can be sure that the key won't make the window leave its input loop
+      // before the function can fire
+      removeExitKey(pKey);
+      removeQuitKey(pKey);
+   }
+   else {
+      if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
+         mKeyFunctions.erase(pKey);
+      }
+   }
+
    return true;
 } // setKeyFunction
 
@@ -2068,8 +2078,8 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1, void *p2,
    }
 
    // If the key was successfully set, remove it from the lists of exit keys
-   //  and quit keys (so that we can be sure that the key won't make the
-   //  window leave its input loop before the function can fire).
+   // and quit keys (so that we can be sure that the key won't make the
+   // window leave its input loop before the function can fire).
    if (setIt) {
       removeExitKey(pKey);
       removeQuitKey(pKey);
@@ -2199,9 +2209,8 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr4 pFunction) {
    }
 
    // Call the other clearKeyFunction() for each key.
-   set<int>::iterator keyIter = keys.begin();
-   for (; keyIter != keys.end(); ++keyIter) {
-      clearKeyFunction(*keyIter);
+   for (const int& key : keys) {
+      clearKeyFunction(key);
    }
 } // clearKeyFunction
 
@@ -2223,9 +2232,8 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr2 pFunction) {
    }
 
    // Call the other clearKeyFunction() for each key.
-   set<int>::iterator keyIter = keys.begin();
-   for (; keyIter != keys.end(); ++keyIter) {
-      clearKeyFunction(*keyIter);
+   for (const int& key : keys) {
+      clearKeyFunction(key);
    }
 } // clearKeyFunction
 
@@ -2247,9 +2255,8 @@ void cxWindow::clearKeyFunctionByPtr(funcPtr0 pFunction) {
    }
 
    // Call the other clearKeyFunction() for each key.
-   set<int>::iterator keyIter = keys.begin();
-   for (; keyIter != keys.end(); ++keyIter) {
-      clearKeyFunction(*keyIter);
+   for (const int& key : keys) {
+      clearKeyFunction(key);
    }
 } // clearKeyFunction
 
@@ -2267,9 +2274,8 @@ void cxWindow::clearKeyFunctions() {
             cxPanel *parentPanel = dynamic_cast<cxPanel*>(mParentWindow);
             vector<int> functionKeys;
             parentPanel->getFunctionKeys(functionKeys);
-            vector<int>::const_iterator iter = functionKeys.begin();
-            for (; iter != functionKeys.end(); ++iter) {
-               addExitKey(*iter);
+            for (const int& key : functionKeys) {
+               addExitKey(key);
             }
          }
       }
@@ -2680,19 +2686,17 @@ void cxWindow::exitNow() {
 void cxWindow::getQuitKeyStrings(vector<string>& pKeys) const {
    pKeys.clear();
 
-   map<int, bool>::const_iterator iter = mQuitKeys.begin();
-   for (; iter != mQuitKeys.end(); ++iter) {
-      pKeys.push_back(cxBase::getKeyStr(iter->first));
+   for (const auto& mapPair : mQuitKeys) {
+      pKeys.push_back(cxBase::getKeyStr(mapPair.first));
    }
 } // getQuitKeyStrings
 
 string cxWindow::getQuitKeyListString() const {
    string quitKeyList;
 
-   map<int, bool>::const_iterator iter = mQuitKeys.begin();
-   for (; iter != mQuitKeys.end(); ++iter) {
+   for (const auto mapPair : mQuitKeys ) {
       if (quitKeyList != "") { quitKeyList += ","; }
-      quitKeyList += cxBase::getKeyStr(iter->first);
+      quitKeyList += cxBase::getKeyStr(mapPair.first);
    }
 
    return(quitKeyList);
@@ -2701,19 +2705,17 @@ string cxWindow::getQuitKeyListString() const {
 void cxWindow::getExitKeyStrings(vector<string>& pKeys) const {
    pKeys.clear();
 
-   map<int, bool>::const_iterator iter = mExitKeys.begin();
-   for (; iter != mExitKeys.end(); ++iter) {
-      pKeys.push_back(cxBase::getKeyStr(iter->first));
+   for (const auto& exitKeyPair : mExitKeys) {
+      pKeys.push_back(cxBase::getKeyStr(exitKeyPair.first));
    }
 } // getExitKeyStrings
 
 string cxWindow::getExitKeyListString() const {
    string exitKeyList;
 
-   map<int, bool>::const_iterator iter = mExitKeys.begin();
-   for (; iter != mExitKeys.end(); ++iter) {
+   for (const auto& exitKeyPair : mExitKeys) {
       if (exitKeyList != "") { exitKeyList += ","; }
-      exitKeyList += cxBase::getKeyStr(iter->first);
+      exitKeyList += cxBase::getKeyStr(exitKeyPair.first);
    }
 
    return(exitKeyList);
@@ -2807,17 +2809,17 @@ void cxWindow::drawMessage() {
       if (hasBorder()) {
          startX = 1;
       }
-      messageLineContainer::iterator iter = mMessageLines.begin();
-      for (; iter != mMessageLines.end(); ++iter) {
+
+      for (const string& msgLine : mMessageLines) {
          // Don't display more rows than the window can hold.
          if (currentRowInWindow < height()) {
             // If we're to use underlines when writing the message, then
             //  use writeWithHighlighting().  Otherwise, write the message
             //  line verbatim.
             if (mHotkeyHighlighting) {
-               writeWithHighlighting(mWindow, *iter, currentRowInWindow, startX,
+               writeWithHighlighting(mWindow, msgLine, currentRowInWindow, startX,
                                    innerWidth);
-               int visualStrLen = (int)cxBase::visualStrLen(*iter);
+               int visualStrLen = (int)cxBase::visualStrLen(msgLine);
                for (int i = startX+visualStrLen; i <= innerWidth; ++i) {
                   mvwaddch(mWindow, currentRowInWindow, i, ' ');
                }
@@ -2833,7 +2835,7 @@ void cxWindow::drawMessage() {
                      os << "%" << innerWidth << "s";
                      break;
                   case eHP_CENTER:
-                     startX = centerCol() - (int)iter->length() / 2;
+                     startX = centerCol() - (int)msgLine.length() / 2;
                      // Write spaces up to startX (to fill in the background color)
                      {
                         std::ostringstream osCenter;
@@ -2859,7 +2861,7 @@ void cxWindow::drawMessage() {
 
                // Write the message line
                mvwprintw(mWindow, currentRowInWindow, startX, (char*)os.str().c_str(),
-                         iter->c_str());
+                         msgLine.c_str());
             }
 
             ++currentRowInWindow;
@@ -2901,9 +2903,8 @@ void cxWindow::drawSpecialChars() {
       // Write the special characters
       pair<int, int> location = make_pair(0, 0);
       attr_t attribute = A_NORMAL;
-      map<pair<int, int>, chtype>::iterator iter = mSpecialChars.begin();
-      for (; iter != mSpecialChars.end(); ++iter) {
-         location = iter->first;
+      for (const auto& charPair : mSpecialChars) {
+         location = charPair.first;
          // Set the attribute to use.  There should be an attribute in
          //  mSpecialCharAttrs for all the characters in mSpecialChars, but
          //  check for it anyway just to be sure.
@@ -2916,7 +2917,7 @@ void cxWindow::drawSpecialChars() {
 
          // Enable the attribute, write the character, then disable the attribute.
          wattron(mWindow, attribute);
-         mvwaddch(mWindow, location.first, location.second, iter->second);
+         mvwaddch(mWindow, location.first, location.second, charPair.second);
          wattroff(mWindow, attribute);
       }
 
@@ -3365,18 +3366,16 @@ map<int, shared_ptr<cxFunction> >::iterator cxWindow::keyFunctions_end() {
 void cxWindow::getFunctionKeyStrings(vector<string>& pKeys) const {
    pKeys.clear();
 
-   map<int, shared_ptr<cxFunction> >::const_iterator iter = mKeyFunctions.begin();
-   for (; iter != mKeyFunctions.end(); ++iter) {
-      pKeys.emplace_back(cxBase::getKeyStr(iter->first));
+   for (const auto& keyFuncPair : mKeyFunctions) {
+      pKeys.emplace_back(cxBase::getKeyStr(keyFuncPair.first));
    }
 } // getFunctionKeyStrings
 
 void cxWindow::getFunctionKeys(vector<int>& pKeys) const {
    pKeys.clear();
 
-   map<int, shared_ptr<cxFunction> >::const_iterator iter = mKeyFunctions.begin();
-   for (; iter != mKeyFunctions.end(); ++iter) {
-      pKeys.emplace_back(iter->first);
+   for (const auto& keyFuncPair : mKeyFunctions) {
+      pKeys.emplace_back(keyFuncPair.first);
    }
 } // getFunctionKeys
 
@@ -3631,10 +3630,9 @@ void cxWindow::setSubWinMessage(unsigned pIndex, const string& pMessage) {
 } // setSubWinMessage
 
 void cxWindow::setSubWinMessage(const string& pTitle, const string& pMessage) {
-   cxWindowPtrContainer::iterator iter = mSubWindows.begin();
-   for (; iter != mSubWindows.end(); ++iter) {
-      if ((*iter)->getTitle() == pTitle) {
-         (*iter)->setMessage(pMessage);
+   for (cxWindow*& subWin : mSubWindows) {
+      if (subWin->getTitle() == pTitle) {
+         subWin->setMessage(pMessage);
          break;
       }
    }
@@ -3710,7 +3708,7 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
       }
 
       // Widen the window (if needed) based on
-      //  the status text
+      // the status text
       if (status.length() > title.length()) {
          if (((int)(status.length())+2) <= maxWidth) {
             if (((int)(status.length())+2) > newWidth) {
@@ -3746,8 +3744,8 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
 
    mMessageLines.clear();
    // Calculate the height based on the message, and also
-   //  find where we need to split the message based on
-   //  the width of the window.
+   // find where we need to split the message based on
+   // the width of the window.
    if (message != "") {
       int innerWidth; // Inner window width
       if (hasBorder()) {
@@ -3761,44 +3759,42 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
       unsigned stringLen = 0;
       vector<string> iMessageLines;
       // Note: We should be able to split on newlines using SplitStringRegex(),
-      //  but it doesn't seem to be working.
+      // but it doesn't seem to be working.
       SplitStringRegex(message, "\n", iMessageLines);
-      vector<string>::iterator msgLineIter = iMessageLines.begin();
-      for (; msgLineIter != iMessageLines.end(); ++msgLineIter) {
+      for (const string& msgLine : iMessageLines) {
          // If the current line is short enough to fit inside the window by
-         //  itself, then just add it to mMessageLines.  Otherwise, split the
-         //  message line on spaces and add lines to mMessageLines long enough
-         //  to fit in the window.
+         // itself, then just add it to mMessageLines.  Otherwise, split the
+         // message line on spaces and add lines to mMessageLines long enough
+         // to fit in the window.
          // If mHotkeyHighlighting is true, don't count message underline
-         //  characters as part of the string length.
+         // characters as part of the string length.
          if (mHotkeyHighlighting) {
-            stringLen = cxBase::visualStrLen(*msgLineIter);
+            stringLen = cxBase::visualStrLen(msgLine);
          }
          else {
-            stringLen = msgLineIter->length();
+            stringLen = msgLine.length();
          }
          if (stringLen <= (unsigned)innerWidth) {
-            mMessageLines.push_back(*msgLineIter);
+            mMessageLines.push_back(msgLine);
          }
          else {
             string currentLine;  // Will be added to mMessageLines
             vector<string> words;
-            SplitStringRegex(*msgLineIter, " ", words);
-            vector<string>::iterator word;
-            for (word = words.begin(); word != words.end(); ++word) {
+            SplitStringRegex(msgLine, " ", words);
+            for (string& word : words) {
                // If the current word is >= the inner width, set the
-               //  window width to the width of the current word (if
-               //  possible..  if not, shorten the word).
+               // window width to the width of the current word (if
+               // possible..  if not, shorten the word).
                if (mHotkeyHighlighting) {
-                  stringLen = cxBase::visualStrLen(*word);
+                  stringLen = cxBase::visualStrLen(word);
                }
                else {
-                  stringLen = word->length();
+                  stringLen = word.length();
                }
                if (stringLen >= (unsigned)innerWidth) {
                   // The current word will have to go on a line by
-                  //  itself..  So add the current line to
-                  //  mMessageLines (if it's not blank).
+                  // itself..  So add the current line to
+                  // mMessageLines (if it's not blank).
                   if (currentLine != "") {
                      if (currentLine[currentLine.length()-1] == ' ') {
                         currentLine = currentLine.substr(0, currentLine.length()-1);
@@ -3808,49 +3804,49 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
                   }
 
                   // Check the length of the current word against
-                  //  the inner width.
+                  // the inner width.
                   if (hasBorder()) {
-                     if ((int)(word->length()) <= maxWidth-2) {
-                        innerWidth = (int)(word->length());
+                     if ((int)(word.length()) <= maxWidth-2) {
+                        innerWidth = (int)(word.length());
                         newWidth = innerWidth + 2;
                      }
                      else {
                         // Truncate the word..  (a better way might
-                        //  be to split it across 2 lines?)
-                        *word = word->substr(0, innerWidth);
+                        // be to split it across 2 lines?)
+                        word = word.substr(0, innerWidth);
                      }
                   }
                   else {
-                     if ((int)(word->length()) <= maxWidth) {
-                        innerWidth = (int)(word->length());
+                     if ((int)(word.length()) <= maxWidth) {
+                        innerWidth = (int)(word.length());
                         newWidth = innerWidth;
                      }
                      else {
                         // Truncate the word..  (a better way might
                         //  be to split it across 2 lines?)
-                        *word = word->substr(0, innerWidth);
+                        word = word.substr(0, innerWidth);
                      }
                   }
 
-                  if (*word != "") {
-                     mMessageLines.push_back(*word);
+                  if (word != "") {
+                     mMessageLines.push_back(word);
                   }
                }
                else {
                   // Add the current word to currentLine.  Update the height
                   //  of the window and update mMessageLines if currentLine
                   //  is long enough to fill the width of the window.
-                  if ((int)(currentLine + *word).length() > innerWidth) {
+                  if ((int)(currentLine + word).length() > innerWidth) {
                      if (currentLine != "") {
                         if (currentLine[currentLine.length()-1] == ' ') {
                            currentLine = currentLine.substr(0, currentLine.length()-1);
                         }
                         mMessageLines.push_back(currentLine);
                      }
-                     currentLine = *word + " ";
+                     currentLine = word + " ";
                   }
                   else {
-                     currentLine += *word + " ";
+                     currentLine += word + " ";
                   }
                }
             }
@@ -3928,15 +3924,12 @@ void cxWindow::removeAllSubwindows() {
    // Set all the subwindows' parent windows to nullptr
    //  (so that they don't try to do something with
    //  this window anymore).
-   cxWindowPtrContainer::iterator iter;
    while (anySubwinHasThisParent()) {
-      for (iter = mSubWindows.begin(); iter != mSubWindows.end(); ++iter) {
-         if ((*iter)->mParentWindow != nullptr) {
-            if ((*iter)->mParentWindow == this) {
-               (*iter)->setParent(nullptr);
-               //(*iter)->mParentWindow = nullptr;
-               break; // Exit the for loop; continue with the while loop
-            }
+      for (cxWindow*& subWin : mSubWindows) {
+         if (subWin->mParentWindow == this) {
+            subWin->setParent(nullptr);
+            //subWin->mParentWindow = nullptr;
+            break; // Exit the for loop; continue with the while loop
          }
       }
    }
@@ -4370,10 +4363,9 @@ bool cxWindow::handleFunctionForLastMouseState(bool *pFunctionExists,
 inline int cxWindow::maxSubwindowHeight() const {
    int maxSubwinHeight = 0;
 
-   cxWindowPtrContainer::const_iterator iter = mSubWindows.begin();
-   for (; iter != mSubWindows.end(); ++iter) {
-      if ((*iter)->height() > maxSubwinHeight) {
-         maxSubwinHeight = (*iter)->height();
+   for (const cxWindow*const& subWin : mSubWindows) {
+      if (subWin->height() > maxSubwinHeight) {
+         maxSubwinHeight = subWin->height();
       }
    }
 
@@ -4411,9 +4403,8 @@ void cxWindow::freeWindow() {
 //  string.
 void cxWindow::combineMessageLines(string& message) {
    message.erase();
-   messageLineContainer::iterator iter;
-   for (iter = mMessageLines.begin(); iter != mMessageLines.end(); ++iter) {
-      message += *iter + " ";
+   for (const string& msgLine : mMessageLines) {
+      message += msgLine + " ";
    }
    // Remove a trailing space from message, if there is one.
    if (message.length() > 0) {
@@ -4426,9 +4417,8 @@ void cxWindow::combineMessageLines(string& message) {
 inline bool cxWindow::subWindowExists(cxWindow *pWindow) const {
    bool exists = false;
 
-   cxWindowPtrContainer::const_iterator iter = mSubWindows.begin();
-   for (; iter != mSubWindows.end(); ++iter) {
-      if (*iter == pWindow) {
+   for (const cxWindow*const& subWin : mSubWindows) {
+      if (subWin == pWindow) {
          exists = true;
          break;
       }
@@ -4631,13 +4621,10 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
 inline bool cxWindow::anySubwinHasThisParent() {
    bool retval = false;
 
-   cxWindowPtrContainer::iterator iter = mSubWindows.begin();
-   for (; iter != mSubWindows.end(); ++iter) {
-      if (nullptr != (*iter)) {
-         if ((*iter)->mParentWindow == this) {
-            retval = true;
-            break;
-         }
+   for (const cxWindow*const& subWin : mSubWindows) {
+      if (subWin->mParentWindow == this) {
+         retval = true;
+         break;
       }
    }
 
@@ -4713,161 +4700,161 @@ bool cxWindow::mouseEvtWasButtonEvt() const {
 
 void cxWindow::setKeyFunctions(const cxWindow& pWindow) {
    // Make sure the other window is a different window than this one
-   if (&pWindow != this) {
-      // Clear mKeyFunctions and copy the ones from pWindow
-      mKeyFunctions.clear();
-      shared_ptr<cxFunction> iFunc = nullptr;
-      map<int, shared_ptr<cxFunction> >::const_iterator iter2 = pWindow.mKeyFunctions.begin();
-      for (; iter2 != pWindow.mKeyFunctions.end(); ++iter2) {
-         iFunc = iter2->second;
-         if (iFunc != nullptr) {
-            // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
-            if (iFunc->cxTypeStr() == "cxFunction0") {
-               try {
-                  shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(iFunc);
-                  if (iFunc0 != nullptr) {
-                     setKeyFunction(iter2->first, iFunc0->getFunction(),
-                                    iFunc0->getUseReturnVal(),
-                                    iFunc0->getExitAfterRun(),
-                                    iFunc0->getRunOnLeaveFunction());
-                  }
-               }
-               catch (...) {
-               }
-            }
-            else if (iFunc->cxTypeStr() == "cxFunction2") {
-               try {
-                  shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(iFunc);
-                  if (iFunc2 != nullptr) {
-                     // If either parameter points to the other window, have it
-                     //  point to this one instead.
-                     void *param1 = iFunc2->getParam1();
-                     void *param2 = iFunc2->getParam2();
-                     if (param1 == (void*)(&pWindow)) {
-                        param1 = (void*)this;
-                     }
-                     if (param2 == (void*)(&pWindow)) {
-                        param2 = (void*)this;
-                     }
-                     setKeyFunction(iter2->first, iFunc2->getFunction(),
-                                    param1, param2, iFunc2->getUseReturnVal(),
-                                    iFunc2->getExitAfterRun(),
-                                    iFunc2->getRunOnLeaveFunction());
-                  }
-               }
-               catch (...) {
+   if (&pWindow == this) {
+      return;
+   }
+
+   // Clear mKeyFunctions and copy the ones from pWindow
+   mKeyFunctions.clear();
+   shared_ptr<cxFunction> iFunc = nullptr;
+   for (const auto& funcMapPair : mKeyFunctions) {
+      iFunc = funcMapPair.second;
+      if (iFunc != nullptr) {
+         // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
+         if (iFunc->cxTypeStr() == "cxFunction0") {
+            try {
+               shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(iFunc);
+               if (iFunc0 != nullptr) {
+                  setKeyFunction(funcMapPair.first, iFunc0->getFunction(),
+                                 iFunc0->getUseReturnVal(),
+                                 iFunc0->getExitAfterRun(),
+                                 iFunc0->getRunOnLeaveFunction());
                }
             }
-            else if (iFunc->cxTypeStr() == "cxFunction4") {
-               try {
-                  shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(iFunc);
-                  if (iFunc4 != nullptr) {
-                     // If any of the parameters point to the other window, have
-                     //  them point to this one instead.
-                     void *param1 = iFunc4->getParam1();
-                     void *param2 = iFunc4->getParam2();
-                     void *param3 = iFunc4->getParam3();
-                     void *param4 = iFunc4->getParam4();
-                     if (param1 == (void*)(&pWindow)) {
-                        param1 = (void*)this;
-                     }
-                     if (param2 == (void*)(&pWindow)) {
-                        param2 = (void*)this;
-                     }
-                     if (param3 == (void*)(&pWindow)) {
-                        param3 = (void*)this;
-                     }
-                     if (param4 == (void*)(&pWindow)) {
-                        param4 = (void*)this;
-                     }
-                     setKeyFunction(iter2->first, iFunc4->getFunction(),
-                                    param1, param2, param3, param4,
-                                    iFunc4->getUseReturnVal(),
-                                    iFunc4->getExitAfterRun(),
-                                    iFunc4->getRunOnLeaveFunction());
+            catch (...) {
+            }
+         }
+         else if (iFunc->cxTypeStr() == "cxFunction2") {
+            try {
+               shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(iFunc);
+               if (iFunc2 != nullptr) {
+                  // If either parameter points to the other window, have it
+                  //  point to this one instead.
+                  void *param1 = iFunc2->getParam1();
+                  void *param2 = iFunc2->getParam2();
+                  if (param1 == (void*)(&pWindow)) {
+                     param1 = (void*)this;
                   }
+                  if (param2 == (void*)(&pWindow)) {
+                     param2 = (void*)this;
+                  }
+                  setKeyFunction(funcMapPair.first, iFunc2->getFunction(),
+                                 param1, param2, iFunc2->getUseReturnVal(),
+                                 iFunc2->getExitAfterRun(),
+                                 iFunc2->getRunOnLeaveFunction());
                }
-               catch (...) {
+            }
+            catch (...) {
+            }
+         }
+         else if (iFunc->cxTypeStr() == "cxFunction4") {
+            try {
+               shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(iFunc);
+               if (iFunc4 != nullptr) {
+                  // If any of the parameters point to the other window, have
+                  //  them point to this one instead.
+                  void *param1 = iFunc4->getParam1();
+                  void *param2 = iFunc4->getParam2();
+                  void *param3 = iFunc4->getParam3();
+                  void *param4 = iFunc4->getParam4();
+                  if (param1 == (void*)(&pWindow)) {
+                     param1 = (void*)this;
+                  }
+                  if (param2 == (void*)(&pWindow)) {
+                     param2 = (void*)this;
+                  }
+                  if (param3 == (void*)(&pWindow)) {
+                     param3 = (void*)this;
+                  }
+                  if (param4 == (void*)(&pWindow)) {
+                     param4 = (void*)this;
+                  }
+                  setKeyFunction(funcMapPair.first, iFunc4->getFunction(),
+                                 param1, param2, param3, param4,
+                                 iFunc4->getUseReturnVal(),
+                                 iFunc4->getExitAfterRun(),
+                                 iFunc4->getRunOnLeaveFunction());
                }
+            }
+            catch (...) {
             }
          }
       }
+   }
 
-      // Do the same with mMouseFunctions
-      mMouseFunctions.clear();
-      iFunc = nullptr;
-      iter2 = pWindow.mMouseFunctions.begin();
-      for (; iter2 != pWindow.mMouseFunctions.end(); ++iter2) {
-         iFunc = iter2->second;
-         if (iFunc != nullptr) {
-            // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
-            if (iFunc->cxTypeStr() == "cxFunction0") {
-               try {
-                  shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(iFunc);
-                  if (iFunc0 != nullptr) {
-                     setMouseFunction(iter2->first, iFunc0->getFunction(),
-                                    iFunc0->getUseReturnVal(),
-                                    iFunc0->getExitAfterRun(),
-                                    iFunc0->getRunOnLeaveFunction());
-                  }
-               }
-               catch (...) {
+   // Do the same with mMouseFunctions
+   mMouseFunctions.clear();
+   iFunc = nullptr;
+   for (const auto& funcMapPair : mMouseFunctions) {
+      iFunc = funcMapPair.second;
+      if (iFunc != nullptr) {
+         // See if it's a cxFunction0, cxFunction2, or cxFunction 4, and copy it as such.
+         if (iFunc->cxTypeStr() == "cxFunction0") {
+            try {
+               shared_ptr<cxFunction0> iFunc0 = dynamic_pointer_cast<cxFunction0>(iFunc);
+               if (iFunc0 != nullptr) {
+                  setMouseFunction(funcMapPair.first, iFunc0->getFunction(),
+                                 iFunc0->getUseReturnVal(),
+                                 iFunc0->getExitAfterRun(),
+                                 iFunc0->getRunOnLeaveFunction());
                }
             }
-            else if (iFunc->cxTypeStr() == "cxFunction2") {
-               try {
-                  shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(iFunc);
-                  if (iFunc2 != nullptr) {
-                     // If either parameter points to the other window, have it
-                     //  point to this one instead.
-                     void *param1 = iFunc2->getParam1();
-                     void *param2 = iFunc2->getParam2();
-                     if (param1 == (void*)(&pWindow)) {
-                        param1 = (void*)this;
-                     }
-                     if (param2 == (void*)(&pWindow)) {
-                        param2 = (void*)this;
-                     }
-                     setMouseFunction(iter2->first, iFunc2->getFunction(),
-                                    param1, param2, iFunc2->getUseReturnVal(),
-                                    iFunc2->getExitAfterRun(),
-                                    iFunc2->getRunOnLeaveFunction());
+            catch (...) {
+            }
+         }
+         else if (iFunc->cxTypeStr() == "cxFunction2") {
+            try {
+               shared_ptr<cxFunction2> iFunc2 = dynamic_pointer_cast<cxFunction2>(iFunc);
+               if (iFunc2 != nullptr) {
+                  // If either parameter points to the other window, have it
+                  //  point to this one instead.
+                  void *param1 = iFunc2->getParam1();
+                  void *param2 = iFunc2->getParam2();
+                  if (param1 == (void*)(&pWindow)) {
+                     param1 = (void*)this;
                   }
-               }
-               catch (...) {
+                  if (param2 == (void*)(&pWindow)) {
+                     param2 = (void*)this;
+                  }
+                  setMouseFunction(funcMapPair.first, iFunc2->getFunction(),
+                                 param1, param2, iFunc2->getUseReturnVal(),
+                                 iFunc2->getExitAfterRun(),
+                                 iFunc2->getRunOnLeaveFunction());
                }
             }
-            else if (iFunc->cxTypeStr() == "cxFunction4") {
-               try {
-                  shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(iFunc);
-                  if (iFunc4 != nullptr) {
-                     // If any of the parameters point to the other window, have
-                     //  them point to this one instead.
-                     void *param1 = iFunc4->getParam1();
-                     void *param2 = iFunc4->getParam2();
-                     void *param3 = iFunc4->getParam3();
-                     void *param4 = iFunc4->getParam4();
-                     if (param1 == (void*)(&pWindow)) {
-                        param1 = (void*)this;
-                     }
-                     if (param2 == (void*)(&pWindow)) {
-                        param2 = (void*)this;
-                     }
-                     if (param3 == (void*)(&pWindow)) {
-                        param3 = (void*)this;
-                     }
-                     if (param4 == (void*)(&pWindow)) {
-                        param4 = (void*)this;
-                     }
-                     setMouseFunction(iter2->first, iFunc4->getFunction(),
-                                    param1, param2, param3, param4,
-                                    iFunc4->getUseReturnVal(),
-                                    iFunc4->getExitAfterRun(),
-                                    iFunc4->getRunOnLeaveFunction());
+            catch (...) {
+            }
+         }
+         else if (iFunc->cxTypeStr() == "cxFunction4") {
+            try {
+               shared_ptr<cxFunction4> iFunc4 = dynamic_pointer_cast<cxFunction4>(iFunc);
+               if (iFunc4 != nullptr) {
+                  // If any of the parameters point to the other window, have
+                  //  them point to this one instead.
+                  void *param1 = iFunc4->getParam1();
+                  void *param2 = iFunc4->getParam2();
+                  void *param3 = iFunc4->getParam3();
+                  void *param4 = iFunc4->getParam4();
+                  if (param1 == (void*)(&pWindow)) {
+                     param1 = (void*)this;
                   }
+                  if (param2 == (void*)(&pWindow)) {
+                     param2 = (void*)this;
+                  }
+                  if (param3 == (void*)(&pWindow)) {
+                     param3 = (void*)this;
+                  }
+                  if (param4 == (void*)(&pWindow)) {
+                     param4 = (void*)this;
+                  }
+                  setMouseFunction(funcMapPair.first, iFunc4->getFunction(),
+                                 param1, param2, param3, param4,
+                                 iFunc4->getUseReturnVal(),
+                                 iFunc4->getExitAfterRun(),
+                                 iFunc4->getRunOnLeaveFunction());
                }
-               catch (...) {
-               }
+            }
+            catch (...) {
             }
          }
       }

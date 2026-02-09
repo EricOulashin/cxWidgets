@@ -37,8 +37,8 @@ using std::make_shared;
 
 // These IDs are used for the main menu.
 // Note: When adding IDs to this list, also add it to getMenuItemIDStr() to
-//  return a string representation of the code - this is useful for
-//  debugging.
+// return a string representation of the code - this is useful for
+// debugging.
 enum menuItemIDs {
    menuCode = cxFIRST_AVAIL_RETURN_CODE,
    menuItemWithMultipleHotkeyCode,
@@ -583,13 +583,13 @@ void cxMultiLineInputOverrideOnKeypress();
 void cxWindowAddMessageLinesAbove();
 
 // Functions for use with forms & fields
-string someFunction_2voidIntPtrs(void *int1, void *int2);
 string someFunction(int& int1, int& int2);
-string someFunction2(void *int1, void *int2);
-string someFunction2x(cxMultiLineInput& input);
-string someFunction3(void *p1, void *p2, void *p3, void *p4);
-string hello(void *unused, void *unused2);
-string genericMessageFunction(void *p1, void *p2, void *p3, void *p4);
+string returnBBye();
+string someFunction2(cxMultiLineInput& input);
+string someFunction3(cxMultiLineInput& input);
+string hello();
+string genericMessageFunction();
+string genericMessageFunction_1str(string& pMessage);
 string testBoxSuccess(void* Foo1, void* Foo2, void* Foo3, void* Foo4);
 
 // Tests whether an input has the values "Y" or "N"
@@ -1963,8 +1963,8 @@ void inputsWithFKeys() {
    auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
    iInput.setKeyFunction(KEY_F(2), keyFunc1);
    // Use 2 keys to run the same function
-   iInput.setKeyFunction(KEY_F(3), someFunction2, &x, &y, true);
-   auto inputFunc = cxFunction1RefTemplated<cxMultiLineInput>::create(someFunction2x, iInput, false, false, true);
+   iInput.setKeyFunction(KEY_F(3), make_shared<cxFunction0>(returnBBye, true));
+   auto inputFunc = cxFunction1RefTemplated<cxMultiLineInput>::create(someFunction2, iInput, false, false, true);
    iInput.setKeyFunction('/', inputFunc);
    iInput.showModal();
    messageBox(iInput.getValue());
@@ -1982,13 +1982,14 @@ void formWithFKeys() {
    iForm.append(3, 1, 1, 25, "City:");
 
    auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
+   auto keyFunc1UseReturnVal = cxFunction2RefTemplated<int, int>::create(someFunction, x, y, true);
 
    iForm.setFieldKeyFunction("Name:", KEY_F(2), keyFunc1);
    iForm.setFieldKeyFunction("Name:", '/', keyFunc1);
-   iForm.setFieldKeyFunction("City:", KEY_F(3), someFunction2, &x, &y, true, false);
-   iForm.setKeyFunction(KEY_F(4), someFunction_2voidIntPtrs, &x, &y, false);
-   iForm.setKeyFunction(KEY_F(5), someFunction_2voidIntPtrs, &x, &y, true);
-   iForm.setOnLeaveFunction(0, genericMessageFunction, nullptr, nullptr, nullptr, nullptr);
+   iForm.setFieldKeyFunction("City:", KEY_F(3), make_shared<cxFunction0>(returnBBye, true));
+   iForm.setKeyFunction(KEY_F(4), keyFunc1);
+   iForm.setKeyFunction(KEY_F(5), keyFunc1UseReturnVal);
+   iForm.setOnLeaveFunction(make_shared<cxFunction0>(genericMessageFunction));
    iForm.showModal();
 
    messageBox("Name:" + iForm.getValue("Name:"));
@@ -2015,13 +2016,6 @@ void cxMultiLineInputMasking() {
    messageBox("You entered:" + iInput.getValue() + ":");
 } // cxMultiLineInputMasking
 
-string someFunction_2voidIntPtrs(void *int1, void *int2) {
-   ostringstream os;
-   os << "1: " << *((int*)int1) << ", 2: " << *((int*)int2);
-   messageBox(2, 31, 3, 18, "Test", os.str());
-   return("hello");
-} // someFunction
-
 string someFunction(int& int1, int& int2) {
    ostringstream os;
    os << "1: " << int1 << ", 2: " << int2;
@@ -2029,45 +2023,38 @@ string someFunction(int& int1, int& int2) {
    return("hello");
 } // someFunction
 
-string someFunction2(void *int1, void *int2) {
+string returnBBye() {
    return("b'bye");
-} // someFunction2
+} // returnBBye
 
-string someFunction2x(cxMultiLineInput& input) {
+string someFunction2(cxMultiLineInput& input) {
    input.setValue("Yep", true);
    return "";
-} // someFunction2x
+} // someFunction2
 
-string someFunction3(void *p1, void *p2, void *p3, void *p4) {
+string someFunction3(cxMultiLineInput& input) {
    string retval;
 
-   if (p1 != nullptr) {
-      cxMultiLineInput *pInput = (cxMultiLineInput*)p1;
-      if (pInput->getValue() != "good") {
-         retval = "Value is not 'good'";
-         messageBox(retval);
-      }
+   if (input.getValue() != "good") {
+      retval = "Value is not 'good'";
+      messageBox(retval);
    }
 
    return(retval);
 } // someFunction3
 
-string hello(void *unused, void *unused2) {
+string hello() {
    cxBase::messageBox("hello");
    return("");
 } // hello
 
-string genericMessageFunction(void *p1, void *p2, void *p3, void *p4) {
-   // If p1 is non-nullptr, assume it's a string pointer and
-   //  use that as the display message.
-   if (p1 != nullptr) {
-      string *pString = static_cast<string*>(p1);
-      messageBox(*pString);
-   }
-   else {
-      messageBox("This is a generic message.");
-   }
+string genericMessageFunction() {
+   messageBox("This is a generic message.");
+   return("");
+}
 
+string genericMessageFunction_1str(string& pMessage) {
+   messageBox(pMessage);
    return("");
 } // genericMessageFunction
 
@@ -2215,8 +2202,9 @@ string sayHello2(void *p1, void *p2) {
 } // sayHello
 
 void cxWindowCopyConstructor() {
-   string message = "This tests the cxWindow copy constructor.  "
-                  + string("If the app doesn't crash, this test passes!");
+   string message = "This tests the cxWindow copy constructor.  " \
+                    "If the app doesn't crash and the " \
+                    "function keys do what they're supposed to do, this test passes!";
    cxBase::messageDialog(message);
 
    // Create the original window dynamically, and delete it after it's copied.
@@ -2225,18 +2213,18 @@ void cxWindowCopyConstructor() {
    shared_ptr<cxWindow> window1 = make_shared<cxWindow>(nullptr, 1, 1, 5, 40, "Title",
                                     "F1 and F2 fire functions.", "Status");
    window1->setName("The window");
-   window1->setKeyFunction(KEY_F(1), sayHello, window1.get(), nullptr, false, false);
-   window1->setKeyFunction(KEY_F(2), sayHello2, window1.get(), nullptr, false, false);
+   window1->setKeyFunction(KEY_F(1), sayHello, window1.get(), nullptr, false, false, false);
+   window1->setKeyFunction(KEY_F(2), sayHello2, window1.get(), nullptr, false, false, false);
    cxWindow window2(*window1);
    window2.showModal();
 }
 
 void demoPanels() {
    // This function tests displaying & moving multiple
-   //  windows, showing the benefits that the panels library
-   //  gives us (i.e., only redrawing what is needed when
-   //  something changes, rather than redrawing the entire
-   //  screen).
+   // windows, showing the benefits that the panels library
+   // gives us (i.e., only redrawing what is needed when
+   // something changes, rather than redrawing the entire
+   // screen).
    cxWindow iWindow(nullptr, 1, 1, 10, 25, "Win1", "Window 1");
    cxWindow iWindow2(nullptr, 3, 3, 10, 25, "Win2", "Window 2");
    cxWindow iWindow3(nullptr, 0, 5, 10, 25, "Win3", "Window 3");
@@ -2454,8 +2442,8 @@ void formWithInputValueValidator() {
    cxForm iForm(nullptr, 1, 1, 15, 45, "Test form");
    shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 20, "Input 1:");
    iForm.append(2, 1, 1, 20, "Input 2:");
-   iForm.setValidatorFunction("Input 1:", someFunction3, input.get(), nullptr, nullptr, nullptr);
-   //iForm.setValidatorFunction(0, someFunction3, input, nullptr, nullptr, nullptr);
+   auto validatorFunc = cxFunction1RefTemplated<cxMultiLineInput>::create(someFunction3, *(input.get()));
+   iForm.setValidatorFunction("Input 1:", validatorFunc);
    iForm.showModal();
 } // formWithInputValueValidator
 
@@ -2640,7 +2628,8 @@ void formUpArrowFunction() {
    cxForm iForm(nullptr, 2, 0, 7, 40, "Test form");
    iForm.append(1, 1, 1, 9, "Input 1:");
    iForm.append(2, 1, 1, 18, "Input 2:");
-   iForm.setOnLeaveFunction(0, genericMessageFunction, nullptr, nullptr, nullptr, nullptr);
+   auto func = make_shared<cxFunction0>(genericMessageFunction);
+   iForm.setOnLeaveFunction(0, func);
    iForm.setKeyFunction(KEY_UP, cxBase::noOp, nullptr, nullptr, true);
    iForm.showModal();
    if (iForm.getLastKey() == KEY_UP) {
@@ -2809,11 +2798,12 @@ void getFormKeys() {
 
    int x = 0, y = 0;
    auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
+   auto keyFunc1UseReturnVal = cxFunction2RefTemplated<int, int>::create(someFunction, x, y, true);
    iForm.setKeyFunction(KEY_F(4), keyFunc1);
-   iForm.setKeyFunction(KEY_F(5), someFunction_2voidIntPtrs, &x, &y, true);
-   iForm.setKeyFunction(KEY_NPAGE, someFunction_2voidIntPtrs, &x, &y, true);
-   iForm.setKeyFunction(KEY_PPAGE, someFunction_2voidIntPtrs, &x, &y, true);
-   iForm.setKeyFunction('/', someFunction_2voidIntPtrs, &x, &y, true);
+   iForm.setKeyFunction(KEY_F(5), keyFunc1UseReturnVal);
+   iForm.setKeyFunction(KEY_NPAGE, keyFunc1UseReturnVal);
+   iForm.setKeyFunction(KEY_PPAGE, keyFunc1UseReturnVal);
+   iForm.setKeyFunction('/', keyFunc1UseReturnVal);
 
    vector<string> formKeys;
    iForm.getFunctionKeyStrings(formKeys);
@@ -3094,7 +3084,7 @@ void formFunctionKeys() {
    // Note: It shouldn't matter if we append inputs to the form after setting
    //  a form function key on the form.
    shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 25, "Input 1:");
-   input->setOnLeaveFunction(genericMessageFunction, nullptr, nullptr, nullptr, nullptr);
+   input->setOnLeaveFunction(make_shared<cxFunction0>(genericMessageFunction));
    input->setKeyFunction(KEY_F(3), showAMessageBox, &cxMLIStr, nullptr, false, false);
 
    iForm.showModal();
@@ -3224,11 +3214,12 @@ void inputQuitKeysOnForm() {
    iForm.setValidatorFunction(2, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
    iForm.setValidatorFunction(3, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
    iForm.setValidatorFunction(4, testBoxSuccess, &validatorMsg, nullptr, nullptr, nullptr);
-   iForm.setOnLeaveFunction(0, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
-   iForm.setOnLeaveFunction(1, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
-   iForm.setOnLeaveFunction(2, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
-   iForm.setOnLeaveFunction(3, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
-   iForm.setOnLeaveFunction(4, genericMessageFunction, &fieldOnLeaveMsg, nullptr, nullptr, nullptr);
+   auto func = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, fieldOnLeaveMsg);
+   iForm.setOnLeaveFunction(0, func);
+   iForm.setOnLeaveFunction(1, func);
+   iForm.setOnLeaveFunction(2, func);
+   iForm.setOnLeaveFunction(3, func);
+   iForm.setOnLeaveFunction(4, func);
    iForm.setAutoExit(true);
    iForm.addQuitKey(SHIFT_F2);
    iForm.addQuitKey(SHIFT_F3);
@@ -3246,10 +3237,13 @@ void cxMenuFocusFunctions() {
    for (int index = 1; index < 25; ++index) {
       iMenu.append("Item " + cxStringUtils::toString(index), index);
    }
-   iMenu.setOnFocusFunction(genericMessageFunction, &onFocusMsg, nullptr, nullptr, nullptr, false);
-   iMenu.setOnLeaveFunction(genericMessageFunction, &onLeaveMsg, nullptr, nullptr, nullptr);
-   iMenu.setLoopStartFunction(genericMessageFunction, &loopStartMsg, nullptr, nullptr, nullptr, false);
-   iMenu.setLoopEndFunction(genericMessageFunction, &loopEndMsg, nullptr, nullptr, nullptr, false);
+   auto func = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, onFocusMsg);
+   iMenu.setOnFocusFunction(func);
+   iMenu.setOnLeaveFunction(func);
+   auto loopStartFunc = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, loopStartMsg);
+   iMenu.setLoopStartFunction(loopStartFunc);
+   auto loopEndFunc = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, loopEndMsg);
+   iMenu.setLoopEndFunction(loopEndFunc);
    iMenu.showModal();
 } // cxMenuFocusFunctions
 
@@ -3266,10 +3260,10 @@ void cxInputOnFormLoopDisabled() {
 
    string onFocusMsg = "Input 2 onFocus function called";
    string onLeaveMsg = "Input 2 onLeave function called";
-   iForm.setOnFocusFunction("Input 2:", genericMessageFunction, &onFocusMsg,
-                            nullptr, nullptr, nullptr, false);
-   iForm.setOnLeaveFunction("Input 2:", genericMessageFunction, &onLeaveMsg,
-                            nullptr, nullptr, nullptr);
+   auto onFocusFunc = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, onFocusMsg);
+   iForm.setOnFocusFunction("Input 2:", onFocusFunc);
+   auto onLeaveFunc = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, onLeaveMsg);
+   iForm.setOnLeaveFunction("Input 2:", onLeaveFunc);
    iForm.enableInputLoop("Input 2:", false);
 
    iForm.showModal();
@@ -3288,8 +3282,10 @@ void loneInputWithLoopDisabledOnForm() {
    cxForm iForm(nullptr, 1, 0, 5, 28, "Test form");
    shared_ptr<cxMultiLineInput> input = iForm.append(1, 1, 1, 25, "Input 1:");
    input->enableInputLoop(false);
-   input->setOnFocusFunction(genericMessageFunction, &onFocusMsg, nullptr, nullptr, nullptr, false);
-   input->setOnLeaveFunction(genericMessageFunction, &onLeaveMsg, nullptr, nullptr, nullptr);
+   auto onFocusFunc = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, onFocusMsg, false, false, false);
+   input->setOnFocusFunction(onFocusFunc);
+   auto onLeaveFunc = cxFunction1RefTemplated<string>::create(genericMessageFunction_1str, onLeaveMsg);
+   input->setOnLeaveFunction(onLeaveFunc);
    iForm.setAutoExit(true);
    iForm.showModal();
 } // loneInputWithLoopDisabledOnForm
@@ -5228,7 +5224,8 @@ void cxMultiLineInputNumericFloatingPtWithRange() {
 void cxMultiLineInputNumericWhole() {
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Whole #:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
-   iInput.setKeyFunction(KEY_F(8), hello, nullptr, nullptr, false, false, true);
+   auto func = make_shared<cxFunction0>(hello,  false, false, true);
+   iInput.setKeyFunction(KEY_F(8), func);
    iInput.showModal();
    cxBase::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNumericWhole

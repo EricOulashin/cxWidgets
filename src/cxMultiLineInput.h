@@ -672,6 +672,17 @@ class cxMultiLineInput : public cxWindow {
        * If the function returns a blank string, it is assumed that the
        * text is valid; if the function returns a non-blank string, it is
        * assumed that the text was incorrect.
+       * @param pFunction Function pointer
+       *
+       * @return true if the function was set, or false if not
+       */
+      virtual bool setValidatorFunction(const std::shared_ptr<cxFunction>& pFunction);
+
+      /**
+       * Sets a validator function to be run before focus is lost.
+       * If the function returns a blank string, it is assumed that the
+       * text is valid; if the function returns a non-blank string, it is
+       * assumed that the text was incorrect.
        * @param pFunction Function to point to--must have signature string func(void*, void*, void*, void*)
        * @param p1 Pointer to the first parameter to be used for the function
        * @param p2 Pointer to the second parameter to be used for the function

@@ -1252,11 +1252,34 @@ string cxMultiLineInput::clearInput(void* theInput, void* unused) {
    return("");
 } // clearInput
 
+bool cxMultiLineInput::setValidatorFunction(const std::shared_ptr<cxFunction>& pFunction) {
+   bool setIt = false;
+   // Free the memory used by mValidatorFunction, and then update it with the
+   // given parameters.
+   clearValidatorFunction();
+   if (pFunction != nullptr) {
+      mValidatorFunction = pFunction;
+      setIt = (mValidatorFunction != nullptr);
+   }
+   else {
+      setIt = true;
+   }
+
+   // Set mRunValidatorFunction - If mValidatorFunction is not nullptr, then
+   // mRunValidatorFunction should be true; otherwise, it should be false.
+   // Note: This uses toggleValidatorFunction() instead of setting
+   // mRunValidatorFunction directly because cxComboBox has its own
+   // mRunValidatorFunction.
+   toggleValidatorFunction(mValidatorFunction != nullptr);
+
+   return(setIt);
+} // setValidatorFunction
+
 bool cxMultiLineInput::setValidatorFunction(funcPtr4 pFunction, void *p1, void *p2,
                                             void *p3, void *p4) {
    bool setIt = false;
    // Free the memory used by mValidatorFunction, and then update it with the
-   //  given parameters.
+   // given parameters.
    clearValidatorFunction();
    if (pFunction != nullptr) {
       mValidatorFunction = make_shared<cxFunction4>(pFunction, p1, p2, p3, p4, false, false, true);
