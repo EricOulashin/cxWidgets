@@ -1120,6 +1120,14 @@ class cxForm : public cxWindow {
       virtual bool setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) override;
 
       /**
+       * \brief Removes a function pointer for a keypress for the form so that it will no
+       * \brief longer fire a function.
+       *
+       * @param pKey The hotkey for the function to remove
+       */
+      virtual void clearKeyFunction(int pKey) override;
+
+      /**
        * \brief Adds a function to call when the user presses some key.
        *
        * @param pKey The keypress to fire the function

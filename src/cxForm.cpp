@@ -1829,6 +1829,15 @@ bool cxForm::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) {
    return(setIt);
 } // setKeyFunction
 
+void cxForm::clearKeyFunction(int pKey) {
+   cxWindow::clearKeyFunction(pKey);
+   // Remove the key from each input's list of keys that exit its input loop,
+   // as that wouldn't be needed anymore.
+   for (const auto& input : mInputs) {
+      input->removeExitKey(pKey);
+   }
+} // clearKeyFunction
+
 bool cxForm::setKeyFunction(int pKey, funcPtr4 pFunction,
                             void *p1, void *p2, void *p3, void *p4,
                             bool pUseReturnVal, bool pExitAfterRun,

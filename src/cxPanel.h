@@ -324,6 +324,14 @@ class cxPanel : public cxWindow {
       virtual bool setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) override;
 
       /**
+       * \brief Removes a function pointer for a keypress for the panel so that it will no
+       * \brief longer fire a function.
+       *
+       * @param pKey The hotkey for the function to remove
+       */
+      virtual void clearKeyFunction(int pKey) override;
+
+      /**
        * \brief Sets a function to be called when a key is pressed.  Note that
        * \brief when a key function is set on a cxPanel, the key will be
        * \brief added to the panel's subwindows as exit keys - so if you need
@@ -416,14 +424,6 @@ class cxPanel : public cxWindow {
                                   bool pUseReturnVal = false,
                                   bool pExitAfterRun = false,
                                   bool pRunOnLeaveFunction = true) override;
-
-      /**
-       * \brief Removes a hotkey from the window so that it will not
-       * \brief fire a function.
-       *
-       * @param pKey The hotkey to remove
-       */
-      virtual void clearKeyFunction(int pKey) override;
 
       /**
        * \brief Returns the index of the current window.

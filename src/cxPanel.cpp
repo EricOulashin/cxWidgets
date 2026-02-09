@@ -367,6 +367,15 @@ bool cxPanel::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) 
    return(setIt);
 } // setKeyFunction
 
+void cxPanel::clearKeyFunction(int pKey) {
+   cxWindow::clearKeyFunction(pKey);
+   // Remove the key from each subwindow's list of keys that exit its input loop,
+   // as that wouldn't be needed anymore.
+   for (auto& window : mWindows) {
+      window->removeExitKey(pKey);
+   }
+} // clearKeyFunction
+
 bool cxPanel::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1,
                             void *p2, void *p3, void *p4, bool pUseReturnVal,
                             bool pExitAfterRun, bool pRunOnLeaveFunction) {
@@ -413,15 +422,6 @@ bool cxPanel::setKeyFunction(int pKey, funcPtr0 pFunction, bool pUseReturnVal,
 
    return(setIt);
 } // setKeyFunction
-
-void cxPanel::clearKeyFunction(int pKey) {
-   // Clear the key in the parent class, and remove the key as an exit
-   //  key from all subwindows.
-   cxWindow::clearKeyFunction(pKey);
-   for (auto& window : mWindows) {
-      window->removeExitKey(pKey);
-   }
-} // clearKeyFunction
 
 int cxPanel::getCurrentWindowIndex() const {
    int currentWindow = -1;
