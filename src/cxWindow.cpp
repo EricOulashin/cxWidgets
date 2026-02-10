@@ -133,10 +133,10 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mReturnCode(cxID_EXIT),
      mRunOnFocus(true),
      mRunOnLeave(true),
-     mBorderTop(true),
-     mBorderBottom(true),
-     mBorderLeft(true),
-     mBorderRight(true)
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true)
 {
    init(pRow, pCol, 0, 0, pTitle, pMessage, pStatus, pParentWindow);
 
@@ -196,10 +196,10 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mReturnCode(cxID_EXIT),
      mRunOnFocus(true),
      mRunOnLeave(true),
-     mBorderTop(true),
-     mBorderBottom(true),
-     mBorderLeft(true),
-     mBorderRight(true)
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true)
 {
    init(0, 0, 0, 0, pTitle, pMessage, pStatus, pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -261,10 +261,10 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mReturnCode(cxID_EXIT),
      mRunOnFocus(true),
      mRunOnLeave(true),
-     mBorderTop(true),
-     mBorderBottom(true),
-     mBorderLeft(true),
-     mBorderRight(true)
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true)
 {
    init(0, 0, 0, 0, "", pMessage, pStatus, pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -325,10 +325,10 @@ cxWindow::cxWindow(cxWindow *pParentWindow, const string& pMessage,
      mReturnCode(cxID_EXIT),
      mRunOnFocus(true),
      mRunOnLeave(true),
-     mBorderTop(true),
-     mBorderBottom(true),
-     mBorderLeft(true),
-     mBorderRight(true)
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true)
 {
    init(0, 0, 0, 0, "", pMessage, "", pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -390,10 +390,10 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
      mReturnCode(cxID_EXIT),
      mRunOnFocus(true),
      mRunOnLeave(true),
-     mBorderTop(true),
-     mBorderBottom(true),
-     mBorderLeft(true),
-     mBorderRight(true)
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true)
 {
    int newRow, newCol;
 
@@ -480,10 +480,10 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
      mTitleStrings(pThatWindow.mTitleStrings),
      mStatusStrings(pThatWindow.mStatusStrings),
      mName(pThatWindow.mName),
-     mBorderTop(pThatWindow.mBorderTop),
-     mBorderBottom(pThatWindow.mBorderBottom),
-     mBorderLeft(pThatWindow.mBorderLeft),
-     mBorderRight(pThatWindow.mBorderRight)
+     mDrawBorderTop(pThatWindow.mDrawBorderTop),
+     mDrawBorderBottom(pThatWindow.mDrawBorderBottom),
+     mDrawBorderLeft(pThatWindow.mDrawBorderLeft),
+     mDrawBorderRight(pThatWindow.mDrawBorderRight)
 {
    // Create mWindow and mPanel
    mWindow = newwin(pThatWindow.height(), pThatWindow.width(), pThatWindow.top(), pThatWindow.left());
@@ -1461,9 +1461,9 @@ void cxWindow::drawBorder(int pRow, int pCol, int pHeight, int pWidth,
             break;
          case eBS_DOUBLE_LINE:
             // Draw a double-line border (this only supported on terminals that
-            //  support extended ASCII/Codepage 437).  The numbers used here
-            //  came from Dan Gookin's book "Programmer's Guide to nCurses"
-            //  (1st edition?), page 173 (Chapter 14: "A Mixture of Stuff")
+            // support extended ASCII/Codepage 437).  The numbers used here
+            // came from Dan Gookin's book "Programmer's Guide to nCurses"
+            // (1st edition?), page 173 (Chapter 14: "A Mixture of Stuff")
             wborder(mWindow,
                     (pLeft ? 0x000000ba : ' '),
                     (pRight ? 0x000000ba : ' '),
@@ -1473,6 +1473,30 @@ void cxWindow::drawBorder(int pRow, int pCol, int pHeight, int pWidth,
                     (pTop && pRight ? 0x000000bb : ' '),
                     (pBottom && pLeft ? 0x000000c8 : ' '),
                     (pBottom && pRight ? 0x000000bc : ' ')
+                   );
+            break;
+         case eBS_DOUBLE_TOP_SINGLE_SIDES:
+            wborder(mWindow,
+                    (pLeft ? ACS_VLINE : ' '),
+                    (pRight ? ACS_VLINE : ' '),
+                    (pTop ? 0x000000cd : ' '),
+                    (pBottom ? 0x000000cd : ' '),
+                    (pTop && pLeft ? 0x000000d5 : ' '),
+                    (pTop && pRight ? 0x000000b8 : ' '),
+                    (pBottom && pLeft ? 0x000000d4 : ' '),
+                    (pBottom && pRight ? 0x000000be : ' ')
+                   );
+            break;
+         case eBS_SINGLE_TOP_DOUBLE_SIDES:
+            wborder(mWindow,
+                    (pLeft ? 0x000000ba : ' '),
+                    (pRight ? 0x000000ba : ' '),
+                    (pTop ? ACS_HLINE : ' '),
+                    (pBottom ? ACS_HLINE : ' '),
+                    (pTop && pLeft ? 0x000000d6 : ' '),
+                    (pTop && pRight ? 0x000000b7 : ' '),
+                    (pBottom && pLeft ? 0x000000d3 : ' '),
+                    (pBottom && pRight ? 0x000000bd : ' ')
                    );
             break;
          case eBS_SPACE:
@@ -1490,11 +1514,11 @@ void cxWindow::drawBorder(int pRow, int pCol, int pHeight, int pWidth,
 } // drawBorder
 
 void cxWindow::drawBorder(int pHeight, int pWidth) {
-   drawBorder(0, 0, pHeight, pWidth, mBorderTop, mBorderBottom, mBorderLeft, mBorderRight);
+   drawBorder(0, 0, pHeight, pWidth, mDrawBorderTop, mDrawBorderBottom, mDrawBorderLeft, mDrawBorderRight);
 } // drawBorder
 
 void cxWindow::drawBorder() {
-   drawBorder(0, 0, bottom()-top(), right()-left(), mBorderTop, mBorderBottom, mBorderLeft, mBorderRight);
+   drawBorder(0, 0, bottom()-top(), right()-left(), mDrawBorderTop, mDrawBorderBottom, mDrawBorderLeft, mDrawBorderRight);
 } // drawBorder
 
 // returns the top of the window
@@ -3226,19 +3250,19 @@ void cxWindow::info() {
 } // info
 
 void cxWindow::toggleBorderTop(bool pToggle) {
-   mBorderTop = pToggle;
+   mDrawBorderTop = pToggle;
 } // toggleBorderTop
 
 void cxWindow::toggleBorderBottom(bool pToggle) {
-   mBorderBottom = pToggle;
+   mDrawBorderBottom = pToggle;
 } // toggleBorderBottom
 
 void cxWindow::toggleBorderLeft(bool pToggle) {
-   mBorderLeft = pToggle;
+   mDrawBorderLeft = pToggle;
 } // toggleBorderLeft
 
 void cxWindow::toggleBorderRight(bool pToggle) {
-   mBorderRight = pToggle;
+   mDrawBorderRight = pToggle;
 } // toggleBorderRight
 
 void cxWindow::addSpecialChar(int pY, int pX, chtype pChar,
@@ -4181,10 +4205,10 @@ void cxWindow::copyCxWinStuff(const cxWindow* pThatWindow, bool pRecreateWin) {
       mTitleStrings = pThatWindow->mTitleStrings;
       mStatusStrings = pThatWindow->mStatusStrings;
       mName = pThatWindow->mName;
-      mBorderTop = pThatWindow->mBorderTop;
-      mBorderBottom = pThatWindow->mBorderBottom;
-      mBorderLeft = pThatWindow->mBorderLeft;
-      mBorderRight = pThatWindow->mBorderRight;
+      mDrawBorderTop = pThatWindow->mDrawBorderTop;
+      mDrawBorderBottom = pThatWindow->mDrawBorderBottom;
+      mDrawBorderLeft = pThatWindow->mDrawBorderLeft;
+      mDrawBorderRight = pThatWindow->mDrawBorderRight;
 
       // Copy the other window's mMouse information
 #ifdef NCURSES_MOUSE_VERSION
@@ -4522,20 +4546,22 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
       lineLength = lineEnd - lineStart;
       switch (mBorderStyle) {
          case eBS_SINGLE_LINE:
+         case eBS_SINGLE_TOP_DOUBLE_SIDES:
          default:
             if (pItem == eTITLE) {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderTop ? ACS_HLINE : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderTop ? ACS_HLINE : ' '), lineLength);
             }
             else {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderBottom ? ACS_HLINE : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderBottom ? ACS_HLINE : ' '), lineLength);
             }
             break;
          case eBS_DOUBLE_LINE:
+         case eBS_DOUBLE_TOP_SINGLE_SIDES:
             if (pItem == eTITLE) {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderTop ? 0x000000cd : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderTop ? 0x000000cd : ' '), lineLength);
             }
             else {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderBottom ? 0x000000cd : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderBottom ? 0x000000cd : ' '), lineLength);
             }
             break;
          case eBS_SPACE:
@@ -4590,20 +4616,22 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
       int lineLength = endX - lineStart;
       switch (mBorderStyle) {
          case eBS_SINGLE_LINE:
+         case eBS_SINGLE_TOP_DOUBLE_SIDES:
          default:
             if (pItem == eTITLE) {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderTop ? ACS_HLINE : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderTop ? ACS_HLINE : ' '), lineLength);
             }
             else {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderBottom ? ACS_HLINE : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderBottom ? ACS_HLINE : ' '), lineLength);
             }
             break;
          case eBS_DOUBLE_LINE:
+         case eBS_DOUBLE_TOP_SINGLE_SIDES:
             if (pItem == eTITLE) {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderTop ? 0x000000cd : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderTop ? 0x000000cd : ' '), lineLength);
             }
             else {
-               mvwhline(mWindow, pVPos, lineStart, (mBorderBottom ? 0x000000cd : ' '), lineLength);
+               mvwhline(mWindow, pVPos, lineStart, (mDrawBorderBottom ? 0x000000cd : ' '), lineLength);
             }
             break;
          case eBS_SPACE:

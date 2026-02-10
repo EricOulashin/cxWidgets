@@ -22,9 +22,11 @@
 */
 enum eBorderStyle {
    eBS_NOBORDER = 0,
-   eBS_SINGLE_LINE, // Use a single line for the border
-   eBS_DOUBLE_LINE, // Use a double line for the border (few terminals support this)
-   eBS_SPACE        // Use spaces for the border
+   eBS_SINGLE_LINE,             // Use a single line for the border
+   eBS_DOUBLE_LINE,             // Use a double line for the border (few terminals support this)
+   eBS_DOUBLE_TOP_SINGLE_SIDES, // Use a double line for the top and single lines for the sides and bottom (few terminals support this)
+   eBS_SINGLE_TOP_DOUBLE_SIDES, // Use a single line for the top and double lines for the sides and bottom (few terminals support this)
+   eBS_SPACE                    // Use spaces for the border
 };
 
 #endif

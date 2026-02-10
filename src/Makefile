@@ -62,7 +62,7 @@ else
    endif
 endif
 
-WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxInput.o cxMenu.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o
+WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxInput.o cxMenu.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o cxBorderChars.o
 STATIC_LIB = libcxWidgets.a
 
 all: testApp keys
@@ -176,6 +176,9 @@ cxWindow.o: cxWindow.h cxWindow.cpp cxObject.o cxWidgetsException.o cxFunction.o
 
 floatingPtInputWithRightLabel.o: floatingPtInputWithRightLabel.h floatingPtInputWithRightLabel.cpp cxMultiLineInput.o
 	$(CC) -c $(CFLAGS) -o floatingPtInputWithRightLabel.o floatingPtInputWithRightLabel.cpp
+
+cxBorderChars.o: cxBorderChars.h cxBorderChars.cpp
+	$(CC) -c $(CFLAGS) -o cxBorderChars.o cxBorderChars.cpp
 
 # Programs
 

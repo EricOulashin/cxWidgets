@@ -2870,10 +2870,10 @@ class cxWindow : public cxObject {
       std::map<int, std::string> mStatusStrings;
       // mName provides an alternate way to identify a window.
       std::string mName;
-      bool mBorderTop = true;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderBottom = true; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderLeft = true;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mBorderRight = true;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mDrawBorderTop = true;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mDrawBorderBottom = true; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mDrawBorderLeft = true;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mDrawBorderRight = true;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
 
       //// Helper functions
 
