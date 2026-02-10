@@ -179,7 +179,8 @@ enum menuItemIDs {
    cxMenuAltItemTextCode,
    cxComboBoxNotEditableMenuEnabledCode,
    cxMultiLineInputOverrideOnKeypressCode,
-   cxWindowAddMessageLinesAboveCode
+   cxWindowAddMessageLinesAboveCode,
+   cxWindowBorderStyles
    // Note: When adding IDs to this list, also add it to getMenuItemIDStr() to
    //  return a string representation of the code - this is useful for
    //  debugging.
@@ -581,6 +582,9 @@ void cxMultiLineInputOverrideOnKeypress();
 
 // Tests adding message lines above current text in a cxWindow
 void cxWindowAddMessageLinesAbove();
+
+// Tests making windows with different border styles
+void cxWindowVariousBorderStyles();
 
 // Functions for use with forms & fields
 string someFunction(int& int1, int& int2);
@@ -1009,6 +1013,8 @@ void doMenu() {
    windowSubMenu.append("Mouse event function test", cxWindowMouseFunctionTestCode,
                         "", cxITEM_NORMAL, true);
    windowSubMenu.append("Adding message lines above", cxWindowAddMessageLinesAboveCode,
+                        "", cxITEM_NORMAL, true);
+   windowSubMenu.append("Different border styles", cxWindowBorderStyles,
                         "", cxITEM_NORMAL, true);
 
    // cxPanel tester stuff
@@ -1511,6 +1517,9 @@ void doMenu() {
             break;
          case cxWindowAddMessageLinesAboveCode:
             cxWindowAddMessageLinesAbove();
+            break;
+         case cxWindowBorderStyles:
+            cxWindowVariousBorderStyles();
             break;
          case someItem: // do nuthin...
          default: // do nuthin...
@@ -4102,6 +4111,9 @@ string getMenuItemIDStr(long pMenuItemID) {
       case cxWindowAddMessageLinesAboveCode:
          menuItemIDStr = "cxWindowAddMessageLinesAboveCode";
          break;
+      case cxWindowBorderStyles:
+         menuItemIDStr = "cxWindowBorderStyles";
+         break;
    }
 
    return(menuItemIDStr);
@@ -5920,3 +5932,18 @@ void cxWindowAddMessageLinesAbove() {
    iWindow.show();
    getch();
 } // cxWindowAddMessageLinesAbove
+
+void cxWindowVariousBorderStyles() {
+   const eBorderStyle borderStyles[] = { eBS_NOBORDER, eBS_SINGLE_LINE, eBS_DOUBLE_LINE, eBS_DOUBLE_TOP_SINGLE_SIDES,
+                                         eBS_SINGLE_TOP_DOUBLE_SIDES, eBS_SPACE };
+   const size_t numBorderStyles = sizeof(borderStyles) / sizeof(borderStyles[0]);
+   for (size_t i = 0; i < numBorderStyles; ++i) {
+      string borderStyleStr = eBorderStyleToStr(borderStyles[i]);
+      string message = "Border style: " + borderStyleStr;
+      // cxWindow *pParentWindow, int pRow, int pCol, int pHeight, int pWidth, string pTitle, string pMessage,
+      // string pStatus, eBorderStyle pBorderStyle
+      unique_ptr<cxWindow> iWindow = make_unique<cxWindow>(nullptr, 2, 0, 12, 50, borderStyleStr, message, "", borderStyles[i]);
+      iWindow->show();
+      getch();
+   }
+} // cxWindowBorderStyles

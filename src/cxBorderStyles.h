@@ -15,6 +15,8 @@
  *
  */
 
+ #include <string>
+
 /**
 * \enum eBorderStyle Defines border styles used by cxWindow and its derivitives:
 * eBS_NOBORDER: This signifies windows without a border
@@ -28,5 +30,14 @@ enum eBorderStyle {
    eBS_SINGLE_TOP_DOUBLE_SIDES, // Use a single line for the top and double lines for the sides and bottom (few terminals support this)
    eBS_SPACE                    // Use spaces for the border
 };
+
+/**
+ * \brief Converts an eBorderStyle value to a string representation.
+ * 
+ * \param borderStyle The eBorderStyle value to convert.
+ * 
+ * \return A string representation of the eBorderStyle value.
+ */
+std::string eBorderStyleToStr(eBorderStyle borderStyle);
 
 #endif
