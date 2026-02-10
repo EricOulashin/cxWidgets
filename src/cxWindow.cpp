@@ -2055,19 +2055,24 @@ bool cxWindow::isModal() const {
    return(mIsModal);
 } // isModal
 
-bool cxWindow::setKeyFunction(int pKey, const std::shared_ptr<cxFunction>& pFunction) {
+bool cxWindow::setKeyFunction(int pKey, const shared_ptr<cxFunction>& pFunction) {
    if (pFunction != nullptr) {
-      mKeyFunctions[pKey] = pFunction;
-      // Remove the key from the lists of exit keys and quit keys so that we
-      // can be sure that the key won't make the window leave its input loop
-      // before the function can fire
-      removeExitKey(pKey);
-      removeQuitKey(pKey);
-   }
-   else {
-      if (mKeyFunctions.find(pKey) != mKeyFunctions.end()) {
+      shared_ptr<cxFunction> func = dynamic_pointer_cast<cxFunction>(pFunction);
+      if (func != nullptr) {
+         mKeyFunctions[pKey] = func;
+         // Remove the key from the lists of exit keys and quit keys so that we
+         // can be sure that the key won't make the window leave its input loop
+         // before the function can fire
+         removeExitKey(pKey);
+         removeQuitKey(pKey);
+      }
+      else {
+         // The dynamic_pointer_cast failed, so remove the key from the map.
          mKeyFunctions.erase(pKey);
       }
+   }
+   else {
+      mKeyFunctions.erase(pKey);
    }
 
    return true;
@@ -2092,8 +2097,11 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr4 pFunction, void *p1, void *p2,
                                                                   pUseReturnVal, pExitAfterRun,
                                                                   pRunOnLeaveFunction);
       if (func4Ptr != nullptr) {
-         mKeyFunctions[pKey] = dynamic_pointer_cast<cxFunction>(func4Ptr);
-         setIt = true;
+         shared_ptr<cxFunction> func = dynamic_pointer_cast<cxFunction>(func4Ptr);
+         if (func != nullptr) {
+            mKeyFunctions[pKey] = func;
+            setIt = true;
+         }
       }
       else {
          // We couldn't allocate any memory, so remove it from the map.
@@ -2131,8 +2139,11 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr2 pFunction, void *p1,
                                                                   pUseReturnVal, pExitAfterRun,
                                                                   pRunOnLeaveFunction);
       if (func2Ptr != nullptr) {
-         mKeyFunctions[pKey] = dynamic_pointer_cast<cxFunction>(func2Ptr);
-         setIt = true;
+         shared_ptr<cxFunction> func = dynamic_pointer_cast<cxFunction>(func2Ptr);
+         if (func != nullptr) {
+            mKeyFunctions[pKey] = func;
+            setIt = true;
+         }
       }
       else {
          // We couldn't allocate any memory, so remove it from the map.
@@ -2168,8 +2179,11 @@ bool cxWindow::setKeyFunction(int pKey, funcPtr0 pFunction, bool pUseReturnVal,
       shared_ptr<cxFunction0> func0Ptr = make_shared<cxFunction0>(pFunction, pUseReturnVal, pExitAfterRun,
                                                                   pRunOnLeaveFunction);
       if (func0Ptr != nullptr) {
-         mKeyFunctions[pKey] = dynamic_pointer_cast<cxFunction>(func0Ptr);
-         setIt = true;
+         shared_ptr<cxFunction> func = dynamic_pointer_cast<cxFunction>(func0Ptr);
+         if (func != nullptr) {
+            mKeyFunctions[pKey] = func;
+            setIt = true;
+         }
       }
       else {
          // We couldn't allocate any memory, so remove it from the map.
