@@ -1,46 +1,120 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
+// Copyright (c) 2026 Eric N. Oulashin
 
 #include "cxTimer.h"
+#include <thread>
 #include <time.h>
+using std::string;
+using std::shared_ptr;
+using std::lock_guard;
 
-// TODO: Make use of pthreads so that the
-//  wait() function runs in the background
-
-cxTimer::cxTimer(funcPtr4 pFuncPtr, void* p1, void* p2, void* p3, void* p4, unsigned pDelayMS)
-   : mFunction(pFuncPtr, p1, p2, p3, p4, false, false, false),
-     mDelay(pDelayMS)
+cxTimer::cxTimer(const shared_ptr<cxFunction>& pFuncPtr, unsigned int pDelayMS, bool pWaitInSeparateThread)
+   : mFunction(pFuncPtr),
+     mDelay(pDelayMS),
+     mWaitInSeparateThread(pWaitInSeparateThread)
 {
-   mFunction.setParams(p1, p2, p3, p4);
-   start();
+   if (mFunction != nullptr) {
+     start();
+   }
 }
 
 cxTimer::~cxTimer() {
 }
 
+void cxTimer::function(const shared_ptr<cxFunction>& pFuncPtr) {
+   lock_guard<std::mutex> lock(mWaitMutex);
+   mFunction = pFuncPtr;
+}
+
+shared_ptr<cxFunction> cxTimer::function() const {
+   return(mFunction);
+}
+
+void cxTimer::delay(unsigned int pDelay) {
+   lock_guard<std::mutex> lock(mWaitMutex);
+   mDelay = pDelay;
+}
+
+unsigned int cxTimer::delay() const {
+   return mDelay;
+}
+
+void cxTimer::waitInSeparateThread(bool pWaitInSeparateThread) {
+   lock_guard<std::mutex> lock(mWaitMutex);
+   mWaitInSeparateThread = pWaitInSeparateThread;
+}
+
+bool cxTimer::waitInSeparateThread() const {
+   return(mWaitInSeparateThread);
+}
+
 void cxTimer::start() {
-   wait();
+   if (!mIsWaiting && mFunction != nullptr) {
+      wait();
+   }
 }
 
-void cxTimer::stop() {
+void cxTimer::stop(bool pRunFunction) {
+   mRunFunctionAfterWaiting = pRunFunction;
+   mIsWaiting = false;
 }
 
-std::string cxTimer::cxTypeStr() const {
+bool cxTimer::isWaiting() const {
+   return(mIsWaiting);
+}
+
+string cxTimer::cxTypeStr() const {
    return("cxTimer");
 } // cxTypeStr
 
 void cxTimer::wait() {
-   // Figure out the number of clocks per millisecond,
-   // the current time, and the time we need to stop
-   // waiting.
-   const unsigned long clocksPerMS = CLOCKS_PER_SEC / 1000;
-   clock_t now = clock();
-   const clock_t endTime = now + (mDelay * clocksPerMS);
-
-   // Wait until the correct time
-   while (now < endTime) {
-      now = clock();
+   mRunFunctionAfterWaiting = true; // Default
+   // If the function pointer is null, then do nothing & return now
+   if (mFunction == nullptr) {
+      mIsWaiting = false;
+      return;
    }
 
-   // Run the function
-   mFunction.runFunction();
+   // A lambda/anonymous function to wait until the correct time.
+   // mIsWaiting could be set back to false by stop().
+   auto doWaitLoop = [&]() {
+      // Lock on mWaitMutex for the duration of this function.
+      // This will protect everything in here in case
+      // someone tries to run multiple instances of this function
+      // in separate threads.
+      lock_guard<std::mutex> lock(mWaitMutex);
+
+      if (mFunction == nullptr) { // Check just in case
+         mIsWaiting = false;
+         return;
+      }
+
+      // Figure out the number of clocks per millisecond,
+      // the current time, and the time we need to stop
+      // waiting.
+      const unsigned long clocksPerMS = CLOCKS_PER_SEC / 1000;
+      clock_t now = clock();
+      const clock_t endTime = now + (mDelay * clocksPerMS);
+
+      mIsWaiting = true;
+      while (now < endTime && mIsWaiting) {
+         now = clock();
+      }
+      mIsWaiting = false;
+
+      // If mRunFunctionAfterWaiting is true, then run the function
+      if (mRunFunctionAfterWaiting && mFunction != nullptr) {
+         mFunction->runFunction();
+      }
+      mRunFunctionAfterWaiting = true; // Reset back to default
+   };
+
+   // Perform the wait & run in a separate thread if configured to do so;
+   // otherwise, run it in the current thread.
+   if (mWaitInSeparateThread) {
+      std::thread t(doWaitLoop);
+   }
+   else {
+      doWaitLoop();
+   }
 }
