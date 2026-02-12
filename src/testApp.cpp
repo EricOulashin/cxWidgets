@@ -1963,13 +1963,36 @@ void cxMenuScrolling() {
 
 void inputsWithFKeys() {
    // Test function key stuff for inputs
+
    messageBox("F2, F3, and '/' are hotkeys for this input.");
 
    int x = 2;
    int y = 73;
 
+   // We can use an anonymous (lambda) function as a cxFunction, as long as the lambda
+   // function doesn't capture anything in its capture clause.
+   /*
+   auto func = [](int& int1, int& int2) -> string {
+      ostringstream os;
+      os << "1: " << int1 << ", 2: " << int2;
+      messageBox(2, 31, 3, 18, "Test", os.str());
+      return("hello");
+   };
+   */
+   // If the function is a named function (not an anonymous/lambda function), we could do this:
+   //auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
+   // With a lambda function, we can simply use the name of the function, as we would with
+   // any function:
+   //auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(func, x, y);
+   // We can also specify a lambda function directly as the first argument to create():
+   auto keyFunc1 = cxFunction2RefTemplated<int, int>::create([](int& int1, int& int2) -> string {
+      ostringstream os;
+      os << "1: " << int1 << ", 2: " << int2;
+      messageBox(2, 31, 3, 18, "Test", os.str());
+      return("hello");
+   }, x, y);
+
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 20, "Prompt:");
-   auto keyFunc1 = cxFunction2RefTemplated<int, int>::create(someFunction, x, y);
    iInput.setKeyFunction(KEY_F(2), keyFunc1);
    // Use 2 keys to run the same function
    iInput.setKeyFunction(KEY_F(3), make_shared<cxFunction0>(returnBBye, true));
