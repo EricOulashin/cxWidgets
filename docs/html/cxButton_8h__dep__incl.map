@@ -1,0 +1,19 @@
+<map id="/home/erico/projects/cxWidgets/src/cxButton.h" name="/home/erico/projects/cxWidgets/src/cxButton.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="549,5,727,45"/>
+<area shape="rect" id="Node000002" href="$cxButton_8cpp.html" title=" " alt="" coords="156,93,347,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="541,51,337,96,335,91,539,46"/>
+<area shape="rect" id="Node000003" href="$cxMessageDialog_8h.html" title=" " alt="" coords="371,93,601,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="594,54,521,96,518,91,591,50"/>
+<area shape="rect" id="Node000006" href="$test1_8cpp.html" title=" " alt="" coords="479,181,647,221"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="636,60,629,96,615,134,600,160,583,183,579,179,595,157,610,132,623,95,631,59"/>
+<area shape="rect" id="Node000007" href="$testApp_8cpp.html" title=" " alt="" coords="671,181,855,221"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="661,55,716,132,751,179,747,182,712,135,657,58"/>
+<area shape="rect" id="Node000008" href="$cxPanel_8cpp.html" title=" " alt="" coords="726,93,913,133"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="691,49,781,91,778,96,689,54"/>
+<area shape="rect" id="Node000004" href="$cxBase_8cpp.html" title=" " alt="" coords="5,181,188,221"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="388,139,182,184,181,179,387,134"/>
+<area shape="rect" id="Node000005" href="$cxMessageDialog_8cpp.html" title=" " alt="" coords="213,181,455,221"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="442,142,369,184,366,179,439,138"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="514,142,548,179,544,183,510,145"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="560,135,703,179,702,184,559,140"/>
+</map>

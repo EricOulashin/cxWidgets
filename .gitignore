@@ -40,6 +40,9 @@
 # debug information files
 *.dwo
 
+# Doxygen-related files
+cxWidgets.tag
+
 # Compiled binaries
 testApp
 

@@ -1,0 +1,27 @@
+<map id="/home/erico/projects/cxWidgets/src/cxTextValidator.h" name="/home/erico/projects/cxWidgets/src/cxTextValidator.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="645,5,858,45"/>
+<area shape="rect" id="Node000002" href="$cxObject_8h.html" title=" " alt="" coords="418,93,503,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="682,48,517,92,516,87,681,43"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="900,240,955,265"/>
+<area shape="poly" id="edge13_Node000001_Node000006" title=" " alt="" coords="833,43,883,61,935,86,982,121,1002,142,1019,165,1023,177,1023,188,1012,207,992,224,969,237,966,233,989,219,1008,204,1018,186,1018,177,1014,168,998,145,978,125,932,91,881,66,832,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,84,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="418,116,280,138,98,169,97,164,279,132,418,111"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="109,167,173,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="419,119,187,169,186,164,417,113"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="197,167,255,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="424,121,268,168,267,163,422,116"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="418,119,376,130,336,147,322,157,314,167,313,178,320,190,349,204,405,216,568,233,748,243,886,248,886,253,747,249,567,238,404,221,347,209,316,194,308,179,309,165,319,153,334,142,374,125,417,113"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="330,167,402,192"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="447,121,394,160,391,156,444,117"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="426,167,495,192"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="463,119,463,153,458,153,458,119"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="519,167,578,192"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="476,117,525,156,522,160,473,121"/>
+<area shape="rect" id="Node000010" href="$cxColors_8h.html" title=" " alt="" coords="602,167,687,192"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="491,116,603,159,601,164,489,121"/>
+<area shape="rect" id="Node000011" href="$cxKeyDefines_8h.html" title=" " alt="" coords="711,167,826,192"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="504,115,707,161,705,166,503,120"/>
+<area shape="rect" id="Node000012" href="$cxWidgetsException_8h.html" title=" " alt="" coords="851,167,1004,192"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="504,111,839,162,838,167,503,116"/>
+<area shape="poly" id="edge12_Node000012_Node000006" title=" " alt="" coords="930,192,930,226,925,226,925,192"/>
+</map>

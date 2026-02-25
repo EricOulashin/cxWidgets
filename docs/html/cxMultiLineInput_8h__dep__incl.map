@@ -1,0 +1,55 @@
+<map id="/home/erico/projects/cxWidgets/src/cxMultiLineInput.h" name="/home/erico/projects/cxWidgets/src/cxMultiLineInput.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1562,5,1782,45"/>
+<area shape="rect" id="Node000002" href="$cxComboBox_8h.html" title=" " alt="" coords="821,101,1025,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1549,45,1025,109,1024,104,1548,39"/>
+<area shape="rect" id="Node000004" href="$cxForm_8h.html" title=" " alt="" coords="819,203,989,243"/>
+<area shape="poly" id="edge21_Node000001_Node000004" title=" " alt="" coords="1549,50,1440,70,1326,96,1123,153,960,206,958,201,1121,148,1325,91,1439,65,1548,45"/>
+<area shape="rect" id="Node000010" href="$testApp_8cpp.html" title=" " alt="" coords="1344,387,1528,427"/>
+<area shape="poly" id="edge32_Node000001_Node000010" title=" " alt="" coords="1736,49,1763,68,1786,92,1825,157,1838,188,1844,219,1844,249,1837,280,1823,310,1799,341,1781,355,1755,366,1686,384,1606,396,1528,403,1528,398,1605,391,1685,379,1753,361,1778,350,1795,337,1818,307,1832,278,1839,249,1839,219,1833,190,1820,159,1782,95,1760,72,1733,54"/>
+<area shape="rect" id="Node000011" href="$cxMultiLineInput_8cpp.html" title=" " alt="" coords="1067,299,1301,339"/>
+<area shape="poly" id="edge24_Node000001_Node000011" title=" " alt="" coords="1593,52,1540,72,1488,96,1402,148,1322,205,1207,300,1203,296,1319,201,1399,143,1485,91,1538,67,1591,47"/>
+<area shape="rect" id="Node000014" href="$cxUnitTest_8cpp.html" title=" " alt="" coords="1325,299,1528,339"/>
+<area shape="poly" id="edge26_Node000001_Node000014" title=" " alt="" coords="1600,53,1566,71,1535,95,1514,120,1495,147,1466,204,1445,258,1434,299,1428,298,1440,257,1461,202,1491,144,1510,116,1531,91,1563,67,1598,48"/>
+<area shape="rect" id="Node000015" href="$test1_8cpp.html" title=" " alt="" coords="1552,299,1720,339"/>
+<area shape="poly" id="edge31_Node000001_Node000015" title=" " alt="" coords="1607,54,1583,72,1564,95,1545,135,1540,171,1547,207,1564,249,1582,276,1606,296,1603,300,1578,279,1559,252,1542,208,1535,171,1540,134,1559,92,1579,68,1604,50"/>
+<area shape="rect" id="Node000016" href="$cxInput_8cpp.html" title=" " alt="" coords="1846,101,2029,141"/>
+<area shape="poly" id="edge22_Node000001_Node000016" title=" " alt="" coords="1739,47,1885,98,1883,103,1738,52"/>
+<area shape="rect" id="Node000017" href="$cxMenu_8cpp.html" title=" " alt="" coords="2053,101,2238,141"/>
+<area shape="poly" id="edge23_Node000001_Node000017" title=" " alt="" coords="1796,44,2042,91,2073,98,2072,103,2041,96,1795,49"/>
+<area shape="rect" id="Node000018" href="$cxScrolledWindow_8cpp.html" title=" " alt="" coords="2263,101,2508,141"/>
+<area shape="poly" id="edge25_Node000001_Node000018" title=" " alt="" coords="1796,35,2009,58,2251,91,2294,98,2293,103,2250,96,2008,64,1795,41"/>
+<area shape="rect" id="Node000019" href="$cxValidators_8cpp.html" title=" " alt="" coords="2532,101,2743,141"/>
+<area shape="poly" id="edge27_Node000001_Node000019" title=" " alt="" coords="1796,28,2124,48,2323,66,2520,91,2560,98,2560,103,2520,96,2322,71,2124,53,1796,34"/>
+<area shape="rect" id="Node000020" href="$floatingPtInputWithRightLabel_8h.html" title=" " alt="" coords="1573,93,1771,148"/>
+<area shape="poly" id="edge28_Node000001_Node000020" title=" " alt="" coords="1675,59,1675,93,1669,93,1669,59"/>
+<area shape="rect" id="Node000003" href="$cxComboBox_8cpp.html" title=" " alt="" coords="5,299,224,339"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="833,146,193,301,191,296,831,141"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="919,155,910,204,905,203,914,154"/>
+<area shape="poly" id="edge20_Node000002_Node000010" title=" " alt="" coords="1029,141,1458,230,1649,272,1734,297,1747,323,1747,335,1742,346,1723,364,1694,378,1656,388,1614,396,1529,405,1528,399,1613,391,1655,383,1692,373,1720,360,1738,343,1742,334,1742,325,1730,301,1647,277,1457,235,1028,146"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="806,237,551,265,243,301,225,304,224,298,242,296,550,259,806,232"/>
+<area shape="rect" id="Node000005" href="$cxBase_8cpp.html" title=" " alt="" coords="571,299,754,339"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="843,251,712,301,710,296,841,246"/>
+<area shape="rect" id="Node000006" href="$cxForm_8cpp.html" title=" " alt="" coords="85,387,267,427"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="805,232,673,240,523,253,385,274,329,286,288,301,268,315,243,338,195,388,191,385,239,334,265,311,285,296,328,281,384,268,523,248,673,234,805,226"/>
+<area shape="rect" id="Node000007" href="$cxMultiForm_8h.html" title=" " alt="" coords="299,299,496,339"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="806,245,497,302,496,297,805,240"/>
+<area shape="rect" id="Node000009" href="$cxPanel_8cpp.html" title=" " alt="" coords="527,387,713,427"/>
+<area shape="poly" id="edge13_Node000004_Node000009" title=" " alt="" coords="806,235,733,244,660,257,598,276,576,288,561,300,555,310,554,321,561,344,578,366,598,385,594,388,574,369,557,346,549,321,550,309,557,297,573,283,596,271,659,252,732,239,805,230"/>
+<area shape="poly" id="edge19_Node000004_Node000010" title=" " alt="" coords="943,250,1006,297,1030,319,1056,336,1129,363,1205,381,1278,393,1344,399,1343,405,1278,398,1204,386,1127,368,1053,341,1026,323,1002,301,940,254"/>
+<area shape="poly" id="edge12_Node000004_Node000011" title=" " alt="" coords="974,245,1128,296,1127,301,973,250"/>
+<area shape="rect" id="Node000012" href="$cxSearchPanel_8h.html" title=" " alt="" coords="779,299,992,339"/>
+<area shape="poly" id="edge14_Node000004_Node000012" title=" " alt="" coords="900,257,892,299,886,298,895,256"/>
+<area shape="poly" id="edge17_Node000004_Node000014" title=" " alt="" coords="1003,239,1325,297,1325,302,1002,245"/>
+<area shape="poly" id="edge18_Node000004_Node000015" title=" " alt="" coords="1003,231,1247,257,1540,296,1552,298,1551,303,1540,301,1247,262,1002,236"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="337,346,225,389,223,384,335,341"/>
+<area shape="rect" id="Node000008" href="$cxMultiForm_8cpp.html" title=" " alt="" coords="292,387,503,427"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="400,353,400,386,395,386,395,353"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="460,341,572,384,570,389,458,346"/>
+<area shape="poly" id="edge11_Node000007_Node000010" title=" " alt="" coords="510,331,559,336,999,373,1344,397,1344,402,998,378,558,341,510,336"/>
+<area shape="poly" id="edge16_Node000012_Node000010" title=" " alt="" coords="1006,336,1344,388,1343,394,1005,341"/>
+<area shape="rect" id="Node000013" href="$cxSearchPanel_8cpp.html" title=" " alt="" coords="772,387,999,427"/>
+<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="888,353,888,386,883,386,883,353"/>
+<area shape="poly" id="edge30_Node000020_Node000010" title=" " alt="" coords="1747,153,1769,172,1786,195,1791,226,1789,273,1778,340,1761,354,1737,365,1674,382,1600,394,1529,402,1528,397,1600,389,1673,377,1735,360,1758,349,1774,337,1784,273,1786,226,1782,197,1765,175,1744,157"/>
+<area shape="rect" id="Node000021" href="$floatingPtInputWithRightLabel_8cpp.html" title=" " alt="" coords="1573,196,1771,251"/>
+<area shape="poly" id="edge29_Node000020_Node000021" title=" " alt="" coords="1675,162,1675,196,1669,196,1669,162"/>
+</map>

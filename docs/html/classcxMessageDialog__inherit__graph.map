@@ -1,0 +1,9 @@
+<map id="cxMessageDialog" name="cxMessageDialog">
+<area shape="rect" id="Node000001" title="Represents a dialog box with &quot;OK&quot; and/or &quot;Cancel&quot;." alt="" coords="15,1265,162,1591"/>
+<area shape="rect" id="Node000002" href="$classcxDialog.html" title="Represents a dialog window on the screen (i.e., something to be shown." alt="" coords="39,1012,139,1217"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,1231,91,1265,86,1265,86,1231"/>
+<area shape="rect" id="Node000003" href="$classcxWindow.html" title="Represents a text&#45;based window on the screen. Can contain a title, status, and a message to appear wi..." alt="" coords="5,279,172,964"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,978,91,1012,86,1012,86,978"/>
+<area shape="rect" id="Node000004" href="$classcxObject.html" title="The base class for windowing classes in the cxWidgets." alt="" coords="41,5,137,231"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="91,245,91,279,86,279,86,245"/>
+</map>

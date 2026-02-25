@@ -1,0 +1,9 @@
+<map id="cxFileViewer" name="cxFileViewer">
+<area shape="rect" id="Node000001" title="Represents a window that displays a file. While the object is being displayed with showModal(),..." alt="" coords="22,1445,190,1651"/>
+<area shape="rect" id="Node000002" href="$classcxScrolledWindow.html" title="Represents a text window with scrolling. This class is." alt="" coords="5,1012,207,1397"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,1411,109,1445,103,1445,103,1411"/>
+<area shape="rect" id="Node000003" href="$classcxWindow.html" title="Represents a text&#45;based window on the screen. Can contain a title, status, and a message to appear wi..." alt="" coords="23,279,189,964"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,978,109,1012,103,1012,103,978"/>
+<area shape="rect" id="Node000004" href="$classcxObject.html" title="The base class for windowing classes in the cxWidgets." alt="" coords="58,5,154,231"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="109,245,109,279,103,279,103,245"/>
+</map>

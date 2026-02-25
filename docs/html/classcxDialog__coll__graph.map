@@ -1,0 +1,30 @@
+<map id="cxDialog" name="cxDialog">
+<area shape="rect" id="Node000001" title="Represents a dialog window on the screen (i.e., something to be shown." alt="" coords="771,1009,871,1215"/>
+<area shape="rect" id="Node000002" href="$classcxWindow.html" title="Represents a text&#45;based window on the screen. Can contain a title, status, and a message to appear wi..." alt="" coords="737,475,904,960"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="823,974,823,1009,818,1009,818,974"/>
+<area shape="rect" id="Node000003" href="$classcxObject.html" title="The base class for windowing classes in the cxWidgets." alt="" coords="178,148,274,353"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="284,350,322,402,368,449,461,520,561,582,656,635,738,676,736,681,654,640,558,587,458,524,364,453,318,405,280,353"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="27,5,65,71"/>
+<area shape="poly" id="edge11_Node000002_Node000004" title=" " alt="" coords="37,72,21,129,9,202,8,241,12,280,22,317,39,352,70,395,105,434,144,470,185,503,276,560,372,606,469,642,563,669,648,688,721,701,720,706,647,693,561,674,467,647,370,611,273,565,182,508,140,474,101,438,66,398,34,355,17,319,7,281,3,241,4,201,16,127,32,70"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,54,112,94,161,146,170,157,166,161,157,150,109,98,64,58"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="298,218,381,283"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="347,283,368,363,388,408,414,449,447,487,484,522,565,583,648,634,724,672,721,677,645,638,562,588,480,526,443,490,409,452,383,410,363,365,342,284"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="405,218,535,283"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="474,283,485,362,498,407,518,449,562,511,615,566,671,614,725,654,722,658,668,618,611,570,558,514,513,452,493,409,480,363,469,284"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="559,211,687,291"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="625,291,629,366,636,409,647,450,684,528,730,600,725,603,679,531,642,452,631,410,624,367,620,291"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="712,218,799,283"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="756,284,754,360,759,450,760,458,755,459,754,451,749,360,751,283"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="823,211,951,291"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="884,291,860,459,855,458,879,290"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="1017,218,1059,283"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="1037,284,1024,361,1012,407,997,452,959,526,916,596,911,593,955,523,992,450,1007,406,1019,360,1032,283"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="1155,218,1233,283"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="1195,284,1183,364,1169,409,1148,452,1099,517,1040,574,978,623,920,663,917,659,975,619,1037,570,1095,513,1144,449,1164,407,1178,362,1190,283"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="1299,218,1462,283"/>
+<area shape="poly" id="edge12_Node000002_Node000012" title=" " alt="" coords="1386,284,1386,321,1382,365,1370,411,1348,452,1305,502,1254,546,1199,584,1140,616,1081,643,1024,665,921,697,919,692,1022,660,1079,638,1138,611,1196,579,1251,542,1301,498,1344,449,1365,409,1377,364,1381,320,1381,284"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="1486,211,1625,291"/>
+<area shape="poly" id="edge13_Node000002_Node000013" title=" " alt="" coords="1559,291,1556,328,1548,371,1533,414,1508,452,1445,513,1372,564,1294,605,1213,639,1132,665,1054,685,921,709,920,703,1053,679,1130,660,1211,634,1292,600,1369,559,1441,509,1504,449,1528,412,1543,370,1550,328,1553,291"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="1649,218,1758,283"/>
+<area shape="poly" id="edge14_Node000002_Node000014" title=" " alt="" coords="1709,284,1708,321,1703,366,1689,412,1678,433,1664,452,1625,491,1583,526,1538,557,1490,584,1389,630,1285,664,1182,688,1084,704,996,713,921,718,920,713,995,708,1083,699,1181,683,1284,659,1387,625,1488,580,1535,552,1580,522,1622,487,1660,449,1674,431,1684,410,1698,365,1703,321,1703,283"/>
+</map>
