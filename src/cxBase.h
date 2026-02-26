@@ -20,9 +20,6 @@
  *                    added some default colors.
  */
 
-/** \mainpage Index page
- * <center>Thank you for your interest in cxWidgets! :)</center>
- */
 
 #include "cxWindow.h"
 #include "cxColors.h"
