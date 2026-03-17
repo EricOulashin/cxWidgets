@@ -54,3 +54,7 @@ devnotes.txt
 
 # IDE
 .idea/
+
+# Demo
+examples/snake/snake_demo
+examples/snake/snake_demo.dSYM

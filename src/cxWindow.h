@@ -1005,8 +1005,9 @@ class cxWindow : public cxObject
        * @param pRow The row in the window at which to write the text
        * @param pCol The column in the window at which to write the text
        * @param pText The text to write in the window
+       * @param pRefresh Whether or not to refresh the window after writing the text
        */
-      virtual void writeText(int pRow, int pCol, const std::string& pText);
+      virtual void writeText(int pRow, int pCol, const std::string& pText, bool pRefresh = true);
 
       /**
        * \brief Enables/disables the use of hotkey attributes when writing the message.
@@ -2024,11 +2025,39 @@ class cxWindow : public cxObject
       void toggleMessage(bool pDrawMessage);
 
       /**
+       * \brief Sets whether or not to draw the title
+       *
+       * @param pDrawTitle Whether or not to draw the title
+       */
+      void toggleTitle(bool pDrawTitle);
+
+      /**
+       * \brief Sets whether or not to draw the status line
+       *
+       * @param pDrawStatus Whether or not to draw the status line
+       */
+      void toggleStatus(bool pDrawStatus);
+
+      /**
        * \brief Returns whether the message will draw or not.
        *
        * @return true if the message will draw, or false if not
        */
       bool messageWillDraw() const;
+
+      /**
+       * \brief Returns whether the title will draw or not.
+       *
+       * @return true if the title will draw, or false if not
+       */
+      bool titleWillDraw() const;
+
+      /**
+       * \brief Returns whether the status line will draw or not.
+       *
+       * @return true if the status line will draw, or false if not
+       */
+      bool statusWillDraw() const;
 
       /**
        * \brief Sets whether or not to draw the "special" characters (these are
@@ -2533,6 +2562,8 @@ class cxWindow : public cxObject
       eHPosition mHorizStatusAlignment = eHP_LEFT;  // Horizontal status alignment
 
       bool mDrawMessage = true;      // Whether or not to draw the message
+      bool mDrawTitle = true;        // Whether or not to draw the title
+      bool mDrawStatus = true;       // Whether or not to draw the status
       bool mDrawSpecialChars = true; // Whether or not to draw the "special" chars
 
       std::shared_ptr<cxFunction> mOnFocusFunction = nullptr; // Function for when focus is gained
