@@ -1933,7 +1933,7 @@ void cxWindow::dump(string& pResult)
    if (!hasBorder())
    {
       const int lineLength = width();
-      unique_ptr line = make_unique<chtype[]>(lineLength);
+      std::unique_ptr<chtype[]> line(new chtype[lineLength]);
       int bottomRow = bottom() - top() + 1;
       int numChars = 0; // # of chars read for each line
       for (int i = 0; i < bottomRow; ++i)
@@ -1997,7 +1997,7 @@ void cxWindow::dump(string& pResult)
       //  add the text inside the box, then add
       //  another vertical line.
       const int lineLength = width()-2;
-      unique_ptr line = make_unique<chtype[]>(lineLength);
+      std::unique_ptr<chtype[]> line(new chtype[lineLength]);
       int bottomRow = bottom() - top();
       int numChars = 0; // # of chars read for each line
       for (int i = 1; i < bottomRow; ++i)
@@ -2064,7 +2064,7 @@ cxWindow& cxWindow::operator =(const cxWindow& pThatWindow)
    return(*this);
 } // operator =
 
-void cxWindow::writeText(int pRow, int pCol, const string& pText)
+void cxWindow::writeText(int pRow, int pCol, const string& pText, bool pRefresh)
 {
    // Enable the attributes
    enableAttrs(mWindow, eMESSAGE);
@@ -2072,7 +2072,10 @@ void cxWindow::writeText(int pRow, int pCol, const string& pText)
    mvwprintw(mWindow, pRow, pCol, "%s", pText.c_str());
    // Disable the attributes
    disableAttrs(mWindow, eMESSAGE);
-   wrefresh(mWindow);
+   if (pRefresh)
+   {
+      wrefresh(mWindow);
+   }
 } // writeText
 
 void cxWindow::setHotkeyHighlighting(bool pHotkeyHighlighting)
@@ -3241,10 +3244,30 @@ void cxWindow::toggleMessage(bool pDrawMessage)
    mDrawMessage = pDrawMessage;
 } // toggleMessage
 
+void cxWindow::toggleTitle(bool pDrawTitle)
+{
+   mDrawTitle = pDrawTitle;
+} // toggleTitle
+
+void cxWindow::toggleStatus(bool pDrawStatus)
+{
+   mDrawStatus = pDrawStatus;
+} // toggleStatus
+
 bool cxWindow::messageWillDraw() const
 {
    return(mDrawMessage);
 } // messageWillDraw
+
+bool cxWindow::titleWillDraw() const
+{
+   return(mDrawTitle);
+} // titleWillDraw
+
+bool cxWindow::statusWillDraw() const
+{
+   return(mDrawStatus);
+} // statusWillDraw
 
 void cxWindow::toggleSpecialChars(bool pDrawSpecialChars)
 {
@@ -5476,8 +5499,14 @@ void cxWindow::draw()
       // If the window has a border, draw the title & status strings
       if (hasBorder())
       {
-         drawTitle();
-         drawStatus();
+         if (mDrawTitle)
+         {
+            drawTitle();
+         }
+         if (mDrawStatus)
+         {
+            drawStatus();
+         }
       }
       // Draw the additional special characters (these are drawn before the
       //  title & status on purpose).

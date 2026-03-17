@@ -1560,6 +1560,7 @@ string cxInput::runValidatorFunction() const
    return(retval);
 } // runValidatorFunction
 
+#ifdef WANT_TIMEOUT
 void cxInput::setTimeout(int pTimeout)
 {
    mTimeout = pTimeout;
@@ -1569,6 +1570,7 @@ int cxInput::getTimeout() const
 {
    return(mTimeout);
 } // getTimeout
+#endif
 
 string cxInput::cxTypeStr() const
 {
