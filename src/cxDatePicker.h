@@ -4,6 +4,7 @@
 // Copyright (c) 2026 Eric Oulashin
 //
 // cxDatePicker.h - A text-based date-picker dialog for the cxWidgets library.
+// This was mde with the help of Claude AI.
 //
 // cxDatePicker presents a modal calendar view.  The layout (38 wide × 20 tall)
 // is:
