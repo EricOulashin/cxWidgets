@@ -228,7 +228,7 @@ class cxWindow : public cxObject
                         bool pHotkeyHighlighting = false);
 
       /**
-       * \brief Overridden constructor
+       * \brief Overloaded constructor
        * @param pParentWindow A pointer to the parent window.
        * @param pRow The row of the upper-left corner.
        * @param pCol The column of the upper-left corner.
@@ -247,7 +247,7 @@ class cxWindow : public cxObject
                cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
-       * \brief Overridden constructor - Centers the window in the middle of the screen.
+       * \brief Overloaded constructor - Centers the window in the middle of the screen.
        * @param pParentWindow A pointer to the parent window.
        * @param pTitle The title to appear at the top of the window.
        * @param pMessage The message to appear in the window.
@@ -263,8 +263,30 @@ class cxWindow : public cxObject
                cxWindow *pExtTitleWindow = nullptr,
                cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
+
       /**
-       * \brief Overridden constructor - Centers the window in the middle of the screen.
+       * \brief Overloaded constructor - Centers the window in the middle of the screen.
+       * @param pParentWindow A pointer to the parent window.
+       * @param pTitle The title to appear at the top of the window.
+       * @param pMessage The message to appear in the window.
+       * @param pHeight The height for the window
+       * @param pWidth The width for the window
+       * @param pStatus The status to display on the bottom row of the window.
+       * @param pExtTitleWindow A pointer to another cxWindow in which to display the window title.
+       * @param pExtStatusWindow A pointer to another cxWindow to use as an external status window.
+       * @param pHotkeyHighlighting Whether or not to recognize & use underline characters when
+       *  displaying the message text.
+       */
+      cxWindow(cxWindow *pParentWindow,
+               const std::string& pTitle, const std::string& pMessage,
+               const std::string& pStatus,
+               int pHeight, int pWidth,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
+               bool pHotkeyHighlighting = false);
+
+      /**
+       * \brief Overloaded constructor - Centers the window in the middle of the screen.
        * @param pParentWindow A pointer to the parent window.
        * @param pMessage The message to appear in the window.
        * @param pStatus The status to display on the bottom row of the window.
@@ -278,8 +300,28 @@ class cxWindow : public cxObject
                cxWindow *pExtTitleWindow = nullptr,
                cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
+
       /**
-       * \brief Overridden constructor - Centers the window in the middle of the screen.
+       * \brief Overloaded constructor - Centers the window in the middle of the screen.
+       * @param pParentWindow A pointer to the parent window.
+       * @param pMessage The message to appear in the window.
+       * @param pStatus The status to display on the bottom row of the window.
+       * @param pHeight The height for the window
+       * @param pWidth The width for the window
+       * @param pExtTitleWindow A pointer to another cxWindow in which to display the window title.
+       * @param pExtStatusWindow A pointer to another cxWindow to use as an external status window.
+       * @param pHotkeyHighlighting Whether or not to recognize & use underline characters when
+       *  displaying the message text.
+       */
+      cxWindow(cxWindow *pParentWindow,
+               const std::string& pMessage, const std::string& pStatus,
+               int pHeight, int pWidth,
+               cxWindow *pExtTitleWindow = nullptr,
+               cxWindow *pExtStatusWindow = nullptr,
+               bool pHotkeyHighlighting = false);
+
+      /**
+       * \brief Overloaded constructor - Centers the window in the middle of the screen.
        * @param pParentWindow A pointer to the parent window.
        * @param pMessage The message to appear in the window.
        * @param pExtTitleWindow A pointer to another cxWindow in which to display the window title.
@@ -292,7 +334,7 @@ class cxWindow : public cxObject
                cxWindow *pExtStatusWindow = nullptr,
                bool pHotkeyHighlighting = false);
       /**
-       * \brief Overridden constructor - Lets you specify the horizontal position
+       * \brief Overloaded constructor - Lets you specify the horizontal position
        * @param pParentWindow A pointer to the parent window.
        * @param pHPosition The horizontal position of the window - eHP_CENTER, eHP_LEFT, or eHP_RIGHT
        * @param pTitle The title to appear at the top of the window.
@@ -771,10 +813,28 @@ class cxWindow : public cxObject
       virtual int right() const;
 
       /**
+       * \brief Changes the width of the window.
+       *
+       * @param pWidth The new width for the window
+       *
+       * @return The nCurses return/error code as a result of changing the window size
+       */
+      virtual int width(int pWidth);
+
+      /**
        * \brief Returns the width of the window
        * @return The width of the window
        */
       virtual int width() const;
+
+      /**
+       * \brief Changes the height of the window.
+       *
+       * @param pHeight The new height for the window
+       *
+       * @return The nCurses return/error code as a result of changing the window size
+       */
+      virtual int height(int pHeight);
 
       /**
        * \brief Returns the height of the window

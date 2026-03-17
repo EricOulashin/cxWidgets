@@ -60,6 +60,17 @@ class cxMessageDialog : public cxDialog
       cxMessageDialog(cxWindow *pParentWindow, const std::string& pTitle, const std::string& pMessage);
 
       /**
+       * Simplified constructor - Displays a message dialog centered in the screen with a message and an OK button.
+       * @param pParentWindow A pointer to the parent window
+       * @param pTitle The title of the window
+       * @param pMessage The message to be displayed in the dialog
+       * @param pHeight The height for the dialog
+       * @param pWidth The width for the dialog
+       * @return
+       */
+      cxMessageDialog(cxWindow *pParentWindow, const std::string& pTitle, const std::string& pMessage, int pHeight, int pWidth);
+
+      /**
        * Copy constructor
        * @param pThatDialog The other cxMessageDialog object to copy
        */

@@ -28,8 +28,22 @@ cxDialog::cxDialog(cxWindow *pParentWindow,
 }
 
 cxDialog::cxDialog(cxWindow *pParentWindow,
+               const string& pTitle, const string& pMessage,
+               const string& pStatus, int pHeight, int pWidth)
+   : cxWindow(pParentWindow, pTitle, pMessage, pStatus, pHeight, pWidth)
+{
+}
+
+cxDialog::cxDialog(cxWindow *pParentWindow,
                    const string& pMessage, const string& pStatus)
    : cxWindow(pParentWindow, pMessage, pStatus)
+{
+}
+
+cxDialog::cxDialog(cxWindow *pParentWindow,
+               const string& pMessage, const string& pStatus,
+               int pHeight, int pWidth)
+   : cxWindow(pParentWindow, pMessage, pStatus, pHeight, pWidth)
 {
 }
 

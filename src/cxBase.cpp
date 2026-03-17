@@ -388,8 +388,17 @@ void cxBase::messageBox(int pRow, int pCol, const string& pMessage)
 
 void cxBase::messageBox(const string& pTitle, const string& pMessage,
                         const string& pStatus)
-                        {
+{
    cxMessageDialog msgDlg(nullptr, pTitle, pMessage);
+   msgDlg.setStatus(pStatus);
+   msgDlg.showModal();
+   msgDlg.hide(); // Hide the window so it doesn't show anymore
+} // messageBox
+
+void cxBase::messageBox(const std::string& pTitle, const std::string& pMessage,
+                   const std::string& pStatus, int pHeight, int pWidth)
+{
+   cxMessageDialog msgDlg(nullptr, pTitle, pMessage, pHeight, pWidth);
    msgDlg.setStatus(pStatus);
    msgDlg.showModal();
    msgDlg.hide(); // Hide the window so it doesn't show anymore
@@ -398,6 +407,14 @@ void cxBase::messageBox(const string& pTitle, const string& pMessage,
 void cxBase::messageBox(const string& pMessage, const string& pStatus)
 {
    cxMessageDialog msgDlg(nullptr, "Info", pMessage);
+   msgDlg.setStatus(pStatus);
+   msgDlg.showModal();
+   msgDlg.hide(); // Hide the window so it doesn't show anymore
+} // messageBox
+
+void cxBase::messageBox(const std::string& pMessage, const std::string& pStatus, int pHeight, int pWidth)
+{
+   cxMessageDialog msgDlg(nullptr, "Info", pMessage, pHeight, pWidth);
    msgDlg.setStatus(pStatus);
    msgDlg.showModal();
    msgDlg.hide(); // Hide the window so it doesn't show anymore

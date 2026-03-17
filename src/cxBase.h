@@ -223,10 +223,30 @@ namespace cxBase
 
    /**
     * \brief Shows a message box
+    * @param pTitle title of message box
+    * @param pMessage message of message box
+    * @param pStatus status of message box
+    * @param pHeight The height for the message box
+    * @param pWidth The width for the message box
+    */
+   void messageBox(const std::string& pTitle, const std::string& pMessage,
+                   const std::string& pStatus, int pHeight, int pWidth);
+
+   /**
+    * \brief Shows a message box
     * @param pMessage Message of message box
     * @param pStatus Status of message box.  Defaults to blank.
     */
    void messageBox(const std::string& pMessage, const std::string& pStatus);
+
+   /**
+    * \brief Shows a message box
+    * @param pMessage Message of message box
+    * @param pStatus Status of message box.  Defaults to blank.
+    * @param pHeight The height for the message box
+    * @param pWidth The width for the message box
+    */
+   void messageBox(const std::string& pMessage, const std::string& pStatus, int pHeight, int pWidth);
 
    /**
     * \brief Shows a message box.

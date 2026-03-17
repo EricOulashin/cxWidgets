@@ -59,6 +59,20 @@ class cxDialog : public cxWindow
       cxDialog(cxWindow *pParentWindow,
                const std::string& pTitle, const std::string& pMessage,
                const std::string& pStatus);
+
+      /**
+       * Constructor overload
+       * @param pParentWindow Pointer to parent window
+       * @param pTitle The title to appear at the top of the dialog
+       * @param pMessage The message to appear with the dialog
+       * @param pStatus The status to display at the bottom of the window
+       * @param pHeight The height for the window
+       * @param pWidth The width for the window
+       */
+      cxDialog(cxWindow *pParentWindow,
+               const std::string& pTitle, const std::string& pMessage,
+               const std::string& pStatus, int pHeight, int pWidth);
+
       /**
        * Constructor overload
        * @param pParentWindow Pointer to parent window
@@ -67,6 +81,17 @@ class cxDialog : public cxWindow
        */
       cxDialog(cxWindow *pParentWindow,
                const std::string& pMessage, const std::string& pStatus);
+      /**
+       * Constructor overload
+       * @param pParentWindow Pointer to parent window
+       * @param pMessage The message to appear with the dialog
+       * @param pStatus The status to display at the bottom of the window
+       * @param pHeight The height for the window
+       * @param pWidth The width for the window
+       */
+      cxDialog(cxWindow *pParentWindow,
+               const std::string& pMessage, const std::string& pStatus,
+               int pHeight, int pWidth);
       /**
        * Constructor overload
        * @param pParentWindow Pointer to parent window

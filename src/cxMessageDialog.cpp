@@ -142,6 +142,19 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, const string& pTitle, 
    setFocus(mOKBtn, false);
 } // simplified constructor
 
+cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, const std::string& pTitle, const std::string& pMessage, int pHeight, int pWidth)
+   : cxDialog(pParentWindow, pTitle, pMessage, "", pHeight, pWidth),
+     mOKBtn(nullptr),
+     mCancelBtn(nullptr)
+{
+   resize(height()+OKBTN_HEIGHT, width(), false); // Make room for the OK button
+
+   int useRow = bottom()-OKBTN_HEIGHT; // TODO: how to handle exact placement if the programmer wants to...
+   mOKBtn = make_shared<cxButton>(this, useRow, centerCol()-1, OKBTN_HEIGHT, OKBTN_WIDTH, "&OK");
+   mOKBtn->setHotkeyHighlighting(true);
+   setFocus(mOKBtn, false);
+} // simplified constructor
+
 // Copy constructor
 cxMessageDialog::cxMessageDialog(const cxMessageDialog& pThatDialog)
    : cxDialog(pThatDialog.getParent(), pThatDialog.top(), pThatDialog.left(),

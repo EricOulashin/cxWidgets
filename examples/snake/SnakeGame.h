@@ -111,7 +111,7 @@ public:
         keypad(mWindow, TRUE);   // Enable special keys
         wtimeout(mWindow, 100);  // 100ms timeout for wgetch
 
-        cxBase::messageBox("Snake Game", "Use Arrow Keys to move.\nPress 'q' or ESC to quit.\n\nPress any key to start!");
+        cxBase::messageBox("Snake Game", "Use Arrow Keys to move.\nPress 'q' or ESC to quit.\n\nPress any key to start!", 0, 25);
 
         while (!mGameOver) {
             int ch = wgetch(mWindow);

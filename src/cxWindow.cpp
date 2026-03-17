@@ -240,6 +240,76 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
 } // ctor
 
 cxWindow::cxWindow(cxWindow *pParentWindow,
+               const string& pTitle, const string& pMessage,
+               const string& pStatus,
+               int pHeight, int pWidth,
+               cxWindow *pExtTitleWindow,
+               cxWindow *pExtStatusWindow,
+               bool pHotkeyHighlighting)
+   : mWindow(nullptr),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mDrawMessage(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mHotkeyHighlighting(pHotkeyHighlighting),
+     mPanel(nullptr),
+     mExtTitleWindow(pExtTitleWindow),
+     mExtStatusWindow(pExtStatusWindow),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
+     mFocus(false),
+     mBorderStyle(eBS_SINGLE_LINE),
+     mEnabled(true),
+     mDisableCursorOnShow(true),
+     mLastKey(NOKEY),
+     mChangeColorsOnFocus(false),
+     mShowSubwinsForward(true),
+     mShowSelfBeforeSubwins(true),
+     mReturnCode(cxID_EXIT),
+     mRunOnFocus(true),
+     mRunOnLeave(true),
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true)
+{
+   init(0, 0, pHeight, pWidth, pTitle, pMessage, pStatus, pParentWindow);
+   // Center the window on the screen, but don't draw it.
+   center(false);
+
+   // If an external title window/external status window are specified,
+   //  tell them to point to this window with their mTitleParent and
+   //  mStatusParent (this way, they can let this window know when
+   //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr)
+   {
+      pExtTitleWindow->mTitleParent = this;
+   }
+   if (pExtStatusWindow != nullptr)
+   {
+      pExtStatusWindow->mStatusParent = this;
+   }
+
+   // Set mMouse's coordinates to (0, 0)
+#ifdef NCURSES_MOUSE_VERSION
+   mMouse.z = 0;
+   mMouse.y = 0;
+   mMouse.x = 0;
+#endif
+} // ctor
+
+cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pMessage, const string& pStatus,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
@@ -281,6 +351,75 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mDrawBorderRight(true)
 {
    init(0, 0, 0, 0, "", pMessage, pStatus, pParentWindow);
+   // Center the window on the screen, but don't draw it.
+   center(false);
+
+   // If an external title window/external status window are specified,
+   //  tell them to point to this window with their mTitleParent and
+   //  mStatusParent (this way, they can let this window know when
+   //  they go out of scope by setting mExtTitleWindow or mExtStatusWindow
+   //  to nullptr).
+   if (pExtTitleWindow != nullptr)
+   {
+      pExtTitleWindow->mTitleParent = this;
+   }
+   if (pExtStatusWindow != nullptr)
+   {
+      pExtStatusWindow->mStatusParent = this;
+   }
+
+   // Set mMouse's coordinates to (0, 0)
+#ifdef NCURSES_MOUSE_VERSION
+   mMouse.z = 0;
+   mMouse.y = 0;
+   mMouse.x = 0;
+#endif
+} // ctor
+
+cxWindow::cxWindow(cxWindow *pParentWindow,
+               const string& pMessage, const string& pStatus,
+               int pHeight, int pWidth,
+               cxWindow *pExtTitleWindow,
+               cxWindow *pExtStatusWindow,
+               bool pHotkeyHighlighting)
+   : mWindow(nullptr),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mDrawMessage(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mHotkeyHighlighting(pHotkeyHighlighting),
+     mPanel(nullptr),
+     mExtTitleWindow(pExtTitleWindow),
+     mExtStatusWindow(pExtStatusWindow),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
+     mFocus(false),
+     mBorderStyle(eBS_SINGLE_LINE),
+     mEnabled(true),
+     mDisableCursorOnShow(true),
+     mLastKey(NOKEY),
+     mChangeColorsOnFocus(false),
+     mShowSubwinsForward(true),
+     mShowSelfBeforeSubwins(true),
+     mReturnCode(cxID_EXIT),
+     mRunOnFocus(true),
+     mRunOnLeave(true),
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true)
+{
+   init(0, 0, pHeight, pWidth, "", pMessage, pStatus, pParentWindow);
    // Center the window on the screen, but don't draw it.
    center(false);
 
@@ -1781,6 +1920,11 @@ int cxWindow::right() const
    return(left()+width()-1);
 } // right
 
+int cxWindow::width(int pWidth)
+{
+   return wresize(mWindow, height(), pWidth);
+} // width
+
 // Returns the width of the window
 int cxWindow::width() const
 {
@@ -1789,6 +1933,11 @@ int cxWindow::width() const
    (void)theHeight;
    return(theWidth);
 } // width
+
+int cxWindow::height(int pHeight)
+{
+   return wresize(mWindow, pHeight, width());
+} // height
 
 // Returns the height of the window
 int cxWindow::height() const
@@ -1933,7 +2082,7 @@ void cxWindow::dump(string& pResult)
    if (!hasBorder())
    {
       const int lineLength = width();
-      std::unique_ptr<chtype[]> line(new chtype[lineLength]);
+      unique_ptr line = make_unique<chtype[]>(lineLength);
       int bottomRow = bottom() - top() + 1;
       int numChars = 0; // # of chars read for each line
       for (int i = 0; i < bottomRow; ++i)
@@ -1997,7 +2146,7 @@ void cxWindow::dump(string& pResult)
       //  add the text inside the box, then add
       //  another vertical line.
       const int lineLength = width()-2;
-      std::unique_ptr<chtype[]> line(new chtype[lineLength]);
+      unique_ptr line = make_unique<chtype[]>(lineLength);
       int bottomRow = bottom() - top();
       int numChars = 0; // # of chars read for each line
       for (int i = 1; i < bottomRow; ++i)
