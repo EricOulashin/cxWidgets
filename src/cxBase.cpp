@@ -1,11 +1,9 @@
+// Copyright (c) 2026 E. Oulashin
 /*
  * cxBase.cpp - Contains cxWidgets utility functions.
  *
  * Copyright (c) 2005-2007 Michael H. Kinney
  *
- * \author $Author: erico $
- * \version $Revision: 1.101 $
- * \date $Date: 2007/12/04 00:23:45 $
  *
  * Date     User      Description
  * 08/21/07 erico     Added new versions of messageBox() that let you specify

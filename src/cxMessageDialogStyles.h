@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXMESSAGEDIALOGSTYLES_H__
 #define __CXMESSAGEDIALOGSTYLES_H__
 

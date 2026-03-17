@@ -1,7 +1,7 @@
+// Copyright (c) 2026 Eric N. Oulashin
 #ifndef __CXOPENFILEDIALOG_H__
 #define __CXOPENFILEDIALOG_H__
 
-// Copyright (c) 2026 Eric N. Oulashin
 //
 // cxOpenFileDialog.h - A directory & file chooser dialog, similar to
 // OpenFileDialog in .NET or QFileDialog in Qt, adapted for text-based display.

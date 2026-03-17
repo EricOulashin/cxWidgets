@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXFORM_H__
 #define __CXFORM_H__
 
@@ -6,9 +7,6 @@
  *
  * Copyright (C) 2005-2007 Michael H. Kinney
  *
- * \author $Author: erico $
- * \version $Revision: 1.187 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  * Date     User    Description
  */

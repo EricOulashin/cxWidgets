@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXWINDOW_H__
 #define __CXWINDOW_H__
 
@@ -187,10 +188,6 @@ typedef std::deque<std::string> messageLineContainer;
  *  <li>eHOTKEY          // Hotkey (for cxMenu and cxWindow)
  *  </ul>
  *
- * \author Eric Oulashin
- * \author Mike Kinney
- * \version $Revision: 1.155 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxWindow : public cxObject
 {

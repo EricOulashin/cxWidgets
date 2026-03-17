@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXWIDGETSEXCEPTION_H__
 #define __CXWIDGETSEXCEPTION_H__
 
@@ -15,9 +16,6 @@
  *  const cxWidgetsException&.  The error message
  *  can be retreived via the getErrorMsg() method.
  *
- * \author $Author: erico $
- * \version $Revision: 1.4 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxWidgetsException
 {

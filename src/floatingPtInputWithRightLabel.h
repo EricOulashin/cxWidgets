@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __FLOATINGPTINPUTWITHRIGHTLABEL_H__
 #define __FLOATINGPTINPUTWITHRIGHTLABEL_H__
 

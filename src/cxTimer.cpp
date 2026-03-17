@@ -1,5 +1,5 @@
-// Copyright (c) 2005-2007 Michael H. Kinney
 // Copyright (c) 2026 Eric N. Oulashin
+// Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxTimer.h"
 #include <thread>

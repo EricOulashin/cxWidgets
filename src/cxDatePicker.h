@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXDATEPICKER_H__
 #define __CXDATEPICKER_H__
 

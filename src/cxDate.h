@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXDATE_H__
 #define __CXDATE_H__
 
@@ -76,8 +77,6 @@ inline constexpr int CXDATE_YEAR_MAX               = 2500;
  * Julian date calculations assume noon for time of day, so Julian dates
  * are whole numbers.
  *
- * \author Eric Oulashin (original date class)
- * \author Mike Kinney (original date class)
  */
 class cxDate
 {

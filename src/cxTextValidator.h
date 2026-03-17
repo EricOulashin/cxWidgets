@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXTEXTVALIDATOR_H__
 #define __CXTEXTVALIDATOR_H__
 
@@ -15,9 +16,6 @@
  * \brief Provides some text validation functionality.  See README.txt for
  * \brief  details of validation strings.
  *
- * \author $Author: erico $
- * \version $Revision: 1.10 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxTextValidator
 {

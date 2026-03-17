@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXMULTILINEINPUT_H__
 #define __CXMULTILINEINPUT_H__
 
@@ -12,9 +13,6 @@
  *
  * Copyright (C) 2005-2007 Michael H. Kinney
  *
- * \author $Author: erico $
- * \version $Revision: 1.155 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  * Date     User    Description
  * 08/23/07 erico   Added a built-in onKeypress function to do per-keypress
@@ -144,9 +142,6 @@ class cxForm; // Pre-declaration to avoid a circular reference
  *  |                                        |         box pops up with info, aka
  *  +Status Line-----------------------------+         extended help.)
  *
- * \author $Author: erico $
- * \version $Revision: 1.155 $
- * \date $Date: 2007/12/04 00:23:46 $
  */
 class cxMultiLineInput : public cxWindow
 {

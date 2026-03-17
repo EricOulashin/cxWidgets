@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXINPUTTYPES_H__
 #define __CXINPUTTYPES_H__
 // Copyright (c) 2007 Michael H. Kinney

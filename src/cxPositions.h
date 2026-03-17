@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXPOSITIONS_H__
 #define __CXPOSITIONS_H__
 // Copyright (c) 2005-2007 Michael H. Kinney

@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #include <cxBase.h>
 #include <cxInput.h>
 #include <string>

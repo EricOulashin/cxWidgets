@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #include "cxApp.h"
 // Note: This is not complete!
 

@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXMULTIFORM_H__
 #define __CXMULTIFORM_H__
 

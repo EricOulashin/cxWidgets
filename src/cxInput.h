@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXINPUT_H__
 #define __CXINPUT_H__
 
@@ -97,9 +98,6 @@ class cxMultiLineInput;
  *  can process the function keys.  This can be changed with a call to
  *  trapNonAssignedFKeys().
  *
- * \author $Author: erico $
- * \version $Revision: 1.89 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  */
 class cxInput : public cxWindow

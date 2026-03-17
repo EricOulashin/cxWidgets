@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 /* cxStringUtils.cpp - String utility functions
  *
  * Copyright (c) 2004-2007 Michael H. Kinney

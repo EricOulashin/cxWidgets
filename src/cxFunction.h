@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXFUNCTION_H__
 #define __CXFUNCTION_H__
 
@@ -6,9 +7,6 @@
  *
  * Copyright (C) 2005-2007 Michael H. Kinney
  *
- * \author $Author: erico $
- * \version $Revision: 1.16 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  */
 
@@ -133,10 +131,6 @@ class cxFunction
  * \brief the function must have the following signature:<br>
  * \brief  string func()<br>
  *
- * \author Eric Oulashin
- * \author Mike Kinney
- * \version $Revision: 1.16 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxFunction0 : public cxFunction
 {
@@ -229,10 +223,6 @@ class cxFunction0 : public cxFunction
  *  the input should exit its input
  *  upon exit of the function.
  *
- * \author Eric Oulashin
- * \author Mike Kinney
- * \version $Revision: 1.16 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxFunction2 : public cxFunction
 {

@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXBUTTON_H__
 #define __CXBUTTON_H__
 
@@ -14,10 +15,6 @@
  * \brief setMouseFunction() with BUTTON1_CLICKED; however, external mouse
  * \brief functions can be set for other mouse buttons if desired.
  *
- * \author Eric Oulashin
- * \author Mike Kinney
- * \version $Revision: 1.13 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 
 #include "cxWindow.h"

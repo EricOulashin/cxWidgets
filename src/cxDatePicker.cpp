@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 // Copyright (c) 2026 Eric Oulashin
 //
 // cxDatePicker.cpp - Implementation of the cxDatePicker dialog.

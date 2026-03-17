@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXFILEVIEWER_H__
 #define __CXFILEVIEWER_H__
 
@@ -24,9 +25,6 @@
  * which by default are '.' and ',', respectively.  These defaults can be changed
  * via setAltPgUpKey() and setAltPgDownKey().
  *
- * \author $Author: erico $
- * \version $Revision: 1.16 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxFileViewer : public cxScrolledWindow
 {

@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXSEARCHPANEL_H__
 #define __CXSEARCHPANEL_H__
 

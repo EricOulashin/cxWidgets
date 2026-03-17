@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXMENU_H__
 #define __CXMENU_H__
 
@@ -53,9 +54,6 @@
  * are static methods; therefore, they can be called without an instance of
  * cxMenu.
  *
- * \author $Author: erico $
- * \version $Revision: 1.88 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  */
 class cxMenu : public cxWindow

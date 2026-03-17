@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXMESSAGEDIALOG_H__
 #define __CXMESSAGEDIALOG_H__
 
@@ -21,10 +22,6 @@
 /** \class cxMessageDialog
  * \brief Represents a dialog box with "OK" and/or "Cancel"
  * \brief  buttons (or "Yes" & "No")
- * \author Eric Oulashin
- * \author Mike Kinney
- * \version $Revision: 1.23 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxMessageDialog : public cxDialog
 {

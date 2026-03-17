@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXAPP_H__
 #define __CXAPP_H__
 
@@ -7,9 +8,6 @@
  *
  * Copyright (c) 2005-2007 Michael H. Kinney
  *
- * \author $Author: erico $
- * \version $Revision: 1.10 $
- * \date $Date: 2007/12/04 00:23:45 $
  */
 
 #include "cxObject.h"

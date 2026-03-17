@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXSCROLLEDWINDOW_H__
 #define __CXSCROLLEDWINDOW_H__
 // Copyright (c) 2005-2007 Michael H. Kinney
@@ -46,9 +47,6 @@
 std::string someFunc(void*, void*, void*, void*)
 \endverbatim
  *
- * \author $Author: erico $
- * \version $Revision: 1.21 $
- * \date $Date: 2007/12/04 00:23:46 $
  */
 class cxScrolledWindow : public cxWindow
 {

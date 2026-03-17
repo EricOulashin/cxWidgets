@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXCOMBOBOX_H__
 #define __CXCOMBOBOX_H__
 
@@ -32,9 +33,6 @@
  * be changed, just as with cxMultiLineInput; however, when the menu is
  * re-enabled, the input portion will shrink back down to 1 line.
  *
- * \author $Author: erico $
- * \version $Revision: 1.30 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  */
 

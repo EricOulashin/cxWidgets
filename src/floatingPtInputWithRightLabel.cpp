@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #include "floatingPtInputWithRightLabel.h"
 using std::string;
 

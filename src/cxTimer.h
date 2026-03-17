@@ -1,8 +1,8 @@
+// Copyright (c) 2026 Eric N. Oulashin
 #ifndef __CXTIMER_H__
 #define __CXTIMER_H__
 
 // Copyright (c) 2005-2007 Michael H. Kinney
-// Copyright (c) 2026 Eric N. Oulashin
 
 #include "cxFunction.h"
 #include <string>

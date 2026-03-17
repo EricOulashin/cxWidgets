@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXSTRINGUTILS_H__
 #define __CXSTRINGUTILS_H__
 
@@ -21,8 +22,6 @@
 /** \namespace cxStringUtils
  *
  * \brief String utility functions
- * \version $Revision: 1.15 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  */
 

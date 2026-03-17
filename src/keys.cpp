@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 /*
  * keys.cpp - test the keys (helpful for testing terminal emulation programs)
  *

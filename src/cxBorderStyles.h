@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXBORDERSTYLES_H__
 #define __CXBORDERSTYLES_H__
 
@@ -7,9 +8,6 @@
  *
  * Copyright (C) 2007 Michael H. Kinney
  *
- * \author $Author: erico $
- * \version $Revision: 1.7 $
- * \date $Date: 2007/12/04 00:23:46 $
  *
  * Date     User    Description
  *

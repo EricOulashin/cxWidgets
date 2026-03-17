@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXFUNCTIONKEYCASES_H__
 // The following #define is to be used in
 //  switch statements in the input loop for

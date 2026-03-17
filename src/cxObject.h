@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXOBJECT_H__
 #define __CXOBJECT_H__
 
@@ -33,9 +34,6 @@ typedef std::vector<std::string>::iterator stringContainerIterator;
  * \brief The base class for windowing classes in the cxWidgets
  * \brief UI framework; contains defaults for some things.
  *
- * \author $Author: erico $
- * \version $Revision: 1.9 $
- * \date $Date: 2007/12/04 00:23:46 $
  */
 class cxObject
 {

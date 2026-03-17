@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXPANEL_H__
 #define __CXPANEL_H__
 

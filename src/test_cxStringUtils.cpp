@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #include "cxStringUtils.h"
 #include <iostream>
 #include <vector>

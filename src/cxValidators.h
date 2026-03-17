@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXVALIDATORS_H__
 #define __CXVALIDATORS_H__
 // Copyright (c) 2005-2007 Michael H. Kinney

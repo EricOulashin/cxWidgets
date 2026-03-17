@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXDIALOG_H__
 #define __CXDIALOG_H__
 
@@ -12,9 +13,6 @@
  * \brief  modally).
  *  Can contain a title, status, and message to appear within the window.
  *
- * \author $Author: erico $
- * \version $Revision: 1.13 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxDialog : public cxWindow
 {

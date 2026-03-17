@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXNOTEBOOK_H__
 #define __CXNOTEBOOK_H__
 
@@ -25,10 +26,6 @@
  * \brief ediable tabs using the tab navigation keys.  This behavior can be
  * \brief changed with a call to setTabNavWrap().
  *
- * \author Mike Kinney
- * \author Eric Oulashin
- * \version $Revision: 1.31 $
- * \date $Date: 2007/12/04 00:23:46 $
 */
 class cxNotebook: public cxPanel
 {

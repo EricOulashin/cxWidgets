@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 /**
  * @file cxDate.cpp
  * \brief C++17-improved implementation of the cxDate class.
@@ -12,7 +13,6 @@
  *  - std::string_view parameters avoid unnecessary string copies
  *  - std::optional<cxDate> returned from tryParse()
  *
- * \author Eric Oulashin (original date class)
  */
 
 #include "cxDate.h"

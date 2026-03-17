@@ -1,3 +1,4 @@
+// Copyright (c) 2026 E. Oulashin
 #ifndef __CXBORDERCHARS_H__
 #define __CXBORDERCHARS_H__
 
@@ -7,9 +8,6 @@
  *
  * Copyright (C) 2026 Eric N. Oulashin
  *
- * \author $Author: erico $
- * \version $Revision: 1.0 $
- * \date $Date: 2026/02/09 16:09:00 $
  *
  * Date     User    Description
  *
