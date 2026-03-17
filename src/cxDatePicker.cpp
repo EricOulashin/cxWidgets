@@ -528,6 +528,11 @@ void cxDatePicker::moveFocusDay(int pDelta)
    redrawDay(oldDay);
    redrawDay(newDay);
    drawContent(); // refresh header + month label too
+   // Ensure buttons remain above the picker in z-order before compositing
+   if (mPrevBtn)    mPrevBtn->bringToTop(false);
+   if (mNextBtn)    mNextBtn->bringToTop(false);
+   if (mCancelBtn)  mCancelBtn->bringToTop(false);
+   if (mOKBtn)      mOKBtn->bringToTop(false);
    update_panels();
    doupdate();
 }
@@ -596,6 +601,15 @@ void cxDatePicker::applyMonthCombo()
 void cxDatePicker::refreshCalendar()
 {
    drawContent();
+   // Ensure buttons remain above the picker in z-order before compositing
+   if (mPrevBtn != nullptr)
+      mPrevBtn->bringToTop(false);
+   if (mNextBtn != nullptr)
+      mNextBtn->bringToTop(false);
+   if (mCancelBtn != nullptr)
+      mCancelBtn->bringToTop(false);
+   if (mOKBtn != nullptr)
+      mOKBtn->bringToTop(false);
    update_panels();
    doupdate();
 }
