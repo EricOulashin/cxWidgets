@@ -66,7 +66,7 @@ endif
 WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDate.o cxDatePicker.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxInput.o cxMenu.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxOpenFileDialog.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o cxBorderChars.o cxBorderStyles.o
 STATIC_LIB = libcxWidgets.a
 
-all: testApp keys
+all: $(DYNAMIC_LIB) $(STATIC_LIB) testApp keys
 
 # Library file targets
 $(DYNAMIC_LIB): $(WIDGETS_OBJS)
