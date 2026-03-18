@@ -54,8 +54,12 @@ test_cxInput
 test_cxDate
 test_cxStringUtils
 test_cxValidators
+test1
+test_sizing
 
-# Misc. stuff
+# Test artifacts
+tests/*.dSYM/
+tests/test_sizing
 DevNotes.txt
 devNotes.txt
 devnotes.txt
