@@ -2111,7 +2111,7 @@ void cxWindow::dump(string& pResult)
    if (!hasBorder())
    {
       const int lineLength = width();
-      unique_ptr line = make_unique<chtype[]>(lineLength);
+      unique_ptr<chtype[]> line = make_unique<chtype[]>(lineLength);
       int bottomRow = bottom() - top() + 1;
       int numChars = 0; // # of chars read for each line
       for (int i = 0; i < bottomRow; ++i)
@@ -2175,7 +2175,7 @@ void cxWindow::dump(string& pResult)
       //  add the text inside the box, then add
       //  another vertical line.
       const int lineLength = width()-2;
-      unique_ptr line = make_unique<chtype[]>(lineLength);
+      unique_ptr<chtype[]> line = make_unique<chtype[]>(lineLength);
       int bottomRow = bottom() - top();
       int numChars = 0; // # of chars read for each line
       for (int i = 1; i < bottomRow; ++i)
