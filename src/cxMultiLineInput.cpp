@@ -72,6 +72,8 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
       // The input should exit when a function key is pressed so that
       //  this multi-line input can catch it.
       input->setExitOnFKey(true);
+      // Set max input length to display width so isFull() works for word wrapping
+      input->setMaxInputLength(input->getInputLen());
       mInputs.push_back(input);
 
       // Create the rest of the inputs (with blank labels)
@@ -86,6 +88,8 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
          //  input position so that this multi-line input can wrap back
          //  around to the previous input.
          input->setExitOnBackspaceAtFront(true);
+         // Set max input length to display width so isFull() works for word wrapping
+         input->setMaxInputLength(input->getInputLen());
          mInputs.push_back(input);
       }
    }
@@ -104,6 +108,7 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
       shared_ptr<cxInput> input = make_shared<cxInput>(nullptr, row, pCol, pWidth, pLabel, eBS_NOBORDER, pInputOption, true, nullptr);
       input->mParentMLInput = this;
       input->setExitOnFKey(true);
+      input->setMaxInputLength(input->getInputLen());
       mInputs.push_back(input);
 
       // Create the rest of the inputs (with blank labels)
@@ -116,6 +121,7 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
          //  input position so that this multi-line input can wrap back
          //  around to the previous input.
          input->setExitOnBackspaceAtFront(true);
+         input->setMaxInputLength(input->getInputLen());
          mInputs.push_back(input);
       }
    }
@@ -701,27 +707,8 @@ bool cxMultiLineInput::setValue(string pValue, bool pRefresh)
             *mExtValue = pValue;
          }
 
-         // Split pValue into lines that can fit into
-         //  the individual input lines (mInputs).
-         cxInputPtrContainer::iterator iter = mInputs.begin();
-         for (; (iter != mInputs.end()) && success; ++iter)
-         {
-            // Get the next length of string from pValue that can
-            //  fit into the current input line and set that in
-            //  the current input line.
-            string value;
-            if (iter != mInputs.end() - 1)
-            {
-               value = pValue.substr(0, (*iter)->getInputLen());
-               pValue.erase(0, (*iter)->getInputLen());
-            }
-            else
-            {
-               value = pValue.substr(0);
-               pValue = "";
-            }
-            success = (*iter)->setValue(value, false);
-         }
+         // Use word-wrapped distribution of text across lines
+         setAllTextWrapped(pValue);
 
          // If mRunValidatorFunction is true, then run the validator function, and
          //  if it returns a warning, then set the old value back.
@@ -3372,6 +3359,30 @@ long cxMultiLineInput::doInputLoop(bool pShowInputs, bool& pRunOnLeaveFunction)
             case KEY_UP:
                if (mCurrentInputLine > 0)
                {
+                  // If backspace was pressed (not up arrow), try to pull text
+                  // from the current line to the end of the previous line
+                  if (lastKey == KEY_BACKSPACE || lastKey == BACKSPACE)
+                  {
+                     string prevVal = mInputs[mCurrentInputLine - 1]->getValue(false, false);
+                     string curVal = mInputs[mCurrentInputLine]->getValue(false, false);
+                     // If there's room on the previous line, pull text up
+                     int prevInputLen = mInputs[mCurrentInputLine - 1]->getInputLen();
+                     if ((int)prevVal.length() < prevInputLen && !curVal.empty())
+                     {
+                        // Combine and reflow from previous line
+                        string combined = prevVal + curVal;
+                        mInputs[mCurrentInputLine - 1]->setValue(combined.substr(0, prevInputLen), false);
+                        if ((int)combined.length() > prevInputLen)
+                           mInputs[mCurrentInputLine]->setValue(combined.substr(prevInputLen), false);
+                        else
+                           mInputs[mCurrentInputLine]->setValue("", false);
+                        reflowFrom(mCurrentInputLine);
+                        // Show updated lines
+                        for (int li = mCurrentInputLine - 1; li < (int)mInputs.size(); ++li)
+                           mInputs[li]->show(true, false);
+                     }
+                  }
+
                   mInputs[mCurrentInputLine]->show(true, false);
                   --mCurrentInputLine;
                   // Make sure the cursor is at the end of the input
@@ -3451,22 +3462,52 @@ long cxMultiLineInput::doInputLoop(bool pShowInputs, bool& pRunOnLeaveFunction)
                   {
                      if (mCurrentInputLine < (int)mInputs.size())
                      {
-                        mInputs[mCurrentInputLine]->show(true, false);
-                        // If we're on the last input and the input is full,
-                        //  then if mExitOnFull is true, exit.
-                        if (mCurrentInputLine == (int)mInputs.size()-1)
+                        // If the current line is full, perform word wrapping
+                        // and move to the next line
+                        if (mInputs[mCurrentInputLine]->isFull())
                         {
-                           if (mInputs[mCurrentInputLine]->isFull() && mExitOnFull)
+                           if (mWordWrap && mCurrentInputLine < (int)mInputs.size() - 1)
                            {
-                              setReturnCode(cxID_EXIT);
-                              continueOn = false;
+                              // Find the last space in the current line's value
+                              string lineVal = mInputs[mCurrentInputLine]->getValue(false, false);
+                              size_t lastSpace = lineVal.rfind(' ');
+                              if (lastSpace != string::npos && lastSpace > 0 && lastSpace < lineVal.length() - 1)
+                              {
+                                 // Move the word fragment after the last space to the next line
+                                 string overflow = lineVal.substr(lastSpace + 1);
+                                 mInputs[mCurrentInputLine]->setValue(lineVal.substr(0, lastSpace + 1), false);
+                                 // Prepend overflow to the next line's content and reflow
+                                 string nextVal = mInputs[mCurrentInputLine + 1]->getValue(false, false);
+                                 mInputs[mCurrentInputLine + 1]->setValue(overflow + nextVal, false);
+                                 // Reflow from the next line downward
+                                 reflowFrom(mCurrentInputLine + 1);
+                              }
+                              // Show updated lines
+                              for (int li = mCurrentInputLine; li < (int)mInputs.size(); ++li)
+                              {
+                                 mInputs[li]->show(true, false);
+                              }
+                              ++mCurrentInputLine;
+                           }
+                           else if (mCurrentInputLine == (int)mInputs.size() - 1)
+                           {
+                              // On the last line and it's full
+                              if (mExitOnFull)
+                              {
+                                 setReturnCode(cxID_EXIT);
+                                 continueOn = false;
+                              }
+                           }
+                           else
+                           {
+                              // Word wrap disabled, just move to next line
+                              mInputs[mCurrentInputLine]->show(true, false);
+                              ++mCurrentInputLine;
                            }
                         }
                         else
                         {
-                           // This isn't the last input line.. Go
-                           //  onto the next line.
-                           ++mCurrentInputLine;
+                           mInputs[mCurrentInputLine]->show(true, false);
                         }
                      }
                      else
@@ -4053,3 +4094,143 @@ bool cxMultiLineInput::valueInRange(const string& pValue) const
 
    return(retval);
 } // valueInRange
+
+string cxMultiLineInput::getAllText() const
+{
+   string text;
+   for (const auto& input : mInputs)
+   {
+      text += input->getValue(false, false);
+   }
+   return text;
+}
+
+void cxMultiLineInput::setAllTextWrapped(const string& pText)
+{
+   // Clear all inputs
+   for (const auto& input : mInputs)
+   {
+      input->clearValue(false);
+   }
+
+   if (!mWordWrap)
+   {
+      // No word wrap - just distribute text evenly across lines
+      string remaining = pText;
+      for (size_t i = 0; i < mInputs.size() && !remaining.empty(); ++i)
+      {
+         int lineLen = mInputs[i]->getInputLen();
+         string lineText = remaining.substr(0, lineLen);
+         remaining.erase(0, lineLen);
+         mInputs[i]->setValue(lineText, false);
+      }
+      return;
+   }
+
+   // Word wrap the text across the input lines
+   string remaining = pText;
+   for (size_t i = 0; i < mInputs.size(); ++i)
+   {
+      if (remaining.empty())
+         break;
+
+      int lineLen = mInputs[i]->getInputLen();
+
+      if ((int)remaining.length() <= lineLen)
+      {
+         // All remaining text fits on this line
+         mInputs[i]->setValue(remaining, false);
+         remaining.clear();
+      }
+      else
+      {
+         // Need to word-wrap: find the last space within lineLen characters
+         string candidate = remaining.substr(0, lineLen);
+         size_t lastSpace = candidate.rfind(' ');
+         if (lastSpace != string::npos && lastSpace > 0)
+         {
+            // Wrap at the last space
+            mInputs[i]->setValue(remaining.substr(0, lastSpace + 1), false);
+            remaining.erase(0, lastSpace + 1);
+         }
+         else
+         {
+            // No space found - break at lineLen (hard wrap)
+            mInputs[i]->setValue(candidate, false);
+            remaining.erase(0, lineLen);
+         }
+      }
+   }
+
+   // Update mCurrentInputLine to the first line that has room
+   mCurrentInputLine = 0;
+   for (size_t i = 0; i < mInputs.size(); ++i)
+   {
+      if (!mInputs[i]->isFull())
+      {
+         mCurrentInputLine = (int)i;
+         break;
+      }
+      mCurrentInputLine = (int)i;
+   }
+}
+
+void cxMultiLineInput::reflowFrom(int pFromLine)
+{
+   if (pFromLine < 0 || pFromLine >= (int)mInputs.size())
+      return;
+
+   // Gather all text from pFromLine onward
+   string text;
+   for (int i = pFromLine; i < (int)mInputs.size(); ++i)
+   {
+      text += mInputs[i]->getValue(false, false);
+   }
+
+   // Clear lines from pFromLine onward
+   for (int i = pFromLine; i < (int)mInputs.size(); ++i)
+   {
+      mInputs[i]->clearValue(false);
+   }
+
+   // Re-distribute with word wrapping
+   for (int i = pFromLine; i < (int)mInputs.size(); ++i)
+   {
+      if (text.empty())
+         break;
+
+      int lineLen = mInputs[i]->getInputLen();
+
+      if ((int)text.length() <= lineLen)
+      {
+         mInputs[i]->setValue(text, false);
+         text.clear();
+      }
+      else
+      {
+         if (mWordWrap)
+         {
+            // Find last space within lineLen characters
+            string candidate = text.substr(0, lineLen);
+            size_t lastSpace = candidate.rfind(' ');
+            if (lastSpace != string::npos && lastSpace > 0)
+            {
+               mInputs[i]->setValue(text.substr(0, lastSpace + 1), false);
+               text.erase(0, lastSpace + 1);
+            }
+            else
+            {
+               // Hard wrap
+               mInputs[i]->setValue(candidate, false);
+               text.erase(0, lineLen);
+            }
+         }
+         else
+         {
+            mInputs[i]->setValue(text.substr(0, lineLen), false);
+            text.erase(0, lineLen);
+         }
+      }
+   }
+   // Any remaining overflow text is lost (lines are finite)
+}

@@ -25,6 +25,8 @@
 #include "cxPanel.h"
 #include "cxSearchPanel.h"
 #include "cxValidators.h"
+#include "cxGrid.h"
+#include "cxLabel.h"
 #include "floatingPtInputWithRightLabel.h"
 #include <unistd.h> //  for sleep()
 #include <stdlib.h>
@@ -187,7 +189,8 @@ enum menuItemIDs
    cxWindowAddMessageLinesAboveCode,
    cxWindowBorderStyles,
    cxDatePickerTestCode,
-   cxOpenFileDialogTestCode
+   cxOpenFileDialogTestCode,
+   cxGridTestCode
    // Note: When adding IDs to this list, also add it to getMenuItemIDStr() to
    //  return a string representation of the code - this is useful for
    //  debugging.
@@ -598,6 +601,9 @@ void cxDatePickerTest();
 
 // Demonstrates the cxOpenFileDialog
 void cxOpenFileDialogTest();
+
+// Demonstrates the cxGrid control
+void cxGridTest();
 
 // Functions for use with forms & fields
 string someFunction(int& int1, int& int2);
@@ -1102,6 +1108,7 @@ void doMenu()
    mainMenu.append("&File viewer", fileViewerCode, "", cxITEM_NORMAL, true);
    mainMenu.append("&Date picker", cxDatePickerTestCode, "Show the cxDatePicker dialog", cxITEM_NORMAL, true);
    mainMenu.append("&Open file dialog", cxOpenFileDialogTestCode, "Show the cxOpenFileDialog", cxITEM_NORMAL, true);
+   mainMenu.append("&Grid test", cxGridTestCode, "Test the cxGrid control", cxITEM_NORMAL, true);
    mainMenu.append("&Attributes", attributesSetterCode, "", cxITEM_NORMAL, true);
    mainMenu.append("E&xit", exitCode, "Exit this application", cxITEM_NORMAL, true);
 
@@ -1551,6 +1558,9 @@ void doMenu()
             break;
          case cxOpenFileDialogTestCode:
             cxOpenFileDialogTest();
+            break;
+         case cxGridTestCode:
+            cxGridTest();
             break;
          case someItem: // do nuthin...
          default: // do nuthin...
@@ -4388,6 +4398,9 @@ string getMenuItemIDStr(long pMenuItemID)
       case cxOpenFileDialogTestCode:
          menuItemIDStr = "cxOpenFileDialogTestCode";
          break;
+      case cxGridTestCode:
+         menuItemIDStr = "cxGridTestCode";
+         break;
    }
 
    return(menuItemIDStr);
@@ -6399,3 +6412,50 @@ void cxOpenFileDialogTest()
       cxBase::messageBox("File selection was cancelled.");
    }
 } // cxOpenFileDialogTest
+
+string gridButtonClicked()
+{
+   cxBase::messageBox("This button was clicked");
+   return "";
+}
+
+void cxGridTest()
+{
+   // Get terminal dimensions and calculate grid size
+   int termHeight = 0, termWidth = 0;
+   cxBase::getTermDimensions(termHeight, termWidth);
+   //const int gridWidth = termWidth - 4;
+   //const int gridHeight = termHeight - 4;
+   const int gridWidth = 60;
+   const int gridHeight = 12;
+
+   // Create the grid
+   const int numRows = 10;
+   const int numCols = 10;
+   cxGrid grid(nullptr, 0, 0, gridHeight, gridWidth, numRows, numCols, 12, "cxGrid Test");
+   grid.center(false);
+
+   // Set the first row's cells to cxLabel instances with "Row 1" and so on
+   for (int c = 0; c < numCols; ++c)
+   {
+      const string labelText = "Row " + std::to_string(c + 1);
+      auto label = make_shared<cxLabel>(nullptr, 0, 0, grid.getColWidth(c), labelText);
+      grid.setCell(0, c, label);
+   }
+
+   // TODO: The button click function isn't being called, and
+   // clicking on the button twice causes the cxGrid to exit out.
+   /*
+   // Place a cxButton at row 3, column B (index 2, 1) that displays a message
+   // when clicked or when Enter is pressed on it.
+   int btnColWidth = grid.getColWidth(1);
+   auto btn = make_shared<cxButton>(nullptr, 0, 0, 1, btnColWidth, "Button!", eBS_NOBORDER);
+   btn->setOnClickFunction(gridButtonClicked);
+   grid.setCell(2, 1, btn);
+   */
+
+   // Set focus to the first cell in the 2nd row (row index 1, col index 0),
+   // then show the grid modally to allow user interaction.
+   //grid.setFocusCell(1, 0);
+   grid.showModal(1, 0);
+} // cxGridTest

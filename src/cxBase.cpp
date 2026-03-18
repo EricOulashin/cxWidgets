@@ -308,11 +308,11 @@ int cxBase::height()
    return(theHeight);
 } // height
 
-void cxBase::getTermDimentions(int& pHeight, int& pWidth)
+void cxBase::getTermDimensions(int& pHeight, int& pWidth)
 {
    pHeight = cxBase::height();
    pWidth = cxBase::width();
-} // getTermDimentions
+} // getTermDimensions
 
 bool cxBase::resizeTerm(int pNewHeight, int pNewWidth)
 {

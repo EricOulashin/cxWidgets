@@ -100,30 +100,28 @@ long cxButton::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows)
 #ifdef NCURSES_MOUSE_VERSION
             if (lastKey == KEY_MOUSE)
             {
-               if (getmouse(&mMouse) == OK)
+               // Try to get the mouse event.  If cxWindow::showModal already
+               //  consumed it via getmouse(), use the stored mMouse instead
+               //  (mMouse is populated by cxWindow::showModal's getmouse call).
+               if (getmouse(&mMouse) != OK)
                {
-                  mouseEvent = true;
-                  // For normal mouse clicks (left click), check to see if the
-                  //  user clicked in the button.  For other clicks, just keep
-                  //  track that the user clicked a mouse button (if so, then
-                  //  we'll want to stay focused in the button).
-                  // hmm..  Rather than having to deal with all the ncurses mouse
-                  //  events like this, I'm wondering if there's a better way to
-                  //  deal with this.  Maybe push this switch up to cxWindow and
-                  //  have it call overridable event functions?  (not sure if that
-                  //  would make things easier or harder for developers..  will
-                  //  have to play with it some more first.)
-                  switch (mMouse.bstate)
-                  {
-                     case BUTTON1_CLICKED:  // Normal mouse click
-                        mouseClickOnButton = mouseEvtWasInWindow();
-                        break;
-                     // For all other mouse states, run
-                     //  handleFunctionForLastMouseState().
-                     default:
-                        handleFunctionForLastMouseState(&mouseFunctionExists);
-                        break;
-                  }
+                  // Already consumed by cxWindow::showModal - mMouse is
+                  //  already set from that call, so we can use it directly.
+               }
+               mouseEvent = true;
+               // Check for mouse button 1 click/press events using bitmask
+               // checks, since bstate may have additional flags OR'd in on
+               // some terminals, and some terminals may report BUTTON1_PRESSED
+               // instead of BUTTON1_CLICKED.
+               if (mMouse.bstate & (BUTTON1_CLICKED | BUTTON1_PRESSED))
+               {
+                  mouseClickOnButton = mouseEvtWasInWindow();
+               }
+               else
+               {
+                  // For all other mouse states, run
+                  //  handleFunctionForLastMouseState().
+                  handleFunctionForLastMouseState(&mouseFunctionExists);
                }
             }
 #endif
@@ -136,11 +134,11 @@ long cxButton::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows)
             {
                // If there was a mouse event, and no external function existed
                //  for the mouse event, then if this button has a cxPanel for a
-               //  parent, and if the mouse event was outside the button
-               //  window, then quit.
+               //  parent (or mExitOnMouseOutside is set), and if the mouse event
+               //  was outside the button window, then quit.
                if (mouseEvent && !mouseFunctionExists)
                {
-                  if (parentIsCxPanel())
+                  if (parentIsCxPanel() || getExitOnMouseOutside())
                   {
                      if (!mouseEvtWasInWindow())
                      {

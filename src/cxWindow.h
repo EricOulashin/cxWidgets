@@ -1135,6 +1135,24 @@ class cxWindow : public cxObject
       virtual bool getDisableCursorOnShow() const;
 
       /**
+       * \brief Returns whether the window exits its modal input loop when
+       * \brief a mouse click occurs outside the window.
+       *
+       * @return true if the window exits on outside mouse clicks
+       */
+      virtual bool getExitOnMouseOutside() const;
+
+      /**
+       * \brief Sets whether the window should exit its modal input loop
+       * \brief when a mouse click occurs outside the window.  Useful for
+       * \brief container widgets like cxGrid that manage focus across
+       * \brief multiple child widgets.
+       *
+       * @param pExitOnMouseOutside Whether to exit on outside mouse clicks
+       */
+      virtual void setExitOnMouseOutside(bool pExitOnMouseOutside);
+
+      /**
        * \brief Returns the last key pressed by the user (for showModal(), etc.)
        *
        * @return The last key pressed by the user
@@ -2956,6 +2974,7 @@ class cxWindow : public cxObject
       eBorderStyle mBorderStyle;          // Border style
       bool mEnabled = true;               // Whether or not the window is enabled
       bool mDisableCursorOnShow = true;   // Whether or not to disable the cursor in show()
+      bool mExitOnMouseOutside = false;  // Exit modal input loop on mouse click outside window
       int mLastKey = NOKEY;               // The last key typed by the user during an input loop
       bool mChangeColorsOnFocus = false;  // Whether or not to apply colors upon setting focus
       bool mShowSubwinsForward = true;    // If true, the subwindows will be shown in

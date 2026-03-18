@@ -106,7 +106,7 @@ namespace cxBase
     * @param pHeight (OUT) This will store the terminal's current height.
     * @param pWidth (OUT) This will store the terminal's current width.
     */
-   void getTermDimentions(int& pHeight, int& pWidth);
+   void getTermDimensions(int& pHeight, int& pWidth);
 
    /**
     * \brief Resizes the terminal screen.

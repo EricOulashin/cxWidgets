@@ -123,6 +123,7 @@ These are some screenshots of the test app, showing examples of what you can do 
 	<img src="screenshots/cxWidgets_test_form_filled.png" alt="Text form (filled)" width="800">
 	<img src="screenshots/cxWidgets_date_picker.png" alt="Date picker (new: 2026-03-17)" width="600">
 	<img src="screenshots/cxWidgets_file_open_dialog.png" alt="File Open dialog (new: 2026-03-17)" width="600">
+	<img src="screenshots/cxWidgets_cxGrid.png" alt="cxGrid (new: 2026-03-18)" width="500">
 </p>
 
 ## Original readme (by Mike Kinney) (README.txt)

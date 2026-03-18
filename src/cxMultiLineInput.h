@@ -2417,6 +2417,26 @@ class cxMultiLineInput : public cxWindow
       // Parameters:
       //  pValue: A value to check
       bool valueInRange(const std::string& pValue) const;
+
+      // Word-wraps the text from the current line (mCurrentInputLine) downward
+      // through subsequent lines.  If text overflows the last visible line,
+      // the overflow is discarded (the caller should handle dynamic line
+      // addition if needed).
+      //
+      // Parameters:
+      //  pFromLine: The line index to start reflowing from
+      void reflowFrom(int pFromLine);
+
+      // Gets the full text content from all input lines, concatenated.
+      // Unlike getValue(), this always concatenates without newlines.
+      std::string getAllText() const;
+
+      // Sets all text by distributing it across lines with word wrapping.
+      // Unlike setValue(), this always word-wraps the text.
+      void setAllTextWrapped(const std::string& pText);
+
+      // Whether word wrapping is enabled (default true)
+      bool mWordWrap = true;
 };
 
 #endif

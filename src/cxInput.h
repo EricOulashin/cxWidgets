@@ -265,6 +265,39 @@ class cxInput : public cxWindow
       void setExitOnBackspaceAtFront(bool pExitOnBackspaceAtFront);
 
       /**
+       * \brief Returns whether the input exits its input loop when a mouse
+       * \brief click occurs outside the input window.
+       *
+       * @return true if the input exits on outside mouse clicks
+       */
+      bool getExitOnMouseOutside() const;
+
+      /**
+       * \brief Sets whether the input should exit its input loop when a
+       * \brief mouse click occurs outside the input window.  This is useful
+       * \brief for container widgets like cxGrid that need to redirect
+       * \brief focus to a different cell when the user clicks elsewhere.
+       *
+       * @param pExitOnMouseOutside Whether to exit on outside mouse clicks
+       */
+      void setExitOnMouseOutside(bool pExitOnMouseOutside);
+
+      /**
+       * \brief Returns whether the input exits when the left arrow key is
+       * \brief pressed at position 0 or the right arrow key is pressed at
+       * \brief the end of the text.
+       */
+      bool getExitOnArrowAtBoundary() const;
+
+      /**
+       * \brief Sets whether the input should exit its input loop when the
+       * \brief left arrow key is pressed at position 0 or the right arrow
+       * \brief key is pressed at the end of the text.  Useful for grid cells
+       * \brief where arrow keys should navigate between cells at text boundaries.
+       */
+      void setExitOnArrowAtBoundary(bool pExitOnArrowAtBoundary);
+
+      /**
        * Accessor for mMustFill
        * @return Returns whether mMustFill is set
        */
@@ -948,6 +981,8 @@ class cxInput : public cxWindow
       // mExitOnBackspaceAtFront specifies whether the input loop should stop when
       //  backspace is pressed in the first input position.
       bool mExitOnBackspaceAtFront = false;
+      bool mExitOnMouseOutside = false;   // Exit input loop on mouse click outside this window
+      bool mExitOnArrowAtBoundary = false; // Exit on left arrow at pos 0 or right arrow at end of text
       bool mMustFill = false;               // Whether or not the user must fill the entire field
       bool mMasked = false;                 // Whether or not the field is masked (i.e. for a password)
       char mMaskChar = '*';                 // The character to display for character masking
@@ -980,7 +1015,9 @@ class cxInput : public cxWindow
       //  navigating in reverse (i.e., with the up arrow or shift-tab).
       bool mValidateOnReverse = true;
       bool mForceUpper = false;             // Convert letters to upper-case
-      int mMaxInputLength = 0;              // Maximum length of text input
+      int mMaxInputLength = 0;              // Maximum length of text input (0 = unlimited)
+      int mScrollOffset = 0;               // Index of first visible character in mValue (for scrolling)
+      int mCursorPos = 0;                  // Cursor position within mValue (0-based index)
 
       // Returns the text entered in the window, from mInputStartX (inclusive)
       //  to a given horizontal position (exclusive), as a string.
@@ -1000,6 +1037,14 @@ class cxInput : public cxWindow
       //  x: The current horizontal cursor position
       //  prevInput: The last contents of the input
       inline void doBackspace(int y, int x, std::string& prevInput);
+
+      // Redraws the visible portion of mValue in the ncurses window,
+      // accounting for mScrollOffset. Pads with spaces to fill mInputLen.
+      void redrawVisibleValue();
+
+      // Adjusts mScrollOffset so that mCursorPos is visible within the
+      // display area (mInputLen characters wide).
+      void ensureCursorVisible();
 
       // Enables the attributes in mValueAttrs.
       inline void enableValueAttrs();

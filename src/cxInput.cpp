@@ -105,8 +105,9 @@ cxInput::cxInput(cxWindow *pParentWindow, int pRow,
    }
 #endif
 
-   // Set mMaxInputLength
-   mMaxInputLength = mInputLen;
+   // Set mMaxInputLength to 0 (unlimited) by default, allowing text to
+   // scroll horizontally when it exceeds the visible input width.
+   mMaxInputLength = 0;
 }
 
 // Copy constructor
@@ -126,6 +127,8 @@ cxInput::cxInput(const cxInput& pThatInput)
      mRightMax(pThatInput.mRightMax),
      mExitOnFull(pThatInput.mExitOnFull),
      mExitOnBackspaceAtFront(pThatInput.mExitOnBackspaceAtFront),
+     mExitOnMouseOutside(pThatInput.mExitOnMouseOutside),
+     mExitOnArrowAtBoundary(pThatInput.mExitOnArrowAtBoundary),
      mMustFill(pThatInput.mMustFill),
      mMasked(pThatInput.mMasked),
      mMaskChar(pThatInput.mMaskChar),
@@ -143,7 +146,9 @@ cxInput::cxInput(const cxInput& pThatInput)
      mShowCursor(pThatInput.mShowCursor),
      mValidateOnReverse(pThatInput.mValidateOnReverse),
      mForceUpper(pThatInput.mForceUpper),
-     mMaxInputLength(pThatInput.mMaxInputLength)
+     mMaxInputLength(pThatInput.mMaxInputLength),
+     mScrollOffset(pThatInput.mScrollOffset),
+     mCursorPos(pThatInput.mCursorPos)
 #ifdef WANT_TIMEOUT
      , mTimeout(pThatInput.mTimeout)
 #endif
@@ -178,6 +183,8 @@ cxInput::cxInput(const cxInput& pThatInput, cxMultiLineInput *pParentMLInput)
      mRightMax(pThatInput.mRightMax),
      mExitOnFull(pThatInput.mExitOnFull),
      mExitOnBackspaceAtFront(pThatInput.mExitOnBackspaceAtFront),
+     mExitOnMouseOutside(pThatInput.mExitOnMouseOutside),
+     mExitOnArrowAtBoundary(pThatInput.mExitOnArrowAtBoundary),
      mMustFill(pThatInput.mMustFill),
      mMasked(pThatInput.mMasked),
      mMaskChar(pThatInput.mMaskChar),
@@ -195,7 +202,9 @@ cxInput::cxInput(const cxInput& pThatInput, cxMultiLineInput *pParentMLInput)
      mShowCursor(pThatInput.mShowCursor),
      mValidateOnReverse(pThatInput.mValidateOnReverse),
      mForceUpper(pThatInput.mForceUpper),
-     mMaxInputLength(pThatInput.mMaxInputLength)
+     mMaxInputLength(pThatInput.mMaxInputLength),
+     mScrollOffset(pThatInput.mScrollOffset),
+     mCursorPos(pThatInput.mCursorPos)
 #ifdef WANT_TIMEOUT
      , mTimeout(pThatInput.mTimeout)
 #endif
@@ -318,29 +327,9 @@ long cxInput::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows)
          int y = 0, x = 0; // Current character position
          getyx(mWindow, y, x);
          // rightLimit is the rightmost limit (highest column# on the
-         //  screen, inclusive) for the user input.
-         int rightLimit = mInputStartX;
-         // If mMaxInputLength is less than the length that will fit inside the
-         //  window, then use mMaxInputLength in calculating rightLimit;
-         //  otherwise, use mInputLen.
-         if (mMaxInputLength < mInputLen)
-         {
-            rightLimit = mInputStartX + mMaxInputLength - 1;
-         }
-         else
-         {
-            rightLimit = mInputStartX + mInputLen - 1;
-         }
-         // If the horizontal cursor position is beyond the
-         //  right limit (after having written the value to
-         //  the window), then set x to the right limit so
-         //  that doInputLoop will still do its loop at least
-         //  once.
-         if (x > rightLimit)
-         {
-            wmove(mWindow, mYPos, rightLimit);
-            x = rightLimit;
-         }
+         //  screen, inclusive) for the user input display area.
+         // With scrolling support, this is always based on the display width.
+         int rightLimit = mInputStartX + mInputLen - 1;
          // Start the input loop
          setReturnCode(doInputLoop(x, y, rightLimit, updatePrevInput, prevInput));
          // If the user doesn't want to quit, then if there is a validator function
@@ -490,6 +479,8 @@ void cxInput::setLabel(const string& pLabel)
 void cxInput::clearValue(bool pRefresh)
 {
    mValue.erase();
+   mCursorPos = 0;
+   mScrollOffset = 0;
    if (mExtValue != nullptr)
    {
       mExtValue->erase();
@@ -584,6 +575,9 @@ bool cxInput::setValue(const string& pValue, bool pRefresh)
    if (pValue != getValue())
    {
       mValue = pValue;
+      // Update cursor position and scroll offset for the new value
+      mCursorPos = (int)mValue.length();
+      ensureCursorVisible();
 
       if (pRefresh)
       {
@@ -642,6 +636,26 @@ void cxInput::setExitOnBackspaceAtFront(bool pExitOnBackspaceAtFront)
    mExitOnBackspaceAtFront = pExitOnBackspaceAtFront;
 } // setExitOnBackspaceAtFront
 
+bool cxInput::getExitOnMouseOutside() const
+{
+   return mExitOnMouseOutside;
+} // getExitOnMouseOutside
+
+void cxInput::setExitOnMouseOutside(bool pExitOnMouseOutside)
+{
+   mExitOnMouseOutside = pExitOnMouseOutside;
+} // setExitOnMouseOutside
+
+bool cxInput::getExitOnArrowAtBoundary() const
+{
+   return mExitOnArrowAtBoundary;
+} // getExitOnArrowAtBoundary
+
+void cxInput::setExitOnArrowAtBoundary(bool pExitOnArrowAtBoundary)
+{
+   mExitOnArrowAtBoundary = pExitOnArrowAtBoundary;
+} // setExitOnArrowAtBoundary
+
 bool cxInput::getMustFill() const
 {
    return(mMustFill);
@@ -682,27 +696,26 @@ void cxInput::setInputOption(eInputOptions pInputOption)
 // Sets the horizontal (x) cursor position
 void cxInput::setCursorX(int pCursorX)
 {
-   // If there is a border, the bounds
-   //  are between mInputStartX and right()-1, and
-   //  the row is 1.  If there is no
-   //  border, the bounds are between mInputStartX and
-   //  right(), and the row is 0.
-   int rightmost = right();
+   // pCursorX is the logical position within the value (relative to label start).
+   // Update mCursorPos and scroll offset, then position the ncurses cursor.
    int row = 0;
    if (hasBorder())
    {
-      --rightmost;
       row = 1;
    }
 
-   if (pCursorX < mInputStartX)
-   {
-      wmove(mWindow, row, mInputStartX);
-   }
-   else if ((pCursorX >= mInputStartX) && (pCursorX < rightmost))
-   {
-      wmove(mWindow, row, pCursorX);
-   }
+   // Treat pCursorX as a position relative to the start of the input area
+   int logicalPos = pCursorX;
+   if (logicalPos < 0)
+      logicalPos = 0;
+   if (logicalPos > (int)mValue.length())
+      logicalPos = (int)mValue.length();
+
+   mCursorPos = logicalPos;
+   ensureCursorVisible();
+
+   int screenX = mInputStartX + (mCursorPos - mScrollOffset);
+   wmove(mWindow, row, screenX);
 } // setCursorX
 
 bool cxInput::move(int pNewRow, int pNewCol, bool pRefresh)
@@ -856,6 +869,56 @@ inline void cxInput::doBackspace(int y, int x, string& prevInput)
       }
    }
 } // doBackspace
+
+void cxInput::redrawVisibleValue()
+{
+   // Show the visible portion of mValue starting at mScrollOffset
+   if (mMasked)
+   {
+      int totalLen = (int)mValue.length();
+      int visibleStart = mScrollOffset;
+      int visibleLen = totalLen - visibleStart;
+      if (visibleLen > mInputLen)
+         visibleLen = mInputLen;
+      if (visibleLen < 0)
+         visibleLen = 0;
+      string maskedVisible(visibleLen, mMaskChar);
+      int padLen = mInputLen - visibleLen;
+      if (padLen > 0)
+         maskedVisible.append(padLen, ' ');
+      mvwaddnstr(mWindow, mYPos, mInputStartX, maskedVisible.c_str(), mInputLen);
+   }
+   else
+   {
+      string visibleText;
+      if (mScrollOffset < (int)mValue.length())
+         visibleText = mValue.substr(mScrollOffset, mInputLen);
+      int padLen = mInputLen - (int)visibleText.length();
+      if (padLen > 0)
+         visibleText.append(padLen, ' ');
+      mvwaddnstr(mWindow, mYPos, mInputStartX, visibleText.c_str(), mInputLen);
+   }
+}
+
+void cxInput::ensureCursorVisible()
+{
+   // Ensure mCursorPos is within [mScrollOffset, mScrollOffset + mInputLen)
+   if (mCursorPos < mScrollOffset)
+      mScrollOffset = mCursorPos;
+   if (mCursorPos >= mScrollOffset + mInputLen)
+      mScrollOffset = mCursorPos - mInputLen + 1;
+   // Scroll back to keep the display as full as possible: if the text
+   // extends before the visible window but the visible portion isn't
+   // filling the display width, reduce the scroll offset so more text
+   // is shown (e.g., when backspacing erases characters at the end).
+   int textLen = (int)mValue.length();
+   if (mScrollOffset > 0 && textLen - mScrollOffset < mInputLen)
+   {
+      mScrollOffset = textLen - mInputLen;
+   }
+   if (mScrollOffset < 0)
+      mScrollOffset = 0;
+}
 
 void cxInput::setLabelColor(e_cxColors pColor)
 {
@@ -1081,8 +1144,11 @@ bool cxInput::onKeyFunctionEnabled() const
 
 bool cxInput::isFull() const
 {
-   return(((int)mValue.length() >= mInputLen) ||
-          ((int)mValue.length() >= mMaxInputLength));
+   // If mMaxInputLength is 0, the input supports unlimited text with
+   // horizontal scrolling, so it is never "full".
+   if (mMaxInputLength == 0)
+      return false;
+   return ((int)mValue.length() >= mMaxInputLength);
 } // isFull
 
 int cxInput::maxValueLen() const
@@ -1170,36 +1236,47 @@ void cxInput::refreshValue(bool pRefresh)
 
    // Place the cursor after the label
    wmove(mWindow, mYPos, mInputStartX);
-   // If mMasked is true, display asterisks rather
-   //  than what the user is actually typing.
-   // We use mvwprintw here to fill the entire space
-   //  so that the value color is used throughout
-   //  the entire space.
+   // Display the visible portion of the value, accounting for scroll offset
    if (mMasked)
    {
-      // Create a string full of mask characters
-      //  and display it.
-      string maskedValue(mValue.length(), mMaskChar);
-      std::ostringstream os;
-      os << "%-" << mInputLen << "s";
-      mvwprintw(mWindow, mYPos, mInputStartX, (char*)os.str().c_str(), maskedValue.c_str());
+      // Create a string of mask characters for the visible portion
+      int totalMaskLen = (int)mValue.length();
+      int visibleStart = mScrollOffset;
+      int visibleLen = totalMaskLen - visibleStart;
+      if (visibleLen > mInputLen)
+         visibleLen = mInputLen;
+      if (visibleLen < 0)
+         visibleLen = 0;
+      string maskedVisible(visibleLen, mMaskChar);
+      // Pad with spaces to fill the input area
+      int padLen = mInputLen - visibleLen;
+      if (padLen > 0)
+         maskedVisible.append(padLen, ' ');
+      mvwaddnstr(mWindow, mYPos, mInputStartX, maskedVisible.c_str(), mInputLen);
    }
    else
    {
-      std::ostringstream os;
-      os << "%-" << mInputLen << "s";
-      mvwprintw(mWindow, mYPos, mInputStartX, (char*)os.str().c_str(), mValue.c_str());
+      // Show mValue starting from mScrollOffset, up to mInputLen chars
+      string visibleText;
+      if (mScrollOffset < (int)mValue.length())
+         visibleText = mValue.substr(mScrollOffset, mInputLen);
+      // Pad with spaces to fill the input area
+      int padLen = mInputLen - (int)visibleText.length();
+      if (padLen > 0)
+         visibleText.append(padLen, ' ');
+      mvwaddnstr(mWindow, mYPos, mInputStartX, visibleText.c_str(), mInputLen);
    }
 
-   // If focus is set, place the cursor one position past the input
-   //  (so that when showModal() is called, it will be ready to
-   //  accept input).  Otherwise, disable the main value attribute,
-   //  extra value attributes, and value color, if focus is not set
+   // If focus is set, place the cursor at the correct position
    if (mHasFocus)
    {
       if (mCursorAfterInput)
       {
-         wmove(mWindow, mYPos, mInputStartX+(int)mValue.length());
+         // Place cursor at the logical cursor position (relative to scroll)
+         int screenCursorX = mInputStartX + (mCursorPos - mScrollOffset);
+         if (screenCursorX > mInputStartX + mInputLen)
+            screenCursorX = mInputStartX + mInputLen;
+         wmove(mWindow, mYPos, screenCursorX);
       }
       else
       {
@@ -1887,175 +1964,90 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
                           {
    setReturnCode(cxID_EXIT);
 
-   // Enable the message attributes and turn on the
-   //  value color
+   // Enable the message attributes and turn on the value color
    enableValueAttrs();
    if (useColors)
    {
       wcolor_set(mWindow, mValueColorPair, nullptr);
    }
 
-   // moveCursor keeps track of whether or not the cursor should be positioned
-   //  after the text each iteration through the input loop.  Normally, the
-   //  cursor is moved after the text is written to the window to ensure that
-   //  the cursor is in the proper place, but sometimes we won't want this to
-   //  happen (i.e., if the user presses the left or right arrow keys to go
-   //  sideways).
-   bool moveCursor = true;
+   // Only initialize cursor position when focus first starts.
+   // When re-entering the input loop (e.g., from a grid re-showing
+   // the same cell), preserve the existing cursor position.
+   if (mJustStartedFocus)
+   {
+      if (mCursorAfterInput)
+      {
+         mCursorPos = (int)mValue.length();
+      }
+      else
+      {
+         mCursorPos = 0;
+      }
+   }
+   // Clamp cursor position to valid range in case value changed externally
+   if (mCursorPos > (int)mValue.length())
+      mCursorPos = (int)mValue.length();
+   ensureCursorVisible();
 
    // Start the input loop
    mLeaveNow = false;
    bool continueOn = true;
-   // writeValue specifies whether or not to write the text value to the input
-   //  each time through the loop.
-   bool writeValue = true;
-   // highestX stores The highest horizontal position reached + 1 (to help
-   //  in getting the final input text once the input loop is finished).
-   int highestX = mInputStartX + (int)(mValue.length()) - 1;
-   while((x <= rightLimit) && continueOn && (getInputOption() != eINPUT_READONLY && !getLeaveNow()))
+   while (continueOn && (getInputOption() != eINPUT_READONLY) && !getLeaveNow())
    {
-      // Make sure the cursor is enabled (sometimes it would disappear for
-      //  some reason).
+      // Make sure the cursor is enabled
       curs_set(1);
-      // Add implied characters to the input.  If masking is to be done,
-      //  then add the implied characters to mValue and output masking
-      //  characters in the window.  If no masking is to be done, output
-      //  the value with no masking.
+
+      // Add implied characters from the validator
       if (mMasked)
       {
          mValidator.addImpliedChars(mValue);
-
-         wmove(mWindow, y, mInputStartX);
-         unsigned valueLen = mValue.length();
-         for (unsigned i = 0; i < valueLen; ++i)
-         {
-            waddch(mWindow, mMaskChar);
-         }
       }
       else
       {
-         // Add the implied characters from the validator to prevInput,
-         //  but only if updatePrevInput is true (it could have been
-         //  set false in the last iteration if the user pressed a
-         //  backspace).
-         if (updatePrevInput)
-         {
-            mValidator.addImpliedChars(prevInput);
-         }
-
-         // Write prevInput to the window
-         // Get the current cursor position (curY, curX), in case moveCursor
-         //  is false.
-         if (writeValue)
-         {
-            int curY = 0, curX = 0;
-            getyx(mWindow, curY, curX);
-            mvwaddstr(mWindow, y, mInputStartX, prevInput.c_str());
-            // If moveCursor is false, move the cursor back to the
-            //  start of the input value.
-            if (!moveCursor)
-            {
-               wmove(mWindow, curY, curX);
-            }
-         }
+         mValidator.addImpliedChars(mValue);
       }
 
-      // If focus just started and mCursorAfterInput is
-      //  false, place the cursor after the label (rather
-      //  than leave it after the input text).
+      // Redraw the visible portion of mValue and position the cursor
+      ensureCursorVisible();
+      redrawVisibleValue();
+
+      // If focus just started and mCursorAfterInput is false, place cursor
+      // at the start of the input area.
       if (mJustStartedFocus && !mCursorAfterInput)
       {
-         // Place the cursor after the label
-         if (moveCursor)
-         {
-            wmove(mWindow, mYPos, mInputStartX);
-         }
-      }
-      else
-      {
-         // If mValue has the same length as the validator string,
-         //  place the cursor at the last character of the
-         //  input in the window.  Otherwise, place the cursor
-         //  after the last character of the text in the window.
-         //  This may be redundant, since this is also done in show(),
-         //  but it needs to always be done after the value is written
-         //  to the window.
-         if ((mValidator.getValidatorStr().length() > 0) &&
-             (mValue.length() == mValidator.getValidatorStr().length()))
-             {
-            prevInput = mValue; // prevInput needs to be updated here
-            if (moveCursor)
-            {
-               wmove(mWindow, mYPos, mInputStartX+(int)mValue.length()-1);
-            }
-         }
-         else
-         {
-            if (moveCursor)
-            {
-               wmove(mWindow, mYPos, mInputStartX+(int)mValue.length());
-            }
-         }
+         mCursorPos = 0;
+         mScrollOffset = 0;
       }
 
-      // Update y and x (since something has been written to the window)
-      getyx(mWindow, y, x);
-      // If the horizontal position of the cursor is now beyond the
-      //  right limit, then we may (or may not) need to exit the
-      //  window:
-      //  If the focus has just started, don't exit.
-      //  Otherwise, if we're to exit when full, go ahead & exit.
-      //     Otherwise, don't exit.
-      if (hasBorder())
+      // Place the screen cursor at the correct position
+      int screenCursorX = mInputStartX + (mCursorPos - mScrollOffset);
+      wmove(mWindow, mYPos, screenCursorX);
+
+      // Handle special case: if validator string length == mValue length,
+      // place cursor at last character rather than after it
+      if ((mValidator.getValidatorStr().length() > 0) &&
+          (mValue.length() == mValidator.getValidatorStr().length()) &&
+          !mJustStartedFocus)
       {
-         if (x > rightLimit)
-         {
-            if (mJustStartedFocus)
-            {
-               if (moveCursor)
-               {
-                  wmove(mWindow, mYPos, rightLimit);
-                  getyx(mWindow, y, x);
-               }
-            }
-            else
-            {
-               if (mExitOnFull)
-               {
-                  setReturnCode(cxID_EXIT);
-                  break;
-               }
-               else
-               {
-                  if (moveCursor)
-                  {
-                     wmove(mWindow, mYPos, rightLimit);
-                     getyx(mWindow, y, x);
-                  }
-               }
-            }
-         }
+         mCursorPos = (int)mValue.length() - 1;
+         if (mCursorPos < 0) mCursorPos = 0;
+         ensureCursorVisible();
+         screenCursorX = mInputStartX + (mCursorPos - mScrollOffset);
+         wmove(mWindow, mYPos, screenCursorX);
       }
 
-      // updatePrevInput should now default to true unless the user
-      //  presses a backspace.
-      updatePrevInput = true;
-
-      // Don't let the user move the cursor into the label
-      if (x < mInputStartX)
+      // Check if the input is full and should exit
+      if (!mJustStartedFocus && isFull() && mExitOnFull)
       {
-         wmove(mWindow, y, mInputStartX);
-         getyx(mWindow, y, x);
+         setReturnCode(cxID_EXIT);
+         break;
       }
 
 #ifdef WANT_TIMEOUT
-      // Each time we get a keypress (using wgetch), we need to enable and
-      //  disable the alarm so that every time the user presses a key, the
-      //  idle timer is reset.
       alarm(mTimeout);
 #endif
       int lastKey = wgetch(mWindow);
-      // Upper-case the character if mForceUpper is true
       if (mForceUpper)
       {
          lastKey = toupper(lastKey);
@@ -2064,30 +2056,16 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
       alarm(0);
 #endif
       setLastKey(lastKey);
-      // If mLeaveNow was set (i.e., from a call to exitNow() or quitNow(),
-      //  then return now.
       if (getLeaveNow())
       {
          return(getReturnCode());
       }
+
 #ifdef NCURSES_MOUSE_VERSION
-      // For mouse button events, we want to do the following:
-      //  - If there is an external function set up for the mouse state, then
-      //    run it.  Otherwise, do the following:
-      //  - If the user clicked inside the window, continue onto the next
-      //    iteration of the input loop (to simulate nothing happening).
-      //  - If the user clicked outside the window, then:
-      //    - If the parent window is a cxPanel or cxMultiLineInput, quit
-      //      out of the input loop (allowing the user to go to another
-      //      window or input inside of a cxMultiLineInput).
-      //      Otherwise, continue on (to simulate nothing happening).
       if (lastKey == KEY_MOUSE)
       {
          if (getmouse(&mMouse) == OK)
          {
-            // Run a function that may exist for the mouse state.  If
-            //  no function exists for the mouse state, then process
-            //  it here.
             bool mouseFuncExists = false;
             continueOn = handleFunctionForLastMouseState(&mouseFuncExists);
             if (!mouseFuncExists)
@@ -2100,7 +2078,8 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
                   }
                   else
                   {
-                     if (parentIsCxPanel() || (mParentMLInput != nullptr))
+                     if (parentIsCxPanel() || (mParentMLInput != nullptr) ||
+                         mExitOnMouseOutside)
                      {
                         setReturnCode(cxID_QUIT);
                         continueOn = false;
@@ -2116,16 +2095,11 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
          }
          else
          {
-            // getmouse failed..  just continue to the next iteration of the
-            //  input loop.
             continue;
          }
       }
 #endif
-      // If the last key is in the quit keys, then quit and return
-      //  cxID_QUIT.  If the key isn't there, look for it in
-      //  the exit keys (if it's there, quit and return cxID_EXIT).
-      //  If not there either, handle the key in a switch.
+
       if (hasQuitKey(lastKey))
       {
          setReturnCode(cxID_QUIT);
@@ -2136,31 +2110,24 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
          setReturnCode(cxID_EXIT);
          continueOn = false;
       }
-      // If the key is the input clear key, then clear the
-      //  input value.  (Ideally, we'd handle this in the switch, but
-      //  you must use const values in a switch).
       else if (lastKey == cxInput::inputClearKey)
       {
-         // If this input is part of a multi-line input, then
-         //  exit the input loop so that the multi-line input can
-         //  catch the key and clear all of its inputs.  Otherwise,
-         //  go ahead and clear the value of this input.
          if (mParentMLInput != nullptr)
          {
             continueOn = false;
          }
          else
          {
-            prevInput = "";
-            setValue("", true);
+            mValue = "";
+            mCursorPos = 0;
+            mScrollOffset = 0;
          }
       }
       else
       {
-         // Perform some action based on the last key pressed
-         switch(lastKey)
+         switch (lastKey)
          {
-            case ESCAPE: // Defined in cxKeyDefines.h
+            case ESCAPE:
                setReturnCode(cxID_QUIT);
                continueOn = false;
                break;
@@ -2168,18 +2135,7 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
             case KEY_ENTER:
             case KEY_DOWN:
             case KEY_UP:
-               // Interpret the up key as quitting out
-               //  of the input.  In some situations,
-               //  there might be a validator function for
-               //  the current input that depends on the
-               //  value of another input - an input won't
-               //  let the cursor leave if the value is
-               //  invalid, but if this returns cxID_QUIT,
-               //  you'd still be able to go back to the
-               //  previous input in a cxForm.
-               // For enter or down arrow, interpret that
-               //  as a successful exit.
-               if (lastKey)
+               if (lastKey == KEY_UP)
                {
                   setReturnCode(cxID_QUIT);
                }
@@ -2195,384 +2151,174 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
                continueOn = false;
                break;
             case KEY_HOME:
-            case KEY_SEND:  // sEND=HOME
-               // Move the cursor to the start of the text
-               wmove(mWindow, y, mInputStartX);
-               // Don't place the cursor after the text next time
-               //  through the input loop
-               moveCursor = false;
+            case KEY_SEND:
+               mCursorPos = 0;
+               ensureCursorVisible();
                break;
             case KEY_END:
             case KEY_END2:
             case KEY_END3:
-            case KEY_SHOME: // sHOME=END
-               // This used to move to the end of the input:
-               //wmove(mWindow, y, mInputStartX+mInputLen-1);
-               // But if the input is not full, that might not make sense..
-               //  So we should move the cursor to the highest horizontal
-               //  position we've seen so far (but add 1 because highestX
-               //  is the highest horizontal positon - 1):
-               wmove(mWindow, y, highestX+1);
-
-               // Don't place the cursor after the text next time
-               //  through the input loop
-               moveCursor = false;
+            case KEY_SHOME:
+               mCursorPos = (int)mValue.length();
+               ensureCursorVisible();
                break;
             case KEY_BACKSPACE:
-            case BACKSPACE: // Defined in cxKeyDefines.h
-            case KEY_DC:    // Delete character
-            case '\b':      // Backspace character
-               // If the cursor was in the first position
-               if (x == mInputStartX)
+            case BACKSPACE:
+            case '\b':
+               if (mCursorPos > 0)
                {
-                  // The cursor was in the first input position
-
-                  // If the value currently has only 1 character, then remove
-                  //  it (that's probably what the user intended).  Check
-                  //  prevInput rather than mValue because it's more up to date.
-                  if (prevInput.length() == 1)
-                  {
-                     prevInput = "";
-                     mValue = "";
-                     // Don't update prevInput later, because we just did now.
-                     updatePrevInput = false;
-                     // Because we have 1 less character, decrement highestX if
-                     //  it's still greater than the starting X position-1.
-                     if (highestX > mInputStartX-1)
-                     {
-                        --highestX;
-                     }
-                     // Write a space to clear out the input
-                     mvwaddch(mWindow, y, x, ' ');
-                     // Make sure the cursor is placed where it should be.
-                     wmove(mWindow, y, x);
-                     // Don't write the input value next time through the loop
-                     writeValue = false;
-                  }
-
-                  // If mExitOnBackspaceAtFront is true, then don't continue
-                  //  the input loop.
+                  // Delete the character before the cursor
+                  mValue.erase(mCursorPos - 1, 1);
+                  --mCursorPos;
+                  ensureCursorVisible();
+               }
+               else
+               {
+                  // Cursor at position 0
                   if (mExitOnBackspaceAtFront)
                   {
                      continueOn = false;
                   }
                }
-               else if (x >= highestX)
+               break;
+            case KEY_DC:
+               // Delete character at cursor position (forward delete)
+               if (mCursorPos < (int)mValue.length())
                {
-                  // The cursor was at the end of the value.
-                  doBackspace(y, x, prevInput);
-                  // Decrement highestX if it's still greater than the
-                  //  starting X position-1
-                  if (highestX > mInputStartX-1)
-                  {
-                     --highestX;
-                  }
-                  // Don't update prevInput
-                  updatePrevInput = false;
-
-                  wmove(mWindow, y, x-1);
-                  moveCursor = false;
-               }
-               else
-               {
-                  // The cursor was somewhere in the middle.  Delete the
-                  //  character at the cursor position from the value.
-                  int pos = x - mInputStartX - 1;
-                  prevInput = cxStringUtils::removeChar(prevInput, pos);
-                  // Don't update prevInput later, because we just did now.
-                  updatePrevInput = false;
-
-                  // Because we have 1 less character, decrement highestX if
-                  //  it's still greater than the starting X position-1.
-                  if (highestX > mInputStartX-1)
-                  {
-                     --highestX;
-                  }
-
-                  // Write the new value to the window
-                  // Pad the value with spaces on the right so that it will
-                  //  write over anything that may have been there before.
-                  string inputPadded = prevInput;
-                  int numSpaces = mInputLen - (int)(prevInput.length());
-                  inputPadded.append(numSpaces, ' ');
-                  mvwaddnstr(mWindow, y, mInputStartX, inputPadded.c_str(), mInputLen);
-                  // Don't write the input value next time through the loop
-                  writeValue = false;
-                  // Move the cursor where it should be
-                  wmove(mWindow, y, x-1);
-                  // Don't move the cursor next time, because we just did.
-                  moveCursor = false;
+                  mValue.erase(mCursorPos, 1);
+                  ensureCursorVisible();
                }
                break;
-            // For left & right keys, only allow the
-            //  user to move left/right if masking is
-            //  not enabled (so we don't have to worry
-            //  about characters changed in the middle).
             case KEY_LEFT:
-               // If the user is using a Wyse50 terminal, then
-               //  do a backspace.  Otherwise, let the user move
-               //  the cursor over without deleting.
                if (cxBase::termType == "wy50")
                {
-                  doBackspace(y, x, prevInput);
-                  // Don't update prevInput
-                  updatePrevInput = false;
+                  // Wyse50 terminal: backspace behavior
+                  if (mCursorPos > 0)
+                  {
+                     mValue.erase(mCursorPos - 1, 1);
+                     --mCursorPos;
+                     ensureCursorVisible();
+                  }
                }
-               else
+               else if (mCursorPos > 0)
                {
                   if (!mMasked)
                   {
-                     wmove(mWindow, y, x-1);
+                     --mCursorPos;
+                     ensureCursorVisible();
                   }
                }
-               // Don't move the cursor next time around
-               moveCursor = false;
+               else if (mExitOnArrowAtBoundary)
+               {
+                  // Cursor at position 0 - exit so the container can
+                  // navigate to the previous cell
+                  setReturnCode(cxID_QUIT);
+                  continueOn = false;
+               }
                break;
             case KEY_RIGHT:
-               // Allow the user to move right, if the input text is not
-               //  masked, and if the cursor is not beyond the text in the
-               //  input.
-               // Note: x - mInputStartX is the position of the cursor where
-               //  a horizontal value of 0 is the position after the label.
-               if (!mMasked && ((x - mInputStartX) < (int)(cxInput::getValue().length())))
+               if (!mMasked && mCursorPos < (int)mValue.length())
                {
-                  wmove(mWindow, y, x+1);
+                  ++mCursorPos;
+                  ensureCursorVisible();
                }
-               // Don't move the cursor next time around
-               moveCursor = false;
+               else if (mExitOnArrowAtBoundary && mCursorPos >= (int)mValue.length())
+               {
+                  // Cursor at end of text - exit so the container can
+                  // navigate to the next cell
+                  setReturnCode(cxID_EXIT);
+                  continueOn = false;
+               }
                break;
-            case ERR:   // Error getting a key
+            case ERR:
                break;
-            // Process any other key
             default:
-               // Update highestX if appropriate.
-               if (isPrintable(lastKey) && (x > highestX))
-               {
-                  highestX = x;
-               }
+            {
+               // Process any functions tied to this keypress
+               bool functionExists = false;
+               continueOn = handleFunctionForLastKey(&functionExists);
+               continueOn = (continueOn && !mLeaveNow);
 
+               if (!functionExists)
                {
-                  // Process any functions that may be tied to
-                  //  the last keypress.
-                  bool functionExists = false;
-                  continueOn = handleFunctionForLastKey(&functionExists);
-                  // If mLeaveNow was set true, then leave the input loop.
-                  continueOn = (continueOn && !mLeaveNow);
-
-                  // If no function exists for the current key, then treat it
-                  //  as another keypress from the user.
-                  if (!functionExists)
+                  if (isPrintable(lastKey))
                   {
-                     if (isPrintable(lastKey))
-                     {
-                        // Deal with input masking
-                        if (mMasked)
-                        {
-                           mValue += char(lastKey);
-                           waddch(mWindow, mMaskChar);
-                        }
-                        else
-                        {
-                           // Add the key to the window and input if the user
-                           //  typed a printable character.
-                           waddch(mWindow, char(lastKey));
-                           // Save the current mValue, in case the user moved
-                           //  the cursor home, etc. and mValue has characters
-                           //  past the current horizontal position
-                           //string valueBackup = mValue;
-                           getInputText(mValue, x, true);
-                           wmove(mWindow, y, x); // because getInput moves the cursor.
-                        }
-                     }
-                     // If the input is not valid, then deal with it.
-                     // Look for the last capital letter in the validator string..
-                     //  If there is one, then only validate the string if it
-                     //  has enough characters.
-                     int lastCapIndex = indexOfLastCap(mValidator.getValidatorStr());
-                     bool canValidate = true;
-                     if (lastCapIndex > -1)
-                     {
-                        canValidate = (mValue.length() >= (unsigned)lastCapIndex + 1);
-                     }
-                     if (canValidate)
-                     {
-                        if (mValidator.textIsValid(mValue))
-                        {
-                           // If the length of the input matches
-                           //  the length of the validator string,
-                           //  place the cursor at the last
-                           //  character in the window.
-                           if ((unsigned)(x - mInputStartX + 1) ==
-                               mValidator.getValidatorStr().length())
-                               {
-                              wmove(mWindow, y, x-1);
-                           }
-                        }
-                        else
-                        {
-                           // The text is not valid at this point, so we have
-                           //  to deal with it.
-                           // Remove the invalid character from mValue and prevInput.
-                           if (mValue.length() > 0)
-                           {
-                              mValue.erase(mValue.length()-1);
-                           }
-                           if (!mMasked)
-                           {
-                              // No masking - Remove the invalid character from
-                              //  prevInput
-                              if (prevInput.length() > 0)
-                              {
-                                 // Updated 2/26
-                                 //prevInput.erase(prevInput.length()-1);
-                              }
-                           }
+                     // Check if we can insert (max length check)
+                     bool canInsert = true;
+                     if (mMaxInputLength > 0 && (int)mValue.length() >= mMaxInputLength)
+                        canInsert = false;
 
-                           // Since the current character is invalid, erase it.
-                           wmove(mWindow, y, x);
-                           // Replace the invalid character with the previous
-                           //  character at this position, or a space if there
-                           //  was no previous character at this location.  Also,
-                           //  this only makes sense if masking is not being done.
-                           if (((int)prevInput.length() > x - mInputStartX) && (!mMasked))
-                           {
-                              waddch(mWindow, prevInput[x - mInputStartX]);
-                           }
-                           else
-                           {
-                              waddch(mWindow, ' ');
-                           }
-                           // Move the cursor back 1 position to the left,
-                           //  but only if the cursor position is not at the
-                           //  rightmost edge (this is an edge case that
-                           //  seemed to be erasing the last character if it
-                           //  was valid).
-                           if (x < (mRightMax - left()))
-                           {
-                              wmove(mWindow, y, x-1);
-                           }
+                     if (canInsert)
+                     {
+                        // Insert the character at mCursorPos
+                        mValue.insert(mCursorPos, 1, (char)lastKey);
+                        ++mCursorPos;
 
-                           updatePrevInput = false;
+                        // Validate the new text
+                        int lastCapIndex = indexOfLastCap(mValidator.getValidatorStr());
+                        bool canValidate = true;
+                        if (lastCapIndex > -1)
+                        {
+                           canValidate = (mValue.length() >= (unsigned)lastCapIndex + 1);
+                        }
+                        if (canValidate && !mValidator.textIsValid(mValue))
+                        {
+                           // Invalid - remove the character we just inserted
+                           --mCursorPos;
+                           mValue.erase(mCursorPos, 1);
                         }
                      }
 
-                     // Make sure the cursor is still enabled
+                     ensureCursorVisible();
                      curs_set(1);
                   }
 
-                  // Check the parent multi-line input to see if what the user
-                  //  has typed is in its list of valid values, and if so, try
-                  //  to fill in the rest.
+                  // Check parent multi-line input for auto-fill
                   if (mParentMLInput != nullptr)
                   {
                      mParentMLInput->autoFillFromValidOptions(true);
-                     // If this input is full, then stop.
                      if (isFull())
                      {
                         continueOn = false;
                      }
                      else
                      {
-                        // x needs to be updated to reflect where the cursor
-                        //  is.
-                        x = mInputStartX + (int)(mValue.length()) - 1;
-                        // Also update highestX if we need to.
-                        if (x > highestX)
-                        {
-                           highestX = x;
-                        }
-                        updatePrevInput = true;
+                        mCursorPos = (int)mValue.length();
+                        ensureCursorVisible();
                      }
                   }
                }
                break;
-         }
-
-         // Run the onKey function
-         // In case the onKey function will remove characters from the
-         //  input value, keep track of whether the value was shortened,
-         //  in which case the focus should stay on the input.
-         bool valueShortened = false;
-         if (mRunOnKeyFunction)
-         {
-            // Keep track of the input value before & after the onKey function
-            //  runs so that we can tell if it was shortened.
-            string oldValue = getValue();
-            runOnKeyFunction();
-            string newValue = getValue();
-            if (newValue.length() < oldValue.length())
-            {
-               valueShortened = true;
             }
          }
 
-         // Update the current vertical & horizontal position in the window
-         getyx(mWindow, y, x);
-
-         // June 11, 2007: The following doesn't seem necessary.  It was
-         //  causing a bug where if you type some stuff, back up with the left
-         //  arrow, and then type a character, it would not keep the text after
-         //  the character:
-         /*
-         // If the last keypress was not a printable character, then set
-         //  highestX to the end of the text in the input - This is needed
-         //  so that when getInputText() is called with highestText(), the
-         //  value it gets is correct.  There are situations when the cursor
-         //  might not be at the last value of the text in the input, in which
-         //  case getInputText() wouldn't get all of the text.
-         if (!isPrintable(getLastKey())) {
-            highestX = (int)(mValue.length()) + mInputStartX - 1;
-         }
-         */
-
-         // Update prevInput for this iteration (if no masking)
-         if (!mMasked)
+         // Run the onKey function
+         if (mRunOnKeyFunction)
          {
-            if (updatePrevInput)
+            string oldValue = getValue();
+            runOnKeyFunction();
+            string newValue = getValue();
+            // If onKey function changed the value, update cursor
+            if (newValue != oldValue)
             {
-               getInputText(prevInput, highestX, true);
-               wmove(mWindow, y, x); // because getInputText() moves the cursor.
+               mCursorPos = (int)mValue.length();
+               ensureCursorVisible();
             }
          }
 
          mJustStartedFocus = false;
 
-         // Decide whether focus should leave this input.  Note: for a
-         //  borderless input window, we can never tell if the cursor went
-         //  beyond the limit because it never will..  So if the cursor
-         //  reaches the limit at the end of this loop, then exit if
-         //  mExitOnFull is true, and if the input was not shortened in the
-         //  process of the user typing (i.e., by an onKey function).
-         if (!hasBorder())
+         // Check if input is full and should exit (for non-bordered inputs)
+         if (isFull() && mExitOnFull)
          {
-            if ((x == rightLimit) && mExitOnFull && !valueShortened)
-            {
-               setReturnCode(cxID_EXIT);
-               break;
-            }
+            setReturnCode(cxID_EXIT);
+            break;
          }
-
-         moveCursor = isPrintable(lastKey);
-         /*
-         // If the user didn't want to go sideways or home/end, or press
-         //  backspace, then let the cursor be moved next time around.
-         if ((lastKey != KEY_LEFT) && (lastKey != KEY_RIGHT) &&
-             (lastKey != KEY_HOME) && (lastKey != KEY_END) &&
-             (lastKey != KEY_SHOME) && (lastKey != KEY_SEND) &&
-             (lastKey != KEY_END2) && (lastKey != KEY_BACKSPACE) &&
-             (lastKey != BACKSPACE) && (lastKey != KEY_DC) &&
-             (lastKey != '\b')) {
-            moveCursor = true;
-         }
-         */
       }
    }
-   // If masking is not being used, make sure mValue is updated by grabbing
-   //  the text from the input between mInputStartX and highestX.
-   if (!mMasked)
-   {
-      getInputText(mValue, highestX, false);
-   }
+
+   // Update prevInput to reflect final mValue (for compatibility)
+   prevInput = mValue;
 
    // Turn off the value color and disable the message attributes
    if (useColors)
@@ -2581,7 +2327,6 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
    }
    disableValueAttrs();
 
-   // mLeaveNow should be false
    mLeaveNow = false;
 
    return(getReturnCode());

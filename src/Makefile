@@ -63,7 +63,7 @@ else
    endif
 endif
 
-WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDate.o cxDatePicker.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxInput.o cxMenu.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxOpenFileDialog.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o cxBorderChars.o cxBorderStyles.o
+WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDate.o cxDatePicker.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxGrid.o cxInput.o cxLabel.o cxMenu.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxOpenFileDialog.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o cxBorderChars.o cxBorderStyles.o
 STATIC_LIB = libcxWidgets.a
 
 all: $(DYNAMIC_LIB) $(STATIC_LIB) testApp keys cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test_sizing test_wordwrap examples
@@ -141,8 +141,14 @@ cxForm.o: cxForm.h cxForm.cpp cxWindow.o cxMultiLineInput.o cxComboBox.o cxMenu.
 cxFunction.o: cxFunction.h cxFunction.cpp
 	$(CC) -c $(CFLAGS) -o cxFunction.o cxFunction.cpp
 
+cxGrid.o: cxGrid.h cxGrid.cpp cxWindow.o cxInput.o cxLabel.o cxButton.o cxBase.o cxFunction.o
+	$(CC) -c $(CFLAGS) -o cxGrid.o cxGrid.cpp
+
 cxInput.o: cxInput.h cxInput.cpp cxInputOptions.h cxColors.h cxWindow.o cxFunction.o cxTextValidator.o cxStringUtils.o cxBase.o
 	$(CC) -c $(CFLAGS) -o cxInput.o cxInput.cpp
+
+cxLabel.o: cxLabel.h cxLabel.cpp cxWindow.o cxBase.o
+	$(CC) -c $(CFLAGS) -o cxLabel.o cxLabel.cpp
 
 cxMenu.o: cxMenu.h cxMenu.cpp cxMenuItemType.h cxWindow.o cxFunction.o cxBase.o cxMultiLineInput.o cxStringUtils.o
 	$(CC) -c $(CFLAGS) -o cxMenu.o cxMenu.cpp

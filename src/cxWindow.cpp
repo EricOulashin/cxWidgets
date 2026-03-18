@@ -1496,6 +1496,14 @@ long cxWindow::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows)
                   case KEY_MOUSE: // Mouse event
                      if (getmouse(&mMouse) == OK)
                      {
+                        // If mExitOnMouseOutside is set and the click was
+                        //  outside this window, exit the input loop.
+                        if (mExitOnMouseOutside && !pointIsInWindow(mMouse.y, mMouse.x))
+                        {
+                           mReturnCode = cxID_QUIT;
+                           continueOn = false;
+                           break;
+                        }
                         // If this is just a cxWindow, then if the parent
                         //  window is a cxPanel, quit the input loop.  This
                         //  could allow the user to go to another window.
@@ -2298,6 +2306,16 @@ bool cxWindow::getDisableCursorOnShow() const
 {
    return(mDisableCursorOnShow);
 } // getDisableCursorOnShow
+
+bool cxWindow::getExitOnMouseOutside() const
+{
+   return mExitOnMouseOutside;
+} // getExitOnMouseOutside
+
+void cxWindow::setExitOnMouseOutside(bool pExitOnMouseOutside)
+{
+   mExitOnMouseOutside = pExitOnMouseOutside;
+} // setExitOnMouseOutside
 
 int cxWindow::getLastKey() const
 {
