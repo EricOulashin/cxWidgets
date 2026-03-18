@@ -123,6 +123,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizTitleAlignment(eHP_LEFT),
      mHorizMessageAlignment(eHP_LEFT),
      mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
      mDrawMessage(true),
      mDrawSpecialChars(true),
      mOnFocusFunction(nullptr),
@@ -188,6 +189,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizTitleAlignment(eHP_LEFT),
      mHorizMessageAlignment(eHP_LEFT),
      mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
      mDrawMessage(true),
      mDrawSpecialChars(true),
      mOnFocusFunction(nullptr),
@@ -258,6 +260,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizTitleAlignment(eHP_LEFT),
      mHorizMessageAlignment(eHP_LEFT),
      mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
      mDrawMessage(true),
      mDrawSpecialChars(true),
      mOnFocusFunction(nullptr),
@@ -325,6 +328,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizTitleAlignment(eHP_LEFT),
      mHorizMessageAlignment(eHP_LEFT),
      mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
      mDrawMessage(true),
      mDrawSpecialChars(true),
      mOnFocusFunction(nullptr),
@@ -394,6 +398,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mHorizTitleAlignment(eHP_LEFT),
      mHorizMessageAlignment(eHP_LEFT),
      mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
      mDrawMessage(true),
      mDrawSpecialChars(true),
      mOnFocusFunction(nullptr),
@@ -460,6 +465,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow, const string& pMessage,
      mHorizTitleAlignment(eHP_LEFT),
      mHorizMessageAlignment(eHP_LEFT),
      mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
      mDrawMessage(true),
      mDrawSpecialChars(true),
      mOnFocusFunction(nullptr),
@@ -527,6 +533,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
      mHorizTitleAlignment(eHP_LEFT),
      mHorizMessageAlignment(eHP_LEFT),
      mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
      mDrawMessage(true),
      mDrawSpecialChars(true),
      mOnFocusFunction(nullptr),
@@ -1218,6 +1225,16 @@ eHPosition cxWindow::getHorizStatusAlignment() const
    }
 } // getHorizStatusAlignment
 
+void cxWindow::setVerticalMessageAlignment(eVPosition pVAlignment)
+{
+   mVerticalMessageAlignment = pVAlignment;
+} // setVerticalMessageAlignment
+
+eVPosition cxWindow::getVerticalMessageAlignment() const
+{
+   return(mVerticalMessageAlignment);
+} // getVerticalMessageAlignment
+
 void cxWindow::setExtTitleWindow(cxWindow *pWindow, bool pRefreshTitle)
 {
    // If pWindow is not nullptr, then move the title into the window
@@ -1879,7 +1896,7 @@ void cxWindow::drawBorder(int pHeight, int pWidth)
 
 void cxWindow::drawBorder()
 {
-   drawBorder(0, 0, bottom()-top(), right()-left(), mDrawBorderTop, mDrawBorderBottom, mDrawBorderLeft, mDrawBorderRight);
+   drawBorder(0, 0, height(), width(), mDrawBorderTop, mDrawBorderBottom, mDrawBorderLeft, mDrawBorderRight);
 } // drawBorder
 
 // returns the top of the window
@@ -3486,6 +3503,15 @@ void cxWindow::drawMessage()
    }
    if (height() > 0)
    {
+      // Figure out the width of the message area
+      int innerWidth = width();
+      int innerHeight = height();
+      if (hasBorder())
+      {
+         innerWidth -= 2;
+         innerHeight -= 2;
+      }
+
       // Start at row 0 & column 0 if there are no borders, or row 1 & column
       //  1 if there are borders.
       int currentRowInWindow = 0;
@@ -3495,21 +3521,27 @@ void cxWindow::drawMessage()
          leftmostCol = 1;
          currentRowInWindow = 1;
       }
-      wmove(mWindow, currentRowInWindow, leftmostCol);
 
-      // Figure out the width of the message area
-      int innerWidth = width();
-      if (hasBorder())
+      // Adjust starting row based on vertical alignment
+      int numMessageLines = (int)mMessageLines.size();
+      switch (mVerticalMessageAlignment)
       {
-         innerWidth -= 2;
+         case eVP_CENTER:
+            currentRowInWindow += (innerHeight - numMessageLines) / 2;
+            break;
+         case eVP_BOTTOM:
+            currentRowInWindow += (innerHeight - numMessageLines);
+            break;
+         case eVP_TOP:
+         default:
+            break;
+      }
+      if (currentRowInWindow < (hasBorder() ? 1 : 0))
+      {
+         currentRowInWindow = (hasBorder() ? 1 : 0);
       }
 
-   // spin thru each line
-   int startX = 0; // For horizontal text alignment
-   if (hasBorder())
-   {
-      startX = 1;
-   }
+      wmove(mWindow, currentRowInWindow, leftmostCol);
 
    // Don't display more rows than the window can hold.
    int rowLimit = height();
@@ -3522,61 +3554,44 @@ void cxWindow::drawMessage()
    {
       if (currentRowInWindow < rowLimit)
       {
+         // Figure out the horizontal starting position (based
+         //  on horizontal alignment)
+         int currentStartX = leftmostCol;
+         switch(mHorizMessageAlignment)
+         {
+            case eHP_RIGHT:
+               currentStartX = leftmostCol + innerWidth - (int)msgLine.length();
+               break;
+            case eHP_CENTER:
+               currentStartX = leftmostCol + (innerWidth / 2) - ((int)msgLine.length() / 2);
+               break;
+            case eHP_LEFT:
+            default:
+               currentStartX = leftmostCol;
+               break;
+         }
+         if (currentStartX < leftmostCol) currentStartX = leftmostCol;
+
          // If we're to use underlines when writing the message, then
          //  use writeWithHighlighting().  Otherwise, write the message
          //  line verbatim.
          if (mHotkeyHighlighting)
          {
-            writeWithHighlighting(mWindow, msgLine, currentRowInWindow, startX,
+            writeWithHighlighting(mWindow, msgLine, currentRowInWindow, currentStartX,
                                 innerWidth);
-            int visualStrLen = (int)cxBase::visualStrLen(msgLine);
-            for (int i = startX+visualStrLen; i <= innerWidth; ++i)
+            // Fill in the rest of the line with spaces
+            int visualLen = (int)cxBase::visualStrLen(msgLine);
+            for (int i = currentStartX + visualLen; i < leftmostCol + innerWidth; ++i)
             {
                mvwaddch(mWindow, currentRowInWindow, i, ' ');
             }
          }
          else
          {
-            std::ostringstream os;
-
-            // Figure out the horizontal starting position (based
-            //  on horizontal alignment)
-            switch(mHorizMessageAlignment)
-            {
-               case eHP_RIGHT:
-                  // Use right justification in os (in prep for mvwprintw())
-                  os << "%" << innerWidth << "s";
-                  break;
-               case eHP_CENTER:
-                  startX = centerCol() - (int)msgLine.length() / 2;
-                  // Write spaces up to startX (to fill in the background color)
-                  {
-                     std::ostringstream osCenter;
-                     if (hasBorder())
-                     {
-                        osCenter << "%-" << startX-1 << "s";
-                     }
-                     else
-                     {
-                        osCenter << "%-" << startX << "s";
-                     }
-                     mvwprintw(mWindow, currentRowInWindow, leftmostCol,
-                               (char*)osCenter.str().c_str(), " ");
-                  }
-
-                  // Use left justification for the message line (in prep for mvwprintw())
-                  os << "%-" << innerWidth - startX << "s";
-                  break;
-               case eHP_LEFT:
-               default:
-                  // Use left justification in os (in prep for mvwprintw())
-                  os << "%-" << innerWidth << "s";
-                  break;
-            }
-
-            // Write the message line
-            mvwprintw(mWindow, currentRowInWindow, startX, (char*)os.str().c_str(),
-                      msgLine.c_str());
+            // Clear the line first to ensure background color is consistent
+            wmove(mWindow, currentRowInWindow, leftmostCol);
+            for(int i=0; i<innerWidth; ++i) waddch(mWindow, ' ');
+            mvwaddstr(mWindow, currentRowInWindow, currentStartX, msgLine.c_str());
          }
 
          ++currentRowInWindow;
@@ -4656,33 +4671,42 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
 
                   // Check the length of the current word against
                   // the inner width.
-                  if (hasBorder())
+                  if (pResizeVertically)
                   {
-                     if ((int)(word.length()) <= maxWidth-2)
+                     if (hasBorder())
                      {
-                        innerWidth = (int)(word.length());
-                        newWidth = innerWidth + 2;
+                        if ((int)(word.length()) <= maxWidth-2)
+                        {
+                           innerWidth = (int)(word.length());
+                           newWidth = innerWidth + 2;
+                        }
+                        else
+                        {
+                           // Truncate the word..  (a better way might
+                           // be to split it across 2 lines?)
+                           word = word.substr(0, innerWidth);
+                        }
                      }
                      else
                      {
-                        // Truncate the word..  (a better way might
-                        // be to split it across 2 lines?)
-                        word = word.substr(0, innerWidth);
+                        if ((int)(word.length()) <= maxWidth)
+                        {
+                           innerWidth = (int)(word.length());
+                           newWidth = innerWidth;
+                        }
+                        else
+                        {
+                           // Truncate the word..  (a better way might
+                           //  be to split it across 2 lines?)
+                           word = word.substr(0, innerWidth);
+                        }
                      }
                   }
                   else
                   {
-                     if ((int)(word.length()) <= maxWidth)
-                     {
-                        innerWidth = (int)(word.length());
-                        newWidth = innerWidth;
-                     }
-                     else
-                     {
-                        // Truncate the word..  (a better way might
-                        //  be to split it across 2 lines?)
-                        word = word.substr(0, innerWidth);
-                     }
+                     // If we're not resizing vertically, we probably shouldn't
+                     // resize horizontally either.  Truncate the word.
+                     word = word.substr(0, innerWidth);
                   }
 
                   if (word != "")
@@ -4695,7 +4719,7 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
                   // Add the current word to currentLine.  Update the height
                   //  of the window and update mMessageLines if currentLine
                   //  is long enough to fill the width of the window.
-                  if ((int)(currentLine + word).length() > innerWidth)
+                  if ((int)(currentLine.length() + word.length() + (currentLine.empty() ? 0 : 1)) > innerWidth)
                   {
                      if (currentLine != "")
                      {
@@ -4709,6 +4733,10 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
                   }
                   else
                   {
+                     if (!currentLine.empty() && currentLine.back() != ' ')
+                     {
+                        currentLine += " ";
+                     }
                      currentLine += word + " ";
                   }
                }
@@ -5452,6 +5480,10 @@ void cxWindow::writeBorderStrings(const map<int, string>& pStrings, int pVPos,
    //  to worry about the horizontal positions (the key value) being
    //  out of order.
    map<int, string>::const_iterator lastIter = pStrings.end();
+   if (pStrings.empty())
+   {
+      return;
+   }
    --lastIter;
    map<int, string>::const_iterator iter = pStrings.begin();
    for (; iter != pStrings.end(); ++iter)

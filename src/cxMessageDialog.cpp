@@ -210,7 +210,7 @@ long cxMessageDialog::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubw
       {
          if (pShowSelf)
          {
-            show(pBringToTop, pShowSubwindows);
+            cxWindow::show(pBringToTop, pShowSubwindows);
          }
          // Disable the cursor (saving the current cursor state)
          int prevCursorState = curs_set(0);
@@ -532,7 +532,3 @@ long cxMessageDialog::doInputLoop()
 
 // The show() is private in this class to prevent it from being called from the
 //  outside, but it is defined here just in case it is called within this class.
-inline long cxMessageDialog::show(bool pBringToTop, bool pShowSubwindows)
-{
-   return(cxWindow::show(pBringToTop, pShowSubwindows));
-} // show

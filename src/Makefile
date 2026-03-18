@@ -66,7 +66,12 @@ endif
 WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDate.o cxDatePicker.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxInput.o cxMenu.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxOpenFileDialog.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o cxBorderChars.o cxBorderStyles.o
 STATIC_LIB = libcxWidgets.a
 
-all: $(DYNAMIC_LIB) $(STATIC_LIB) testApp keys cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test_sizing
+all: $(DYNAMIC_LIB) $(STATIC_LIB) testApp keys cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test_sizing test_wordwrap examples
+
+examples: $(STATIC_LIB)
+	$(MAKE) -C ../examples/flashcard
+	$(MAKE) -C ../examples/centipede
+	$(MAKE) -C ../examples/snake
 
 test_sizing: ../tests/test_sizing.cpp $(STATIC_LIB)
 	$(CC) -o test_sizing $(CFLAGS) -I. ../tests/test_sizing.cpp $(STATIC_LIB) $(LIBS_OPT)
@@ -216,10 +221,14 @@ test_cxDate: test_cxDate.cpp $(WIDGETS_OBJS)
 test_cxValidators: test_cxValidators.cpp $(WIDGETS_OBJS)
 	$(CC) -o test_cxValidators $(CFLAGS) test_cxValidators.cpp $(WIDGETS_OBJS) $(LIBS_OPT)
 
-alltest: test_cxStringUtils test_cxDate test_cxValidators
+test_wordwrap: ../tests/test_wordwrap.cpp $(STATIC_LIB)
+	$(CC) -o test_wordwrap $(CFLAGS) -I. ../tests/test_wordwrap.cpp $(STATIC_LIB) $(LIBS_OPT)
+
+alltest: test_cxStringUtils test_cxDate test_cxValidators test_wordwrap
 	./test_cxStringUtils
 	./test_cxDate
 	./test_cxValidators
+	./test_wordwrap
 	@echo "Note: cxUnitTest requires ncurses tracing and might fail if not properly configured."
 	# ./cxUnitTest 
 	+make testcxInput
@@ -253,4 +262,7 @@ cxWidgets_wrap.cxx: $(CXH)
 
 # Cleanup
 clean:
-	rm -f *.o *.a *.so *.dylib $(STATIC_LIB) $(DYNAMIC_LIB) testApp cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test1 testcxInput keys trace test_sizing
+	rm -f *.o *.a *.so *.dylib $(STATIC_LIB) $(DYNAMIC_LIB) testApp cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test_wordwrap test1 testcxInput keys trace test_sizing
+	$(MAKE) -C ../examples/flashcard clean
+	$(MAKE) -C ../examples/centipede clean
+	$(MAKE) -C ../examples/snake clean

@@ -19,6 +19,8 @@ public:
     FlashcardApp(int pHeight, int pWidth) : cxWindow(nullptr, 0, 0, pHeight, pWidth) {
         setTitle("Flashcard Example");
         center();
+        setHorizMessageAlignment(eHP_CENTER);
+        setVerticalMessageAlignment(eVP_CENTER);
         mCurrentCardIdx = 0;
         mShowBack = false;
         loadCards("cards.txt");
@@ -65,31 +67,23 @@ public:
 
     void draw() {
         wclear(mWindow);
-        cxWindow::draw();
 
         if (mCards.empty()) {
+            cxWindow::draw();
             writeText(height() / 2, (width() / 2) - 10, "No cards available.", false);
         } else {
             const Card& card = mCards[mCurrentCardIdx];
-            std::string side = mShowBack ? "[ BACK ]" : "[ FRONT ]";
             std::string text = mShowBack ? card.back : card.front;
-
-            writeText(2, (width() / 2) - (side.length() / 2), side, false);
+            setMessage(text);
             
-            // Basic word wrap or just centering for now
-            // If text is long, we might need more complex drawing, but for examples simple is fine
-            if (text.length() < (size_t)width() - 4) {
-                writeText(height() / 2, (width() / 2) - (text.length() / 2), text, false);
-            } else {
-                // Simple split if too long (very basic)
-                writeText(height() / 2, 2, text.substr(0, width() - 4), false);
-                if (text.length() > (size_t)width() - 4) {
-                    writeText(height() / 2 + 1, 2, text.substr(width() - 4), false);
-                }
-            }
+            // Re-center vertical alignment if message changed height
+            setVerticalMessageAlignment(eVP_CENTER);
+
+            cxWindow::draw();
+
+            std::string side = mShowBack ? "[ BACK ]" : "[ FRONT ]";
+            writeText(2, (width() / 2) - (side.length() / 2), side, false);
         }
-        
-        cxBase::updateWindows();
     }
 
     void showHelp() {
@@ -118,6 +112,7 @@ public:
         bool quit = false;
         while (!quit) {
             draw();
+            cxBase::updateWindows();
             int ch = wgetch(mWindow);
             switch (ch) {
                 case KEY_RIGHT:

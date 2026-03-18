@@ -570,6 +570,18 @@ class cxWindow : public cxObject
       eHPosition getHorizStatusAlignment() const;
 
       /**
+       * \brief Sets the vertical alignment of the message text
+       * @param pVAlignment The vertical alignment - Can be eVP_CENTER, eVP_TOP, or eVP_BOTTOM
+       */
+      void setVerticalMessageAlignment(eVPosition pVAlignment);
+
+      /**
+       * \brief Accessor for the vertical message text alignment
+       * @return The vertical message alignment - Can be eVP_CENTER, eVP_TOP, or eVP_BOTTOM
+       */
+      eVPosition getVerticalMessageAlignment() const;
+
+      /**
        * \brief Sets an external cxWindow object to be used for the title, rather
        * \brief than the title line of the window.
        * @param pWindow A pointer to the external window to use for the title.
@@ -2617,6 +2629,7 @@ class cxWindow : public cxObject
       eHPosition mHorizTitleAlignment = eHP_LEFT;   // Horizontal title alignment
       eHPosition mHorizMessageAlignment = eHP_LEFT; // Horizontal message alignment
       eHPosition mHorizStatusAlignment = eHP_LEFT;  // Horizontal status alignment
+      eVPosition mVerticalMessageAlignment = eVP_TOP; // Vertical message alignment
 
       bool mDrawMessage = true;      // Whether or not to draw the message
       bool mDrawTitle = true;        // Whether or not to draw the title
