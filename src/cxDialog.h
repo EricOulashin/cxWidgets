@@ -29,8 +29,8 @@ class cxDialog : public cxWindow
        * @param pStatus The status (appears in the bottom border).
        */
       explicit cxDialog(cxWindow *pParentWindow = nullptr, int pRow = 0,
-                        int pCol = 0, int pHeight = DEFAULT_HEIGHT,
-                        int pWidth = DEFAULT_WIDTH,
+                        int pCol = 0, int pHeight = 0,
+                        int pWidth = 0,
                         const std::string& pTitle = "",
                         const std::string& pMessage = "",
                         const std::string& pStatus = "");
