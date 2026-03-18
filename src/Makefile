@@ -63,7 +63,7 @@ else
    endif
 endif
 
-WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDate.o cxDatePicker.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxGrid.o cxInput.o cxLabel.o cxMenu.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxOpenFileDialog.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o cxBorderChars.o cxBorderStyles.o
+WIDGETS_OBJS = cxApp.o cxBase.o cxButton.o cxComboBox.o cxDate.o cxDatePicker.o cxDialog.o cxFileViewer.o cxForm.o cxFunction.o cxGrid.o cxInput.o cxLabel.o cxMenu.o cxMenuBar.o cxMessageDialog.o cxMultiForm.o cxMultiLineInput.o cxNotebook.o cxObject.o cxOpenFileDialog.o cxPanel.o cxScrolledWindow.o cxSearchPanel.o cxStringUtils.o cxTextValidator.o cxTimer.o cxValidators.o cxWidgetsException.o cxWindow.o cxBorderChars.o cxBorderStyles.o
 STATIC_LIB = libcxWidgets.a
 
 all: $(DYNAMIC_LIB) $(STATIC_LIB) testApp keys cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test_sizing test_wordwrap examples
@@ -72,6 +72,7 @@ examples: $(STATIC_LIB)
 	$(MAKE) -C ../examples/flashcard
 	$(MAKE) -C ../examples/centipede
 	$(MAKE) -C ../examples/snake
+	$(MAKE) -C ../examples/spreadsheet
 
 test_sizing: ../tests/test_sizing.cpp $(STATIC_LIB)
 	$(CC) -o test_sizing $(CFLAGS) -I. ../tests/test_sizing.cpp $(STATIC_LIB) $(LIBS_OPT)
@@ -152,6 +153,9 @@ cxLabel.o: cxLabel.h cxLabel.cpp cxWindow.o cxBase.o
 
 cxMenu.o: cxMenu.h cxMenu.cpp cxMenuItemType.h cxWindow.o cxFunction.o cxBase.o cxMultiLineInput.o cxStringUtils.o
 	$(CC) -c $(CFLAGS) -o cxMenu.o cxMenu.cpp
+
+cxMenuBar.o: cxMenuBar.h cxMenuBar.cpp cxWindow.o cxMenu.o cxFunction.o cxBase.o
+	$(CC) -c $(CFLAGS) -o cxMenuBar.o cxMenuBar.cpp
 
 cxMessageDialog.o: cxMessageDialog.h cxMessageDialog.cpp cxMessageDialogStyles.h cxDialog.o cxButton.o
 	$(CC) -c $(CFLAGS) -o cxMessageDialog.o cxMessageDialog.cpp
