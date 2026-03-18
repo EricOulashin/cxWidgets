@@ -40,7 +40,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
 	  mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
 	  mBorderStyle(pBorderStyle)
 {
-   // If pHeight & pWidth are <= 0, then use them to control the height of
+   // If pHeight & pWidth are < 0, then use them to control the height of
    //  the window based on the parent window's height/width (or the screen's
    //  height & width).  i.e., if pHeight is -1, then this window will be
    //  1 row shorter than the parent window/screen.
@@ -49,7 +49,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    //  too big.
    const int maxHeight = (int)(cxBase::height()) - pRow;
    const int maxWidth = (int)(cxBase::width()) - pCol;
-   if (pHeight <= 0)
+   if (pHeight < 0)
    {
       if (pParentWindow != nullptr)
       {
@@ -62,12 +62,12 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    }
    // If pHeight is more than the maximum possible window height that the
    //  screen can display, use the maximum height.
-   else if (pHeight > maxHeight)
+   else if ((pHeight > 0) && (pHeight > maxHeight))
    {
       pHeight = (int)(cxBase::height());
    }
 
-   if (pWidth <= 0)
+   if (pWidth < 0)
    {
       if (pParentWindow != nullptr)
       {
@@ -78,11 +78,14 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
          pWidth = cxBase::width() + pWidth;
       }
    }
-   else if (pWidth > maxWidth)
+   else if ((pWidth > 0) && (pWidth > maxWidth))
    {
       pWidth = (int)(cxBase::width());
    }
 
+   // Ensure that if pHeight or pWidth is 0, they are passed as 0 to init()
+   // to trigger auto-sizing logic. Previous version might have had logic
+   // that overridden 0 with full-screen dimensions.
    init(pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus, pParentWindow);
 
    // If an external title window/external status window are specified,
@@ -3492,7 +3495,7 @@ void cxWindow::drawMessage()
          leftmostCol = 1;
          currentRowInWindow = 1;
       }
-      wmove(mWindow, leftmostCol, currentRowInWindow);
+      wmove(mWindow, currentRowInWindow, leftmostCol);
 
       // Figure out the width of the message area
       int innerWidth = width();
@@ -3501,85 +3504,94 @@ void cxWindow::drawMessage()
          innerWidth -= 2;
       }
 
-      // spin thru each line
-      int startX = 0; // For horizontal text alignment
-      if (hasBorder())
-      {
-         startX = 1;
-      }
+   // spin thru each line
+   int startX = 0; // For horizontal text alignment
+   if (hasBorder())
+   {
+      startX = 1;
+   }
 
-      for (const string& msgLine : mMessageLines)
+   // Don't display more rows than the window can hold.
+   int rowLimit = height();
+   if (hasBorder())
+   {
+      --rowLimit;
+   }
+
+   for (const string& msgLine : mMessageLines)
+   {
+      if (currentRowInWindow < rowLimit)
       {
-         // Don't display more rows than the window can hold.
-         if (currentRowInWindow < height())
+         // If we're to use underlines when writing the message, then
+         //  use writeWithHighlighting().  Otherwise, write the message
+         //  line verbatim.
+         if (mHotkeyHighlighting)
          {
-            // If we're to use underlines when writing the message, then
-            //  use writeWithHighlighting().  Otherwise, write the message
-            //  line verbatim.
-            if (mHotkeyHighlighting)
+            writeWithHighlighting(mWindow, msgLine, currentRowInWindow, startX,
+                                innerWidth);
+            int visualStrLen = (int)cxBase::visualStrLen(msgLine);
+            for (int i = startX+visualStrLen; i <= innerWidth; ++i)
             {
-               writeWithHighlighting(mWindow, msgLine, currentRowInWindow, startX,
-                                   innerWidth);
-               int visualStrLen = (int)cxBase::visualStrLen(msgLine);
-               for (int i = startX+visualStrLen; i <= innerWidth; ++i)
-               {
-                  mvwaddch(mWindow, currentRowInWindow, i, ' ');
-               }
+               mvwaddch(mWindow, currentRowInWindow, i, ' ');
             }
-            else
-            {
-               std::ostringstream os;
-
-               // Figure out the horizontal starting position (based
-               //  on horizontal alignment)
-               switch(mHorizMessageAlignment)
-               {
-                  case eHP_RIGHT:
-                     // Use right justification in os (in prep for mvwprintw())
-                     os << "%" << innerWidth << "s";
-                     break;
-                  case eHP_CENTER:
-                     startX = centerCol() - (int)msgLine.length() / 2;
-                     // Write spaces up to startX (to fill in the background color)
-                     {
-                        std::ostringstream osCenter;
-                        if (hasBorder())
-                        {
-                           osCenter << "%-" << startX-1 << "s";
-                        }
-                        else
-                        {
-                           osCenter << "%-" << startX << "s";
-                        }
-                        mvwprintw(mWindow, currentRowInWindow, leftmostCol,
-                                  (char*)osCenter.str().c_str(), " ");
-                     }
-
-                     // Use left justification for the message line (in prep for mvwprintw())
-                     os << "%-" << innerWidth - startX << "s";
-                     break;
-                  case eHP_LEFT:
-                  default:
-                     // Use left justification in os (in prep for mvwprintw())
-                     os << "%-" << innerWidth << "s";
-                     break;
-               }
-
-               // Write the message line
-               mvwprintw(mWindow, currentRowInWindow, startX, (char*)os.str().c_str(),
-                         msgLine.c_str());
-            }
-
-            ++currentRowInWindow;
          }
+         else
+         {
+            std::ostringstream os;
+
+            // Figure out the horizontal starting position (based
+            //  on horizontal alignment)
+            switch(mHorizMessageAlignment)
+            {
+               case eHP_RIGHT:
+                  // Use right justification in os (in prep for mvwprintw())
+                  os << "%" << innerWidth << "s";
+                  break;
+               case eHP_CENTER:
+                  startX = centerCol() - (int)msgLine.length() / 2;
+                  // Write spaces up to startX (to fill in the background color)
+                  {
+                     std::ostringstream osCenter;
+                     if (hasBorder())
+                     {
+                        osCenter << "%-" << startX-1 << "s";
+                     }
+                     else
+                     {
+                        osCenter << "%-" << startX << "s";
+                     }
+                     mvwprintw(mWindow, currentRowInWindow, leftmostCol,
+                               (char*)osCenter.str().c_str(), " ");
+                  }
+
+                  // Use left justification for the message line (in prep for mvwprintw())
+                  os << "%-" << innerWidth - startX << "s";
+                  break;
+               case eHP_LEFT:
+               default:
+                  // Use left justification in os (in prep for mvwprintw())
+                  os << "%-" << innerWidth << "s";
+                  break;
+            }
+
+            // Write the message line
+            mvwprintw(mWindow, currentRowInWindow, startX, (char*)os.str().c_str(),
+                      msgLine.c_str());
+         }
+
+         ++currentRowInWindow;
       }
-      // Fill in the remainder of the text area with spaces
-      //  (to fill in the background color)
-      int rowLimit = height();
-      if (hasBorder())
-      {
-         --rowLimit;
-      }
+   }
+   // Fill in the remainder of the text area with spaces
+   //  (to fill in the background color)
+   if (hasBorder())
+   {
+      rowLimit = height() - 1;
+   }
+   else
+   {
+      rowLimit = height();
+   }
       for ( ; currentRowInWindow < rowLimit; ++currentRowInWindow)
       {
          std::ostringstream os;
@@ -4463,60 +4475,40 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
                     const string& pStatus, cxWindow *pParentWindow,
                     bool pResizeVertically)
                     {
-   // If pHeight and pWidth are <= 0, this is probably unacceptable..
-   if (pHeight <= 0)
-   {
-      pHeight = 1;
-   }
-   if (pWidth <= 0)
-   {
-      pWidth = 1;
-   }
-   // Also validate pRow and pCol..
-   if ((pRow < 0) || (pRow > cxBase::bottom()))
-   {
-      pRow = 0;
-   }
-   if ((pCol < 0) || (pCol > cxBase::right()))
-   {
-      pCol = 0;
-   }
-
+   // If pHeight and pWidth are <= 0, we'll try to calculate them below
+   // unless they remain <= 0 after calculation.
    int newWidth = pWidth;   // if we have to override the width
    int newHeight = pHeight; // if we have to override the height
    const int maxHeight = (int)(cxBase::height()) - pRow;
    const int maxWidth = (int)(cxBase::width()) - pCol;
 
-   // Strip newlines from pMessage (if it has newlines,
+   // Split message on newlines (\n) (if it has newlines,
    // the message won't display correctly)
-   string message = cxStringUtils::stripNewlines(pMessage);
-   // If message is at least 15 characters, then set the width
-   // of the window to an arbitrary large width.  This should
-   // avoid having each word on its own line in the window.
-   const int someWidth = (cxBase::width() >= 30 ? 30 : cxBase::width());
-   if (message.length() >= 15)
+   //string message = cxStringUtils::stripNewlines(pMessage);
+   string message = pMessage;
+   // Find the length of the longest line in the message
+   int maxMsgLineLen = 0;
+   vector<string> initialLines;
+   cxStringUtils::SplitStringRegex(message, "\n", initialLines);
+   for (const string& line : initialLines)
    {
-      if (!hasBorder())
+      int currentLineLen = (mHotkeyHighlighting ? cxBase::visualStrLen(line) : line.length());
+      if (currentLineLen > maxMsgLineLen)
       {
-         if ((int)message.length() >= someWidth)
-         {
-            newWidth = someWidth;
-         }
+         maxMsgLineLen = currentLineLen;
       }
-      else
+   }
+
+   if (pWidth <= 0)
+   {
+      newWidth = maxMsgLineLen + (hasBorder() ? 2 : 0);
+      if (newWidth > maxWidth)
       {
-         if ((int)message.length() >= someWidth)
-         {
-            newWidth = someWidth + 2;
-         }
-         else
-         {
-            newWidth = message.length() + 2;
-         }
+         newWidth = maxWidth;
       }
    }
    // If pWidth is greater than newWidth, use pWidth instead.
-   if (pWidth > newWidth)
+   if (pWidth > 0 && pWidth > newWidth)
    {
       newWidth = pWidth;
    }
@@ -4604,9 +4596,11 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
       // Split message on newlines (\n)
       unsigned stringLen = 0;
       vector<string> iMessageLines;
-      // Note: We should be able to split on newlines using SplitStringRegex(),
-      // but it doesn't seem to be working.
-      SplitStringRegex(message, "\n", iMessageLines);
+      cxStringUtils::SplitStringRegex(message, "\n", iMessageLines);
+      if (iMessageLines.empty() && !message.empty())
+      {
+         iMessageLines.push_back(message);
+      }
       for (const string& msgLine : iMessageLines)
       {
          // If the current line is short enough to fit inside the window by
@@ -4631,7 +4625,7 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
          {
             string currentLine;  // Will be added to mMessageLines
             vector<string> words;
-            SplitStringRegex(msgLine, " ", words);
+            cxStringUtils::SplitStringRegex(msgLine, " ", words);
             for (string& word : words)
             {
                // If the current word is >= the inner width, set the
@@ -4747,6 +4741,12 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
       {
          newHeight = minHeight;
       }
+   }
+   else if (pHeight <= 0)
+   {
+      // If pHeight was 0 (auto-size), but pResizeVertically is false,
+      // we still need a height based on the message.
+      newHeight = (int)mMessageLines.size() + (hasBorder() ? 2 : 0);
    }
 
    // if we have something realistic to display...
@@ -5370,15 +5370,11 @@ void cxWindow::combineMessageLines(string& message)
    message.erase();
    for (const string& msgLine : mMessageLines)
    {
-      message += msgLine + " ";
-   }
-   // Remove a trailing space from message, if there is one.
-   if (message.length() > 0)
-   {
-      if (message[message.length()-1] == ' ')
+      if (!message.empty())
       {
-         message = message.substr(0, message.length()-1);
+         message += "\n";
       }
+      message += msgLine;
    }
 } // combineMessageLines
 

@@ -402,13 +402,6 @@ void cxBase::messageBox(const std::string& pTitle, const std::string& pMessage,
    msgDlg.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
-void cxBase::messageBox(const string& pMessage, const string& pStatus)
-{
-   cxMessageDialog msgDlg(nullptr, "Info", pMessage);
-   msgDlg.setStatus(pStatus);
-   msgDlg.showModal();
-   msgDlg.hide(); // Hide the window so it doesn't show anymore
-} // messageBox
 
 void cxBase::messageBox(const std::string& pMessage, const std::string& pStatus, int pHeight, int pWidth)
 {

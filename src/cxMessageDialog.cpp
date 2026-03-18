@@ -13,7 +13,7 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
                    const string& pMessage,
                    long pStyle,
                    const string& pStatus)
-   : cxDialog(pParentWindow, pRow, pCol, pHeight, pWidth, pTitle, pMessage, pStatus)
+   : cxDialog(pParentWindow, pRow, pCol, (pHeight == DEFAULT_HEIGHT ? 0 : pHeight), (pWidth == DEFAULT_WIDTH ? 0 : pWidth), pTitle, pMessage, pStatus)
 {
    // Set variables for the starting column & row
    //  & total width of the buttons
@@ -86,17 +86,16 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
    {
       minWidth += 2;
    }
-   int minHeight = OKBTN_HEIGHT + mMessageLines.size();
-   if (getBorderStyle() != eBS_NOBORDER)
-   {
-      minHeight += 2;
-   }
+   // Calculate required height: message lines + buttons (3) + borders (2)
+   int minHeight = OKBTN_HEIGHT + mMessageLines.size() + (getBorderStyle() != eBS_NOBORDER ? 2 : 0);
+   
    if ((width() < minWidth) || (height() < minHeight))
    {
-      resize(minHeight, minWidth, false);
+      resize((height() < minHeight ? minHeight : height()), 
+             (width() < minWidth ? minWidth : width()), false);
       // Make sure  the buttons are on the bottom of the
       //  form
-      theRow = bottom() - OKBTN_HEIGHT;
+      theRow = bottom() - (getBorderStyle() != eBS_NOBORDER ? 1 : 0) - OKBTN_HEIGHT;
       if (mOKBtn != nullptr)
       {
          mOKBtn->move(theRow, mOKBtn->left(), false);
@@ -131,7 +130,7 @@ cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
 
 // Simplified constructor
 cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, const string& pTitle, const string& pMessage)
-   : cxDialog(pParentWindow, pTitle, pMessage, ""),
+   : cxDialog(pParentWindow, pTitle, pMessage, "", 0, 0),
      mOKBtn(nullptr),
      mCancelBtn(nullptr)
 {
