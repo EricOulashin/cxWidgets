@@ -161,7 +161,10 @@ class cxMessageDialog : public cxDialog
       std::shared_ptr<cxButton> mCancelBtn; // Cancel/No button
 
       // Dis-allow show() for this class
-      inline long show(bool pBringToTop = true, bool pShowSubwindows = true) override;
+      virtual long show(bool pBringToTop = false, bool pShowSubwindows = true) override
+      {
+         return(showModal(true, pBringToTop, pShowSubwindows));
+      }
 
 }; // end of class cxMessageDialog
 

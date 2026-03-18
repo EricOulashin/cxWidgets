@@ -81,7 +81,7 @@ public:
             case RIGHT: head.x++; break;
         }
 
-        // Check wall collision
+        // Check wall collision (inner window boundaries)
         if (head.x <= 0 || head.x >= width() - 1 || head.y <= 0 || head.y >= height() - 1) {
             mGameOver = true;
             return;

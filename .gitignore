@@ -54,6 +54,7 @@ test_cxInput
 test_cxDate
 test_cxStringUtils
 test_cxValidators
+test_wordwrap
 test1
 test_sizing
 
