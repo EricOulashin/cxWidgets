@@ -270,7 +270,7 @@ class cxInput : public cxWindow
        *
        * @return true if the input exits on outside mouse clicks
        */
-      bool getExitOnMouseOutside() const;
+      bool getExitOnMouseOutside() const override;
 
       /**
        * \brief Sets whether the input should exit its input loop when a
