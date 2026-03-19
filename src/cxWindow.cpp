@@ -5401,12 +5401,18 @@ void cxWindow::freeWindow()
 {
    if (mPanel != nullptr)
    {
-      del_panel(mPanel);
+      if (cxBase::cxInitialized())
+      {
+         del_panel(mPanel);
+      }
       mPanel = nullptr;
    }
    if (mWindow != nullptr)
    {
-      delwin(mWindow);
+      if (cxBase::cxInitialized())
+      {
+         delwin(mWindow);
+      }
       mWindow = nullptr;
    }
 } // freeWindow
