@@ -78,7 +78,8 @@ namespace cx
 
 void cx::init(bool pEnableMouse)
 {
-   WINDOW* tmpWindow=initscr();         // initialize the curses library
+   // initialize the curses library
+   WINDOW* tmpWindow = initscr();
    if (tmpWindow == nullptr)
    {
       cerr << "Warning: initscr() returned a nullptr pointer" << endl;
@@ -227,6 +228,11 @@ void cx::init(bool pEnableMouse)
 
    cx::mInitialized = true;
 } // init
+
+bool cx::isInitialized()
+{
+   return cx::mInitialized;
+} // isInitialized
 
 void cx::cleanup()
 {

@@ -47,6 +47,11 @@ namespace cx
    void init(bool pEnableMouse = true);
 
    /**
+    * \brief Returns whether cxWidgets has been initialized.
+    */
+   bool isInitialized();
+
+   /**
     * \brief Cleans up the cxWidgets library.  Must be called after all
     * \brief screen-related cxWidgets objects & functions are done being used.
     */

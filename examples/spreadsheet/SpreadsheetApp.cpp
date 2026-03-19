@@ -1,7 +1,4 @@
 #include <cxUtils.h>
-#include <cxMenu.h>
-#include <cxMenuBar.h>
-#include <cxGrid.h>
 #include <cxDatePicker.h>
 #include <cxOpenFileDialog.h>
 #include <cxScrolledWindow.h>
@@ -13,6 +10,8 @@
 
 using namespace cx;
 using std::string;
+using std::shared_ptr;
+using std::make_shared;
 
 // Hotkey definitions (Ctrl keys as ASCII values)
 static const int CTRL_D =  4;
@@ -39,84 +38,84 @@ enum MenuCodes
 SpreadsheetApp::SpreadsheetApp()
       : mCurrentFilePath(""),
         mTermHeight(24),
-        mTermWidth(80),
-        mRunning(true)
+        mTermWidth(80)
 {
-}
-
-void SpreadsheetApp::run()
-{
-    cx::init();
+    if (!cx::isInitialized())
+        cx::init();
 
     cx::getTermDimensions(mTermHeight, mTermWidth);
 
     // Create the menu bar (row 0, full width)
-    cxMenuBar menuBar(nullptr, 0, 0, mTermWidth);
-    menuBar.setBarColor(eWHITE_BLUE);
-    menuBar.setHighlightColor(eBLACK_WHITE);
+    mMenuBar = make_shared<cx::cxMenuBar>(nullptr, 0, 0, mTermWidth);
+    mMenuBar->setBarColor(eWHITE_BLUE);
+    mMenuBar->setHighlightColor(eBLACK_WHITE);
 
     // File menu
-    cxMenu fileMenu(nullptr, 1, 0, 9, 28, "");
-    fileMenu.append("&Open        Ctrl+O", MENU_FILE_OPEN, "", cxITEM_NORMAL, true);
-    fileMenu.append("&Save        Ctrl+S", MENU_FILE_SAVE, "", cxITEM_NORMAL, true);
-    fileMenu.append("Save &As", MENU_FILE_SAVE_AS, "", cxITEM_NORMAL, true);
-    fileMenu.append("&Close", MENU_FILE_CLOSE, "", cxITEM_NORMAL, true);
-    fileMenu.append("E&xit        Ctrl+X", MENU_FILE_EXIT, "", cxITEM_NORMAL, true);
+    mFileMenu = make_shared<cx::cxMenu>(nullptr, 1, 0, 9, 28, "");
+    mFileMenu->append("&Open        Ctrl+O", MENU_FILE_OPEN, "", cxITEM_NORMAL, true);
+    mFileMenu->append("&Save        Ctrl+S", MENU_FILE_SAVE, "", cxITEM_NORMAL, true);
+    mFileMenu->append("Save &As",            MENU_FILE_SAVE_AS, "", cxITEM_NORMAL, true);
+    mFileMenu->append("&Close",              MENU_FILE_CLOSE, "", cxITEM_NORMAL, true);
+    mFileMenu->append("E&xit        Ctrl+X", MENU_FILE_EXIT, "", cxITEM_NORMAL, true);
 
     // Help menu
-    cxMenu helpMenu(nullptr, 1, 0, 5, 22, "");
-    helpMenu.append("&Help            F1", MENU_HELP_HELP, "", cxITEM_NORMAL, true);
-    helpMenu.append("&About", MENU_HELP_ABOUT, "", cxITEM_NORMAL, true);
+    mHelpMenu = make_shared<cxMenu>(nullptr, 1, 0, 5, 22, "");
+    mHelpMenu->append("&Help            F1", MENU_HELP_HELP, "", cxITEM_NORMAL, true);
+    mHelpMenu->append("&About", MENU_HELP_ABOUT, "", cxITEM_NORMAL, true);
 
-    menuBar.addMenu("&File", &fileMenu);
-    menuBar.addMenu("&Help", &helpMenu);
-
-    // Draw the bottom status/help line
-    drawStatusLine();
-
-    // Show the menu bar (but don't start its input loop)
-    menuBar.show();
+    mMenuBar->addMenu("&File", mFileMenu.get());
+    mMenuBar->addMenu("&Help", mHelpMenu.get());
 
     // Create the grid (between menu bar and status line)
     int gridRows = 100;
     int gridCols = 26; // A through Z
     int gridHeight = mTermHeight - 2; // minus menu bar and status line
     int gridWidth = mTermWidth;
-    cxGrid grid(nullptr, 1, 0, gridHeight, gridWidth,
-                gridRows, gridCols, 12, "", eBS_NOBORDER);
-    grid.showRowHeaders(true);
-    grid.showColHeaders(true);
-
+    mGrid = make_shared<cxGrid>(nullptr, 1, 0, gridHeight, gridWidth,
+                                gridRows, gridCols, 12, "", eBS_NOBORDER);
+    mGrid->showRowHeaders(true);
+    mGrid->showColHeaders(true);
     // Add quit keys to the grid so it exits on app-level hotkeys.
     // These keys also need to be quit keys on each cell so the cell's
     // input loop exits and returns control to the grid.
     int appQuitKeys[] = { CTRL_D, CTRL_O, CTRL_S, CTRL_X, KEY_F(1), KEY_F(10) };
     for (int key : appQuitKeys)
     {
-        grid.addQuitKey(key);
+        mGrid->addQuitKey(key);
         // Propagate to all cells
         for (int r = 0; r < gridRows; ++r)
         {
-        for (int c = 0; c < gridCols; ++c)
-        {
-            auto cell = grid.getCell(r, c);
-            if (cell)
-                cell->addQuitKey(key);
-        }
+            for (int c = 0; c < gridCols; ++c)
+            {
+                auto cell = mGrid->getCell(r, c);
+                if (cell)
+                    cell->addQuitKey(key);
+            }
         }
     }
+}
+
+void SpreadsheetApp::run()
+{
+    mRunning = true;
+
+    // Draw the bottom status/help line
+    drawStatusLine();
+
+    // Show the menu bar (but don't start its input loop)
+    mMenuBar->show();
 
     // Main application loop
     while (mRunning)
     {
-        grid.show();
+        mGrid->show();
         // Show the grid modally - it returns when a key the grid doesn't handle
         // causes it to exit, or when ESC is pressed
-        grid.showModal(grid.getFocusRow(), grid.getFocusCol());
-        int lastKey = grid.getLastKey();
+        mGrid->showModal(mGrid->getFocusRow(), mGrid->getFocusCol());
+        int lastKey = mGrid->getLastKey();
 
         // After the grid exits, check if a formula was entered
-        processFormulas(grid);
+        processFormulas();
 
         // Handle keys that should open menus or perform actions
         bool handled = false;
@@ -124,77 +123,77 @@ void SpreadsheetApp::run()
         // Check for Ctrl key hotkeys
         if (lastKey == CTRL_D)
         {
-        doInsertDate(grid);
-        handled = true;
+            doInsertDate();
+            handled = true;
         }
         else if (lastKey == CTRL_O)
         {
-        doOpen(grid);
-        handled = true;
+            doOpen();
+            handled = true;
         }
         else if (lastKey == CTRL_S)
         {
-        doSave(grid);
-        handled = true;
+            doSave();
+            handled = true;
         }
         else if (lastKey == CTRL_X)
         {
-        if (cx::promptYesNo("Exit the application?", " Exit "))
-            mRunning = false;
-        handled = true;
+            if (cx::promptYesNo("Exit the application?", " Exit "))
+                mRunning = false;
+            handled = true;
         }
         else if (lastKey == KEY_F(1))
         {
-        doHelp();
-        handled = true;
+            doHelp();
+            handled = true;
         }
         else if (lastKey == KEY_F(10) || lastKey == ESC)
         {
-        // Open the menu bar
-        menuBar.show();
-        long menuResult = menuBar.showModal();
-        menuBar.hide();
+            // Open the menu bar
+            mMenuBar->show();
+            long menuResult = mMenuBar->showModal();
+            mMenuBar->hide();
 
-        // Redraw the status line (menu bar may have overwritten it)
-        drawStatusLine();
-
-        if (menuResult != cxID_QUIT && menuResult != cxID_CANCEL)
-        {
-            long code = menuBar.getLastMenuReturnCode();
-            handleMenuAction(code, grid);
-        }
-        handled = true;
-        }
-        else if (lastKey == KEY_MOUSE)
-        {
-        // Check if the mouse was clicked on the menu bar
-        int my, mx;
-        grid.getLastMouseEvtCoords(my, mx);
-        if (my == 0)
-        {
-            // Pass the click X position directly to the menu bar so it
-            // immediately opens the right dropdown without waiting for a
-            // second click (the original click was consumed by the grid).
-            long menuResult = menuBar.showModalWithClick(mx);
-            menuBar.hide();
+            // Redraw the status line (menu bar may have overwritten it)
             drawStatusLine();
+
             if (menuResult != cxID_QUIT && menuResult != cxID_CANCEL)
             {
-                long code = menuBar.getLastMenuReturnCode();
-                handleMenuAction(code, grid);
+                long code = mMenuBar->getLastMenuReturnCode();
+                handleMenuAction(code);
             }
             handled = true;
         }
+        else if (lastKey == KEY_MOUSE)
+        {
+            // Check if the mouse was clicked on the menu bar
+            int my, mx;
+            mGrid->getLastMouseEvtCoords(my, mx);
+            if (my == 0)
+            {
+                // Pass the click X position directly to the menu bar so it
+                // immediately opens the right dropdown without waiting for a
+                // second click (the original click was consumed by the grid).
+                long menuResult = mMenuBar->showModalWithClick(mx);
+                mMenuBar->hide();
+                drawStatusLine();
+                if (menuResult != cxID_QUIT && menuResult != cxID_CANCEL)
+                {
+                    long code = mMenuBar->getLastMenuReturnCode();
+                    handleMenuAction(code);
+                }
+                handled = true;
+            }
         }
 
         if (!handled && lastKey == ESC)
         {
-        mRunning = false;
+            mRunning = false;
         }
 
         // Redraw status line in case it was overwritten
         drawStatusLine();
-        menuBar.show();
+        mMenuBar->show();
     }
 
     cx::cleanup();
@@ -211,21 +210,21 @@ void SpreadsheetApp::drawStatusLine()
     cx::writeText(mTermHeight - 1, 0, statusText, A_NORMAL, eWHITE_BLUE);
 }
 
-void SpreadsheetApp::handleMenuAction(long pCode, cxGrid& pGrid)
+void SpreadsheetApp::handleMenuAction(long pCode)
 {
     switch (pCode)
     {
         case MENU_FILE_OPEN:
-            doOpen(pGrid);
+            doOpen();
             break;
         case MENU_FILE_SAVE:
-            doSave(pGrid);
+            doSave();
             break;
         case MENU_FILE_SAVE_AS:
-            doSaveAs(pGrid);
+            doSaveAs();
             break;
         case MENU_FILE_CLOSE:
-            doClose(pGrid);
+            doClose();
             break;
         case MENU_FILE_EXIT:
             if (cx::promptYesNo("Exit the application?", " Exit "))
@@ -242,7 +241,7 @@ void SpreadsheetApp::handleMenuAction(long pCode, cxGrid& pGrid)
     }
 }
 
-void SpreadsheetApp::doInsertDate(cxGrid& pGrid)
+void SpreadsheetApp::doInsertDate()
 {
     cxDatePicker picker(nullptr, -1, -1);
     if (picker.showModal() == cxID_OK)
@@ -258,14 +257,14 @@ void SpreadsheetApp::doInsertDate(cxGrid& pGrid)
         char buf[64];
         std::strftime(buf, sizeof(buf), "%x", &tm);
 
-        int row = pGrid.getFocusRow();
-        int col = pGrid.getFocusCol();
-        pGrid.setCellValue(row, col, pGrid.getCellValue(row, col) + string(buf));
+        int row = mGrid->getFocusRow();
+        int col = mGrid->getFocusCol();
+        mGrid->setCellValue(row, col, mGrid->getCellValue(row, col) + string(buf));
     }
     picker.hide();
 }
 
-void SpreadsheetApp::doOpen(cxGrid& pGrid)
+void SpreadsheetApp::doOpen()
 {
     cxOpenFileDialog dlg(nullptr, -1, -1, " Open Spreadsheet ");
     dlg.addFilter("Tab-Separated (*.tsv)", "*.tsv");
@@ -276,7 +275,7 @@ void SpreadsheetApp::doOpen(cxGrid& pGrid)
     {
         string filePath = dlg.getSelectedFilePath();
         string errorMsg;
-        if (loadFromFile(pGrid, filePath, errorMsg))
+        if (loadFromFile(*mGrid, filePath, errorMsg))
         {
         mCurrentFilePath = filePath;
         cx::messageBox("Loaded", "File loaded: " + filePath, "");
@@ -288,7 +287,7 @@ void SpreadsheetApp::doOpen(cxGrid& pGrid)
     }
 }
 
-void SpreadsheetApp::doSave(cxGrid& pGrid)
+void SpreadsheetApp::doSave()
 {
     string filePath = mCurrentFilePath;
     if (filePath.empty())
@@ -310,7 +309,7 @@ void SpreadsheetApp::doSave(cxGrid& pGrid)
     }
 
     string errorMsg;
-    if (saveToFile(pGrid, filePath, errorMsg))
+    if (saveToFile(*mGrid, filePath, errorMsg))
     {
         mCurrentFilePath = filePath;
         cx::messageBox("Saved", "File saved: " + filePath, "");
@@ -321,7 +320,7 @@ void SpreadsheetApp::doSave(cxGrid& pGrid)
     }
 }
 
-void SpreadsheetApp::doSaveAs(cxGrid& pGrid)
+void SpreadsheetApp::doSaveAs()
 {
     cxOpenFileDialog dlg(nullptr, -1, -1, " Save Spreadsheet As ");
     dlg.addFilter("Tab-Separated (*.tsv)", "*.tsv");
@@ -333,7 +332,7 @@ void SpreadsheetApp::doSaveAs(cxGrid& pGrid)
 
     string filePath = dlg.getSelectedFilePath();
     string errorMsg;
-    if (saveToFile(pGrid, filePath, errorMsg))
+    if (saveToFile(*mGrid, filePath, errorMsg))
     {
         mCurrentFilePath = filePath;
         cx::messageBox("Saved", "File saved: " + filePath, "");
@@ -344,18 +343,18 @@ void SpreadsheetApp::doSaveAs(cxGrid& pGrid)
     }
 }
 
-void SpreadsheetApp::doClose(cxGrid& pGrid)
+void SpreadsheetApp::doClose()
 {
     // Clear all cells
-    for (int r = 0; r < pGrid.getNumRows(); ++r)
+    for (int r = 0; r < mGrid->getNumRows(); ++r)
     {
-        for (int c = 0; c < pGrid.getNumCols(); ++c)
+        for (int c = 0; c < mGrid->getNumCols(); ++c)
         {
-        pGrid.setCellValue(r, c, "");
+            mGrid->setCellValue(r, c, "");
         }
     }
     mCurrentFilePath = "";
-    pGrid.setFocusCell(0, 0);
+    mGrid->setFocusCell(0, 0);
 }
 
 void SpreadsheetApp::doHelp()
@@ -443,18 +442,18 @@ void SpreadsheetApp::doAbout()
 }
 
 // Process formulas in the grid after the user finishes editing
-void SpreadsheetApp::processFormulas(cxGrid& pGrid)
+void SpreadsheetApp::processFormulas()
 {
-    int focusRow = pGrid.getFocusRow();
-    int focusCol = pGrid.getFocusCol();
-    string val = pGrid.getCellValue(focusRow, focusCol);
+    const int focusRow = mGrid->getFocusRow();
+    const int focusCol = mGrid->getFocusCol();
+    const string val = mGrid->getCellValue(focusRow, focusCol);
 
     if (!val.empty() && val[0] == '=')
     {
         string result;
         string errorMsg;
-        if (evaluateFormula(pGrid, val, result, errorMsg))
-            pGrid.setCellValue(focusRow, focusCol, result);
+        if (evaluateFormula(*mGrid, val, result, errorMsg))
+            mGrid->setCellValue(focusRow, focusCol, result);
         else
         {
             cxMessageDialog errDlg(nullptr, " Formula Error ", errorMsg);
