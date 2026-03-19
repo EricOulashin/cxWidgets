@@ -512,38 +512,30 @@ string cxInput::getValue(bool pRemoveLeadingSpaces, bool pRemoveTrailingSpaces) 
    // Remove leading spaces from mValue, if pRemoveLeadingSpaces is true.
    if (pRemoveLeadingSpaces)
    {
-      unsigned valueLen = theValue.length();
-      if (valueLen > 0)
+      size_t first = theValue.find_first_not_of(' ');
+      if (first == string::npos)
       {
-         if (theValue[0] == ' ')
-         {
-            unsigned i = 0;
-            while ((i < valueLen) && (theValue[i] == ' '))
-            {
-               ++i;
-            }
-            theValue.erase(0, i);
-         }
+         theValue.clear();
+      }
+      else if (first > 0)
+      {
+         theValue.erase(0, first);
       }
    }
 
    // Remove trailing spaces from mValue, if pRemoveTrailingSpaces is true.
    if (pRemoveTrailingSpaces)
    {
-      unsigned valueLen = theValue.length();
-      if (valueLen > 0)
+      if (!theValue.empty())
       {
-         if (theValue[valueLen-1] == ' ')
+         size_t last = theValue.find_last_not_of(' ');
+         if (last == string::npos)
          {
-            unsigned i = valueLen - 1;
-            while (i > 0 && theValue[i] == ' ')
-            {
-               --i;
-            }
-            if (theValue[i] == ' ')
-               theValue.clear(); // entire string is spaces
-            else
-               theValue.erase(i + 1);
+            theValue.clear();
+         }
+         else
+         {
+            theValue.erase(last + 1);
          }
       }
    }
@@ -809,7 +801,7 @@ void cxInput::getInputText(string& pValue, int pX, bool pCheckPrintable)
       // Get the text in the window from mInputStartX up to the cursor
       //  position.  If there is a border, the input will be on row 1;
       //  without a border, the input will be on row 0.
-      int requestLen = pX - mInputStartX + 1;
+      int requestLen = pX - mInputStartX;
       if (requestLen > mInputLen)
       {
          requestLen = mInputLen;
@@ -819,25 +811,32 @@ void cxInput::getInputText(string& pValue, int pX, bool pCheckPrintable)
          requestLen = 0;
       }
 
-      if (hasBorder())
+      if (requestLen > 0)
       {
-         numChars = mvwinchnstr(mWindow, 1, mInputStartX, buffer, requestLen);
-      }
-      else
-      {
-         numChars = mvwinchnstr(mWindow, 0, mInputStartX, buffer, requestLen);
-      }
-      // The ncurses data type 'chtype' contains both the
-      //  character and attribute information.  In order to
-      //  extract only the characters, we have to bitwise-AND
-      //  each character with A_CHARTEXT before adding it.
-      // If mvwinchnstr didn't return an error, we can go
-      //  ahead and do this.
-      if (numChars != ERR)
-      {
-         for (int i = 0; i < numChars; ++i)
+         if (hasBorder())
          {
-            pValue += (buffer[i] & A_CHARTEXT);
+            numChars = mvwinchnstr(mWindow, 1, mInputStartX, buffer, requestLen);
+         }
+         else
+         {
+            numChars = mvwinchnstr(mWindow, 0, mInputStartX, buffer, requestLen);
+         }
+         // The ncurses data type 'chtype' contains both the
+         //  character and attribute information.  In order to
+         //  extract only the characters, we have to bitwise-AND
+         //  each character with A_CHARTEXT before adding it.
+         // If mvwinchnstr didn't return an error, we can go
+         //  ahead and do this.
+         if (numChars != ERR && numChars > 0)
+         {
+            // Just in case numChars is greater than requestLen
+            if (numChars > requestLen)
+               numChars = requestLen;
+
+            for (int i = 0; i < numChars; ++i)
+            {
+               pValue += (buffer[i] & A_CHARTEXT);
+            }
          }
       }
 

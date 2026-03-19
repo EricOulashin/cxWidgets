@@ -4804,29 +4804,32 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
       fprintf(stderr, "cxWindow::init() calling freeWindow() for %p\n", (void*)this);
 #endif
       freeWindow();
-      mWindow = newwin(newHeight, newWidth, pRow, pCol);
-#ifdef DEBUG_TESTS
-      fprintf(stderr, "cxWindow::init() newwin returned %p for %p\n", (void*)mWindow, (void*)this);
-#endif
-      // If mWindow is nullptr, that means newwin() had an error..
-      if (mWindow == nullptr)
+      if (cxBase::cxInitialized())
       {
-         throw(cxWidgetsException("Couldn't create a new ncurses window (constructing a new cxWindow)."));
+         mWindow = newwin(newHeight, newWidth, pRow, pCol);
+#ifdef DEBUG_TESTS
+         fprintf(stderr, "cxWindow::init() newwin returned %p for %p\n", (void*)mWindow, (void*)this);
+#endif
+         if (mWindow != nullptr)
+         {
+            reCreatePanel();
+            keypad(mWindow, TRUE); // for each newwin() we have to set this...
+            hide();
+         }
       }
-      reCreatePanel();
-      keypad(mWindow, TRUE); // for each newwin() we have to set this...
-      hide();
 
       // Add this window to the parent window, if it's not nullptr
-      addToParentWindow(pParentWindow);
+      if (pParentWindow != nullptr && pParentWindow != mParentWindow)
+      {
+         addToParentWindow(pParentWindow);
+      }
    }
    else
    {
-      throw(cxWidgetsException("Warning: There was no width OR no height to a window. [in cxWindow::init(row:" +
-            cxStringUtils::toString(pRow) + " pCol:" + cxStringUtils::toString(pCol) + " pHeight:" +
-            cxStringUtils::toString(pHeight) + " pWidth:" + cxStringUtils::toString(pWidth) +
-            " pTitle:" + pTitle + ": pMessage:" + pMessage + ": pStatus:" + pStatus + ":) newWidth:" +
-            cxStringUtils::toString(newWidth) + " newHeight:" + cxStringUtils::toString(newHeight) + " ]"));
+#ifdef DEBUG_TESTS
+      fprintf(stderr, "Warning: There was no width OR no height to a window. [in cxWindow::init(row:%d, pCol:%d, pHeight:%d, pWidth:%d, pTitle:%s, pMessage:%s, pStatus:%s)] newWidth:%d, newHeight:%d\n",
+              pRow, pCol, pHeight, pWidth, pTitle.c_str(), pMessage.c_str(), pStatus.c_str(), newWidth, newHeight);
+#endif
    }
 
    // Set the title & status
@@ -5431,29 +5434,34 @@ void cxWindow::reCreatePanel()
 #endif
    if (mPanel != nullptr)
    {
-      void* tempPanel = mPanel;
+      PANEL* tempPanel = mPanel;
       mPanel = nullptr;
       if (cxBase::cxInitialized())
       {
 #ifdef DEBUG_TESTS
-         fprintf(stderr, "cxWindow::reCreatePanel() calling del_panel(%p)\n", tempPanel);
+         fprintf(stderr, "cxWindow::reCreatePanel() calling del_panel(%p) for %p\n", (void*)tempPanel, (void*)this);
 #endif
-         del_panel((PANEL*)tempPanel);
+         del_panel(tempPanel);
       }
    }
    if (mWindow == nullptr)
    {
-      throw cxWidgetsException("cxWindow::reCreatePanel mWindow should not be nullptr.");
-   }
-   mPanel = new_panel(mWindow);
 #ifdef DEBUG_TESTS
-   fprintf(stderr, "cxWindow::reCreatePanel() new_panel returned %p for %p\n", (void*)mPanel, (void*)this);
+      fprintf(stderr, "cxWindow::reCreatePanel() mWindow is nullptr for %p, returning\n", (void*)this);
 #endif
-   if (mPanel == nullptr)
-   {
-      throw cxWidgetsException("cxWindow::reCreatePanel could not run new_panel().");
+      return;
    }
-   set_panel_userptr(mPanel, this);
+   if (cxBase::cxInitialized())
+   {
+      mPanel = new_panel(mWindow);
+#ifdef DEBUG_TESTS
+      fprintf(stderr, "cxWindow::reCreatePanel() new_panel returned %p for %p\n", (void*)mPanel, (void*)this);
+#endif
+      if (mPanel != nullptr)
+      {
+         set_panel_userptr(mPanel, this);
+      }
+   }
 } // reCreatePanel
 
 // Frees the memory used by mWindow
