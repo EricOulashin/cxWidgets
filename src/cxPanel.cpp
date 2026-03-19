@@ -220,6 +220,7 @@ shared_ptr<cxWindow> cxPanel::removeWindow(unsigned int pIndex)
       if (removedWindow->getParent() == this)
       {
          removedWindow->setParent(nullptr);
+         removeSubWindow(removedWindow.get());
       }
    }
 
