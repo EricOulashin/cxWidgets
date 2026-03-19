@@ -1,11 +1,11 @@
 <map id="/home/erico/projects/cxWidgets/examples/centipede/main.cpp" name="/home/erico/projects/cxWidgets/examples/centipede/main.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="1628,5,1836,60"/>
-<area shape="rect" id="Node000002" href="$cxBase_8h.html" title=" " alt="" coords="1795,181,1918,207"/>
+<area shape="rect" id="Node000002" href="$cxUtils_8h.html" title=" " alt="" coords="1796,181,1916,207"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1755,59,1841,169,1837,172,1751,62"/>
 <area shape="rect" id="Node000032" href="$CentipedeGame_8h.html" title=" " alt="" coords="1618,108,1745,133"/>
 <area shape="poly" id="edge43_Node000001_Node000032" title=" " alt="" coords="1719,61,1698,97,1693,95,1715,59"/>
 <area shape="rect" id="Node000003" href="$cxWindow_8h.html" title=" " alt="" coords="994,255,1086,280"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1795,203,1100,263,1100,258,1795,198"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1797,203,1101,263,1100,258,1796,198"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="1610,475,1665,500"/>
 <area shape="poly" id="edge40_Node000002_Node000008" title=" " alt="" coords="1886,204,1962,240,2006,265,2048,293,2082,325,2104,358,2109,376,2109,393,2104,411,2092,429,2070,440,2030,450,1915,467,1679,486,1679,481,1914,462,2029,445,2068,435,2088,425,2099,409,2104,392,2104,376,2099,360,2078,328,2044,298,2003,269,1960,245,1884,209"/>
 <area shape="rect" id="Node000012" href="$cxColors_8h.html" title=" " alt="" coords="1814,401,1899,427"/>
@@ -19,9 +19,9 @@
 <area shape="rect" id="Node000029" href="$cxInputOptions_8h.html" title="Defines an enumeration for different input options (editable and." alt="" coords="2097,255,2218,280"/>
 <area shape="poly" id="edge36_Node000002_Node000029" title=" " alt="" coords="1905,204,2096,249,2095,254,1904,209"/>
 <area shape="rect" id="Node000030" href="$cxInputTypes_8h.html" title="Defines an enumeration for different input input types (text,." alt="" coords="2242,255,2353,280"/>
-<area shape="poly" id="edge37_Node000002_Node000030" title=" " alt="" coords="1919,202,2229,252,2229,257,1918,208"/>
+<area shape="poly" id="edge37_Node000002_Node000030" title=" " alt="" coords="1917,202,2229,252,2228,257,1916,207"/>
 <area shape="rect" id="Node000031" href="$cxMessageDialogStyles_8h.html" title=" " alt="" coords="2377,255,2552,280"/>
-<area shape="poly" id="edge39_Node000002_Node000031" title=" " alt="" coords="1918,200,2364,252,2363,257,1918,205"/>
+<area shape="poly" id="edge39_Node000002_Node000031" title=" " alt="" coords="1917,200,2364,252,2363,257,1917,205"/>
 <area shape="rect" id="Node000004" href="$cxObject_8h.html" title=" " alt="" coords="1426,328,1511,353"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1087,274,1412,327,1412,333,1086,279"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="1162,401,1234,427"/>

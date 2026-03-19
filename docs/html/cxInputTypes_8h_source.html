@@ -54,23 +54,29 @@ $(document).ready(function() { init_codefold(0); });
 <a href="cxInputTypes_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2026 E. Oulashin</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef __CXINPUTTYPES_H__</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define __CXINPUTTYPES_H__</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Copyright (c) 2007 Michael H. Kinney</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">//</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecx.html">cx</a> {</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014d">   16</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014d">eInputTypes</a></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014da7748334f76f9774d59ecd0709e7c31fd">   18</a></span>   <a class="code hl_enumvalue" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014da7748334f76f9774d59ecd0709e7c31fd">eINPUT_TYPE_TEXT</a> = 0,</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014da66dcf3180fddfeb3413abdead1fbcde5">   19</a></span>   <a class="code hl_enumvalue" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014da66dcf3180fddfeb3413abdead1fbcde5">eINPUT_TYPE_NUMERIC_FLOATING_PT</a>,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>   <a class="code hl_enumvalue" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014dad0d070563b9e9a61ab544328bb45e3db">eINPUT_TYPE_NUMERIC_WHOLE</a></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014dad0d070563b9e9a61ab544328bb45e3db">   21</a></span>};</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// Copyright (c) 2007 Michael H. Kinney</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0">   19</a></span><span class="keyword">enum</span> <a class="code hl_enumeration" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0">eInputTypes</a></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0ab2f13ea7cafcce4924f15c8b43c5b760">   21</a></span>   <a class="code hl_enumvalue" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0ab2f13ea7cafcce4924f15c8b43c5b760">eINPUT_TYPE_TEXT</a> = 0,</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0a57f858a50d19b64a6f0050ef6e424c1c">   22</a></span>   <a class="code hl_enumvalue" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0a57f858a50d19b64a6f0050ef6e424c1c">eINPUT_TYPE_NUMERIC_FLOATING_PT</a>,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>   <a class="code hl_enumvalue" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0a226e668b4ebf23ba481fb1d0bde300d4">eINPUT_TYPE_NUMERIC_WHOLE</a></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="namespacecx.html#a392f47328e1071848baa71b54e0679b0a226e668b4ebf23ba481fb1d0bde300d4">   24</a></span>};</div>
 </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="acxInputTypes_8h_html_a45a7684b98c7690f14a0da78253d014d"><div class="ttname"><a href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014d">eInputTypes</a></div><div class="ttdeci">eInputTypes</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:17</div></div>
-<div class="ttc" id="acxInputTypes_8h_html_a45a7684b98c7690f14a0da78253d014da66dcf3180fddfeb3413abdead1fbcde5"><div class="ttname"><a href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014da66dcf3180fddfeb3413abdead1fbcde5">eINPUT_TYPE_NUMERIC_FLOATING_PT</a></div><div class="ttdeci">@ eINPUT_TYPE_NUMERIC_FLOATING_PT</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:19</div></div>
-<div class="ttc" id="acxInputTypes_8h_html_a45a7684b98c7690f14a0da78253d014da7748334f76f9774d59ecd0709e7c31fd"><div class="ttname"><a href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014da7748334f76f9774d59ecd0709e7c31fd">eINPUT_TYPE_TEXT</a></div><div class="ttdeci">@ eINPUT_TYPE_TEXT</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:18</div></div>
-<div class="ttc" id="acxInputTypes_8h_html_a45a7684b98c7690f14a0da78253d014dad0d070563b9e9a61ab544328bb45e3db"><div class="ttname"><a href="cxInputTypes_8h.html#a45a7684b98c7690f14a0da78253d014dad0d070563b9e9a61ab544328bb45e3db">eINPUT_TYPE_NUMERIC_WHOLE</a></div><div class="ttdeci">@ eINPUT_TYPE_NUMERIC_WHOLE</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:20</div></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>} <span class="comment">// namespace cx</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="anamespacecx_html"><div class="ttname"><a href="namespacecx.html">cx</a></div><div class="ttdoc">cxBorderChars.h - Defines border characters to be used in drawing a box (i.e., in cxWindow and all it...</div><div class="ttdef"><b>Definition</b> cxApp.cpp:5</div></div>
+<div class="ttc" id="anamespacecx_html_a392f47328e1071848baa71b54e0679b0"><div class="ttname"><a href="namespacecx.html#a392f47328e1071848baa71b54e0679b0">cx::eInputTypes</a></div><div class="ttdeci">eInputTypes</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:20</div></div>
+<div class="ttc" id="anamespacecx_html_a392f47328e1071848baa71b54e0679b0a226e668b4ebf23ba481fb1d0bde300d4"><div class="ttname"><a href="namespacecx.html#a392f47328e1071848baa71b54e0679b0a226e668b4ebf23ba481fb1d0bde300d4">cx::eINPUT_TYPE_NUMERIC_WHOLE</a></div><div class="ttdeci">@ eINPUT_TYPE_NUMERIC_WHOLE</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:23</div></div>
+<div class="ttc" id="anamespacecx_html_a392f47328e1071848baa71b54e0679b0a57f858a50d19b64a6f0050ef6e424c1c"><div class="ttname"><a href="namespacecx.html#a392f47328e1071848baa71b54e0679b0a57f858a50d19b64a6f0050ef6e424c1c">cx::eINPUT_TYPE_NUMERIC_FLOATING_PT</a></div><div class="ttdeci">@ eINPUT_TYPE_NUMERIC_FLOATING_PT</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:22</div></div>
+<div class="ttc" id="anamespacecx_html_a392f47328e1071848baa71b54e0679b0ab2f13ea7cafcce4924f15c8b43c5b760"><div class="ttname"><a href="namespacecx.html#a392f47328e1071848baa71b54e0679b0ab2f13ea7cafcce4924f15c8b43c5b760">cx::eINPUT_TYPE_TEXT</a></div><div class="ttdeci">@ eINPUT_TYPE_TEXT</div><div class="ttdef"><b>Definition</b> cxInputTypes.h:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

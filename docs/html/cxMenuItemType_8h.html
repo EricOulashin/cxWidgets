@@ -44,6 +44,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">cxMenuItemType.h File Reference</div></div>
 </div><!--header-->
@@ -58,8 +59,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="1763,59,1763,93,1758,93,1758,59"/>
 <area shape="rect" href="SpreadsheetApp_8cpp.html" title=" " alt="" coords="132,357,355,412"/>
 <area shape="poly" title=" " alt="" coords="1662,120,1435,127,1148,139,869,158,754,170,667,184,597,201,545,218,430,272,350,316,282,360,279,355,347,312,427,267,543,213,596,195,665,179,753,165,868,153,1147,134,1435,121,1662,114"/>
-<area shape="rect" href="cxBase_8cpp.html" title=" " alt="" coords="1885,365,2068,405"/>
-<area shape="poly" title=" " alt="" coords="1769,146,1791,236,1805,279,1820,308,1839,325,1860,340,1906,362,1904,367,1857,345,1835,330,1816,311,1800,281,1786,238,1764,147"/>
 <area shape="rect" href="cxComboBox_8h.html" title=" " alt="" coords="780,181,984,221"/>
 <area shape="poly" title=" " alt="" coords="1662,127,984,193,984,187,1661,122"/>
 <area shape="rect" href="testApp_8cpp.html" title=" " alt="" coords="766,460,950,500"/>
@@ -68,10 +67,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="1733,145,1599,271,1595,267,1729,141"/>
 <area shape="rect" href="cxSearchPanel_8h.html" title=" " alt="" coords="1647,365,1861,405"/>
 <area shape="poly" title=" " alt="" coords="1763,147,1757,365,1752,364,1757,147"/>
-<area shape="rect" href="cxUnitTest_8cpp.html" title=" " alt="" coords="2093,365,2295,405"/>
-<area shape="poly" title=" " alt="" coords="1780,144,1800,180,1818,219,1828,251,1842,279,1870,307,1897,325,1922,336,1969,344,2019,346,2081,355,2113,362,2112,367,2080,360,2018,352,1968,350,1920,341,1895,330,1867,311,1838,282,1823,253,1813,221,1796,183,1776,147"/>
-<area shape="rect" href="test1_8cpp.html" title=" " alt="" coords="2319,365,2487,405"/>
-<area shape="poly" title=" " alt="" coords="1795,140,1849,180,1914,219,1996,253,2112,292,2340,362,2338,367,2111,297,1994,258,1911,224,1846,184,1792,144"/>
+<area shape="rect" href="cxUnitTest_8cpp.html" title=" " alt="" coords="1885,365,2087,405"/>
+<area shape="poly" title=" " alt="" coords="1769,146,1791,236,1805,279,1820,308,1839,326,1861,340,1909,362,1907,367,1858,345,1836,330,1816,311,1800,282,1785,238,1764,147"/>
+<area shape="rect" href="cxUtils_8cpp.html" title=" " alt="" coords="2112,365,2292,405"/>
+<area shape="poly" title=" " alt="" coords="1780,144,1800,180,1818,219,1828,251,1842,279,1870,307,1900,326,1927,337,1952,343,1977,345,2032,346,2100,355,2130,362,2129,367,2099,360,2032,351,1977,350,1951,348,1925,342,1897,331,1867,311,1838,283,1823,253,1813,221,1796,183,1776,147"/>
+<area shape="rect" href="test1_8cpp.html" title=" " alt="" coords="2317,365,2485,405"/>
+<area shape="poly" title=" " alt="" coords="1795,140,1849,180,1914,219,1996,253,2111,292,2337,362,2336,367,2109,297,1994,258,1911,224,1846,184,1792,144"/>
 <area shape="rect" href="cxFrame_8h.html" title=" " alt="" coords="1925,181,2101,221"/>
 <area shape="poly" title=" " alt="" coords="1830,135,1958,179,1957,184,1828,140"/>
 <area shape="rect" href="cxMenu_8cpp.html" title=" " alt="" coords="2125,181,2311,221"/>
@@ -90,7 +91,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="cxDatePicker_8cpp.html" title=" " alt="" coords="379,365,596,405"/>
 <area shape="poly" title=" " alt="" coords="526,323,501,366,496,363,522,320"/>
 <area shape="poly" title=" " alt="" coords="572,318,628,374,668,410,723,438,781,457,779,463,721,443,664,414,625,378,568,321"/>
-<area shape="poly" title=" " alt="" coords="1675,310,1873,355,1903,362,1902,367,1872,360,1674,315"/>
 <area shape="poly" title=" " alt="" coords="1479,302,1263,325,1010,360,969,367,968,362,1010,355,1263,320,1478,297"/>
 <area shape="poly" title=" " alt="" coords="1478,298,1367,306,1244,318,1133,336,1088,347,1055,360,1039,371,1030,385,1020,399,1005,414,959,442,913,462,911,457,957,437,1002,410,1016,396,1025,382,1036,368,1053,355,1087,342,1132,330,1244,313,1367,300,1478,293"/>
 <area shape="rect" href="cxForm_8cpp.html" title=" " alt="" coords="1320,460,1503,500"/>
@@ -102,8 +102,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="cxMultiLineInput_8cpp.html" title=" " alt="" coords="1066,365,1301,405"/>
 <area shape="poly" title=" " alt="" coords="1485,315,1263,367,1262,362,1483,310"/>
 <area shape="poly" title=" " alt="" coords="1626,313,1719,362,1717,367,1623,318"/>
-<area shape="poly" title=" " alt="" coords="1675,298,1864,321,2081,355,2117,362,2116,367,2080,360,1863,327,1675,304"/>
-<area shape="poly" title=" " alt="" coords="1675,295,2011,321,2183,338,2308,355,2341,362,2340,367,2307,360,2182,343,2010,327,1675,300"/>
+<area shape="poly" title=" " alt="" coords="1674,310,1873,355,1905,362,1904,367,1872,360,1673,315"/>
+<area shape="poly" title=" " alt="" coords="1675,297,1872,319,2100,355,2133,362,2132,367,2099,360,1871,325,1675,302"/>
+<area shape="poly" title=" " alt="" coords="1675,295,2009,321,2181,338,2305,355,2338,362,2337,367,2304,360,2180,343,2009,327,1675,300"/>
 <area shape="poly" title=" " alt="" coords="1335,410,1313,415,1120,447,951,470,950,465,1119,442,1312,409,1334,405"/>
 <area shape="poly" title=" " alt="" coords="1422,419,1416,460,1411,460,1417,418"/>
 <area shape="rect" href="cxMultiForm_8cpp.html" title=" " alt="" coords="1085,460,1295,500"/>
@@ -112,10 +113,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="1634,403,1534,415,951,473,950,467,1534,409,1633,398"/>
 <area shape="rect" href="cxSearchPanel_8cpp.html" title=" " alt="" coords="1738,460,1965,500"/>
 <area shape="poly" title=" " alt="" coords="1785,412,1834,458,1830,462,1782,416"/>
-<area shape="rect" href="cxApp_8h.html" title=" " alt="" coords="2251,269,2414,309"/>
-<area shape="poly" title=" " alt="" coords="2097,222,2263,267,2262,272,2096,228"/>
-<area shape="rect" href="cxApp_8cpp.html" title=" " alt="" coords="2511,365,2687,405"/>
-<area shape="poly" title=" " alt="" coords="2400,311,2546,362,2545,367,2399,316"/>
+<area shape="rect" href="cxApp_8h.html" title=" " alt="" coords="2250,269,2413,309"/>
+<area shape="poly" title=" " alt="" coords="2097,222,2262,267,2261,272,2095,228"/>
+<area shape="rect" href="cxApp_8cpp.html" title=" " alt="" coords="2509,365,2685,405"/>
+<area shape="poly" title=" " alt="" coords="2399,311,2544,362,2542,367,2397,316"/>
 <area shape="poly" title=" " alt="" coords="249,235,247,357,241,357,244,235"/>
 <area shape="rect" href="cxMenuBar_8cpp.html" title=" " alt="" coords="5,269,209,309"/>
 <area shape="poly" title=" " alt="" coords="206,231,139,272,137,267,204,226"/>
@@ -124,41 +125,25 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="cxMenuItemType_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacecx" id="r_namespacecx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html">cx</a></td></tr>
+<tr class="memdesc:namespacecx"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="cxBorderChars_8h.html">cxBorderChars.h</a> - Defines border characters to be used in drawing a box (i.e., in <a class="el" href="classcx_1_1cxWindow.html" title="Represents a text-based window on the screen. Can contain a title, status, and a message to appear wi...">cxWindow</a> and all its derivitives) <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:abaf559d683affa61c002673fd2ae16de" id="r_abaf559d683affa61c002673fd2ae16de"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxMenuItemType_8h.html#abaf559d683affa61c002673fd2ae16de">cxMenuItemType</a> { <br />
-&#160;&#160;<a class="el" href="cxMenuItemType_8h.html#abaf559d683affa61c002673fd2ae16dea42cf1b7a1f4e33a31ccdbd41756e54cf">cxITEM_NORMAL</a> = 0
-, <a class="el" href="cxMenuItemType_8h.html#abaf559d683affa61c002673fd2ae16deae686907aa0ced44a40fc8e30cc40d26f">cxITEM_SUBMENU</a>
-, <a class="el" href="cxMenuItemType_8h.html#abaf559d683affa61c002673fd2ae16dea4a2dd8c619ebb216e93990aef9890a97">cxITEM_POPUPMENU</a>
-, <a class="el" href="cxMenuItemType_8h.html#abaf559d683affa61c002673fd2ae16deae56c668e99d96b440d0f9067af51a382">cxITEM_SEPARATOR</a>
+<tr class="memitem:a4f628e0801cedb32f2e5b9ea7e200872" id="r_a4f628e0801cedb32f2e5b9ea7e200872"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#a4f628e0801cedb32f2e5b9ea7e200872">cx::cxMenuItemType</a> { <br />
+&#160;&#160;<a class="el" href="namespacecx.html#a4f628e0801cedb32f2e5b9ea7e200872aa02b283412bed8e1fcbda1468d63bb42">cx::cxITEM_NORMAL</a> = 0
+, <a class="el" href="namespacecx.html#a4f628e0801cedb32f2e5b9ea7e200872a6c053ea137c1f77540d857affa3f05cf">cx::cxITEM_SUBMENU</a>
+, <a class="el" href="namespacecx.html#a4f628e0801cedb32f2e5b9ea7e200872a0639251b2a174a335132a5ee33038159">cx::cxITEM_POPUPMENU</a>
+, <a class="el" href="namespacecx.html#a4f628e0801cedb32f2e5b9ea7e200872a79daccdf4bf2a4ce1c52f88c22f388d9">cx::cxITEM_SEPARATOR</a>
 , <br />
-&#160;&#160;<a class="el" href="cxMenuItemType_8h.html#abaf559d683affa61c002673fd2ae16dea737f0615d03c889b64467cac3a1135c7">cxITEM_UNSELECTABLE</a>
+&#160;&#160;<a class="el" href="namespacecx.html#a4f628e0801cedb32f2e5b9ea7e200872af8697005abdc4f75156047359641e819">cx::cxITEM_UNSELECTABLE</a>
 <br />
  }</td></tr>
-<tr class="separator:abaf559d683affa61c002673fd2ae16de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a4f628e0801cedb32f2e5b9ea7e200872"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="abaf559d683affa61c002673fd2ae16de" name="abaf559d683affa61c002673fd2ae16de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abaf559d683affa61c002673fd2ae16de">&#9670;&#160;</a></span>cxMenuItemType</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="cxMenuItemType_8h.html#abaf559d683affa61c002673fd2ae16de">cxMenuItemType</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abaf559d683affa61c002673fd2ae16dea42cf1b7a1f4e33a31ccdbd41756e54cf" name="abaf559d683affa61c002673fd2ae16dea42cf1b7a1f4e33a31ccdbd41756e54cf"></a>cxITEM_NORMAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="abaf559d683affa61c002673fd2ae16deae686907aa0ced44a40fc8e30cc40d26f" name="abaf559d683affa61c002673fd2ae16deae686907aa0ced44a40fc8e30cc40d26f"></a>cxITEM_SUBMENU&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="abaf559d683affa61c002673fd2ae16dea4a2dd8c619ebb216e93990aef9890a97" name="abaf559d683affa61c002673fd2ae16dea4a2dd8c619ebb216e93990aef9890a97"></a>cxITEM_POPUPMENU&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="abaf559d683affa61c002673fd2ae16deae56c668e99d96b440d0f9067af51a382" name="abaf559d683affa61c002673fd2ae16deae56c668e99d96b440d0f9067af51a382"></a>cxITEM_SEPARATOR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="abaf559d683affa61c002673fd2ae16dea737f0615d03c889b64467cac3a1135c7" name="abaf559d683affa61c002673fd2ae16dea737f0615d03c889b64467cac3a1135c7"></a>cxITEM_UNSELECTABLE&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -10,6 +10,10 @@
 
 namespace cx {
 
+/**
+* \class cxLabel
+* \brief This is a class for displaying a read-only label.
+*/
 class cxLabel : public cxWindow
 {
    public:

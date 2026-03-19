@@ -1,9 +1,0 @@
-<map id="floatingPtInputWithRightLabel" name="floatingPtInputWithRightLabel">
-<area shape="rect" id="Node000001" title=" " alt="" coords="17,1565,193,1715"/>
-<area shape="rect" id="Node000002" href="$classcxMultiLineInput.html" title="This class represents an input box that can have a height." alt="" coords="5,1012,204,1517"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,1531,107,1565,102,1565,102,1531"/>
-<area shape="rect" id="Node000003" href="$classcxWindow.html" title="Represents a text&#45;based window on the screen. Can contain a title, status, and a message to appear wi..." alt="" coords="21,279,188,964"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,978,107,1012,102,1012,102,978"/>
-<area shape="rect" id="Node000004" href="$classcxObject.html" title="The base class for windowing classes in the cxWidgets." alt="" coords="57,5,153,231"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="107,245,107,279,102,279,102,245"/>
-</map>

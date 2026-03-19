@@ -1,5 +1,0 @@
-<map id="cxApp" name="cxApp">
-<area shape="rect" id="Node000001" title="Holds application setup &amp; exit logic, as well as the application&#39;s main frame." alt="" coords="7,279,100,484"/>
-<area shape="rect" id="Node000002" href="$classcxObject.html" title="The base class for windowing classes in the cxWidgets." alt="" coords="5,5,101,231"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,244,56,278,51,278,51,244"/>
-</map>

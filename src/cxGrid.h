@@ -23,6 +23,10 @@
 
 namespace cx {
 
+/**
+* \class cxGrid
+* \brief This is a class representing a grid of data, similar to a spreadsheet, with rows & columns of cells where data can be entered.
+*/
 class cxGrid : public cxWindow
 {
    public:

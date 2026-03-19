@@ -43,13 +43,15 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle"><div class="title">cxOpenFileDialog.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="cxOpenFileDialog_8h_source.html">cxOpenFileDialog.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cxKeyDefines_8h_source.html">cxKeyDefines.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cxReturnCodes_8h_source.html">cxReturnCodes.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="cxBase_8h_source.html">cxBase.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="cxUtils_8h_source.html">cxUtils.h</a>&quot;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
@@ -61,115 +63,122 @@ Include dependency graph for cxOpenFileDialog.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="cxOpenFileDialog_8cpp__incl.png" border="0" usemap="#a_2home_2erico_2projects_2cxWidgets_2src_2cxOpenFileDialog_8cpp" alt=""/></div>
 <map name="a_2home_2erico_2projects_2cxWidgets_2src_2cxOpenFileDialog_8cpp" id="a_2home_2erico_2projects_2cxWidgets_2src_2cxOpenFileDialog_8cpp">
-<area shape="rect" title=" " alt="" coords="2009,5,2252,45"/>
-<area shape="rect" href="cxOpenFileDialog_8h.html" title=" " alt="" coords="1217,93,1353,119"/>
-<area shape="poly" title=" " alt="" coords="2009,41,1367,100,1367,94,2009,35"/>
-<area shape="rect" title=" " alt="" coords="1496,387,1565,412"/>
-<area shape="poly" title=" " alt="" coords="2123,47,2088,106,2031,187,1995,230,1955,271,1910,309,1863,341,1827,358,1789,372,1712,391,1639,399,1579,402,1579,396,1639,394,1711,385,1788,367,1825,354,1860,336,1907,305,1951,267,1991,226,2026,183,2083,103,2118,44"/>
-<area shape="rect" href="cxKeyDefines_8h.html" title=" " alt="" coords="2079,387,2193,412"/>
-<area shape="poly" title=" " alt="" coords="2125,46,2106,105,2098,141,2095,178,2095,254,2098,287,2106,319,2126,373,2121,375,2100,321,2092,288,2089,254,2089,178,2093,140,2100,103,2120,45"/>
-<area shape="rect" href="cxReturnCodes_8h.html" title=" " alt="" coords="1677,313,1801,339"/>
-<area shape="poly" title=" " alt="" coords="2099,48,2024,96,1963,141,1917,179,1814,267,1765,307,1761,303,1810,263,1914,175,1960,137,2021,91,2096,43"/>
-<area shape="rect" href="cxBase_8h.html" title=" " alt="" coords="1389,167,1467,192"/>
-<area shape="poly" title=" " alt="" coords="2044,48,1481,169,1480,164,2043,43"/>
-<area shape="rect" title=" " alt="" coords="2129,93,2212,119"/>
-<area shape="poly" title=" " alt="" coords="2143,44,2161,80,2156,82,2138,47"/>
-<area shape="rect" title=" " alt="" coords="2236,93,2311,119"/>
-<area shape="poly" title=" " alt="" coords="2166,43,2242,84,2239,89,2164,48"/>
-<area shape="rect" title=" " alt="" coords="2335,93,2401,119"/>
-<area shape="poly" title=" " alt="" coords="2188,43,2322,87,2321,92,2187,48"/>
-<area shape="rect" title=" " alt="" coords="2425,93,2487,119"/>
-<area shape="poly" title=" " alt="" coords="2214,43,2413,91,2412,96,2212,48"/>
-<area shape="rect" title=" " alt="" coords="2511,93,2572,119"/>
-<area shape="poly" title=" " alt="" coords="2248,43,2498,91,2497,96,2247,48"/>
-<area shape="rect" href="cxWindow_8h.html" title=" " alt="" coords="1125,240,1217,265"/>
-<area shape="poly" title=" " alt="" coords="1278,121,1190,231,1186,228,1274,117"/>
-<area shape="rect" title=" " alt="" coords="633,460,687,485"/>
-<area shape="poly" title=" " alt="" coords="1354,106,1527,118,1627,132,1724,153,1807,182,1840,201,1865,222,1883,247,1890,275,1886,306,1869,340,1852,362,1835,378,1817,389,1798,396,1702,415,1610,431,1487,443,1191,461,901,470,701,474,701,468,901,465,1191,456,1486,438,1609,425,1701,409,1796,391,1815,384,1832,374,1848,359,1864,337,1881,304,1885,275,1878,249,1861,226,1837,205,1804,187,1722,158,1626,137,1526,124,1354,111"/>
-<area shape="rect" title=" " alt="" coords="1413,387,1472,412"/>
-<area shape="poly" title=" " alt="" coords="1354,114,1469,133,1605,160,1730,195,1779,216,1814,238,1829,255,1836,272,1843,313,1846,327,1842,340,1816,359,1778,371,1732,378,1681,382,1575,384,1486,390,1486,384,1575,379,1680,376,1731,373,1777,366,1813,354,1838,337,1841,327,1837,314,1831,273,1824,258,1810,242,1777,220,1729,200,1604,165,1468,138,1353,119"/>
-<area shape="rect" title=" " alt="" coords="39,387,108,412"/>
-<area shape="poly" title=" " alt="" coords="1217,112,761,129,504,146,398,157,318,169,207,191,163,209,111,242,78,273,60,314,58,344,65,373,60,374,53,345,55,313,74,270,108,238,160,204,206,186,317,164,397,152,504,141,760,124,1217,106"/>
-<area shape="rect" href="cxInput_8h.html" title=" " alt="" coords="330,167,406,192"/>
-<area shape="poly" title=" " alt="" coords="1217,115,420,177,420,171,1217,110"/>
-<area shape="rect" href="cxObject_8h.html" title=" " alt="" coords="479,313,564,339"/>
-<area shape="poly" title=" " alt="" coords="1125,260,894,278,739,295,578,316,577,311,738,289,893,273,1124,254"/>
-<area shape="rect" title=" " alt="" coords="737,387,809,412"/>
-<area shape="poly" title=" " alt="" coords="1185,264,1200,280,1213,299,1219,320,1217,331,1211,340,1182,360,1141,373,1091,381,1035,384,920,385,823,390,823,384,920,380,1035,379,1090,375,1140,368,1180,356,1207,337,1212,329,1213,321,1208,302,1195,283,1181,267"/>
-<area shape="poly" title=" " alt="" coords="1217,257,1348,279,1411,294,1456,311,1492,341,1518,373,1514,377,1488,344,1453,316,1410,299,1346,284,1217,263"/>
-<area shape="poly" title=" " alt="" coords="1218,259,1345,284,1401,298,1431,311,1441,326,1446,342,1448,373,1443,373,1441,343,1436,328,1428,315,1399,303,1344,289,1217,264"/>
-<area shape="rect" href="cxPositions_8h.html" title=" " alt="" coords="1272,313,1373,339"/>
-<area shape="poly" title=" " alt="" coords="1196,263,1287,305,1284,310,1194,268"/>
-<area shape="poly" title=" " alt="" coords="1217,256,1663,311,1663,316,1217,262"/>
-<area shape="rect" href="cxBorderStyles_8h.html" title=" " alt="" coords="833,387,956,412"/>
-<area shape="poly" title=" " alt="" coords="1217,258,1315,277,1360,293,1387,312,1393,326,1387,340,1374,352,1356,362,1311,376,1257,383,1197,387,1073,387,970,389,969,384,1073,382,1197,381,1257,378,1310,370,1354,357,1371,348,1383,337,1388,326,1383,315,1357,297,1314,283,1216,263"/>
-<area shape="rect" href="cxMiscDefines_8h.html" title=" " alt="" coords="588,313,708,339"/>
-<area shape="poly" title=" " alt="" coords="1125,262,722,316,721,310,1124,257"/>
-<area shape="rect" href="cxFunction_8h.html" title=" " alt="" coords="82,313,179,339"/>
-<area shape="poly" title=" " alt="" coords="1125,260,194,323,193,318,1124,254"/>
-<area shape="poly" title=" " alt="" coords="1125,258,792,276,603,293,526,304,467,316,442,328,416,341,336,363,256,379,122,397,121,391,255,373,335,358,414,336,439,323,466,311,525,299,603,288,791,271,1124,253"/>
-<area shape="rect" href="cxWidgetItems_8h.html" title="Defines an enumeration for the different cxWidgets items (title,." alt="" coords="733,313,854,339"/>
-<area shape="poly" title=" " alt="" coords="1125,265,868,313,867,308,1124,260"/>
-<area shape="rect" title=" " alt="" coords="878,313,946,339"/>
-<area shape="poly" title=" " alt="" coords="1130,268,960,314,958,309,1128,263"/>
-<area shape="rect" title=" " alt="" coords="971,313,1037,339"/>
-<area shape="poly" title=" " alt="" coords="1145,268,1045,310,1043,305,1143,263"/>
-<area shape="rect" title=" " alt="" coords="1549,313,1589,339"/>
-<area shape="poly" title=" " alt="" coords="1217,257,1358,278,1531,311,1536,312,1535,317,1530,316,1357,283,1217,262"/>
-<area shape="rect" title=" " alt="" coords="357,313,403,339"/>
-<area shape="poly" title=" " alt="" coords="1124,257,1002,261,828,271,627,288,423,316,417,317,416,312,422,311,626,283,828,266,1002,256,1124,252"/>
-<area shape="rect" title=" " alt="" coords="1614,313,1653,339"/>
-<area shape="poly" title=" " alt="" coords="1217,255,1383,272,1490,289,1601,311,1600,316,1489,294,1383,277,1217,260"/>
-<area shape="rect" title=" " alt="" coords="1062,313,1119,339"/>
-<area shape="poly" title=" " alt="" coords="1160,267,1116,306,1112,302,1156,263"/>
-<area shape="rect" title=" " alt="" coords="1144,313,1197,339"/>
-<area shape="poly" title=" " alt="" coords="1173,266,1173,300,1168,300,1168,266"/>
-<area shape="rect" title=" " alt="" coords="546,387,625,412"/>
-<area shape="poly" title=" " alt="" coords="534,337,568,375,564,378,530,341"/>
-<area shape="rect" title=" " alt="" coords="649,387,713,412"/>
-<area shape="poly" title=" " alt="" coords="548,336,644,379,642,383,546,341"/>
-<area shape="rect" title=" " alt="" coords="465,387,522,412"/>
-<area shape="poly" title=" " alt="" coords="519,340,505,375,500,373,514,338"/>
-<area shape="poly" title=" " alt="" coords="501,341,480,355,460,373,450,392,450,401,454,410,480,428,523,443,620,463,618,468,522,448,478,433,450,414,444,402,444,391,456,370,476,351,498,337"/>
-<area shape="poly" title=" " alt="" coords="563,336,724,382,723,387,561,341"/>
-<area shape="poly" title=" " alt="" coords="565,334,576,336,712,350,829,357,1027,358,1227,360,1345,368,1482,384,1482,389,1344,373,1227,365,1027,363,828,362,712,356,576,341,564,339"/>
-<area shape="poly" title=" " alt="" coords="565,334,576,336,752,353,992,370,1400,393,1400,398,992,375,752,359,576,341,564,339"/>
-<area shape="rect" href="cxColors_8h.html" title=" " alt="" coords="276,387,361,412"/>
-<area shape="poly" title=" " alt="" coords="490,341,365,385,363,380,488,336"/>
-<area shape="poly" title=" " alt="" coords="565,334,576,336,714,349,896,360,1332,377,2065,394,2065,400,1331,382,895,365,713,354,576,341,564,340"/>
-<area shape="rect" href="cxWidgetsException_8h.html" title=" " alt="" coords="981,387,1134,412"/>
-<area shape="poly" title=" " alt="" coords="565,334,576,336,769,362,967,384,967,389,769,368,576,341,564,339"/>
-<area shape="poly" title=" " alt="" coords="994,415,701,467,700,461,993,409"/>
-<area shape="poly" title=" " alt="" coords="858,415,701,462,700,457,856,409"/>
-<area shape="poly" title=" " alt="" coords="139,338,162,375,179,394,200,410,234,423,281,435,399,452,522,462,619,467,619,473,521,468,398,457,280,440,232,428,197,414,176,398,158,378,134,340"/>
-<area shape="poly" title=" " alt="" coords="123,341,93,378,89,374,119,337"/>
-<area shape="poly" title=" " alt="" coords="406,181,1111,243,1111,249,406,187"/>
-<area shape="poly" title=" " alt="" coords="330,184,282,188,225,197,166,214,111,242,60,280,39,300,22,322,12,343,8,365,13,387,29,410,40,417,59,424,118,437,288,454,476,464,619,468,619,473,475,469,287,459,117,442,57,430,37,422,25,414,8,390,3,365,7,342,18,319,35,297,57,276,108,238,164,209,224,192,282,182,329,178"/>
-<area shape="poly" title=" " alt="" coords="362,194,331,244,314,278,303,314,302,345,310,373,305,375,297,345,297,313,310,276,326,242,357,191"/>
-<area shape="poly" title=" " alt="" coords="344,194,251,242,158,307,155,302,248,238,341,190"/>
-<area shape="poly" title=" " alt="" coords="330,187,269,198,196,220,160,236,126,258,96,283,72,315,66,328,64,343,68,373,63,374,59,343,61,327,67,312,92,280,122,253,157,232,194,215,268,192,329,182"/>
-<area shape="poly" title=" " alt="" coords="406,178,542,181,745,190,984,207,1108,221,1228,237,1317,254,1403,275,1537,312,1536,317,1402,280,1316,259,1228,243,1107,226,984,213,745,195,542,186,406,184"/>
-<area shape="poly" title=" " alt="" coords="363,193,349,226,345,245,347,265,365,301,360,303,341,266,339,245,343,224,358,191"/>
-<area shape="rect" href="cxTextValidator_8h.html" title=" " alt="" coords="357,240,478,265"/>
-<area shape="poly" title=" " alt="" coords="378,191,404,227,399,230,374,194"/>
-<area shape="rect" href="cxInputOptions_8h.html" title="Defines an enumeration for different input options (editable and." alt="" coords="502,240,623,265"/>
-<area shape="poly" title=" " alt="" coords="400,190,519,233,517,238,398,195"/>
-<area shape="poly" title=" " alt="" coords="436,263,494,303,491,307,433,268"/>
-<area shape="poly" title=" " alt="" coords="382,268,341,287,302,315,278,340,261,363,255,386,258,398,266,410,290,427,327,441,373,451,424,459,531,467,619,469,619,474,531,472,424,464,372,457,325,446,287,432,262,414,253,400,249,386,256,361,274,336,298,311,338,282,380,263"/>
-<area shape="poly" title=" " alt="" coords="1390,194,1226,239,1225,234,1388,189"/>
-<area shape="poly" title=" " alt="" coords="1467,179,1590,187,1664,196,1736,210,1798,230,1823,243,1842,258,1855,275,1860,295,1856,316,1842,340,1814,371,1786,390,1757,402,1726,407,1659,408,1620,410,1578,415,1449,434,1318,448,1062,466,846,473,701,474,701,469,845,468,1062,461,1317,443,1449,428,1577,409,1620,404,1658,403,1726,401,1755,396,1784,386,1811,367,1838,337,1851,315,1855,295,1850,277,1838,262,1820,248,1796,235,1735,215,1663,201,1590,192,1467,184"/>
-<area shape="poly" title=" " alt="" coords="1389,188,803,253,489,292,387,306,345,316,335,328,328,342,322,373,317,372,323,340,331,325,343,311,386,301,489,286,802,248,1389,182"/>
-<area shape="poly" title=" " alt="" coords="1434,191,1450,228,1463,247,1480,263,1505,276,1534,285,1599,294,1667,293,1731,289,1785,286,1822,290,1832,296,1835,307,1829,322,1813,341,1786,350,1727,359,1545,375,1148,397,1148,391,1545,369,1726,354,1784,345,1810,336,1824,319,1830,307,1828,299,1820,295,1785,291,1731,294,1667,299,1598,299,1533,291,1503,281,1477,268,1459,251,1445,230,1429,193"/>
-<area shape="poly" title=" " alt="" coords="1416,194,1401,209,1388,227,1381,246,1386,263,1537,312,1535,317,1382,267,1376,246,1383,225,1397,206,1412,190"/>
-<area shape="poly" title=" " alt="" coords="1428,192,1425,227,1428,247,1437,264,1454,281,1470,291,1506,300,1549,303,1601,311,1600,316,1548,308,1505,306,1468,296,1450,285,1432,267,1423,248,1419,228,1423,192"/>
-<area shape="poly" title=" " alt="" coords="1389,185,1080,205,864,221,643,243,638,243,637,238,642,237,864,216,1080,199,1389,180"/>
-<area shape="rect" href="cxInputTypes_8h.html" title="Defines an enumeration for different input input types (text,." alt="" coords="1491,240,1602,265"/>
-<area shape="poly" title=" " alt="" coords="1448,190,1517,230,1514,235,1446,194"/>
-<area shape="rect" href="cxMessageDialogStyles_8h.html" title=" " alt="" coords="1626,240,1801,265"/>
-<area shape="poly" title=" " alt="" coords="1468,188,1655,234,1654,239,1466,193"/>
+<area shape="rect" title=" " alt="" coords="2003,5,2246,45"/>
+<area shape="rect" href="cxOpenFileDialog_8h.html" title=" " alt="" coords="1211,93,1347,119"/>
+<area shape="poly" title=" " alt="" coords="2003,41,1361,100,1361,94,2003,35"/>
+<area shape="rect" title=" " alt="" coords="1490,387,1559,412"/>
+<area shape="poly" title=" " alt="" coords="2117,47,2082,106,2025,187,1989,230,1949,271,1904,309,1857,341,1821,358,1784,372,1706,391,1633,399,1573,402,1573,396,1633,394,1705,385,1782,367,1819,354,1854,336,1901,305,1945,267,1985,226,2020,183,2077,103,2112,44"/>
+<area shape="rect" href="cxKeyDefines_8h.html" title=" " alt="" coords="2073,387,2187,412"/>
+<area shape="poly" title=" " alt="" coords="2119,46,2100,105,2092,141,2089,178,2089,254,2092,287,2100,319,2120,373,2115,375,2095,321,2087,288,2083,254,2083,178,2087,140,2095,103,2114,45"/>
+<area shape="rect" href="cxReturnCodes_8h.html" title=" " alt="" coords="1671,313,1795,339"/>
+<area shape="poly" title=" " alt="" coords="2093,48,2018,96,1957,141,1911,179,1808,267,1759,307,1756,303,1804,263,1908,175,1954,137,2015,91,2090,43"/>
+<area shape="rect" href="cxUtils_8h.html" title=" " alt="" coords="1385,167,1459,192"/>
+<area shape="poly" title=" " alt="" coords="2038,48,1473,170,1472,164,2037,43"/>
+<area shape="rect" title=" " alt="" coords="2123,93,2206,119"/>
+<area shape="poly" title=" " alt="" coords="2137,44,2155,80,2150,82,2132,47"/>
+<area shape="rect" title=" " alt="" coords="2230,93,2305,119"/>
+<area shape="poly" title=" " alt="" coords="2160,43,2236,84,2233,89,2158,48"/>
+<area shape="rect" title=" " alt="" coords="2329,93,2395,119"/>
+<area shape="poly" title=" " alt="" coords="2182,43,2316,87,2315,92,2181,48"/>
+<area shape="rect" title=" " alt="" coords="2419,93,2481,119"/>
+<area shape="poly" title=" " alt="" coords="2208,43,2407,91,2406,96,2206,48"/>
+<area shape="rect" title=" " alt="" coords="2505,93,2566,119"/>
+<area shape="poly" title=" " alt="" coords="2242,43,2492,91,2491,96,2241,48"/>
+<area shape="rect" href="cxWindow_8h.html" title=" " alt="" coords="1119,240,1211,265"/>
+<area shape="poly" title=" " alt="" coords="1272,121,1184,231,1180,228,1268,117"/>
+<area shape="rect" title=" " alt="" coords="627,460,681,485"/>
+<area shape="poly" title=" " alt="" coords="1348,106,1521,118,1621,132,1718,153,1801,182,1834,201,1859,222,1877,247,1884,275,1880,306,1863,340,1846,362,1829,378,1811,389,1792,396,1696,415,1604,431,1481,443,1185,461,895,470,695,474,695,468,895,465,1185,456,1480,438,1603,425,1695,409,1790,391,1809,384,1826,374,1842,359,1858,337,1875,304,1879,275,1872,249,1856,226,1831,205,1798,187,1717,158,1621,137,1520,124,1348,111"/>
+<area shape="rect" title=" " alt="" coords="1407,387,1466,412"/>
+<area shape="poly" title=" " alt="" coords="1348,114,1463,133,1599,160,1724,195,1773,216,1808,238,1823,255,1830,272,1837,313,1840,327,1836,340,1810,359,1772,371,1726,378,1675,382,1569,384,1480,390,1480,384,1569,379,1674,376,1725,373,1771,366,1807,354,1832,337,1835,327,1831,314,1825,273,1818,258,1804,242,1771,220,1723,200,1598,165,1462,138,1347,119"/>
+<area shape="rect" title=" " alt="" coords="39,387,109,412"/>
+<area shape="poly" title=" " alt="" coords="1211,112,755,129,498,146,392,157,312,169,201,191,156,209,105,242,73,273,55,314,53,329,54,344,64,373,59,375,49,346,48,329,50,313,68,270,102,238,154,204,200,186,311,164,391,152,498,141,754,124,1211,106"/>
+<area shape="rect" href="cxInput_8h.html" title=" " alt="" coords="324,167,400,192"/>
+<area shape="poly" title=" " alt="" coords="1211,115,414,177,414,171,1211,110"/>
+<area shape="rect" href="cxObject_8h.html" title=" " alt="" coords="473,313,558,339"/>
+<area shape="poly" title=" " alt="" coords="1119,260,888,278,733,295,572,316,571,311,732,289,887,273,1118,254"/>
+<area shape="rect" title=" " alt="" coords="731,387,803,412"/>
+<area shape="poly" title=" " alt="" coords="1179,264,1194,280,1207,299,1213,320,1211,331,1205,340,1176,360,1135,373,1085,381,1029,384,914,385,817,390,817,384,914,380,1029,379,1084,375,1134,368,1174,356,1201,337,1206,329,1207,321,1202,302,1190,283,1175,267"/>
+<area shape="poly" title=" " alt="" coords="1212,257,1342,279,1405,294,1450,311,1486,341,1512,373,1508,377,1482,344,1447,316,1404,299,1341,284,1211,263"/>
+<area shape="poly" title=" " alt="" coords="1212,259,1339,284,1395,298,1425,311,1435,326,1440,342,1442,373,1437,373,1435,343,1430,328,1422,315,1393,303,1338,289,1211,264"/>
+<area shape="rect" href="cxPositions_8h.html" title=" " alt="" coords="1266,313,1367,339"/>
+<area shape="poly" title=" " alt="" coords="1190,263,1281,305,1279,310,1188,268"/>
+<area shape="poly" title=" " alt="" coords="1211,256,1657,311,1657,316,1211,262"/>
+<area shape="rect" href="cxBorderStyles_8h.html" title=" " alt="" coords="827,387,950,412"/>
+<area shape="poly" title=" " alt="" coords="1211,258,1310,277,1354,293,1381,312,1387,326,1382,340,1368,352,1350,362,1306,376,1251,383,1191,387,1067,387,964,389,963,384,1067,382,1191,381,1251,378,1304,370,1348,357,1365,348,1377,337,1382,326,1377,315,1351,297,1308,283,1210,263"/>
+<area shape="rect" href="cxMiscDefines_8h.html" title=" " alt="" coords="582,313,702,339"/>
+<area shape="poly" title=" " alt="" coords="1119,262,716,316,715,310,1118,257"/>
+<area shape="rect" href="cxFunction_8h.html" title=" " alt="" coords="76,313,173,339"/>
+<area shape="poly" title=" " alt="" coords="1119,260,188,323,187,318,1118,254"/>
+<area shape="poly" title=" " alt="" coords="1119,258,786,276,597,293,520,304,462,316,436,328,410,341,332,362,254,378,123,396,122,391,253,373,331,357,408,336,433,323,460,311,519,299,597,288,785,271,1119,253"/>
+<area shape="rect" href="cxWidgetItems_8h.html" title="Defines an enumeration for the different cxWidgets items (title,." alt="" coords="727,313,848,339"/>
+<area shape="poly" title=" " alt="" coords="1119,265,862,313,861,308,1118,260"/>
+<area shape="rect" title=" " alt="" coords="872,313,940,339"/>
+<area shape="poly" title=" " alt="" coords="1124,268,954,314,952,309,1122,263"/>
+<area shape="rect" title=" " alt="" coords="965,313,1031,339"/>
+<area shape="poly" title=" " alt="" coords="1139,268,1039,310,1037,305,1137,263"/>
+<area shape="rect" title=" " alt="" coords="1543,313,1583,339"/>
+<area shape="poly" title=" " alt="" coords="1211,257,1352,278,1525,311,1530,312,1529,317,1524,316,1351,283,1211,262"/>
+<area shape="rect" title=" " alt="" coords="351,313,397,339"/>
+<area shape="poly" title=" " alt="" coords="1118,257,996,261,822,271,621,288,417,316,411,317,410,312,416,311,620,283,822,266,996,256,1118,252"/>
+<area shape="rect" title=" " alt="" coords="1608,313,1647,339"/>
+<area shape="poly" title=" " alt="" coords="1211,255,1377,272,1484,289,1595,311,1594,316,1483,294,1377,277,1211,260"/>
+<area shape="rect" title=" " alt="" coords="1056,313,1113,339"/>
+<area shape="poly" title=" " alt="" coords="1154,267,1110,306,1106,302,1150,263"/>
+<area shape="rect" title=" " alt="" coords="1138,313,1191,339"/>
+<area shape="poly" title=" " alt="" coords="1167,266,1167,300,1162,300,1162,266"/>
+<area shape="rect" title=" " alt="" coords="540,387,619,412"/>
+<area shape="poly" title=" " alt="" coords="528,337,562,375,558,378,524,341"/>
+<area shape="rect" title=" " alt="" coords="643,387,707,412"/>
+<area shape="poly" title=" " alt="" coords="542,336,638,379,636,383,540,341"/>
+<area shape="rect" title=" " alt="" coords="459,387,516,412"/>
+<area shape="poly" title=" " alt="" coords="513,340,499,375,494,373,508,338"/>
+<area shape="poly" title=" " alt="" coords="495,341,474,355,454,373,444,392,444,401,448,410,474,428,517,443,614,463,613,468,516,448,472,433,444,414,439,402,439,391,450,370,470,351,492,337"/>
+<area shape="poly" title=" " alt="" coords="557,336,718,382,717,387,555,341"/>
+<area shape="poly" title=" " alt="" coords="559,334,570,336,707,350,823,357,1022,358,1221,360,1339,368,1476,384,1476,389,1338,373,1221,365,1022,363,822,362,706,356,570,341,558,339"/>
+<area shape="poly" title=" " alt="" coords="559,334,570,336,746,353,986,370,1394,393,1394,398,986,375,746,359,570,341,558,339"/>
+<area shape="rect" href="cxColors_8h.html" title=" " alt="" coords="270,387,355,412"/>
+<area shape="poly" title=" " alt="" coords="484,341,359,385,357,380,482,336"/>
+<area shape="poly" title=" " alt="" coords="559,334,570,336,708,349,890,360,1326,377,2059,394,2059,400,1326,382,889,365,707,354,570,341,558,340"/>
+<area shape="rect" href="cxWidgetsException_8h.html" title=" " alt="" coords="975,387,1128,412"/>
+<area shape="poly" title=" " alt="" coords="559,334,570,336,763,362,961,384,961,389,763,368,570,341,558,339"/>
+<area shape="poly" title=" " alt="" coords="988,415,695,467,694,461,987,409"/>
+<area shape="poly" title=" " alt="" coords="852,415,695,462,694,457,850,409"/>
+<area shape="poly" title=" " alt="" coords="133,338,156,375,173,394,194,410,228,423,275,435,393,452,516,462,613,467,613,473,515,468,392,457,274,440,226,428,191,414,170,398,152,378,128,340"/>
+<area shape="poly" title=" " alt="" coords="119,341,92,377,88,374,114,337"/>
+<area shape="poly" title=" " alt="" coords="400,181,1105,243,1105,249,400,187"/>
+<area shape="poly" title=" " alt="" coords="324,184,277,187,220,197,160,214,105,242,56,280,36,300,21,322,11,343,8,365,14,388,29,410,40,417,59,424,117,436,285,454,471,464,613,468,613,473,471,469,285,459,116,442,58,429,38,422,25,414,9,390,3,366,6,342,16,319,32,297,53,276,102,238,158,209,218,191,276,182,324,178"/>
+<area shape="poly" title=" " alt="" coords="356,194,325,244,309,278,297,314,296,345,304,373,299,375,291,345,291,313,304,276,320,242,351,191"/>
+<area shape="poly" title=" " alt="" coords="338,194,245,242,152,307,149,302,242,238,335,190"/>
+<area shape="poly" title=" " alt="" coords="324,187,263,198,190,220,154,236,120,258,90,283,66,315,60,329,60,344,66,373,61,374,54,344,55,327,61,312,86,280,116,253,151,232,188,215,262,192,323,182"/>
+<area shape="poly" title=" " alt="" coords="401,178,536,181,739,190,978,207,1102,221,1222,237,1311,254,1397,275,1531,312,1530,317,1396,280,1310,259,1222,243,1101,226,978,213,739,195,536,186,400,184"/>
+<area shape="poly" title=" " alt="" coords="357,193,343,226,339,245,341,265,359,301,354,303,335,266,334,245,338,224,352,191"/>
+<area shape="rect" href="cxTextValidator_8h.html" title=" " alt="" coords="351,240,472,265"/>
+<area shape="poly" title=" " alt="" coords="372,191,398,227,393,230,368,194"/>
+<area shape="rect" href="cxInputOptions_8h.html" title="Defines an enumeration for different input options (editable and." alt="" coords="496,240,617,265"/>
+<area shape="poly" title=" " alt="" coords="394,190,513,233,511,238,392,195"/>
+<area shape="poly" title=" " alt="" coords="430,263,488,303,485,307,427,268"/>
+<area shape="poly" title=" " alt="" coords="376,268,335,287,296,315,272,340,255,363,249,386,252,398,260,410,284,427,321,441,367,451,418,459,525,467,613,469,613,474,525,472,418,464,366,457,319,446,281,432,256,414,247,400,244,386,250,361,268,336,292,311,332,282,374,263"/>
+<area shape="poly" title=" " alt="" coords="1385,194,1220,239,1219,234,1384,188"/>
+<area shape="poly" title=" " alt="" coords="1460,179,1583,187,1657,196,1729,210,1792,230,1817,243,1836,258,1849,275,1854,294,1850,316,1836,340,1808,371,1780,390,1751,402,1720,407,1653,408,1614,410,1572,415,1443,434,1312,448,1056,466,840,473,695,474,695,469,839,468,1056,461,1311,443,1443,428,1571,409,1614,404,1652,403,1720,401,1750,396,1778,386,1805,367,1832,337,1845,315,1849,295,1844,277,1832,261,1814,247,1789,235,1728,215,1656,201,1582,192,1460,184"/>
+<area shape="poly" title=" " alt="" coords="1385,187,798,253,484,291,382,306,339,316,329,328,322,342,316,373,311,372,317,340,325,325,337,311,381,301,483,286,798,248,1384,182"/>
+<area shape="poly" title=" " alt="" coords="1428,191,1444,228,1457,247,1474,263,1499,276,1528,285,1593,294,1661,293,1725,289,1779,286,1816,290,1827,296,1829,307,1823,322,1808,341,1780,350,1721,359,1539,375,1142,397,1142,391,1539,369,1720,354,1779,345,1805,336,1818,319,1824,307,1822,299,1814,295,1779,291,1726,294,1661,299,1592,299,1527,291,1497,281,1471,268,1453,251,1439,230,1423,193"/>
+<area shape="poly" title=" " alt="" coords="1410,194,1395,209,1382,227,1375,246,1380,263,1531,312,1529,317,1376,267,1370,246,1377,225,1391,206,1406,190"/>
+<area shape="poly" title=" " alt="" coords="1422,192,1419,227,1422,247,1431,264,1448,281,1464,291,1500,300,1543,303,1595,311,1594,316,1542,308,1500,306,1462,296,1444,285,1427,267,1417,248,1414,228,1417,192"/>
+<area shape="poly" title=" " alt="" coords="1385,185,1076,205,859,221,637,243,632,243,631,238,636,237,858,216,1075,199,1384,180"/>
+<area shape="rect" href="cxInputTypes_8h.html" title="Defines an enumeration for different input input types (text,." alt="" coords="1485,240,1596,265"/>
+<area shape="poly" title=" " alt="" coords="1442,190,1511,230,1508,235,1440,194"/>
+<area shape="rect" href="cxMessageDialogStyles_8h.html" title=" " alt="" coords="1620,240,1795,265"/>
+<area shape="poly" title=" " alt="" coords="1461,187,1649,234,1648,239,1459,193"/>
 </map>
 </div>
-</div></div><!-- contents -->
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacecx" id="r_namespacecx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html">cx</a></td></tr>
+<tr class="memdesc:namespacecx"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="cxBorderChars_8h.html">cxBorderChars.h</a> - Defines border characters to be used in drawing a box (i.e., in <a class="el" href="classcx_1_1cxWindow.html" title="Represents a text-based window on the screen. Can contain a title, status, and a message to appear wi...">cxWindow</a> and all its derivitives) <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8

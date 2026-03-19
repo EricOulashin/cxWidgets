@@ -44,12 +44,13 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">cxDate.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>C++14-compatible implementation of the <a class="el" href="classcxDate.html" title="Enables easy management of dates.">cxDate</a> class.  
+<p>C++17-improved implementation of the cxDate class.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="cxDate_8h_source.html">cxDate.h</a>&quot;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
@@ -58,114 +59,72 @@ $(function() {
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
 <code>#include &lt;cctype&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;stdexcept&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for cxDate.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="cxDate_8cpp__incl.png" border="0" usemap="#a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8cpp" alt=""/></div>
 <map name="a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8cpp" id="a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8cpp">
-<area shape="rect" title="C++14&#45;compatible implementation of the cxDate class." alt="" coords="293,5,474,45"/>
-<area shape="rect" href="cxDate_8h.html" title=" " alt="" coords="39,93,114,119"/>
-<area shape="poly" title=" " alt="" coords="311,48,128,94,127,89,309,43"/>
-<area shape="rect" title=" " alt="" coords="138,93,199,119"/>
-<area shape="poly" title=" " alt="" coords="333,48,213,91,211,86,331,43"/>
-<area shape="rect" title=" " alt="" coords="224,93,279,119"/>
-<area shape="poly" title=" " alt="" coords="353,48,284,88,282,84,350,43"/>
-<area shape="rect" title=" " alt="" coords="303,93,373,119"/>
-<area shape="poly" title=" " alt="" coords="375,47,354,83,349,80,370,44"/>
-<area shape="rect" title=" " alt="" coords="397,93,463,119"/>
-<area shape="poly" title=" " alt="" coords="397,44,418,80,414,83,392,47"/>
-<area shape="rect" title=" " alt="" coords="488,93,553,119"/>
-<area shape="poly" title=" " alt="" coords="418,43,490,84,487,89,415,48"/>
-<area shape="rect" title=" " alt="" coords="578,93,639,119"/>
-<area shape="poly" title=" " alt="" coords="438,43,566,87,564,92,436,48"/>
-<area shape="rect" title=" " alt="" coords="663,93,738,119"/>
-<area shape="poly" title=" " alt="" coords="460,43,651,90,649,95,459,48"/>
+<area shape="rect" title="C++17&#45;improved implementation of the cxDate class." alt="" coords="489,5,670,45"/>
+<area shape="rect" href="cxDate_8h.html" title=" " alt="" coords="143,93,218,119"/>
+<area shape="poly" title=" " alt="" coords="489,46,232,96,231,90,488,40"/>
+<area shape="rect" title=" " alt="" coords="242,93,303,119"/>
+<area shape="poly" title=" " alt="" coords="506,48,317,96,317,96,316,91,316,91,504,43"/>
+<area shape="rect" title=" " alt="" coords="328,93,383,119"/>
+<area shape="poly" title=" " alt="" coords="527,48,397,93,395,88,525,43"/>
+<area shape="rect" title=" " alt="" coords="407,93,477,119"/>
+<area shape="poly" title=" " alt="" coords="548,48,476,89,473,84,545,43"/>
+<area shape="rect" title=" " alt="" coords="501,93,567,119"/>
+<area shape="poly" title=" " alt="" coords="571,47,550,83,545,80,566,44"/>
+<area shape="rect" title=" " alt="" coords="592,93,657,119"/>
+<area shape="poly" title=" " alt="" coords="593,44,613,80,609,83,588,47"/>
+<area shape="rect" title=" " alt="" coords="682,93,743,119"/>
+<area shape="poly" title=" " alt="" coords="613,43,683,84,680,89,610,48"/>
+<area shape="rect" title=" " alt="" coords="767,93,826,119"/>
+<area shape="poly" title=" " alt="" coords="632,43,755,87,753,92,630,48"/>
+<area shape="rect" title=" " alt="" coords="850,93,925,119"/>
+<area shape="poly" title=" " alt="" coords="654,43,837,89,836,94,652,48"/>
+<area shape="rect" title=" " alt="" coords="949,93,1028,119"/>
+<area shape="poly" title=" " alt="" coords="671,40,936,91,935,96,670,45"/>
 <area shape="rect" title=" " alt="" coords="5,167,60,192"/>
-<area shape="poly" title=" " alt="" coords="72,120,49,156,45,154,67,118"/>
-<area shape="rect" title=" " alt="" coords="85,167,157,192"/>
-<area shape="poly" title=" " alt="" coords="86,118,109,154,104,156,82,120"/>
+<area shape="poly" title=" " alt="" coords="158,121,70,163,68,158,156,116"/>
+<area shape="rect" title=" " alt="" coords="85,167,173,192"/>
+<area shape="poly" title=" " alt="" coords="174,121,147,157,143,154,170,117"/>
+<area shape="rect" title=" " alt="" coords="197,167,269,192"/>
+<area shape="poly" title=" " alt="" coords="191,117,218,154,214,157,187,121"/>
+<area shape="rect" title=" " alt="" coords="293,167,359,192"/>
+<area shape="poly" title=" " alt="" coords="205,116,291,158,289,163,203,121"/>
 </map>
 </div>
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacecx" id="r_namespacecx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html">cx</a></td></tr>
+<tr class="memdesc:namespacecx"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="cxBorderChars_8h.html">cxBorderChars.h</a> - Defines border characters to be used in drawing a box (i.e., in <a class="el" href="classcx_1_1cxWindow.html" title="Represents a text-based window on the screen. Can contain a title, status, and a message to appear wi...">cxWindow</a> and all its derivitives) <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a62cb6f323bb1af8c1754d661fb2e1b54" id="r_a62cb6f323bb1af8c1754d661fb2e1b54"><td class="memItemLeft" align="right" valign="top">ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8cpp.html#a62cb6f323bb1af8c1754d661fb2e1b54">operator&lt;&lt;</a> (ostream &amp;pOS, const <a class="el" href="classcxDate.html">cxDate</a> &amp;pDate)</td></tr>
-<tr class="separator:a62cb6f323bb1af8c1754d661fb2e1b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71c04f2a4524667caf6a4d0bb67e6424" id="r_a71c04f2a4524667caf6a4d0bb67e6424"><td class="memItemLeft" align="right" valign="top">istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8cpp.html#a71c04f2a4524667caf6a4d0bb67e6424">operator&gt;&gt;</a> (istream &amp;pIS, <a class="el" href="classcxDate.html">cxDate</a> &amp;pDate)</td></tr>
-<tr class="separator:a71c04f2a4524667caf6a4d0bb67e6424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a924c25c5bf424ec15f33ad01950c9a25" id="r_a924c25c5bf424ec15f33ad01950c9a25"><td class="memItemLeft" align="right" valign="top">ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#a924c25c5bf424ec15f33ad01950c9a25">cx::operator&lt;&lt;</a> (ostream &amp;pOS, const <a class="el" href="classcx_1_1cxDate.html">cxDate</a> &amp;pDate)</td></tr>
+<tr class="separator:a924c25c5bf424ec15f33ad01950c9a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa57420986893a57fad4a9632c455c536" id="r_aa57420986893a57fad4a9632c455c536"><td class="memItemLeft" align="right" valign="top">istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#aa57420986893a57fad4a9632c455c536">cx::operator&gt;&gt;</a> (istream &amp;pIS, <a class="el" href="classcx_1_1cxDate.html">cxDate</a> &amp;pDate)</td></tr>
+<tr class="separator:aa57420986893a57fad4a9632c455c536"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>C++14-compatible implementation of the <a class="el" href="classcxDate.html" title="Enables easy management of dates.">cxDate</a> class. </p>
+<div class="textblock"><p>C++17-improved implementation of the cxDate class. </p>
 <p>Modernizations applied vs. the original date.cpp:</p><ul>
 <li>std::chrono used in today() / getToday() for current date (thread-safe)</li>
 <li>std::stoi() replaces atoi() / istringstream-based int parsing</li>
 <li>std::to_string() replaces the custom anythingToString&lt;T&gt;() template</li>
-<li>noexcept propagated from the header</li>
-<li>Range-based for loops used where applicable </li>
+<li>noexcept and [[nodiscard]] propagated from the header</li>
+<li>std::clamp used in validateDateElements() for range clamping</li>
+<li>Range-based for loops used where applicable</li>
+<li>std::string_view parameters avoid unnecessary string copies</li>
+<li>std::optional&lt;cxDate&gt; returned from tryParse() </li>
 </ul>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a62cb6f323bb1af8c1754d661fb2e1b54" name="a62cb6f323bb1af8c1754d661fb2e1b54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62cb6f323bb1af8c1754d661fb2e1b54">&#9670;&#160;</a></span>operator&lt;&lt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ostream &amp; operator&lt;&lt; </td>
-          <td>(</td>
-          <td class="paramtype">ostream &amp;&#160;</td>
-          <td class="paramname"><em>pOS</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcxDate.html">cxDate</a> &amp;&#160;</td>
-          <td class="paramname"><em>pDate</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="classcxDate.html#ad0d0835cea922fc14cffa46641245360">cxDate::dayOfWeekStr()</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ad126fb6ce1835bd6ca66a389c5dee2de">DD_MM_YY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a28aceb16ffa9a4c65b339140649d7e00">DD_MM_YYYY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a48af7516a2ebb96c074027bbac1dbf82">DDMMYY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56aa62eb4c9725e249e6b8568748d5d3909">DDMMYYYY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a1a067afba0eb03748c72a239af8de692">MM_DD_YY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56abcd91d59a20af75748f7a610d1060306">MM_DD_YYYY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56acc2e6ce49b5d293e2581fdbc606fea38">MMDDYY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7bb554d7a313a2f1cefdb05f2d64d936">MMDDYYYY</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a88a03cec97a50dd3de6cad7d038b43f2">YY_MM_DD</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7d1b2df383ca4e7c541e5ac44e4c4865">YYMMDD</a>, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a5600e4b641a04af3552c0453f5ad2b6b">YYYY_MM_DD</a>, and <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ab9f60efb642df6dda3ed61d251ed3d0d">YYYYMMDD</a>.</p>
-
-</div>
-</div>
-<a id="a71c04f2a4524667caf6a4d0bb67e6424" name="a71c04f2a4524667caf6a4d0bb67e6424"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71c04f2a4524667caf6a4d0bb67e6424">&#9670;&#160;</a></span>operator&gt;&gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">istream &amp; operator&gt;&gt; </td>
-          <td>(</td>
-          <td class="paramtype">istream &amp;&#160;</td>
-          <td class="paramname"><em>pIS</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classcxDate.html">cxDate</a> &amp;&#160;</td>
-          <td class="paramname"><em>pDate</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="classcxDate.html#aff568746e3ea8b934eb4bac60d8152ff">cxDate::fromString()</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8

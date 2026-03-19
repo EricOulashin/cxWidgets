@@ -1,21 +1,21 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classcxFunction.html" title="Base class for cxFunction2 and cxFunction4. This class is pure." alt="" coords="5,241,92,267"/>
-<area shape="rect" id="Node000001" href="$classcxFunction0.html" title="A more intelligent function pointer, which can run a." alt="" coords="181,5,274,31"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="51,227,60,186,77,136,102,85,119,62,138,41,158,29,179,21,181,26,160,34,142,45,123,65,106,88,81,138,65,188,56,228"/>
-<area shape="rect" id="Node000002" href="$classcxFunction1RefTemplated.html" title="This class is a cxFunction that is templated to take a reference of a specific type." alt="" coords="140,55,315,95"/>
-<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="57,227,87,167,110,134,138,105,157,93,160,98,142,109,114,137,92,169,62,229"/>
-<area shape="rect" id="Node000003" href="$classcxFunction2.html" title="A more intelligent function pointer, which can run a function with." alt="" coords="181,120,274,145"/>
-<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="65,228,96,191,139,156,179,139,181,144,141,160,100,195,69,231"/>
-<area shape="rect" id="Node000004" href="$classcxFunction2RefTemplated.html" title="This class is a cxFunction that is templated to take 2 references of specific types." alt="" coords="140,170,315,210"/>
-<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="97,234,170,208,172,213,99,239"/>
-<area shape="rect" id="Node000005" href="$classcxFunction2Templated.html" title="This class is a cxFunction that is templated to take 2 pointers of specific types." alt="" coords="151,234,304,274"/>
-<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="106,251,150,251,150,257,106,257"/>
-<area shape="rect" id="Node000006" href="$classcxFunction3RefTemplated.html" title="This class is a cxFunction that is templated to take 2 references of specific types." alt="" coords="140,298,315,338"/>
-<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="99,269,172,295,170,300,97,274"/>
-<area shape="rect" id="Node000007" href="$classcxFunction4.html" title="This class is just like cxFunction2, but for functions." alt="" coords="181,363,274,388"/>
-<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="69,277,100,313,141,348,181,364,179,369,139,352,96,317,65,280"/>
-<area shape="rect" id="Node000008" href="$classcxFunction4RefTemplated.html" title="This class is a cxFunction that is templated to take 4 references of specific types." alt="" coords="140,413,315,453"/>
-<area shape="poly" id="edge8_Node000000_Node000008" title=" " alt="" coords="62,278,92,338,115,370,142,397,162,410,159,415,138,401,111,373,88,340,57,281"/>
-<area shape="rect" id="Node000009" href="$classcxFunction4Templated.html" title="This class is a cxFunction that is templated to take 4 pointers of specific types." alt="" coords="151,477,304,517"/>
-<area shape="poly" id="edge9_Node000000_Node000009" title=" " alt="" coords="57,280,66,320,83,369,107,419,142,463,158,474,155,479,138,467,103,422,78,371,61,321,52,281"/>
+<area shape="rect" id="Node000000" href="$classcx_1_1cxFunction.html" title="Base class for cxFunction2 and cxFunction4. This class is pure." alt="" coords="5,241,113,267"/>
+<area shape="rect" id="Node000001" href="$classcx_1_1cxFunction0.html" title="A more intelligent function pointer, which can run a." alt="" coords="202,5,317,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="63,227,74,186,93,136,121,85,139,62,160,41,179,29,201,22,203,27,182,34,163,45,143,65,125,88,98,138,79,188,68,229"/>
+<area shape="rect" id="Node000002" href="$classcx_1_1cxFunction1RefTemplated.html" title="This class is a cxFunction that is templated to take a reference of a specific type." alt="" coords="161,55,357,95"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="69,227,104,166,129,134,160,105,180,93,183,98,163,109,133,137,108,169,74,230"/>
+<area shape="rect" id="Node000003" href="$classcx_1_1cxFunction2.html" title="A more intelligent function pointer, which can run a function with." alt="" coords="202,120,317,145"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="77,229,113,191,160,156,201,140,203,145,163,160,116,195,81,233"/>
+<area shape="rect" id="Node000004" href="$classcx_1_1cxFunction2RefTemplated.html" title="This class is a cxFunction that is templated to take 2 references of specific types." alt="" coords="161,170,357,210"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="112,235,195,208,197,213,114,240"/>
+<area shape="rect" id="Node000005" href="$classcx_1_1cxFunction2Templated.html" title="This class is a cxFunction that is templated to take 2 pointers of specific types." alt="" coords="172,234,347,274"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="127,251,172,251,172,257,127,257"/>
+<area shape="rect" id="Node000006" href="$classcx_1_1cxFunction3RefTemplated.html" title="This class is a cxFunction that is templated to take 2 references of specific types." alt="" coords="161,298,357,338"/>
+<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="114,268,197,295,195,300,112,273"/>
+<area shape="rect" id="Node000007" href="$classcx_1_1cxFunction4.html" title="This class is just like cxFunction2, but for functions." alt="" coords="202,363,317,388"/>
+<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="81,275,116,313,163,348,203,363,201,368,160,352,113,317,77,279"/>
+<area shape="rect" id="Node000008" href="$classcx_1_1cxFunction4RefTemplated.html" title="This class is a cxFunction that is templated to take 4 references of specific types." alt="" coords="161,413,357,453"/>
+<area shape="poly" id="edge8_Node000000_Node000008" title=" " alt="" coords="74,278,109,338,134,370,163,397,185,410,182,415,160,401,130,373,104,341,70,281"/>
+<area shape="rect" id="Node000009" href="$classcx_1_1cxFunction4Templated.html" title="This class is a cxFunction that is templated to take 4 pointers of specific types." alt="" coords="172,477,347,517"/>
+<area shape="poly" id="edge9_Node000000_Node000009" title=" " alt="" coords="69,279,80,320,99,369,126,419,143,442,163,463,180,474,177,479,160,467,139,446,122,422,94,371,75,321,64,281"/>
 </map>

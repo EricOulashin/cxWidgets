@@ -45,23 +45,30 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#define-members">Macros</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">cxDate.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
+<code>#include &lt;string_view&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for cxDate.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="cxDate_8h__incl.png" border="0" usemap="#a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8h" alt=""/></div>
 <map name="a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8h" id="a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8h">
-<area shape="rect" title=" " alt="" coords="5,5,172,45"/>
-<area shape="rect" title=" " alt="" coords="17,93,72,119"/>
-<area shape="poly" title=" " alt="" coords="80,47,60,83,56,80,76,44"/>
-<area shape="rect" title=" " alt="" coords="97,93,169,119"/>
-<area shape="poly" title=" " alt="" coords="102,44,122,80,117,83,97,47"/>
+<area shape="rect" title=" " alt="" coords="97,5,264,45"/>
+<area shape="rect" title=" " alt="" coords="5,93,60,119"/>
+<area shape="poly" title=" " alt="" coords="146,48,68,89,65,84,144,43"/>
+<area shape="rect" title=" " alt="" coords="85,93,173,119"/>
+<area shape="poly" title=" " alt="" coords="170,47,146,83,142,80,166,44"/>
+<area shape="rect" title=" " alt="" coords="197,93,269,119"/>
+<area shape="poly" title=" " alt="" coords="195,44,220,80,215,83,191,47"/>
+<area shape="rect" title=" " alt="" coords="293,93,359,119"/>
+<area shape="poly" title=" " alt="" coords="217,43,294,84,291,89,214,48"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -70,7 +77,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="center"><img src="cxDate_8h__dep__incl.png" border="0" usemap="#a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8hdep" alt=""/></div>
 <map name="a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8hdep" id="a_2home_2erico_2projects_2cxWidgets_2src_2cxDate_8hdep">
 <area shape="rect" title=" " alt="" coords="391,5,557,45"/>
-<area shape="rect" href="cxDate_8cpp.html" title="C++17&#45;compatible implementation of the cxDate class." alt="" coords="98,93,279,133"/>
+<area shape="rect" href="cxDate_8cpp.html" title="C++17&#45;improved implementation of the cxDate class." alt="" coords="98,93,279,133"/>
 <area shape="poly" title=" " alt="" coords="399,52,252,96,250,91,397,47"/>
 <area shape="rect" href="cxDatePicker_8h.html" title=" " alt="" coords="303,93,506,133"/>
 <area shape="poly" title=" " alt="" coords="452,58,422,95,418,91,448,55"/>
@@ -90,230 +97,70 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcxDate.html">cxDate</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables easy management of dates. C++14-compatible.  <a href="classcxDate.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1cxDate.html">cx::cxDate</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables easy management of dates. C++17-enhanced version of the original 'date' class.  <a href="classcx_1_1cxDate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a6d5e262aa1768014ae464d20d03be1bb" id="r_a6d5e262aa1768014ae464d20d03be1bb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a6d5e262aa1768014ae464d20d03be1bb">CXDATE_DEFAULT_YEAR</a>&#160;&#160;&#160;2000</td></tr>
-<tr class="separator:a6d5e262aa1768014ae464d20d03be1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9df4d3d7ba6268cbc1b3c9a9a2237582" id="r_a9df4d3d7ba6268cbc1b3c9a9a2237582"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a9df4d3d7ba6268cbc1b3c9a9a2237582">CXDATE_YEAR_2DIGIT_LAST_CENT</a>&#160;&#160;&#160;49</td></tr>
-<tr class="separator:a9df4d3d7ba6268cbc1b3c9a9a2237582"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a929d7d896ef6ce27d7d57e43552b17b7" id="r_a929d7d896ef6ce27d7d57e43552b17b7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a929d7d896ef6ce27d7d57e43552b17b7">CXDATE_MONTHS_IN_YEAR</a>&#160;&#160;&#160;12</td></tr>
-<tr class="separator:a929d7d896ef6ce27d7d57e43552b17b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46fd2a3da188f0d88b93a95caf8f1def" id="r_a46fd2a3da188f0d88b93a95caf8f1def"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a46fd2a3da188f0d88b93a95caf8f1def">CXDATE_START_MONTH</a>&#160;&#160;&#160;1</td></tr>
-<tr class="separator:a46fd2a3da188f0d88b93a95caf8f1def"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefe3150dc62da5b97c898aeb720226ea" id="r_aefe3150dc62da5b97c898aeb720226ea"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#aefe3150dc62da5b97c898aeb720226ea">CXDATE_END_MONTH</a>&#160;&#160;&#160;12</td></tr>
-<tr class="separator:aefe3150dc62da5b97c898aeb720226ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01c29055f157f4f24ad2ba23e4e64d4b" id="r_a01c29055f157f4f24ad2ba23e4e64d4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a01c29055f157f4f24ad2ba23e4e64d4b">CXDATE_START_DAY</a>&#160;&#160;&#160;1</td></tr>
-<tr class="separator:a01c29055f157f4f24ad2ba23e4e64d4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80e015ef61f485ae9f9225f9519ec886" id="r_a80e015ef61f485ae9f9225f9519ec886"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a80e015ef61f485ae9f9225f9519ec886">CXDATE_YEAR_MIN</a>&#160;&#160;&#160;1800</td></tr>
-<tr class="separator:a80e015ef61f485ae9f9225f9519ec886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a862e5c4224c1e5238ddb2438ae861685" id="r_a862e5c4224c1e5238ddb2438ae861685"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a862e5c4224c1e5238ddb2438ae861685">CXDATE_YEAR_MAX</a>&#160;&#160;&#160;2500</td></tr>
-<tr class="separator:a862e5c4224c1e5238ddb2438ae861685"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacecx" id="r_namespacecx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html">cx</a></td></tr>
+<tr class="memdesc:namespacecx"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="cxBorderChars_8h.html">cxBorderChars.h</a> - Defines border characters to be used in drawing a box (i.e., in <a class="el" href="classcx_1_1cxWindow.html" title="Represents a text-based window on the screen. Can contain a title, status, and a message to appear wi...">cxWindow</a> and all its derivitives) <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a0b5f9e7ff3f334f3a1e8c0a81e1a5b56" id="r_a0b5f9e7ff3f334f3a1e8c0a81e1a5b56"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56">eDateFormats</a> { <br />
-&#160;&#160;<a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a5600e4b641a04af3552c0453f5ad2b6b">YYYY_MM_DD</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56abcd91d59a20af75748f7a610d1060306">MM_DD_YYYY</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a28aceb16ffa9a4c65b339140649d7e00">DD_MM_YYYY</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a88a03cec97a50dd3de6cad7d038b43f2">YY_MM_DD</a>
+<tr class="memitem:a729c7d7e0d5396dd1c96e1a321cb2b78" id="r_a729c7d7e0d5396dd1c96e1a321cb2b78"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78">cx::eDateFormats</a> { <br />
+&#160;&#160;<a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a71f409368e9fa0bff2118fd220db776f">cx::YYYY_MM_DD</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a6d5f5940a0cee46b51a11a5da87281db">cx::MM_DD_YYYY</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a8cd3a43af45756bf6d7b5f9921f56a96">cx::DD_MM_YYYY</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78af3f8bcda55b360af798aec934791fc24">cx::YY_MM_DD</a>
 , <br />
-&#160;&#160;<a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a1a067afba0eb03748c72a239af8de692">MM_DD_YY</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ad126fb6ce1835bd6ca66a389c5dee2de">DD_MM_YY</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ab9f60efb642df6dda3ed61d251ed3d0d">YYYYMMDD</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7bb554d7a313a2f1cefdb05f2d64d936">MMDDYYYY</a>
+&#160;&#160;<a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78aa78eb2c3651fa405bda26272408f097d">cx::MM_DD_YY</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a77c62c5367eef233cea2021c2ee28844">cx::DD_MM_YY</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78ad2d091c2aa319d222d0b13a126b61890">cx::YYYYMMDD</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a6a58e045116865a01cd0beecdec007b8">cx::MMDDYYYY</a>
 , <br />
-&#160;&#160;<a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56aa62eb4c9725e249e6b8568748d5d3909">DDMMYYYY</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7d1b2df383ca4e7c541e5ac44e4c4865">YYMMDD</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56acc2e6ce49b5d293e2581fdbc606fea38">MMDDYY</a>
-, <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a48af7516a2ebb96c074027bbac1dbf82">DDMMYY</a>
+&#160;&#160;<a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a859d1333a4c37000549d65c8d8fa1ddf">cx::DDMMYYYY</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78ae6a288d266d1b2c91fc636faaa8e3ea1">cx::YYMMDD</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78ac4a402a52a0710e5455d4cb000b745b3">cx::MMDDYY</a>
+, <a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a37abcdbac1e85d842f5866521aeb3879">cx::DDMMYY</a>
 , <br />
-&#160;&#160;<a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a6ce26a62afab55d7606ad4e92428b30c">UNKNOWN</a>
+&#160;&#160;<a class="el" href="namespacecx.html#a729c7d7e0d5396dd1c96e1a321cb2b78a8556040db2354af81b328df64ae4b52d">cx::UNKNOWN</a>
 <br />
  }</td></tr>
-<tr class="separator:a0b5f9e7ff3f334f3a1e8c0a81e1a5b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57c3f931012fc89cc5885cfffeb3a5dd" id="r_a57c3f931012fc89cc5885cfffeb3a5dd"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5dd">eWeekDays</a> { <br />
-&#160;&#160;<a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5ddafd5ae4e8a3db9900330c50c41a470559">eSUNDAY</a>
-, <a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5dda7847f7b1c1ebd6de16b16073d2786aad">eMONDAY</a>
-, <a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5dda49aa92be4c009d3750ffb0e34e4f8a26">eTUESDAY</a>
-, <a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5dda774a564a137bb7c0340943496bab5144">eWEDNESDAY</a>
+<tr class="separator:a729c7d7e0d5396dd1c96e1a321cb2b78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abde1b8018403411168c6530d0d12a408" id="r_abde1b8018403411168c6530d0d12a408"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408">cx::eWeekDays</a> { <br />
+&#160;&#160;<a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408a984fdc7c36129ee35680ed3cddc75d4d">cx::eSUNDAY</a>
+, <a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408a66dca0f1c0e8f78df75dc1735d60103e">cx::eMONDAY</a>
+, <a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408a5f9e17ad6ebbfc7154887e96e30999d8">cx::eTUESDAY</a>
+, <a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408af7d8f4810f2596a3ca314edda17b420f">cx::eWEDNESDAY</a>
 , <br />
-&#160;&#160;<a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5ddab93320f4c33d27401a26972ab9c3f755">eTHURSDAY</a>
-, <a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5dda7dc903804143027367af1c3fe3a25ed7">eFRIDAY</a>
-, <a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5dda6c97d921f032bda0a1cff23dc3394b3e">eSATURDAY</a>
+&#160;&#160;<a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408ac59f1fdb0450a7f4450bb090d7ca09c9">cx::eTHURSDAY</a>
+, <a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408ac453c1f7efa44eda414d16038a7b52c9">cx::eFRIDAY</a>
+, <a class="el" href="namespacecx.html#abde1b8018403411168c6530d0d12a408a5f7014a96a53be6bf4d2ade4a56d058a">cx::eSATURDAY</a>
 <br />
  }</td></tr>
-<tr class="separator:a57c3f931012fc89cc5885cfffeb3a5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:abde1b8018403411168c6530d0d12a408"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ad07535a65a29ad306bbe2bef133724af" id="r_ad07535a65a29ad306bbe2bef133724af"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#ad07535a65a29ad306bbe2bef133724af">cx::CXDATE_DEFAULT_YEAR</a> = 2000</td></tr>
+<tr class="separator:ad07535a65a29ad306bbe2bef133724af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fde6a328e8f93717cb7b2e2a52cfa2e" id="r_a7fde6a328e8f93717cb7b2e2a52cfa2e"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#a7fde6a328e8f93717cb7b2e2a52cfa2e">cx::CXDATE_YEAR_2DIGIT_LAST_CENT</a> = 49</td></tr>
+<tr class="separator:a7fde6a328e8f93717cb7b2e2a52cfa2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae68be440357065f012aecd5bcda86369" id="r_ae68be440357065f012aecd5bcda86369"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#ae68be440357065f012aecd5bcda86369">cx::CXDATE_MONTHS_IN_YEAR</a> = 12</td></tr>
+<tr class="separator:ae68be440357065f012aecd5bcda86369"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a178842d354ef8c7e2660f422ee5168bd" id="r_a178842d354ef8c7e2660f422ee5168bd"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#a178842d354ef8c7e2660f422ee5168bd">cx::CXDATE_START_MONTH</a> = 1</td></tr>
+<tr class="separator:a178842d354ef8c7e2660f422ee5168bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab1cd4c00437b68bb2345ec07d8d53a1" id="r_aab1cd4c00437b68bb2345ec07d8d53a1"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#aab1cd4c00437b68bb2345ec07d8d53a1">cx::CXDATE_END_MONTH</a> = 12</td></tr>
+<tr class="separator:aab1cd4c00437b68bb2345ec07d8d53a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae575700033de3f1c3deed63abb4d274e" id="r_ae575700033de3f1c3deed63abb4d274e"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#ae575700033de3f1c3deed63abb4d274e">cx::CXDATE_START_DAY</a> = 1</td></tr>
+<tr class="separator:ae575700033de3f1c3deed63abb4d274e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af05c547b689378ac0722d30c00c59dd4" id="r_af05c547b689378ac0722d30c00c59dd4"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#af05c547b689378ac0722d30c00c59dd4">cx::CXDATE_YEAR_MIN</a> = 1800</td></tr>
+<tr class="separator:af05c547b689378ac0722d30c00c59dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a0002eb480d339f7e80d2f1d894621b" id="r_a3a0002eb480d339f7e80d2f1d894621b"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html#a3a0002eb480d339f7e80d2f1d894621b">cx::CXDATE_YEAR_MAX</a> = 2500</td></tr>
+<tr class="separator:a3a0002eb480d339f7e80d2f1d894621b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a6d5e262aa1768014ae464d20d03be1bb" name="a6d5e262aa1768014ae464d20d03be1bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d5e262aa1768014ae464d20d03be1bb">&#9670;&#160;</a></span>CXDATE_DEFAULT_YEAR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_DEFAULT_YEAR&#160;&#160;&#160;2000</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aefe3150dc62da5b97c898aeb720226ea" name="aefe3150dc62da5b97c898aeb720226ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefe3150dc62da5b97c898aeb720226ea">&#9670;&#160;</a></span>CXDATE_END_MONTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_END_MONTH&#160;&#160;&#160;12</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a929d7d896ef6ce27d7d57e43552b17b7" name="a929d7d896ef6ce27d7d57e43552b17b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a929d7d896ef6ce27d7d57e43552b17b7">&#9670;&#160;</a></span>CXDATE_MONTHS_IN_YEAR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_MONTHS_IN_YEAR&#160;&#160;&#160;12</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a01c29055f157f4f24ad2ba23e4e64d4b" name="a01c29055f157f4f24ad2ba23e4e64d4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01c29055f157f4f24ad2ba23e4e64d4b">&#9670;&#160;</a></span>CXDATE_START_DAY</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_START_DAY&#160;&#160;&#160;1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a46fd2a3da188f0d88b93a95caf8f1def" name="a46fd2a3da188f0d88b93a95caf8f1def"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46fd2a3da188f0d88b93a95caf8f1def">&#9670;&#160;</a></span>CXDATE_START_MONTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_START_MONTH&#160;&#160;&#160;1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9df4d3d7ba6268cbc1b3c9a9a2237582" name="a9df4d3d7ba6268cbc1b3c9a9a2237582"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9df4d3d7ba6268cbc1b3c9a9a2237582">&#9670;&#160;</a></span>CXDATE_YEAR_2DIGIT_LAST_CENT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_YEAR_2DIGIT_LAST_CENT&#160;&#160;&#160;49</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a862e5c4224c1e5238ddb2438ae861685" name="a862e5c4224c1e5238ddb2438ae861685"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a862e5c4224c1e5238ddb2438ae861685">&#9670;&#160;</a></span>CXDATE_YEAR_MAX</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_YEAR_MAX&#160;&#160;&#160;2500</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a80e015ef61f485ae9f9225f9519ec886" name="a80e015ef61f485ae9f9225f9519ec886"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80e015ef61f485ae9f9225f9519ec886">&#9670;&#160;</a></span>CXDATE_YEAR_MIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CXDATE_YEAR_MIN&#160;&#160;&#160;1800</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56">&#9670;&#160;</a></span>eDateFormats</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="cxDate_8h.html#a0b5f9e7ff3f334f3a1e8c0a81e1a5b56">eDateFormats</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a5600e4b641a04af3552c0453f5ad2b6b" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a5600e4b641a04af3552c0453f5ad2b6b"></a>YYYY_MM_DD&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56abcd91d59a20af75748f7a610d1060306" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56abcd91d59a20af75748f7a610d1060306"></a>MM_DD_YYYY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a28aceb16ffa9a4c65b339140649d7e00" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a28aceb16ffa9a4c65b339140649d7e00"></a>DD_MM_YYYY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a88a03cec97a50dd3de6cad7d038b43f2" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a88a03cec97a50dd3de6cad7d038b43f2"></a>YY_MM_DD&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a1a067afba0eb03748c72a239af8de692" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a1a067afba0eb03748c72a239af8de692"></a>MM_DD_YY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ad126fb6ce1835bd6ca66a389c5dee2de" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ad126fb6ce1835bd6ca66a389c5dee2de"></a>DD_MM_YY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ab9f60efb642df6dda3ed61d251ed3d0d" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56ab9f60efb642df6dda3ed61d251ed3d0d"></a>YYYYMMDD&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7bb554d7a313a2f1cefdb05f2d64d936" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7bb554d7a313a2f1cefdb05f2d64d936"></a>MMDDYYYY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56aa62eb4c9725e249e6b8568748d5d3909" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56aa62eb4c9725e249e6b8568748d5d3909"></a>DDMMYYYY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7d1b2df383ca4e7c541e5ac44e4c4865" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a7d1b2df383ca4e7c541e5ac44e4c4865"></a>YYMMDD&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56acc2e6ce49b5d293e2581fdbc606fea38" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56acc2e6ce49b5d293e2581fdbc606fea38"></a>MMDDYY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a48af7516a2ebb96c074027bbac1dbf82" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a48af7516a2ebb96c074027bbac1dbf82"></a>DDMMYY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a6ce26a62afab55d7606ad4e92428b30c" name="a0b5f9e7ff3f334f3a1e8c0a81e1a5b56a6ce26a62afab55d7606ad4e92428b30c"></a>UNKNOWN&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="a57c3f931012fc89cc5885cfffeb3a5dd" name="a57c3f931012fc89cc5885cfffeb3a5dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57c3f931012fc89cc5885cfffeb3a5dd">&#9670;&#160;</a></span>eWeekDays</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="cxDate_8h.html#a57c3f931012fc89cc5885cfffeb3a5dd">eWeekDays</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a57c3f931012fc89cc5885cfffeb3a5ddafd5ae4e8a3db9900330c50c41a470559" name="a57c3f931012fc89cc5885cfffeb3a5ddafd5ae4e8a3db9900330c50c41a470559"></a>eSUNDAY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a57c3f931012fc89cc5885cfffeb3a5dda7847f7b1c1ebd6de16b16073d2786aad" name="a57c3f931012fc89cc5885cfffeb3a5dda7847f7b1c1ebd6de16b16073d2786aad"></a>eMONDAY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a57c3f931012fc89cc5885cfffeb3a5dda49aa92be4c009d3750ffb0e34e4f8a26" name="a57c3f931012fc89cc5885cfffeb3a5dda49aa92be4c009d3750ffb0e34e4f8a26"></a>eTUESDAY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a57c3f931012fc89cc5885cfffeb3a5dda774a564a137bb7c0340943496bab5144" name="a57c3f931012fc89cc5885cfffeb3a5dda774a564a137bb7c0340943496bab5144"></a>eWEDNESDAY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a57c3f931012fc89cc5885cfffeb3a5ddab93320f4c33d27401a26972ab9c3f755" name="a57c3f931012fc89cc5885cfffeb3a5ddab93320f4c33d27401a26972ab9c3f755"></a>eTHURSDAY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a57c3f931012fc89cc5885cfffeb3a5dda7dc903804143027367af1c3fe3a25ed7" name="a57c3f931012fc89cc5885cfffeb3a5dda7dc903804143027367af1c3fe3a25ed7"></a>eFRIDAY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a57c3f931012fc89cc5885cfffeb3a5dda6c97d921f032bda0a1cff23dc3394b3e" name="a57c3f931012fc89cc5885cfffeb3a5dda6c97d921f032bda0a1cff23dc3394b3e"></a>eSATURDAY&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

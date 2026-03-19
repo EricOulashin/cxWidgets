@@ -1,6 +1,6 @@
 <map id="/home/erico/projects/cxWidgets/src/cxDate.h" name="/home/erico/projects/cxWidgets/src/cxDate.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="391,5,557,45"/>
-<area shape="rect" id="Node000002" href="$cxDate_8cpp.html" title="C++14&#45;compatible implementation of the cxDate class." alt="" coords="98,93,279,133"/>
+<area shape="rect" id="Node000002" href="$cxDate_8cpp.html" title="C++17&#45;improved implementation of the cxDate class." alt="" coords="98,93,279,133"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="399,52,252,96,250,91,397,47"/>
 <area shape="rect" id="Node000003" href="$cxDatePicker_8h.html" title=" " alt="" coords="303,93,506,133"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="452,58,422,95,418,91,448,55"/>

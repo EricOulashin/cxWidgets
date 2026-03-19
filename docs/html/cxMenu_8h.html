@@ -45,6 +45,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">cxMenu.h File Reference</div></div>
 </div><!--header-->
@@ -140,8 +141,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" title=" " alt="" coords="1675,5,1846,45"/>
 <area shape="rect" href="SpreadsheetApp_8cpp.html" title=" " alt="" coords="132,269,355,324"/>
 <area shape="poly" title=" " alt="" coords="1662,32,1435,39,1148,51,869,70,754,82,667,96,597,113,545,130,430,184,350,228,282,272,279,267,347,224,427,179,543,125,596,107,665,91,753,77,868,65,1147,46,1435,33,1662,26"/>
-<area shape="rect" href="cxBase_8cpp.html" title=" " alt="" coords="1885,277,2068,317"/>
-<area shape="poly" title=" " alt="" coords="1769,58,1791,148,1805,191,1820,220,1839,237,1860,252,1906,274,1904,279,1857,257,1835,242,1816,223,1800,193,1786,150,1764,59"/>
 <area shape="rect" href="cxComboBox_8h.html" title=" " alt="" coords="780,93,984,133"/>
 <area shape="poly" title=" " alt="" coords="1662,39,984,105,984,99,1661,34"/>
 <area shape="rect" href="testApp_8cpp.html" title=" " alt="" coords="766,372,950,412"/>
@@ -150,10 +149,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="1733,57,1599,183,1595,179,1729,53"/>
 <area shape="rect" href="cxSearchPanel_8h.html" title=" " alt="" coords="1647,277,1861,317"/>
 <area shape="poly" title=" " alt="" coords="1763,59,1757,277,1752,276,1757,59"/>
-<area shape="rect" href="cxUnitTest_8cpp.html" title=" " alt="" coords="2093,277,2295,317"/>
-<area shape="poly" title=" " alt="" coords="1780,56,1800,92,1818,131,1828,163,1842,191,1870,219,1897,237,1922,248,1969,256,2019,258,2081,267,2113,274,2112,279,2080,272,2018,264,1968,262,1920,253,1895,242,1867,223,1838,194,1823,165,1813,133,1796,95,1776,59"/>
-<area shape="rect" href="test1_8cpp.html" title=" " alt="" coords="2319,277,2487,317"/>
-<area shape="poly" title=" " alt="" coords="1795,52,1849,92,1914,131,1996,165,2112,204,2340,274,2338,279,2111,209,1994,170,1911,136,1846,96,1792,56"/>
+<area shape="rect" href="cxUnitTest_8cpp.html" title=" " alt="" coords="1885,277,2087,317"/>
+<area shape="poly" title=" " alt="" coords="1769,58,1791,148,1805,191,1820,220,1839,238,1861,252,1909,274,1907,279,1858,257,1836,242,1816,223,1800,194,1785,150,1764,59"/>
+<area shape="rect" href="cxUtils_8cpp.html" title=" " alt="" coords="2112,277,2292,317"/>
+<area shape="poly" title=" " alt="" coords="1780,56,1800,92,1818,131,1828,163,1842,191,1870,219,1900,238,1927,249,1952,255,1977,257,2032,258,2100,267,2130,274,2129,279,2099,272,2032,263,1977,262,1951,260,1925,254,1897,243,1867,223,1838,195,1823,165,1813,133,1796,95,1776,59"/>
+<area shape="rect" href="test1_8cpp.html" title=" " alt="" coords="2317,277,2485,317"/>
+<area shape="poly" title=" " alt="" coords="1795,52,1849,92,1914,131,1996,165,2111,204,2337,274,2336,279,2109,209,1994,170,1911,136,1846,96,1792,56"/>
 <area shape="rect" href="cxFrame_8h.html" title=" " alt="" coords="1925,93,2101,133"/>
 <area shape="poly" title=" " alt="" coords="1830,47,1958,91,1957,96,1828,52"/>
 <area shape="rect" href="cxMenu_8cpp.html" title=" " alt="" coords="2125,93,2311,133"/>
@@ -172,7 +173,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="cxDatePicker_8cpp.html" title=" " alt="" coords="379,277,596,317"/>
 <area shape="poly" title=" " alt="" coords="526,235,501,278,496,275,522,232"/>
 <area shape="poly" title=" " alt="" coords="572,230,628,286,668,322,723,350,781,369,779,375,721,355,664,326,625,290,568,233"/>
-<area shape="poly" title=" " alt="" coords="1675,222,1873,267,1903,274,1902,279,1872,272,1674,227"/>
 <area shape="poly" title=" " alt="" coords="1479,214,1263,237,1010,272,969,279,968,274,1010,267,1263,232,1478,209"/>
 <area shape="poly" title=" " alt="" coords="1478,210,1367,218,1244,230,1133,248,1088,259,1055,272,1039,283,1030,297,1020,311,1005,326,959,354,913,374,911,369,957,349,1002,322,1016,308,1025,294,1036,280,1053,267,1087,254,1132,242,1244,225,1367,212,1478,205"/>
 <area shape="rect" href="cxForm_8cpp.html" title=" " alt="" coords="1320,372,1503,412"/>
@@ -184,8 +184,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="cxMultiLineInput_8cpp.html" title=" " alt="" coords="1066,277,1301,317"/>
 <area shape="poly" title=" " alt="" coords="1485,227,1263,279,1262,274,1483,222"/>
 <area shape="poly" title=" " alt="" coords="1626,225,1719,274,1717,279,1623,230"/>
-<area shape="poly" title=" " alt="" coords="1675,210,1864,233,2081,267,2117,274,2116,279,2080,272,1863,239,1675,216"/>
-<area shape="poly" title=" " alt="" coords="1675,207,2011,233,2183,250,2308,267,2341,274,2340,279,2307,272,2182,255,2010,239,1675,212"/>
+<area shape="poly" title=" " alt="" coords="1674,222,1873,267,1905,274,1904,279,1872,272,1673,227"/>
+<area shape="poly" title=" " alt="" coords="1675,209,1872,231,2100,267,2133,274,2132,279,2099,272,1871,237,1675,214"/>
+<area shape="poly" title=" " alt="" coords="1675,207,2009,233,2181,250,2305,267,2338,274,2337,279,2304,272,2180,255,2009,239,1675,212"/>
 <area shape="poly" title=" " alt="" coords="1335,322,1313,327,1120,359,951,382,950,377,1119,354,1312,321,1334,317"/>
 <area shape="poly" title=" " alt="" coords="1422,331,1416,372,1411,372,1417,330"/>
 <area shape="rect" href="cxMultiForm_8cpp.html" title=" " alt="" coords="1085,372,1295,412"/>
@@ -194,10 +195,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="1634,315,1534,327,951,385,950,379,1534,321,1633,310"/>
 <area shape="rect" href="cxSearchPanel_8cpp.html" title=" " alt="" coords="1738,372,1965,412"/>
 <area shape="poly" title=" " alt="" coords="1785,324,1834,370,1830,374,1782,328"/>
-<area shape="rect" href="cxApp_8h.html" title=" " alt="" coords="2251,181,2414,221"/>
-<area shape="poly" title=" " alt="" coords="2097,134,2263,179,2262,184,2096,140"/>
-<area shape="rect" href="cxApp_8cpp.html" title=" " alt="" coords="2511,277,2687,317"/>
-<area shape="poly" title=" " alt="" coords="2400,223,2546,274,2545,279,2399,228"/>
+<area shape="rect" href="cxApp_8h.html" title=" " alt="" coords="2250,181,2413,221"/>
+<area shape="poly" title=" " alt="" coords="2097,134,2262,179,2261,184,2095,140"/>
+<area shape="rect" href="cxApp_8cpp.html" title=" " alt="" coords="2509,277,2685,317"/>
+<area shape="poly" title=" " alt="" coords="2399,223,2544,274,2542,279,2397,228"/>
 <area shape="poly" title=" " alt="" coords="249,147,247,269,241,269,244,147"/>
 <area shape="rect" href="cxMenuBar_8cpp.html" title=" " alt="" coords="5,181,209,221"/>
 <area shape="poly" title=" " alt="" coords="206,143,139,184,137,179,204,138"/>
@@ -208,8 +209,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcxMenu.html">cxMenu</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of items, one of which may be selected.  <a href="classcxMenu.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1cxMenu.html">cx::cxMenu</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a list of items, one of which may be selected.  <a href="classcx_1_1cxMenu.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacecx" id="r_namespacecx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecx.html">cx</a></td></tr>
+<tr class="memdesc:namespacecx"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="cxBorderChars_8h.html">cxBorderChars.h</a> - Defines border characters to be used in drawing a box (i.e., in <a class="el" href="classcx_1_1cxWindow.html" title="Represents a text-based window on the screen. Can contain a title, status, and a message to appear wi...">cxWindow</a> and all its derivitives) <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
