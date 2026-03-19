@@ -436,7 +436,6 @@ void SpreadsheetApp::doAbout()
                             "A text-based spreadsheet application\n"
                             "built with cxWidgets.\n\n"
                             "Copyright (c) 2026 E. Oulashin");
-    aboutDlg.center();
     aboutDlg.showModal();
     aboutDlg.hide();
 }
@@ -457,7 +456,6 @@ void SpreadsheetApp::processFormulas()
         else
         {
             cxMessageDialog errDlg(nullptr, " Formula Error ", errorMsg);
-            errDlg.center();
             errDlg.showModal();
             errDlg.hide();
         }
