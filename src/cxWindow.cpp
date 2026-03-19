@@ -810,7 +810,7 @@ cxWindow::~cxWindow()
 #endif
    // Hide the window (to make sure it doesn't show anymore), and then free
    // the memory used by mWindow and mPanel.
-   if (cxBase::cxInitialized())
+   if (cxBase::cxInitialized() && !(isHidden()))
    {
       hide();
    }
@@ -1397,7 +1397,7 @@ cxWindow* cxWindow::getExtStatusWindow() const
 
 bool cxWindow::isHidden() const
 {
-   if (mPanel == nullptr) return true;
+   if (mPanel == nullptr || !cxBase::cxInitialized()) return true;
    return(panel_hidden(mPanel) == TRUE);
 } // isHidden
 
@@ -1409,41 +1409,44 @@ long cxWindow::show(bool pBringToTop, bool pShowSubwindows)
    {
       if (mEnabled)
       {
-         // Show the subwindows now, if pShowSubwindows is true and
-         // mShowSelfBeforeSubwins is false.
-         if (pShowSubwindows && !mShowSelfBeforeSubwins)
+         if (cxBase::cxInitialized())
          {
-            showSubwindows(pBringToTop, pShowSubwindows);
-         }
-
-         // Fill mWindow with the window text
-         draw();
-
-         // Call unhide() to make sure this window is not hidden.  unhide()
-         // calls show_panel(mPanel) and update_pannels() to refresh the
-         // window & update the panel).  Note that this is calling cxWindow's
-         // unhide specifically; In testing, we found that because other
-         // cxWindow-based classes override unhide() if they have other
-         // windows to unhide, that could cause undesired screen repaints
-         // when other derived class methods call show(), etc.
-         cxWindow::unhide();
-
-         // Bring this window to the top of the stack if
-         //  pBringToTop is true and the window already
-         //  isn't on top.
-         if (pBringToTop)
-         {
-            if (!isOnTop())
+            // Show the subwindows now, if pShowSubwindows is true and
+            // mShowSelfBeforeSubwins is false.
+            if (pShowSubwindows && !mShowSelfBeforeSubwins)
             {
-               top_panel(mPanel);
+               showSubwindows(pBringToTop, pShowSubwindows);
             }
-         }
 
-         // Show the subwindows now, if pShowSubwindows and
-         //  mShowSelfBeforeSubwins are both true.
-         if (pShowSubwindows && mShowSelfBeforeSubwins)
-         {
-            showSubwindows(pBringToTop, pShowSubwindows);
+            // Fill mWindow with the window text
+            draw();
+
+            // Call unhide() to make sure this window is not hidden.  unhide()
+            // calls show_panel(mPanel) and update_pannels() to refresh the
+            // window & update the panel).  Note that this is calling cxWindow's
+            // unhide specifically; In testing, we found that because other
+            // cxWindow-based classes override unhide() if they have other
+            // windows to unhide, that could cause undesired screen repaints
+            // when other derived class methods call show(), etc.
+            cxWindow::unhide();
+
+            // Bring this window to the top of the stack if
+            //  pBringToTop is true and the window already
+            //  isn't on top.
+            if (pBringToTop)
+            {
+               if (!isOnTop())
+               {
+                  top_panel(mPanel);
+               }
+            }
+
+            // Show the subwindows now, if pShowSubwindows and
+            //  mShowSelfBeforeSubwins are both true.
+            if (pShowSubwindows && mShowSelfBeforeSubwins)
+            {
+               showSubwindows(pBringToTop, pShowSubwindows);
+            }
          }
       }
       else
@@ -1793,7 +1796,7 @@ bool cxWindow::isBelow(const cxWindow& pThatWindow) const
 void cxWindow::hide(bool pHideSubwindows)
 {
    // If not already hidden, hide the window.
-   if (mPanel != nullptr && panel_hidden(mPanel) == FALSE)
+   if (mPanel != nullptr && cxBase::cxInitialized() && panel_hidden(mPanel) == FALSE)
    {
       hide_panel(mPanel);
    }
@@ -1815,7 +1818,7 @@ void cxWindow::unhide(bool pUnhideSubwindows)
 {
    // Only let the window be un-hidden if it's
    //  enabled.
-   if (mEnabled)
+   if (mEnabled && cxBase::cxInitialized())
    {
       show_panel(mPanel);
 
