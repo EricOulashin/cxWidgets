@@ -51,25 +51,25 @@ $(document).ready(function() { init_codefold(0); });
   <div class="headertitle"><div class="title">cxApp.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="cxApp_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef __CXAPP_H__</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define __CXAPP_H__</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * </span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * cxApp.h - application framework</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Copyright (c) 2005-2007 Michael H. Kinney</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * \author $Author: erico $</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * \version $Revision: 1.10 $</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * \date $Date: 2007/12/04 00:23:45 $</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="cxObject_8h.html">cxObject.h</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="cxFrame_8h.html">cxFrame.h</a>&quot;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="foldopen" id="foldopen00022" data-start="{" data-end="};">
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classcxApp.html">   22</a></span><span class="keyword">class </span><a class="code hl_class" href="classcxApp.html">cxApp</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcxObject.html">cxObject</a> {</div>
+<a href="cxApp_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2026 E. Oulashin</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef __CXAPP_H__</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define __CXAPP_H__</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * cxApp.h - application framework</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * Copyright (c) 2005-2007 Michael H. Kinney</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="cxObject_8h.html">cxObject.h</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="cxFrame_8h.html">cxFrame.h</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="};">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classcxApp.html">   21</a></span><span class="keyword">class </span><a class="code hl_class" href="classcxApp.html">cxApp</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcxObject.html">cxObject</a></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>{</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>   <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>      <a class="code hl_function" href="classcxApp.html#afa7f8baa8171f2dc240584584c6f8773">cxApp</a>();</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
@@ -88,22 +88,21 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classcxApp.html#a0d2c58231d06c9fa9dec0f8b1e4c9654">cxTypeStr</a>() <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>   <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <a class="code hl_class" href="classcxFrame.html">cxFrame</a> *mAppFrame = <span class="keyword">nullptr</span>; <span class="comment">// The application&#39;s frame</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      std::shared_ptr&lt;cxFrame&gt; mAppFrame; <span class="comment">// The application&#39;s frame</span></div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>};</div>
 </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclasscxApp_html"><div class="ttname"><a href="classcxApp.html">cxApp</a></div><div class="ttdoc">Holds application setup &amp; exit logic, as well as the application's main frame.</div><div class="ttdef"><b>Definition</b> cxApp.h:22</div></div>
-<div class="ttc" id="aclasscxApp_html_a0860a00a24c29834a9da95596a5f2600"><div class="ttname"><a href="classcxApp.html#a0860a00a24c29834a9da95596a5f2600">cxApp::run</a></div><div class="ttdeci">virtual long run()</div><div class="ttdoc">Synonym for onRun().</div><div class="ttdef"><b>Definition</b> cxApp.cpp:19</div></div>
-<div class="ttc" id="aclasscxApp_html_a0d2c58231d06c9fa9dec0f8b1e4c9654"><div class="ttname"><a href="classcxApp.html#a0d2c58231d06c9fa9dec0f8b1e4c9654">cxApp::cxTypeStr</a></div><div class="ttdeci">virtual std::string cxTypeStr() const override</div><div class="ttdoc">Returns the name of the cxWidgets class. This is overridden.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:31</div></div>
-<div class="ttc" id="aclasscxApp_html_a29b851825e50ae96f04d02df80dbc879"><div class="ttname"><a href="classcxApp.html#a29b851825e50ae96f04d02df80dbc879">cxApp::~cxApp</a></div><div class="ttdeci">virtual ~cxApp()</div><div class="ttdef"><b>Definition</b> cxApp.cpp:8</div></div>
-<div class="ttc" id="aclasscxApp_html_a2cf51d3018f107c2d0b0d532420d5842"><div class="ttname"><a href="classcxApp.html#a2cf51d3018f107c2d0b0d532420d5842">cxApp::onExit</a></div><div class="ttdeci">virtual long onExit()</div><div class="ttdoc">Things to be done upon applicatoin exit will go here.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:27</div></div>
-<div class="ttc" id="aclasscxApp_html_a34c81815d23502cb665216d4b1009a0b"><div class="ttname"><a href="classcxApp.html#a34c81815d23502cb665216d4b1009a0b">cxApp::onInit</a></div><div class="ttdeci">virtual long onInit()</div><div class="ttdoc">Application initialization &amp; startup commands will go here.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:23</div></div>
-<div class="ttc" id="aclasscxApp_html_aed3a0f0207d5395deae81d483e77d677"><div class="ttname"><a href="classcxApp.html#aed3a0f0207d5395deae81d483e77d677">cxApp::mainLoop</a></div><div class="ttdeci">virtual long mainLoop()</div><div class="ttdoc">Enters the main loop.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:11</div></div>
-<div class="ttc" id="aclasscxApp_html_af3c84dea7a230db87f470bd5814733be"><div class="ttname"><a href="classcxApp.html#af3c84dea7a230db87f470bd5814733be">cxApp::onRun</a></div><div class="ttdeci">virtual long onRun()</div><div class="ttdoc">This virtual function is where the execution of a program written with cxWidgets starts....</div><div class="ttdef"><b>Definition</b> cxApp.cpp:15</div></div>
-<div class="ttc" id="aclasscxApp_html_afa7f8baa8171f2dc240584584c6f8773"><div class="ttname"><a href="classcxApp.html#afa7f8baa8171f2dc240584584c6f8773">cxApp::cxApp</a></div><div class="ttdeci">cxApp()</div><div class="ttdef"><b>Definition</b> cxApp.cpp:4</div></div>
-<div class="ttc" id="aclasscxFrame_html"><div class="ttname"><a href="classcxFrame.html">cxFrame</a></div><div class="ttdoc">Similar to wxFrame and other frame classes in GUI frameworks, this.</div><div class="ttdef"><b>Definition</b> cxFrame.h:27</div></div>
-<div class="ttc" id="aclasscxObject_html"><div class="ttname"><a href="classcxObject.html">cxObject</a></div><div class="ttdoc">The base class for windowing classes in the cxWidgets.</div><div class="ttdef"><b>Definition</b> cxObject.h:40</div></div>
+<div class="ttc" id="aclasscxApp_html_a0860a00a24c29834a9da95596a5f2600"><div class="ttname"><a href="classcxApp.html#a0860a00a24c29834a9da95596a5f2600">cxApp::run</a></div><div class="ttdeci">virtual long run()</div><div class="ttdoc">Synonym for onRun().</div><div class="ttdef"><b>Definition</b> cxApp.cpp:23</div></div>
+<div class="ttc" id="aclasscxApp_html_a0d2c58231d06c9fa9dec0f8b1e4c9654"><div class="ttname"><a href="classcxApp.html#a0d2c58231d06c9fa9dec0f8b1e4c9654">cxApp::cxTypeStr</a></div><div class="ttdeci">virtual std::string cxTypeStr() const override</div><div class="ttdoc">Returns the name of the cxWidgets class. This is overridden.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:38</div></div>
+<div class="ttc" id="aclasscxApp_html_a29b851825e50ae96f04d02df80dbc879"><div class="ttname"><a href="classcxApp.html#a29b851825e50ae96f04d02df80dbc879">cxApp::~cxApp</a></div><div class="ttdeci">virtual ~cxApp()</div><div class="ttdef"><b>Definition</b> cxApp.cpp:9</div></div>
+<div class="ttc" id="aclasscxApp_html_a2cf51d3018f107c2d0b0d532420d5842"><div class="ttname"><a href="classcxApp.html#a2cf51d3018f107c2d0b0d532420d5842">cxApp::onExit</a></div><div class="ttdeci">virtual long onExit()</div><div class="ttdoc">Things to be done upon applicatoin exit will go here.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:33</div></div>
+<div class="ttc" id="aclasscxApp_html_a34c81815d23502cb665216d4b1009a0b"><div class="ttname"><a href="classcxApp.html#a34c81815d23502cb665216d4b1009a0b">cxApp::onInit</a></div><div class="ttdeci">virtual long onInit()</div><div class="ttdoc">Application initialization &amp; startup commands will go here.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:28</div></div>
+<div class="ttc" id="aclasscxApp_html_aed3a0f0207d5395deae81d483e77d677"><div class="ttname"><a href="classcxApp.html#aed3a0f0207d5395deae81d483e77d677">cxApp::mainLoop</a></div><div class="ttdeci">virtual long mainLoop()</div><div class="ttdoc">Enters the main loop.</div><div class="ttdef"><b>Definition</b> cxApp.cpp:13</div></div>
+<div class="ttc" id="aclasscxApp_html_af3c84dea7a230db87f470bd5814733be"><div class="ttname"><a href="classcxApp.html#af3c84dea7a230db87f470bd5814733be">cxApp::onRun</a></div><div class="ttdeci">virtual long onRun()</div><div class="ttdoc">This virtual function is where the execution of a program written with cxWidgets starts....</div><div class="ttdef"><b>Definition</b> cxApp.cpp:18</div></div>
+<div class="ttc" id="aclasscxApp_html_afa7f8baa8171f2dc240584584c6f8773"><div class="ttname"><a href="classcxApp.html#afa7f8baa8171f2dc240584584c6f8773">cxApp::cxApp</a></div><div class="ttdeci">cxApp()</div><div class="ttdef"><b>Definition</b> cxApp.cpp:5</div></div>
+<div class="ttc" id="aclasscxObject_html"><div class="ttname"><a href="classcxObject.html">cxObject</a></div><div class="ttdoc">The base class for windowing classes in the cxWidgets.</div><div class="ttdef"><b>Definition</b> cxObject.h:39</div></div>
 <div class="ttc" id="acxFrame_8h_html"><div class="ttname"><a href="cxFrame_8h.html">cxFrame.h</a></div></div>
 <div class="ttc" id="acxObject_8h_html"><div class="ttname"><a href="cxObject_8h.html">cxObject.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

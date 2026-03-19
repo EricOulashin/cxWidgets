@@ -1,14 +1,16 @@
 <map id="/home/erico/projects/cxWidgets/src/cxScrolledWindow.h" name="/home/erico/projects/cxWidgets/src/cxScrolledWindow.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="395,5,626,45"/>
-<area shape="rect" id="Node000002" href="$cxFileViewer_8h.html" title=" " alt="" coords="243,93,442,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="463,54,381,96,378,91,461,49"/>
-<area shape="rect" id="Node000005" href="$testApp_8cpp.html" title=" " alt="" coords="435,181,619,221"/>
-<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="516,59,528,181,522,181,511,59"/>
-<area shape="rect" id="Node000006" href="$cxScrolledWindow_8cpp.html" title=" " alt="" coords="548,93,793,133"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="559,49,637,91,634,96,556,54"/>
-<area shape="rect" id="Node000003" href="$cxFileViewer_8cpp.html" title=" " alt="" coords="5,181,219,221"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="280,141,163,184,162,179,279,136"/>
-<area shape="rect" id="Node000004" href="$test1_8cpp.html" title=" " alt="" coords="243,181,411,221"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,147,333,182,328,181,334,146"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="397,137,488,179,485,184,394,142"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="311,5,542,45"/>
+<area shape="rect" id="Node000002" href="$SpreadsheetApp_8cpp.html" title=" " alt="" coords="13,93,235,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="353,52,210,96,208,91,352,47"/>
+<area shape="rect" id="Node000003" href="$cxFileViewer_8h.html" title=" " alt="" coords="259,101,458,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="407,58,375,102,370,99,403,55"/>
+<area shape="rect" id="Node000006" href="$testApp_8cpp.html" title=" " alt="" coords="435,196,619,236"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="449,56,472,92,521,195,516,197,467,95,445,58"/>
+<area shape="rect" id="Node000007" href="$cxScrolledWindow_8cpp.html" title=" " alt="" coords="532,101,777,141"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="486,48,610,98,608,103,484,53"/>
+<area shape="rect" id="Node000004" href="$cxFileViewer_8cpp.html" title=" " alt="" coords="5,196,219,236"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="297,148,163,198,161,193,295,143"/>
+<area shape="rect" id="Node000005" href="$test1_8cpp.html" title=" " alt="" coords="243,196,411,236"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="350,154,336,197,331,195,345,153"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="406,145,494,194,491,198,403,150"/>
 </map>

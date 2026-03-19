@@ -379,6 +379,19 @@ void cxDatePicker::drawContent()
    }
 
    wnoutrefresh(mWindow);
+
+   // ncurses per-row dirty tracking spans from the first to the last modified
+   // column on each row.  On ROW_CTRL_MID we write at cols COL_MONTH_COMBO
+   // (6-18) and COL_YEAR_INPUT (27-32), which causes the dirty span to cover
+   // the entire 6-32 range — including the [>] button area at cols 21-23.
+   // The wnoutrefresh() call above therefore writes datepicker background
+   // (spaces) to the virtual screen over the [>] button position.  Mark the
+   // nav-button windows as fully dirty so that the next update_panels() call
+   // will re-composite their content on top.
+   if (mPrevBtn)   mPrevBtn->touchWindow();
+   if (mNextBtn)   mNextBtn->touchWindow();
+   if (mCancelBtn) mCancelBtn->touchWindow();
+   if (mOKBtn)     mOKBtn->touchWindow();
 }
 
 void cxDatePicker::redrawDay(int pDay)
@@ -820,7 +833,8 @@ long cxDatePicker::doInputLoop()
                   redrawDay(oldDay);
                   redrawDay(mFocusDay);
                   drawContent();
-                  show(false, false);
+                  update_panels();
+                  doupdate();
 
                   // Double-click confirms the day
                   if (mMouse.bstate & BUTTON1_DOUBLE_CLICKED)

@@ -1440,6 +1440,11 @@ bool cxMenu::getExitWhenLeaveLast() const
    return(mExitWhenLeaveLast);
 } // getExitWhenLeaveLast
 
+void cxMenu::setExitOnOutsideClick(bool pExitOnOutsideClick)
+{
+   mExitOnOutsideClick = pExitOnOutsideClick;
+} // setExitOnOutsideClick
+
 void cxMenu::setRefreshItemsWhenModal(bool pRefreshItemsWhenModal)
 {
    mRefreshItemsWhenModal = pRefreshItemsWhenModal;
@@ -2197,7 +2202,7 @@ long cxMenu::doInputLoop(bool& pRunOnLeaveFunction)
                            //  loop.  This can allow the user to go to another
                            //  window (in a cxPanel) or go back up to the parent
                            //  menu.
-                           if (parentIsCxPanel() || (mNumParentMenus > 0))
+                           if (parentIsCxPanel() || (mNumParentMenus > 0) || mExitOnOutsideClick)
                            {
                               returnCode = cxID_EXIT;
                               continueOn = false;

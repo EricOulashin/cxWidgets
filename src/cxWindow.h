@@ -758,6 +758,15 @@ class cxWindow : public cxObject
       virtual void unhide(bool pUnhideSubwindows = true);
 
       /**
+       * \brief Marks the window's entire content as dirty so that the next
+       * \brief call to wnoutrefresh() (e.g., via update_panels()) will
+       * \brief re-composite the full window content onto the virtual screen.
+       * \brief Useful when another window's wnoutrefresh() may have
+       * \brief overwritten this window's area in the virtual screen.
+       */
+      void touchWindow() { if (mWindow) touchwin(mWindow); }
+
+      /**
        * \brief Draws the border (based on the border style)
        *
        * @param pRow The row of the upper-left corner.

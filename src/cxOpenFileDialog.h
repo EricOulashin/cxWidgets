@@ -52,6 +52,9 @@
 #include <vector>
 #include <memory>
 
+/**
+ * \brief This is a dialog class that is designed to allow the user to choose a filename in a specific directory, with a directory browser. This class is designed to be similar to file choosers in GUI libraries, such as OpenFileDialog in .NET Core 8, QtFileDilog in Qt, etc.
+ */
 class cxOpenFileDialog : public cxWindow
 {
 public:

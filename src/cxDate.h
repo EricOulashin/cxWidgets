@@ -73,8 +73,7 @@ inline constexpr int CXDATE_YEAR_MAX               = 2500;
 
 /**
  * \class cxDate
- * \brief Enables easy management of dates. C++14-compatible version of the
- * original 'date' class.
+ * \brief Enables easy management of dates. C++14-compatible.
  *
  * Note: Months and days are 1-based (months 1-12, days 1-31).
  * Julian date calculations assume noon for time of day, so Julian dates

@@ -158,7 +158,10 @@ int cxGrid::innerLeft() const
    return l;
 }
 
-// Calculate how many data rows fit in the visible area
+// Calculate how many data rows fit in the visible area.
+// Each data row occupies 2 screen rows: 1 for the cell, 1 for the
+// horizontal separator line below it. The last visible row still gets
+// a separator line (so all N rows take exactly 2*N screen rows).
 int cxGrid::visibleRows() const
 {
    int availHeight = height();
@@ -170,7 +173,8 @@ int cxGrid::visibleRows() const
       --availHeight;
    if (availHeight < 0)
       availHeight = 0;
-   return availHeight;
+   // Each data row + its separator below takes 2 screen rows
+   return availHeight / 2;
 }
 
 // Calculate how many columns fit in the visible area
@@ -288,15 +292,15 @@ void cxGrid::drawRowHeaders()
    {
       int r = mScrollRow + i;
       string label = mRowLabels[r];
-      // Right-justify the label in the row header width
-      int screenRow = (yStart + i) - top();
+      // Each data row is at screen row yStart + 2*i (the separator is at 2*i+1)
+      int screenRow = (yStart + 2 * i) - top();
       int screenCol = xPos - left();
-      // Fill with spaces
+      // Fill data row with spaces
       for (int j = 0; j < mRowHeaderWidth && (screenCol + j) < width(); ++j)
       {
          mvwaddch(mWindow, screenRow, screenCol + j, ' ');
       }
-      // Right-justify
+      // Right-justify the row number label
       int labelStart = screenCol + mRowHeaderWidth - (int)label.length();
       if (labelStart < screenCol)
          labelStart = screenCol;
@@ -305,11 +309,27 @@ void cxGrid::drawRowHeaders()
          mvwaddch(mWindow, screenRow, labelStart + j, label[j]);
       }
 
-      // Draw vertical separator after row header
+      // Draw vertical separator after row header (data row)
       int sepCol = screenCol + mRowHeaderWidth;
       if (sepCol < width())
       {
          mvwaddch(mWindow, screenRow, sepCol, ACS_VLINE);
+      }
+
+      // Draw the horizontal separator row (below the data row)
+      int hRow = screenRow + 1;
+      if (hRow < height() - (getBorderStyle() != eBS_NOBORDER ? 1 : 0))
+      {
+         // Fill separator row with horizontal line characters
+         for (int j = 0; j < mRowHeaderWidth && (screenCol + j) < width(); ++j)
+         {
+            mvwaddch(mWindow, hRow, screenCol + j, ACS_HLINE);
+         }
+         // Draw T-junction at the separator column
+         if (sepCol < width())
+         {
+            mvwaddch(mWindow, hRow, sepCol, ACS_PLUS);
+         }
       }
    }
 
@@ -326,29 +346,68 @@ void cxGrid::drawGridLines()
    int xStart = innerLeft();
    int vr = visibleRows();
    int vc = visibleCols();
+   int bottomLimit = height() - (getBorderStyle() != eBS_NOBORDER ? 1 : 0);
 
    wattron(mWindow, COLOR_PAIR(mGridLineColorPair));
 
-   // Draw vertical separators between columns
-   int xPos = xStart;
-   for (int i = 0; i < vc && (mScrollCol + i) < mNumCols; ++i)
+   // Collect the x positions of column separators (window-relative)
+   vector<int> sepCols;
    {
-      xPos += mColWidths[mScrollCol + i];
-      if (i < vc - 1)
+      int xPos = xStart;
+      for (int i = 0; i < vc && (mScrollCol + i) < mNumCols; ++i)
       {
-         int screenCol = xPos - left();
-         if (screenCol < width())
+         xPos += mColWidths[mScrollCol + i];
+         if (i < vc - 1)
          {
-            for (int row = 0; row < vr && (mScrollRow + row) < mNumRows; ++row)
-            {
-               int screenRow = (yStart + row) - top();
-               mvwaddch(mWindow, screenRow, screenCol, ACS_VLINE);
-            }
+            int screenCol = xPos - left();
+            if (screenCol < width())
+               sepCols.push_back(screenCol);
+            ++xPos;
          }
-         ++xPos;
       }
    }
 
+   // Draw vertical separators between columns (at each data row and its separator row)
+   for (int col : sepCols)
+   {
+      for (int row = 0; row < vr && (mScrollRow + row) < mNumRows; ++row)
+      {
+         // Data row
+         int screenRow = (yStart + 2 * row) - top();
+         if (screenRow < bottomLimit)
+            mvwaddch(mWindow, screenRow, col, ACS_VLINE);
+         // Separator row — draw plus (cross) instead of vline
+         int hRow = screenRow + 1;
+         if (hRow < bottomLimit)
+            mvwaddch(mWindow, hRow, col, ACS_PLUS);
+      }
+   }
+
+   // Draw horizontal separator lines across the cell area (between data rows).
+   // These cover the cell columns in the separator row; row header + T-junctions
+   // are handled by drawRowHeaders(), and column-separator crosses are handled above.
+   for (int row = 0; row < vr && (mScrollRow + row) < mNumRows; ++row)
+   {
+      int dataScreenRow = (yStart + 2 * row) - top();
+      int hRow = dataScreenRow + 1; // separator row
+      if (hRow >= bottomLimit)
+         break;
+
+      // Draw ACS_HLINE across the full cell area (between row-header separator
+      // and right edge, excluding positions already drawn as ACS_PLUS above)
+      int xPos = xStart;
+      for (int ci = 0; ci < vc && (mScrollCol + ci) < mNumCols; ++ci)
+      {
+         int colW = mColWidths[mScrollCol + ci];
+         int screenCol = xPos - left();
+         // Fill this column's width with horizontal line chars
+         for (int j = 0; j < colW && (screenCol + j) < width(); ++j)
+            mvwaddch(mWindow, hRow, screenCol + j, ACS_HLINE);
+         xPos += colW;
+         if (ci < vc - 1)
+            ++xPos; // skip the separator column (already drawn as ACS_PLUS)
+      }
+   }
 
    wattroff(mWindow, COLOR_PAIR(mGridLineColorPair));
 }
@@ -395,7 +454,7 @@ void cxGrid::positionCells()
          if (ci < vc - 1)
             ++xPos;
       }
-      ++yPos;
+      yPos += 2;  // skip separator row
    }
 }
 
@@ -484,10 +543,10 @@ bool cxGrid::findCellAt(int pY, int pX, int& pRow, int& pCol) const
    int yStart = innerTop();
    int xStart = innerLeft();
 
-   // Check rows
-   int yPos = yStart;
+   // Check rows (each data row uses 2 screen rows: cell row + separator row)
    for (int ri = 0; ri < vr && (mScrollRow + ri) < mNumRows; ++ri)
    {
+      int yPos = yStart + 2 * ri;
       if (pY == yPos)
       {
          // This is the row - find the column
@@ -508,7 +567,6 @@ bool cxGrid::findCellAt(int pY, int pX, int& pRow, int& pCol) const
          }
          return false; // Row matched but no column matched (on a separator)
       }
-      ++yPos;
    }
    return false;
 }
@@ -577,6 +635,8 @@ long cxGrid::inputLoop()
             // The cell already consumed the event - get coords from the cell
             mouseEvt = cell->getMouseEvent();
          }
+         // Store in mMouse so getLastMouseEvtCoords() returns the correct position
+         mMouse = mouseEvt;
 
          // Check if the click is on a visible cell
          int clickRow = -1, clickCol = -1;

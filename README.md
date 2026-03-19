@@ -126,6 +126,22 @@ These are some screenshots of the test app, showing examples of what you can do 
 	<img src="screenshots/cxWidgets_cxGrid.png" alt="cxGrid (new: 2026-03-18)" width="500">
 </p>
 
+## Example applications
+Some example programs are included, which show example usages of cxWidgets:
+<ul>
+<li>Spreadsheet:<br/>
+<img src="screenshots/examples/spreadsheet_1.png" alt="Spreadsheet" width="800">
+<img src="screenshots/examples/spreadsheet_2.png" alt="Spreadsheet: File menu" width="800">
+<img src="screenshots/examples/spreadsheet_3.png" alt="Spreadsheet: Picking a date" width="800">
+<img src="screenshots/examples/spreadsheet_4.png" alt="Spreadsheet: Date entered in cell" width="800">
+<li>Centipede:<br/>
+<img src="screenshots/examples/centipede.png" alt="Centipede" width="800">
+<li>Flashcard:<br/>
+<img src="screenshots/examples/flashcard.png" alt="Centipede" width="600">
+<li>Snake:<br/>
+<img src="screenshots/examples/snake.png" alt="Centipede" width="600">
+</ul>
+
 ## Original readme (by Mike Kinney) (README.txt)
 README.TXT for cxWidgets - character based "widgets"
 

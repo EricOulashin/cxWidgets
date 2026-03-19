@@ -3,15 +3,19 @@ CX_SRC_DIR = ../../src
 STATIC_LIB = $(CX_SRC_DIR)/libcxWidgets.a
 INCDIR = -I$(CX_SRC_DIR)
 CFLAGS = -Wall -g -std=c++17 $(INCDIR)
-LIBS = -L$(CX_SRC_DIR) -lcxWidgets -lmenu -lpanel -lncurses
+LIBS = -lmenu -lpanel -lncurses
+OBJS = SnakeGame.o
 
 all: snake_demo
 
 $(STATIC_LIB):
 	$(MAKE) -C $(CX_SRC_DIR) libcxWidgets.a
 
-snake_demo: main.cpp SnakeGame.h $(STATIC_LIB)
-	$(CC) $(CFLAGS) -o snake_demo main.cpp $(STATIC_LIB) -lmenu -lpanel -lncurses
+snake_demo: main.cpp $(STATIC_LIB) $(OBJS)
+	$(CC) $(CFLAGS) -o snake_demo main.cpp $(OBJS) $(STATIC_LIB) $(LIBS)
+
+SnakeGame.o: SnakeGame.h SnakeGame.cpp
+	$(CC) -c $(CFLAGS) -o SnakeGame.o SnakeGame.cpp
 
 clean:
-	rm -f snake_demo
+	rm -f snake_demo SnakeGame.o

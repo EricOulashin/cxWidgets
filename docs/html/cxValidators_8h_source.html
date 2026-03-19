@@ -51,33 +51,35 @@ $(document).ready(function() { init_codefold(0); });
   <div class="headertitle"><div class="title">cxValidators.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="cxValidators_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef __CXVALIDATORS_H__</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define __CXVALIDATORS_H__</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Copyright (c) 2005-2007 Michael H. Kinney</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// This file defines some input validators.</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="foldopen" id="foldopen00009" data-start="{" data-end="}">
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespacecxValidators.html">    9</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecxValidators.html">cxValidators</a> {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>   std::string <a class="code hl_function" href="namespacecxValidators.html#a77cb7fe90b3097983b1ced140b8ef7d4">intOnKeyValidator</a>(<span class="keywordtype">void</span> *theInput, <span class="keywordtype">void</span> *clearOnSpace);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>   std::string <a class="code hl_function" href="namespacecxValidators.html#af1feee0c5276ca840dba17d5d585e267">floatingPtOnKeyValidator</a>(<span class="keywordtype">void</span> *theInput, <span class="keywordtype">void</span> *clearOnSpace);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="namespacecxValidators.html#ac323bf29f393a6f0e22437d2cee69ead">   45</a></span>   <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecxValidators.html#ac323bf29f393a6f0e22437d2cee69ead">isValidFloatingPtNumStr</a>(<span class="keyword">const</span> std::string&amp; pNumStr);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="namespacecxValidators.html#a150de147f6eb5e71143345cf2bc8e23c">   55</a></span>   <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecxValidators.html#a150de147f6eb5e71143345cf2bc8e23c">isValidWholeNumStr</a>(<span class="keyword">const</span> std::string&amp; pNumStr);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>} <span class="comment">// end of namespace cxValidators</span></div>
-</div>
+<a href="cxValidators_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2026 E. Oulashin</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef __CXVALIDATORS_H__</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define __CXVALIDATORS_H__</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Copyright (c) 2005-2007 Michael H. Kinney</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">//</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">// This file defines some input validators.</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="foldopen" id="foldopen00010" data-start="{" data-end="}">
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="namespacecxValidators.html">   10</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecxValidators.html">cxValidators</a></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>   std::string <a class="code hl_function" href="namespacecxValidators.html#a77cb7fe90b3097983b1ced140b8ef7d4">intOnKeyValidator</a>(<span class="keywordtype">void</span> *theInput, <span class="keywordtype">void</span> *clearOnSpace);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>   std::string <a class="code hl_function" href="namespacecxValidators.html#af1feee0c5276ca840dba17d5d585e267">floatingPtOnKeyValidator</a>(<span class="keywordtype">void</span> *theInput, <span class="keywordtype">void</span> *clearOnSpace);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="namespacecxValidators.html#ac323bf29f393a6f0e22437d2cee69ead">   47</a></span>   <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecxValidators.html#ac323bf29f393a6f0e22437d2cee69ead">isValidFloatingPtNumStr</a>(<span class="keyword">const</span> std::string&amp; pNumStr);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="namespacecxValidators.html#a150de147f6eb5e71143345cf2bc8e23c">   57</a></span>   <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacecxValidators.html#a150de147f6eb5e71143345cf2bc8e23c">isValidWholeNumStr</a>(<span class="keyword">const</span> std::string&amp; pNumStr);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacecxValidators_html"><div class="ttname"><a href="namespacecxValidators.html">cxValidators</a></div><div class="ttdef"><b>Definition</b> cxValidators.h:9</div></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <span class="comment">// end of namespace cxValidators</span></div>
+</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="anamespacecxValidators_html"><div class="ttname"><a href="namespacecxValidators.html">cxValidators</a></div><div class="ttdef"><b>Definition</b> cxValidators.h:11</div></div>
 <div class="ttc" id="anamespacecxValidators_html_a150de147f6eb5e71143345cf2bc8e23c"><div class="ttname"><a href="namespacecxValidators.html#a150de147f6eb5e71143345cf2bc8e23c">cxValidators::isValidWholeNumStr</a></div><div class="ttdeci">bool isValidWholeNumStr(const std::string &amp;pNumStr)</div><div class="ttdoc">Returns whether or not a string contains a valid whole number. A.</div></div>
-<div class="ttc" id="anamespacecxValidators_html_a77cb7fe90b3097983b1ced140b8ef7d4"><div class="ttname"><a href="namespacecxValidators.html#a77cb7fe90b3097983b1ced140b8ef7d4">cxValidators::intOnKeyValidator</a></div><div class="ttdeci">std::string intOnKeyValidator(void *theInput, void *clearOnSpace)</div><div class="ttdoc">Validator for inputs that should only accept integers. This is.</div><div class="ttdef"><b>Definition</b> cxValidators.cpp:8</div></div>
+<div class="ttc" id="anamespacecxValidators_html_a77cb7fe90b3097983b1ced140b8ef7d4"><div class="ttname"><a href="namespacecxValidators.html#a77cb7fe90b3097983b1ced140b8ef7d4">cxValidators::intOnKeyValidator</a></div><div class="ttdeci">std::string intOnKeyValidator(void *theInput, void *clearOnSpace)</div><div class="ttdoc">Validator for inputs that should only accept integers. This is.</div><div class="ttdef"><b>Definition</b> cxValidators.cpp:9</div></div>
 <div class="ttc" id="anamespacecxValidators_html_ac323bf29f393a6f0e22437d2cee69ead"><div class="ttname"><a href="namespacecxValidators.html#ac323bf29f393a6f0e22437d2cee69ead">cxValidators::isValidFloatingPtNumStr</a></div><div class="ttdeci">bool isValidFloatingPtNumStr(const std::string &amp;pNumStr)</div><div class="ttdoc">Returns whether or not a string contains a valid floating-point.</div></div>
-<div class="ttc" id="anamespacecxValidators_html_af1feee0c5276ca840dba17d5d585e267"><div class="ttname"><a href="namespacecxValidators.html#af1feee0c5276ca840dba17d5d585e267">cxValidators::floatingPtOnKeyValidator</a></div><div class="ttdeci">std::string floatingPtOnKeyValidator(void *theInput, void *clearOnSpace)</div><div class="ttdoc">Validator for inputs that should only accept floating-point.</div><div class="ttdef"><b>Definition</b> cxValidators.cpp:118</div></div>
+<div class="ttc" id="anamespacecxValidators_html_af1feee0c5276ca840dba17d5d585e267"><div class="ttname"><a href="namespacecxValidators.html#af1feee0c5276ca840dba17d5d585e267">cxValidators::floatingPtOnKeyValidator</a></div><div class="ttdeci">std::string floatingPtOnKeyValidator(void *theInput, void *clearOnSpace)</div><div class="ttdoc">Validator for inputs that should only accept floating-point.</div><div class="ttdef"><b>Definition</b> cxValidators.cpp:136</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

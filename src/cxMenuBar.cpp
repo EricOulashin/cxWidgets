@@ -130,10 +130,20 @@ void cxMenuBar::drawBar()
    if (mWindow == nullptr)
       return;
 
-   // Fill the bar with the bar color
-   wattron(mWindow, COLOR_PAIR(mBarColorPair / 2 + 1));
+   // Precompute complete attribute values so color pair switching is atomic.
+   // Using wattrset() (instead of wattron/wattroff) avoids the bug where
+   // wattroff(COLOR_PAIR(x)) clears ALL color bits and leaves the window
+   // with no color (renders as terminal default, often black-on-black).
+   attr_t barAttr = COLOR_PAIR(mBarColorPair);
    if (mBarColorPair & cxCOLOR_BRIGHT)
-      wattron(mWindow, A_BOLD);
+      barAttr |= A_BOLD;
+
+   attr_t hlAttr = COLOR_PAIR(mHighlightColorPair);
+   if (mHighlightColorPair & cxCOLOR_BRIGHT)
+      hlAttr |= A_BOLD;
+
+   // Fill the entire bar row with the bar background color
+   wattrset(mWindow, barAttr);
    for (int x = 0; x < width(); ++x)
       mvwaddch(mWindow, 0, x, ' ');
 
@@ -142,35 +152,24 @@ void cxMenuBar::drawBar()
    {
       int xOff = mEntries[i].xPos - left(); // convert to window-relative
       bool isSelected = (i == mCurrentIndex && mHasFocus);
+      attr_t activeAttr = isSelected ? hlAttr : barAttr;
 
-      if (isSelected)
-      {
-         // Highlight the selected item
-         wattroff(mWindow, A_BOLD);
-         wattroff(mWindow, COLOR_PAIR(mBarColorPair / 2 + 1));
-         wattron(mWindow, COLOR_PAIR(mHighlightColorPair / 2 + 1));
-         if (mHighlightColorPair & cxCOLOR_BRIGHT)
-            wattron(mWindow, A_BOLD);
-      }
-
-      // Draw padding + label + padding
-      int labelLen = (int)mEntries[i].cleanLabel.length();
-      // 2 spaces padding on each side
+      // Draw 2 spaces of padding before label
+      wattrset(mWindow, activeAttr);
       mvwaddch(mWindow, 0, xOff, ' ');
       mvwaddch(mWindow, 0, xOff + 1, ' ');
 
-      // Draw the label with hotkey underlining
+      // Draw the label, underlining the hotkey character
       int cx = xOff + 2;
       bool hotkeyDrawn = false;
       for (size_t ci = 0; ci < mEntries[i].label.length(); ++ci)
       {
          if (mEntries[i].label[ci] == '&' && ci + 1 < mEntries[i].label.length() && !hotkeyDrawn)
          {
-            // Draw next char with underline for hotkey
             ++ci;
-            wattron(mWindow, A_UNDERLINE);
+            wattrset(mWindow, activeAttr | A_UNDERLINE);
             mvwaddch(mWindow, 0, cx, mEntries[i].label[ci]);
-            wattroff(mWindow, A_UNDERLINE);
+            wattrset(mWindow, activeAttr); // restore (no underline)
             hotkeyDrawn = true;
          }
          else
@@ -179,23 +178,14 @@ void cxMenuBar::drawBar()
          }
          ++cx;
       }
+
+      // Draw 2 spaces of padding after label
+      int labelLen = (int)mEntries[i].cleanLabel.length();
       mvwaddch(mWindow, 0, xOff + 2 + labelLen, ' ');
       mvwaddch(mWindow, 0, xOff + 2 + labelLen + 1, ' ');
-
-      if (isSelected)
-      {
-         // Restore bar color
-         wattroff(mWindow, A_BOLD);
-         wattroff(mWindow, COLOR_PAIR(mHighlightColorPair / 2 + 1));
-         wattron(mWindow, COLOR_PAIR(mBarColorPair / 2 + 1));
-         if (mBarColorPair & cxCOLOR_BRIGHT)
-            wattron(mWindow, A_BOLD);
-      }
    }
 
-   wattroff(mWindow, A_BOLD);
-   wattroff(mWindow, COLOR_PAIR(mBarColorPair / 2 + 1));
-
+   wattrset(mWindow, A_NORMAL);
    wrefresh(mWindow);
 }
 
@@ -213,7 +203,7 @@ long cxMenuBar::openDropdown(int pIndex)
    int menuRow = top() + 1;
    int menuCol = mEntries[pIndex].xPos;
    menu->move(menuRow, menuCol, false);
-   menu->setExitOnMouseOutside(true);
+   menu->setExitOnOutsideClick(true);
 
    long result = menu->showModal();
    menu->hide();
@@ -242,6 +232,106 @@ long cxMenuBar::showModal(bool pShowSelf, bool pBringToTop, bool pShowSubwindows
    mHasFocus = false;
    drawBar(); // Redraw without highlight
    return retCode;
+}
+
+// showModalWithClick: show bar and immediately open the dropdown for the
+// item at screen column pClickX (the mouse click that brought us here).
+long cxMenuBar::showModalWithClick(int pClickX, bool pShowSelf,
+                                   bool pBringToTop, bool pShowSubwindows)
+{
+   if (pShowSelf)
+      show(pBringToTop, pShowSubwindows);
+   mHasFocus = true;
+
+   // Identify which item the click landed on
+   int clickedIndex = -1;
+   for (int i = 0; i < (int)mEntries.size(); ++i)
+   {
+      int startX = mEntries[i].xPos;
+      int endX = startX + (int)mEntries[i].cleanLabel.length() + 4;
+      if (pClickX >= startX && pClickX < endX)
+      {
+         clickedIndex = i;
+         break;
+      }
+   }
+
+   long returnCode = cxID_QUIT;
+
+   if (clickedIndex >= 0)
+   {
+      mCurrentIndex = clickedIndex;
+      drawBar();
+      // Immediately open the dropdown — no need to wait for another keypress
+      long menuResult = openDropdown(clickedIndex);
+      if (menuResult >= cxFIRST_AVAIL_RETURN_CODE)
+      {
+         mLastMenuReturnCode = menuResult;
+         returnCode = menuResult;
+         mHasFocus = false;
+         drawBar();
+         return returnCode;
+      }
+
+      // Dropdown closed without a selection.  Check whether it was dismissed
+      // by a mouse click, and if so where that click landed.
+      if (mEntries[clickedIndex].menu != nullptr &&
+          mEntries[clickedIndex].menu->lastKeyWasMouseEvt())
+      {
+         int ly, lx;
+         mEntries[clickedIndex].menu->getLastMouseEvtCoords(ly, lx);
+         if (ly == top())
+         {
+            // Click was on the menu bar row — find the target item (if any)
+            int targetIndex = -1;
+            for (int j = 0; j < (int)mEntries.size(); ++j)
+            {
+               int sx = mEntries[j].xPos;
+               int ex = sx + (int)mEntries[j].cleanLabel.length() + 4;
+               if (lx >= sx && lx < ex)
+               {
+                  targetIndex = j;
+                  break;
+               }
+            }
+            if (targetIndex < 0 || targetIndex == clickedIndex)
+            {
+               // Same item or blank bar area: close the bar
+               mHasFocus = false;
+               drawBar();
+               return cxID_QUIT;
+            }
+            // Different item: open it directly (the event was consumed, so we
+            // can't rely on the input loop seeing it again)
+            mCurrentIndex = targetIndex;
+            drawBar();
+            long mr = openDropdown(targetIndex);
+            if (mr >= cxFIRST_AVAIL_RETURN_CODE)
+            {
+               mLastMenuReturnCode = mr;
+               mHasFocus = false;
+               drawBar();
+               return mr;
+            }
+            // That dropdown also closed without a selection — fall through to
+            // the keyboard input loop so the bar stays active
+         }
+         else
+         {
+            // Click was outside the menu bar entirely: close the bar
+            mHasFocus = false;
+            drawBar();
+            return cxID_QUIT;
+         }
+      }
+   }
+
+   // Fall through to the normal input loop
+   drawBar();
+   returnCode = inputLoop();
+   mHasFocus = false;
+   drawBar();
+   return returnCode;
 }
 
 bool cxMenuBar::modalGetsKeypress() const
@@ -448,7 +538,7 @@ long cxMenuBar::inputLoop()
                      drawBar();
                      // Open the dropdown
                      long menuResult = openDropdown(i);
-                     if (menuResult != cxID_QUIT && menuResult != cxID_CANCEL)
+                     if (menuResult >= cxFIRST_AVAIL_RETURN_CODE)
                      {
                         mLastMenuReturnCode = menuResult;
                         returnCode = menuResult;
@@ -456,33 +546,51 @@ long cxMenuBar::inputLoop()
                      }
                      else
                      {
-                        // Check if the mouse was clicked on another bar item
-                        // by checking the menu's last key
+                        // Dropdown closed without a selection.  Check whether
+                        // a mouse click caused it and where that click landed.
                         if (mEntries[i].menu != nullptr && mEntries[i].menu->lastKeyWasMouseEvt())
                         {
                            int ly, lx;
                            mEntries[i].menu->getLastMouseEvtCoords(ly, lx);
                            if (ly == top())
                            {
-                              // Re-inject this as a click on the bar
+                              // Click was on the menu bar row
+                              int targetIndex = -1;
                               for (int j = 0; j < (int)mEntries.size(); ++j)
                               {
                                  int sx = mEntries[j].xPos;
                                  int ex = sx + (int)mEntries[j].cleanLabel.length() + 4;
-                                 if (lx >= sx && lx < ex && j != i)
+                                 if (lx >= sx && lx < ex)
                                  {
-                                    mCurrentIndex = j;
-                                    drawBar();
-                                    long mr = openDropdown(j);
-                                    if (mr != cxID_QUIT && mr != cxID_CANCEL)
-                                    {
-                                       mLastMenuReturnCode = mr;
-                                       returnCode = mr;
-                                       continueOn = false;
-                                    }
+                                    targetIndex = j;
                                     break;
                                  }
                               }
+                              if (targetIndex >= 0 && targetIndex != i)
+                              {
+                                 // Different item: open its dropdown
+                                 mCurrentIndex = targetIndex;
+                                 drawBar();
+                                 long mr = openDropdown(targetIndex);
+                                 if (mr >= cxFIRST_AVAIL_RETURN_CODE)
+                                 {
+                                    mLastMenuReturnCode = mr;
+                                    returnCode = mr;
+                                    continueOn = false;
+                                 }
+                              }
+                              else
+                              {
+                                 // Same item or blank bar area: close the bar
+                                 returnCode = cxID_QUIT;
+                                 continueOn = false;
+                              }
+                           }
+                           else
+                           {
+                              // Click was outside the bar: close the bar
+                              returnCode = cxID_QUIT;
+                              continueOn = false;
                            }
                         }
                      }
@@ -521,7 +629,7 @@ long cxMenuBar::inputLoop()
       {
          // Open the dropdown for the current item
          long menuResult = openDropdown(mCurrentIndex);
-         if (menuResult != cxID_QUIT && menuResult != cxID_CANCEL)
+         if (menuResult >= cxFIRST_AVAIL_RETURN_CODE)
          {
             mLastMenuReturnCode = menuResult;
             returnCode = menuResult;
@@ -567,7 +675,7 @@ long cxMenuBar::inputLoop()
                mCurrentIndex = i;
                drawBar();
                long menuResult = openDropdown(i);
-               if (menuResult != cxID_QUIT && menuResult != cxID_CANCEL)
+               if (menuResult >= cxFIRST_AVAIL_RETURN_CODE)
                {
                   mLastMenuReturnCode = menuResult;
                   returnCode = menuResult;
@@ -586,7 +694,7 @@ long cxMenuBar::inputLoop()
                mCurrentIndex = it->second;
                drawBar();
                long menuResult = openDropdown(it->second);
-               if (menuResult != cxID_QUIT && menuResult != cxID_CANCEL)
+               if (menuResult >= cxFIRST_AVAIL_RETURN_CODE)
                {
                   mLastMenuReturnCode = menuResult;
                   returnCode = menuResult;

@@ -11,65 +11,81 @@ digraph cxWidgets_UML {
     edge [arrowhead=empty];
 
     /* Core Base */
-    cxObject [label="{cxObject|+ UseColors() : bool\l+ UseBeeps() : bool\l+ beep()\l}"];
-    cxApp [label="{cxApp|}"];
+    cxObject [label="{cxObject|+ UseColors() : bool\l+ UseBeeps() : bool\l+ beep()\l+ cxTypeStr() : string\l}"];
+
+    cxApp [label="{cxApp|+ mainLoop() : long\l+ run() : long\l+ onInit() : long\l+ onExit() : long\l}"];
     cxApp -> cxObject;
 
     /* Main Window Hierarchy */
-    cxWindow [label="{cxWindow|+ show()\l+ showModal()\l+ setFocus()\l+ move()\l+ resize()\l}"];
+    cxWindow [label="{cxWindow|+ show()\l+ showModal() : long\l+ draw()\l+ hide()\l+ move() : bool\l+ resize() : bool\l+ touchWindow()\l}"];
     cxWindow -> cxObject;
 
-    cxButton [label="{cxButton|}"];
+    cxButton [label="{cxButton|+ showModal() : long\l+ setOnClickFunction()\l+ runOnClickFunction() : string\l}"];
     cxButton -> cxWindow;
 
-    cxDialog [label="{cxDialog|+ showModal()\l}"];
+    cxDialog [label="{cxDialog|+ showModal() : long\l}"];
     cxDialog -> cxWindow;
 
-    cxMessageDialog [label="{cxMessageDialog|}"];
+    cxMessageDialog [label="{cxMessageDialog|+ showModal() : long\l}"];
     cxMessageDialog -> cxDialog;
 
     cxFrame [label="{cxFrame|}"];
     cxFrame -> cxWindow;
 
-    cxPanel [label="{cxPanel|+ append()\l+ removeWindow()\l+ delWindow()\l}"];
+    cxLabel [label="{cxLabel|+ getText() : string\l+ setText()\l}"];
+    cxLabel -> cxWindow;
+
+    cxPanel [label="{cxPanel|+ showModal() : long\l+ append() : bool\l+ getWindow()\l+ delWindow()\l+ numWindows() : unsigned\l}"];
     cxPanel -> cxWindow;
 
-    cxNotebook [label="{cxNotebook|}"];
+    cxNotebook [label="{cxNotebook|+ showModal() : long\l+ append()\l+ getPanel()\l+ setCurrentWindow() : bool\l}"];
     cxNotebook -> cxPanel;
 
-    cxSearchPanel [label="{cxSearchPanel|}"];
+    cxSearchPanel [label="{cxSearchPanel|+ getForm()\l+ getMenu()\l+ appendToForm()\l+ appendToMenu()\l}"];
     cxSearchPanel -> cxPanel;
 
-    cxForm [label="{cxForm|+ append()\l+ remove()\l+ getValue()\l}"];
+    cxForm [label="{cxForm|+ append()\l+ showModal() : long\l+ setCurrentInput() : bool\l}"];
     cxForm -> cxWindow;
 
     cxMultiForm [label="{cxMultiForm|}"];
     cxMultiForm -> cxForm;
 
-    cxMenu [label="{cxMenu|+ append()\l+ remove()\l+ showModal()\l}"];
+    cxMenu [label="{cxMenu|+ append()\l+ remove() : bool\l+ showModal() : long\l}"];
     cxMenu -> cxWindow;
 
-    cxScrolledWindow [label="{cxScrolledWindow|+ scrollWin()\l}"];
+    cxMenuBar [label="{cxMenuBar|+ addMenu()\l+ showModal() : long\l+ showModalWithClick() : long\l+ getLastMenuReturnCode() : long\l}"];
+    cxMenuBar -> cxWindow;
+
+    cxScrolledWindow [label="{cxScrolledWindow|+ showModal() : long\l+ draw()\l}"];
     cxScrolledWindow -> cxWindow;
 
-    cxFileViewer [label="{cxFileViewer|}"];
+    cxFileViewer [label="{cxFileViewer|+ show() : long\l+ load()\l+ widestLine() : int\l}"];
     cxFileViewer -> cxScrolledWindow;
 
+    cxGrid [label="{cxGrid|+ show() : long\l+ showModal() : long\l+ draw()\l+ getCellValue() : string\l+ setCellValue()\l}"];
+    cxGrid -> cxWindow;
+
+    cxDatePicker [label="{cxDatePicker|+ showModal() : long\l+ getSelectedDate() : cxDate\l}"];
+    cxDatePicker -> cxWindow;
+
+    cxOpenFileDialog [label="{cxOpenFileDialog|+ showModal() : long\l+ addFilter()\l+ setDirectory()\l+ getSelectedFilePath() : string\l}"];
+    cxOpenFileDialog -> cxWindow;
+
     /* Input Hierarchy */
-    cxMultiLineInput [label="{cxMultiLineInput|+ getValue()\l+ setValue()\l}"];
+    cxMultiLineInput [label="{cxMultiLineInput|+ showModal() : long\l+ getValue() : string\l+ setValue()\l}"];
     cxMultiLineInput -> cxWindow;
 
-    cxInput [label="{cxInput|}"];
+    cxInput [label="{cxInput|+ showModal() : long\l+ getValue() : string\l+ setValue()\l}"];
     cxInput -> cxWindow;
 
-    cxComboBox [label="{cxComboBox|}"];
+    cxComboBox [label="{cxComboBox|+ appendToMenu()\l+ removeFromMenu()\l+ toggleMenu()\l}"];
     cxComboBox -> cxMultiLineInput;
 
     floatingPtInputWithRightLabel [label="{floatingPtInputWithRightLabel|}"];
     floatingPtInputWithRightLabel -> cxMultiLineInput;
 
     /* Function Callback Hierarchy */
-    cxFunction [label="{«abstract»\ncxFunction|+ runFunction()\l+ functionIsSet()\l}", style=filled, fillcolor=lightgray];
+    cxFunction [label="{«abstract»\ncxFunction|+ runFunction() : string\l+ functionIsSet() : bool\l}", style=filled, fillcolor=lightgray];
     cxFunction0 [label="{cxFunction0|}"];
     cxFunction0 -> cxFunction;
     cxFunction2 [label="{cxFunction2|}"];
@@ -78,9 +94,13 @@ digraph cxWidgets_UML {
     cxFunction4 -> cxFunction;
 
     /* Standalone classes */
-    cxWidgetsException [label="{cxWidgetsException|}", style=filled, fillcolor=lightyellow];
-    cxTimer [label="{cxTimer|+ start()\l+ wait()\l}", style=filled, fillcolor=lightyellow];
-    cxTextValidator [label="{cxTextValidator|}", style=filled, fillcolor=lightyellow];
+    cxDate [label="{cxDate|+ getYear() : int\l+ getMonth() : int\l+ getDay() : int\l}", style=filled, fillcolor=lightyellow];
+    cxWidgetsException [label="{cxWidgetsException|+ getErrorMsg() : string\l}", style=filled, fillcolor=lightyellow];
+    cxTimer [label="{cxTimer|+ start()\l+ stop()\l+ delay()\l}", style=filled, fillcolor=lightyellow];
+    cxTextValidator [label="{cxTextValidator|+ textIsValid() : bool\l+ addImpliedChars() : string\l}", style=filled, fillcolor=lightyellow];
+
+    /* cxBase namespace (utility functions, not a class) */
+    cxBase_ns [label="{«namespace»\ncxBase|+ init()\l+ cleanup()\l+ messageBox()\l+ promptYesNo() : bool\l+ updateWindows()\l+ writeText()\l}", style=filled, fillcolor=lightblue, shape=record];
 
     /* Subgraphs for grouping */
     subgraph cluster_core {
@@ -92,6 +112,7 @@ digraph cxWidgets_UML {
         label="Window Hierarchy";
         cxWindow;
         cxButton;
+        cxLabel;
         cxDialog;
         cxMessageDialog;
         cxFrame;
@@ -101,8 +122,12 @@ digraph cxWidgets_UML {
         cxForm;
         cxMultiForm;
         cxMenu;
+        cxMenuBar;
         cxScrolledWindow;
         cxFileViewer;
+        cxGrid;
+        cxDatePicker;
+        cxOpenFileDialog;
     }
     subgraph cluster_inputs {
         label="Input Controls";
@@ -120,8 +145,10 @@ digraph cxWidgets_UML {
     }
     subgraph cluster_util {
         label="Utility";
+        cxDate;
         cxWidgetsException;
         cxTimer;
         cxTextValidator;
+        cxBase_ns;
     }
 }

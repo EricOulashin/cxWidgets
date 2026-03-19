@@ -48,6 +48,9 @@
 #include "cxDate.h"
 #include <memory>
 
+/**
+ * \brief This is a dialog that displays a calendar, allowing the user to choose a date while viewing a calendar; this dialog also allows the user to navigate through the months and specify different years to view calendars of various months and years.
+ */
 class cxDatePicker : public cxWindow
 {
 public:

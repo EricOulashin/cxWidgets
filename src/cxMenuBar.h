@@ -24,6 +24,10 @@
 #include <memory>
 #include <map>
 
+/**
+ * \brief This is a menu bar class, designed for displaying a horizontal
+ * \brief menu.
+ */
 class cxMenuBar : public cxWindow
 {
    public:
@@ -124,6 +128,25 @@ class cxMenuBar : public cxWindow
        * @return The label text
        */
       std::string getMenuLabel(int pIndex) const;
+
+      /**
+       * \brief Shows the menu bar and immediately opens the dropdown for
+       * whichever menu item is at screen column pClickX.  Used when the
+       * caller already knows the user clicked at a specific X position
+       * (e.g., from a mouse event intercepted before the bar had focus)
+       * so the bar doesn't wait for a second click to open the dropdown.
+       *
+       * If pClickX doesn't land on any item, falls back to normal showModal.
+       *
+       * @param pClickX The screen X (column) coordinate of the initial click
+       * @param pShowSelf Whether to call show() first
+       * @param pBringToTop Whether to bring the window to the top
+       * @param pShowSubwindows Whether to show subwindows
+       * @return The return code from the selected menu item, or cxID_QUIT
+       */
+      long showModalWithClick(int pClickX, bool pShowSelf = true,
+                              bool pBringToTop = true,
+                              bool pShowSubwindows = true);
 
       /**
        * \brief Sets a global hotkey that activates a specific menu.

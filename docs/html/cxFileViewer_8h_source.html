@@ -51,75 +51,77 @@ $(document).ready(function() { init_codefold(0); });
   <div class="headertitle"><div class="title">cxFileViewer.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="cxFileViewer_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef __CXFILEVIEWER_H__</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define __CXFILEVIEWER_H__</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Copyright (c) 2005-2007 Michael H. Kinney</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">// Creates a new window, opens a file, and</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// displays it in that window.</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="cxScrolledWindow_8h.html">cxScrolledWindow.h</a>&quot;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="cxFunction_8h.html">cxFunction.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classcxFileViewer.html">   31</a></span><span class="keyword">class </span><a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcxScrolledWindow.html">cxScrolledWindow</a> {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>   <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classcxFileViewer.html#a414e9a5e35802527d1f21ddb74649be1">   43</a></span>      <span class="keyword">explicit</span> <a class="code hl_function" href="classcxFileViewer.html#a414e9a5e35802527d1f21ddb74649be1">cxFileViewer</a>(<a class="code hl_class" href="classcxWindow.html">cxWindow</a> *pParentWindow, <span class="keyword">const</span> std::string&amp; pFilename,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                            <span class="keywordtype">int</span> pRow = 0, <span class="keywordtype">int</span> pCol = 0,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                            <span class="keywordtype">int</span> pHeight = <a class="code hl_define" href="cxWindow_8h.html#a1879f9e5604a01f0983829846001ab23">DEFAULT_HEIGHT</a>,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                            <span class="keywordtype">int</span> pWidth = <a class="code hl_define" href="cxWindow_8h.html#a93493eb8fae5549bd5be67f3449245e0">DEFAULT_WIDTH</a>);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      <a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>&amp; pThatFileViewer);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      <span class="keyword">virtual</span> <a class="code hl_function" href="classcxFileViewer.html#a435232429bbf4a2b25d2ca2d6279ff9b">~cxFileViewer</a>();</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <span class="keyword">virtual</span> <span class="keywordtype">long</span> <a class="code hl_function" href="classcxFileViewer.html#ab0a6242eb369a69d5c3b013047869cc1">show</a>(<span class="keywordtype">bool</span> pBringToTop = <span class="keyword">true</span>, <span class="keywordtype">bool</span> pShowSubwindows = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <span class="keywordtype">void</span> <a class="code hl_function" href="classcxFileViewer.html#a7e72e2f1ad82b319d68b55f7229fa6ea">load</a>();</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="keywordtype">int</span> <a class="code hl_function" href="classcxFileViewer.html#abc74e5f778b868412dad96f07b63fbf1">widestLine</a>();</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classcxFileViewer.html#aed58a88f8fc796e7f842ac25018290c7">cxTypeStr</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>   <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      <span class="keywordtype">void</span> <a class="code hl_function" href="classcxFileViewer.html#a58bacc64740bedd091ac087065eca8b2">copyCxFileViewerStuff</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>* pThatFileViewer);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>   <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      std::string mFilename;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      <span class="comment">// Displays the line numbers in the bottom border</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      <span class="keywordtype">void</span> displayLineNumbers();</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      <span class="comment">// Calls displayLineNumbers() on a cxFileViewer.  This</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>      <span class="comment">// function is to be used as the &#39;loop function&#39; to be</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      <span class="comment">// run at the end of each cycle through the input loop</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      <span class="comment">// in the parent class.</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      <span class="keyword">static</span> std::string updateLineNumbers(<a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>&amp; pFileViewer);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      <span class="comment">// Disable the use of setLoopEndFunction from the outside</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      <span class="keywordtype">void</span> setLoopEndFunction(<span class="keyword">const</span> std::shared_ptr&lt;cxFunction&gt;&amp; pFuncPtr) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>};</div>
+<a href="cxFileViewer_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2026 E. Oulashin</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef __CXFILEVIEWER_H__</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define __CXFILEVIEWER_H__</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// Copyright (c) 2005-2007 Michael H. Kinney</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// Creates a new window, opens a file, and</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">// displays it in that window.</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="cxScrolledWindow_8h.html">cxScrolledWindow.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="cxFunction_8h.html">cxFunction.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classcxFileViewer.html">   29</a></span><span class="keyword">class </span><a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a> : <span class="keyword">public</span> <a class="code hl_class" href="classcxScrolledWindow.html">cxScrolledWindow</a></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classcxFileViewer.html#a414e9a5e35802527d1f21ddb74649be1">   42</a></span>      <span class="keyword">explicit</span> <a class="code hl_function" href="classcxFileViewer.html#a414e9a5e35802527d1f21ddb74649be1">cxFileViewer</a>(<a class="code hl_class" href="classcxWindow.html">cxWindow</a> *pParentWindow, <span class="keyword">const</span> std::string&amp; pFilename,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                            <span class="keywordtype">int</span> pRow = 0, <span class="keywordtype">int</span> pCol = 0,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                            <span class="keywordtype">int</span> pHeight = <a class="code hl_define" href="cxWindow_8h.html#a1879f9e5604a01f0983829846001ab23">DEFAULT_HEIGHT</a>,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                            <span class="keywordtype">int</span> pWidth = <a class="code hl_define" href="cxWindow_8h.html#a93493eb8fae5549bd5be67f3449245e0">DEFAULT_WIDTH</a>);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>&amp; pThatFileViewer);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keyword">virtual</span> <a class="code hl_function" href="classcxFileViewer.html#a435232429bbf4a2b25d2ca2d6279ff9b">~cxFileViewer</a>();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      <span class="keyword">virtual</span> <span class="keywordtype">long</span> <a class="code hl_function" href="classcxFileViewer.html#ab0a6242eb369a69d5c3b013047869cc1">show</a>(<span class="keywordtype">bool</span> pBringToTop = <span class="keyword">true</span>, <span class="keywordtype">bool</span> pShowSubwindows = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <span class="keywordtype">void</span> <a class="code hl_function" href="classcxFileViewer.html#a7e72e2f1ad82b319d68b55f7229fa6ea">load</a>();</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <span class="keywordtype">int</span> <a class="code hl_function" href="classcxFileViewer.html#abc74e5f778b868412dad96f07b63fbf1">widestLine</a>();</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classcxFileViewer.html#aed58a88f8fc796e7f842ac25018290c7">cxTypeStr</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>   <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      <span class="keywordtype">void</span> <a class="code hl_function" href="classcxFileViewer.html#a58bacc64740bedd091ac087065eca8b2">copyCxFileViewerStuff</a>(<span class="keyword">const</span> <a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>* pThatFileViewer);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      std::string mFilename;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      <span class="comment">// Displays the line numbers in the bottom border</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      <span class="keywordtype">void</span> displayLineNumbers();</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      <span class="comment">// Calls displayLineNumbers() on a cxFileViewer.  This</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      <span class="comment">// function is to be used as the &#39;loop function&#39; to be</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>      <span class="comment">// run at the end of each cycle through the input loop</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      <span class="comment">// in the parent class.</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      <span class="keyword">static</span> std::string updateLineNumbers(<a class="code hl_class" href="classcxFileViewer.html">cxFileViewer</a>&amp; pFileViewer);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>      <span class="comment">// Disable the use of setLoopEndFunction from the outside</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      <span class="keywordtype">void</span> setLoopEndFunction(<span class="keyword">const</span> std::shared_ptr&lt;cxFunction&gt;&amp; pFuncPtr) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>};</div>
 </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclasscxFileViewer_html"><div class="ttname"><a href="classcxFileViewer.html">cxFileViewer</a></div><div class="ttdoc">Represents a window that displays a file. While the object is being displayed with showModal(),...</div><div class="ttdef"><b>Definition</b> cxFileViewer.h:31</div></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclasscxFileViewer_html"><div class="ttname"><a href="classcxFileViewer.html">cxFileViewer</a></div><div class="ttdoc">Represents a window that displays a file. While the object is being displayed with showModal(),...</div><div class="ttdef"><b>Definition</b> cxFileViewer.h:30</div></div>
 <div class="ttc" id="aclasscxFileViewer_html_a414e9a5e35802527d1f21ddb74649be1"><div class="ttname"><a href="classcxFileViewer.html#a414e9a5e35802527d1f21ddb74649be1">cxFileViewer::cxFileViewer</a></div><div class="ttdeci">cxFileViewer(cxWindow *pParentWindow, const std::string &amp;pFilename, int pRow=0, int pCol=0, int pHeight=DEFAULT_HEIGHT, int pWidth=DEFAULT_WIDTH)</div></div>
-<div class="ttc" id="aclasscxFileViewer_html_a435232429bbf4a2b25d2ca2d6279ff9b"><div class="ttname"><a href="classcxFileViewer.html#a435232429bbf4a2b25d2ca2d6279ff9b">cxFileViewer::~cxFileViewer</a></div><div class="ttdeci">virtual ~cxFileViewer()</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:55</div></div>
-<div class="ttc" id="aclasscxFileViewer_html_a58bacc64740bedd091ac087065eca8b2"><div class="ttname"><a href="classcxFileViewer.html#a58bacc64740bedd091ac087065eca8b2">cxFileViewer::copyCxFileViewerStuff</a></div><div class="ttdeci">void copyCxFileViewerStuff(const cxFileViewer *pThatFileViewer)</div><div class="ttdoc">Makes a copy of a cxFileViewer's member variables.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:108</div></div>
-<div class="ttc" id="aclasscxFileViewer_html_a7e72e2f1ad82b319d68b55f7229fa6ea"><div class="ttname"><a href="classcxFileViewer.html#a7e72e2f1ad82b319d68b55f7229fa6ea">cxFileViewer::load</a></div><div class="ttdeci">void load()</div><div class="ttdoc">Loads the contents of the file.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:64</div></div>
-<div class="ttc" id="aclasscxFileViewer_html_ab0a6242eb369a69d5c3b013047869cc1"><div class="ttname"><a href="classcxFileViewer.html#ab0a6242eb369a69d5c3b013047869cc1">cxFileViewer::show</a></div><div class="ttdeci">virtual long show(bool pBringToTop=true, bool pShowSubwindows=true) override</div><div class="ttdoc">Shows the window.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:58</div></div>
-<div class="ttc" id="aclasscxFileViewer_html_abc74e5f778b868412dad96f07b63fbf1"><div class="ttname"><a href="classcxFileViewer.html#abc74e5f778b868412dad96f07b63fbf1">cxFileViewer::widestLine</a></div><div class="ttdeci">int widestLine()</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:89</div></div>
-<div class="ttc" id="aclasscxFileViewer_html_aed58a88f8fc796e7f842ac25018290c7"><div class="ttname"><a href="classcxFileViewer.html#aed58a88f8fc796e7f842ac25018290c7">cxFileViewer::cxTypeStr</a></div><div class="ttdeci">virtual std::string cxTypeStr() const override</div><div class="ttdoc">Returns the name of the cxWidgets class. This can be used to.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:102</div></div>
-<div class="ttc" id="aclasscxScrolledWindow_html"><div class="ttname"><a href="classcxScrolledWindow.html">cxScrolledWindow</a></div><div class="ttdoc">Represents a text window with scrolling. This class is.</div><div class="ttdef"><b>Definition</b> cxScrolledWindow.h:53</div></div>
-<div class="ttc" id="aclasscxWindow_html"><div class="ttname"><a href="classcxWindow.html">cxWindow</a></div><div class="ttdoc">Represents a text-based window on the screen. Can contain a title, status, and a message to appear wi...</div><div class="ttdef"><b>Definition</b> cxWindow.h:195</div></div>
+<div class="ttc" id="aclasscxFileViewer_html_a435232429bbf4a2b25d2ca2d6279ff9b"><div class="ttname"><a href="classcxFileViewer.html#a435232429bbf4a2b25d2ca2d6279ff9b">cxFileViewer::~cxFileViewer</a></div><div class="ttdeci">virtual ~cxFileViewer()</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:56</div></div>
+<div class="ttc" id="aclasscxFileViewer_html_a58bacc64740bedd091ac087065eca8b2"><div class="ttname"><a href="classcxFileViewer.html#a58bacc64740bedd091ac087065eca8b2">cxFileViewer::copyCxFileViewerStuff</a></div><div class="ttdeci">void copyCxFileViewerStuff(const cxFileViewer *pThatFileViewer)</div><div class="ttdoc">Makes a copy of a cxFileViewer's member variables.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:120</div></div>
+<div class="ttc" id="aclasscxFileViewer_html_a7e72e2f1ad82b319d68b55f7229fa6ea"><div class="ttname"><a href="classcxFileViewer.html#a7e72e2f1ad82b319d68b55f7229fa6ea">cxFileViewer::load</a></div><div class="ttdeci">void load()</div><div class="ttdoc">Loads the contents of the file.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:67</div></div>
+<div class="ttc" id="aclasscxFileViewer_html_ab0a6242eb369a69d5c3b013047869cc1"><div class="ttname"><a href="classcxFileViewer.html#ab0a6242eb369a69d5c3b013047869cc1">cxFileViewer::show</a></div><div class="ttdeci">virtual long show(bool pBringToTop=true, bool pShowSubwindows=true) override</div><div class="ttdoc">Shows the window.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:60</div></div>
+<div class="ttc" id="aclasscxFileViewer_html_abc74e5f778b868412dad96f07b63fbf1"><div class="ttname"><a href="classcxFileViewer.html#abc74e5f778b868412dad96f07b63fbf1">cxFileViewer::widestLine</a></div><div class="ttdeci">int widestLine()</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:97</div></div>
+<div class="ttc" id="aclasscxFileViewer_html_aed58a88f8fc796e7f842ac25018290c7"><div class="ttname"><a href="classcxFileViewer.html#aed58a88f8fc796e7f842ac25018290c7">cxFileViewer::cxTypeStr</a></div><div class="ttdeci">virtual std::string cxTypeStr() const override</div><div class="ttdoc">Returns the name of the cxWidgets class. This can be used to.</div><div class="ttdef"><b>Definition</b> cxFileViewer.cpp:113</div></div>
+<div class="ttc" id="aclasscxScrolledWindow_html"><div class="ttname"><a href="classcxScrolledWindow.html">cxScrolledWindow</a></div><div class="ttdoc">Represents a text window with scrolling. This class is.</div><div class="ttdef"><b>Definition</b> cxScrolledWindow.h:52</div></div>
+<div class="ttc" id="aclasscxWindow_html"><div class="ttname"><a href="classcxWindow.html">cxWindow</a></div><div class="ttdoc">Represents a text-based window on the screen. Can contain a title, status, and a message to appear wi...</div><div class="ttdef"><b>Definition</b> cxWindow.h:193</div></div>
 <div class="ttc" id="acxFunction_8h_html"><div class="ttname"><a href="cxFunction_8h.html">cxFunction.h</a></div></div>
 <div class="ttc" id="acxScrolledWindow_8h_html"><div class="ttname"><a href="cxScrolledWindow_8h.html">cxScrolledWindow.h</a></div></div>
-<div class="ttc" id="acxWindow_8h_html_a1879f9e5604a01f0983829846001ab23"><div class="ttname"><a href="cxWindow_8h.html#a1879f9e5604a01f0983829846001ab23">DEFAULT_HEIGHT</a></div><div class="ttdeci">#define DEFAULT_HEIGHT</div><div class="ttdef"><b>Definition</b> cxWindow.h:65</div></div>
-<div class="ttc" id="acxWindow_8h_html_a93493eb8fae5549bd5be67f3449245e0"><div class="ttname"><a href="cxWindow_8h.html#a93493eb8fae5549bd5be67f3449245e0">DEFAULT_WIDTH</a></div><div class="ttdeci">#define DEFAULT_WIDTH</div><div class="ttdef"><b>Definition</b> cxWindow.h:66</div></div>
+<div class="ttc" id="acxWindow_8h_html_a1879f9e5604a01f0983829846001ab23"><div class="ttname"><a href="cxWindow_8h.html#a1879f9e5604a01f0983829846001ab23">DEFAULT_HEIGHT</a></div><div class="ttdeci">#define DEFAULT_HEIGHT</div><div class="ttdef"><b>Definition</b> cxWindow.h:66</div></div>
+<div class="ttc" id="acxWindow_8h_html_a93493eb8fae5549bd5be67f3449245e0"><div class="ttname"><a href="cxWindow_8h.html#a93493eb8fae5549bd5be67f3449245e0">DEFAULT_WIDTH</a></div><div class="ttdeci">#define DEFAULT_WIDTH</div><div class="ttdef"><b>Definition</b> cxWindow.h:67</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

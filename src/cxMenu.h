@@ -746,6 +746,18 @@ class cxMenu : public cxWindow
       void setExitWhenLeaveLast(bool pExitWhenLeaveLast);
 
       /**
+       * \brief When set to true, the menu will exit its input loop whenever a
+       * mouse click occurs outside the menu window, regardless of whether the
+       * menu has a parent menu or is embedded in a cxPanel.  Use this when
+       * showing a standalone dropdown that should close on any outside click
+       * (e.g., a cxMenuBar dropdown).
+       *
+       * @param pExitOnOutsideClick If true, exit the input loop on any outside
+       *  mouse click.
+       */
+      void setExitOnOutsideClick(bool pExitOnOutsideClick);
+
+      /**
        * \brief Returns whether the menu will exit its input loop when the
        * \brief user presses the down arrow on the last menu item.
        *
@@ -1074,6 +1086,9 @@ class cxMenu : public cxWindow
       //  as a pull-right or pop-up menu.  It is decremented when the menu is
       //  removed.
       int mNumParentMenus = 0;
+      // mExitOnOutsideClick: when true, any mouse click outside the menu
+      // window will close the menu, even without a parent menu/panel.
+      bool mExitOnOutsideClick = false;
       // mLastInputWasMouseEvent will be set true if the last input
       //  was a mouse event in the input loop.
       bool mLastInputWasMouseEvent = false;

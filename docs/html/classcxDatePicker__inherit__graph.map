@@ -1,0 +1,7 @@
+<map id="cxDatePicker" name="cxDatePicker">
+<area shape="rect" id="Node000001" title="This is a dialog that displays a calendar, allowing the user to choose a date while viewing a calenda..." alt="" coords="6,1012,171,1477"/>
+<area shape="rect" id="Node000002" href="$classcxWindow.html" title="Represents a text&#45;based window on the screen. Can contain a title, status, and a message to appear wi..." alt="" coords="5,279,172,964"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,978,91,1012,86,1012,86,978"/>
+<area shape="rect" id="Node000003" href="$classcxObject.html" title="The base class for windowing classes in the cxWidgets." alt="" coords="41,5,137,231"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,245,91,279,86,279,86,245"/>
+</map>
