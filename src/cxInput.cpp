@@ -785,6 +785,7 @@ void cxInput::getInputText(string& pValue, int pX, bool pCheckPrintable)
    }
    if (getText)
    {
+      if (mWindow == nullptr) return;
       pValue.erase();
 
       // mvwinchnstr() is used to extract the characters that

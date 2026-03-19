@@ -34,11 +34,63 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pStatus, eBorderStyle pBorderStyle,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
+     mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
-	  mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
-	  mBorderStyle(pBorderStyle)
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mExtTitleTemp(),
+     mExtStatusTemp(),
+     mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
+     mSubWindows(),
+     mFocus(false),
+     mBorderStyle(pBorderStyle),
+     mEnabled(true),
+     mDisableCursorOnShow(true),
+     mExitOnMouseOutside(false),
+     mLastKey(NOKEY),
+     mChangeColorsOnFocus(false),
+     mShowSubwinsForward(true),
+     mShowSelfBeforeSubwins(true),
+     mReturnCode(cxID_EXIT),
+     mRunOnFocus(true),
+     mRunOnLeave(true),
+     mDrawBorderTop(true),
+     mDrawBorderBottom(true),
+     mDrawBorderLeft(true),
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageLines(),
+     mSpecialChars(),
+     mMessageAttrs(),
+     mTitleAttrs(),
+     mStatusAttrs(),
+     mBorderAttrs(),
+     mHotkeyAttrs(),
+     mSpecialCharAttrs(),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawTitle(true),
+     mDrawStatus(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mKeyFunctions(),
+     mMouseFunctions(),
+     mQuitKeys(),
+     mExitKeys(),
+     mHotkeyHighlighting(pHotkeyHighlighting),
+     mMouse()
 {
    // If pHeight & pWidth are < 0, then use them to control the height of
    //  the window based on the parent window's height/width (or the screen's
@@ -115,32 +167,21 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pMessage, const string& pStatus,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mWindow(nullptr),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mVerticalMessageAlignment(eVP_TOP),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
      mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
      mTitleParent(nullptr),
      mStatusParent(nullptr),
+     mExtTitleTemp(),
+     mExtStatusTemp(),
      mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
+     mSubWindows(),
      mFocus(false),
      mBorderStyle(eBS_SINGLE_LINE),
      mEnabled(true),
      mDisableCursorOnShow(true),
+     mExitOnMouseOutside(false),
      mLastKey(NOKEY),
      mChangeColorsOnFocus(false),
      mShowSubwinsForward(true),
@@ -151,7 +192,38 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mDrawBorderTop(true),
      mDrawBorderBottom(true),
      mDrawBorderLeft(true),
-     mDrawBorderRight(true)
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageLines(),
+     mSpecialChars(),
+     mMessageAttrs(),
+     mTitleAttrs(),
+     mStatusAttrs(),
+     mBorderAttrs(),
+     mHotkeyAttrs(),
+     mSpecialCharAttrs(),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawTitle(true),
+     mDrawStatus(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mKeyFunctions(),
+     mMouseFunctions(),
+     mQuitKeys(),
+     mExitKeys(),
+     mHotkeyHighlighting(pHotkeyHighlighting),
+     mMouse()
 {
    init(pRow, pCol, 0, 0, pTitle, pMessage, pStatus, pParentWindow);
 
@@ -181,32 +253,21 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pTitle, const string& pMessage,
                    const string& pStatus, cxWindow *pExtTitleWindow,
                    cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
-   : mWindow(nullptr),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mVerticalMessageAlignment(eVP_TOP),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
      mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
      mTitleParent(nullptr),
      mStatusParent(nullptr),
+     mExtTitleTemp(),
+     mExtStatusTemp(),
      mParentWindow(pParentWindow != this ? pParentWindow : nullptr),
+     mSubWindows(),
      mFocus(false),
      mBorderStyle(eBS_SINGLE_LINE),
      mEnabled(true),
      mDisableCursorOnShow(true),
+     mExitOnMouseOutside(false),
      mLastKey(NOKEY),
      mChangeColorsOnFocus(false),
      mShowSubwinsForward(true),
@@ -217,7 +278,38 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mDrawBorderTop(true),
      mDrawBorderBottom(true),
      mDrawBorderLeft(true),
-     mDrawBorderRight(true)
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageLines(),
+     mSpecialChars(),
+     mMessageAttrs(),
+     mTitleAttrs(),
+     mStatusAttrs(),
+     mBorderAttrs(),
+     mHotkeyAttrs(),
+     mSpecialCharAttrs(),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawTitle(true),
+     mDrawStatus(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mKeyFunctions(),
+     mMouseFunctions(),
+     mQuitKeys(),
+     mExitKeys(),
+     mHotkeyHighlighting(pHotkeyHighlighting),
+     mMouse()
 {
    init(0, 0, 0, 0, pTitle, pMessage, pStatus, pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -252,22 +344,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                cxWindow *pExtTitleWindow,
                cxWindow *pExtStatusWindow,
                bool pHotkeyHighlighting)
-   : mWindow(nullptr),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mVerticalMessageAlignment(eVP_TOP),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
      mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
@@ -288,7 +365,23 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mDrawBorderTop(true),
      mDrawBorderBottom(true),
      mDrawBorderLeft(true),
-     mDrawBorderRight(true)
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mHotkeyHighlighting(pHotkeyHighlighting)
 {
    init(0, 0, pHeight, pWidth, pTitle, pMessage, pStatus, pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -320,22 +413,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                    const string& pMessage, const string& pStatus,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mWindow(nullptr),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mVerticalMessageAlignment(eVP_TOP),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
      mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
@@ -356,7 +434,23 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mDrawBorderTop(true),
      mDrawBorderBottom(true),
      mDrawBorderLeft(true),
-     mDrawBorderRight(true)
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mHotkeyHighlighting(pHotkeyHighlighting)
 {
    init(0, 0, 0, 0, "", pMessage, pStatus, pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -390,22 +484,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
                cxWindow *pExtTitleWindow,
                cxWindow *pExtStatusWindow,
                bool pHotkeyHighlighting)
-   : mWindow(nullptr),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mVerticalMessageAlignment(eVP_TOP),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
      mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
@@ -426,7 +505,23 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
      mDrawBorderTop(true),
      mDrawBorderBottom(true),
      mDrawBorderLeft(true),
-     mDrawBorderRight(true)
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mHotkeyHighlighting(pHotkeyHighlighting)
 {
    init(0, 0, pHeight, pWidth, "", pMessage, pStatus, pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -457,22 +552,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
 cxWindow::cxWindow(cxWindow *pParentWindow, const string& pMessage,
                    cxWindow *pExtTitleWindow, cxWindow *pExtStatusWindow,
                    bool pHotkeyHighlighting)
-   : mWindow(nullptr),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mVerticalMessageAlignment(eVP_TOP),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
      mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
@@ -493,7 +573,23 @@ cxWindow::cxWindow(cxWindow *pParentWindow, const string& pMessage,
      mDrawBorderTop(true),
      mDrawBorderBottom(true),
      mDrawBorderLeft(true),
-     mDrawBorderRight(true)
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mHotkeyHighlighting(pHotkeyHighlighting)
 {
    init(0, 0, 0, 0, "", pMessage, "", pParentWindow);
    // Center the window on the screen, but don't draw it.
@@ -525,22 +621,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
                    const string& pTitle, const string& pMessage,
                    const string& pStatus, cxWindow *pExtTitleWindow,
                    cxWindow *pExtStatusWindow, bool pHotkeyHighlighting)
-   : mWindow(nullptr),
-     mMessageColorPair(eWHITE_BLUE),
-     mTitleColorPair(eGRAY_BLUE),
-     mStatusColorPair(eBROWN_BLUE),
-     mBorderColorPair(eGRAY_BLUE),
-     mHorizTitleAlignment(eHP_LEFT),
-     mHorizMessageAlignment(eHP_LEFT),
-     mHorizStatusAlignment(eHP_LEFT),
-     mVerticalMessageAlignment(eVP_TOP),
-     mDrawMessage(true),
-     mDrawSpecialChars(true),
-     mOnFocusFunction(nullptr),
-     mOnLeaveFunction(nullptr),
-     mIsModal(false),
-     mLeaveNow(false),
-     mHotkeyHighlighting(pHotkeyHighlighting),
+   : mIsBeingDestroyed(false),
      mPanel(nullptr),
      mExtTitleWindow(pExtTitleWindow),
      mExtStatusWindow(pExtStatusWindow),
@@ -561,7 +642,23 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
      mDrawBorderTop(true),
      mDrawBorderBottom(true),
      mDrawBorderLeft(true),
-     mDrawBorderRight(true)
+     mDrawBorderRight(true),
+     mWindow(nullptr),
+     mMessageColorPair(eWHITE_BLUE),
+     mTitleColorPair(eGRAY_BLUE),
+     mStatusColorPair(eBROWN_BLUE),
+     mBorderColorPair(eGRAY_BLUE),
+     mHorizTitleAlignment(eHP_LEFT),
+     mHorizMessageAlignment(eHP_LEFT),
+     mHorizStatusAlignment(eHP_LEFT),
+     mVerticalMessageAlignment(eVP_TOP),
+     mDrawMessage(true),
+     mDrawSpecialChars(true),
+     mOnFocusFunction(nullptr),
+     mOnLeaveFunction(nullptr),
+     mIsModal(false),
+     mLeaveNow(false),
+     mHotkeyHighlighting(pHotkeyHighlighting)
 {
    int newRow, newCol;
 
@@ -593,7 +690,33 @@ cxWindow::cxWindow(cxWindow *pParentWindow, eHPosition pHPosition,
 
 // Copy constructor
 cxWindow::cxWindow(const cxWindow& pThatWindow)
-   : mWindow(nullptr),
+   : mIsBeingDestroyed(pThatWindow.mIsBeingDestroyed),
+     mPanel(nullptr),
+     mExtTitleWindow(pThatWindow.mExtTitleWindow),
+     mExtStatusWindow(pThatWindow.mExtStatusWindow),
+     mTitleParent(nullptr),
+     mStatusParent(nullptr),
+     mExtTitleTemp(pThatWindow.mExtTitleTemp),
+     mExtStatusTemp(pThatWindow.mExtStatusTemp),
+     mParentWindow(pThatWindow.mParentWindow != this ? pThatWindow.mParentWindow : nullptr),
+     mSubWindows(),
+     mFocus(false),
+     mBorderStyle(pThatWindow.mBorderStyle),
+     mEnabled(pThatWindow.mEnabled),
+     mDisableCursorOnShow(pThatWindow.mDisableCursorOnShow),
+     mExitOnMouseOutside(pThatWindow.mExitOnMouseOutside),
+     mLastKey(pThatWindow.mLastKey),
+     mChangeColorsOnFocus(pThatWindow.mChangeColorsOnFocus),
+     mShowSubwinsForward(pThatWindow.mShowSubwinsForward),
+     mShowSelfBeforeSubwins(pThatWindow.mShowSelfBeforeSubwins),
+     mReturnCode(pThatWindow.mReturnCode),
+     mRunOnFocus(pThatWindow.mRunOnFocus),
+     mRunOnLeave(pThatWindow.mRunOnLeave),
+     mDrawBorderTop(pThatWindow.mDrawBorderTop),
+     mDrawBorderBottom(pThatWindow.mDrawBorderBottom),
+     mDrawBorderLeft(pThatWindow.mDrawBorderLeft),
+     mDrawBorderRight(pThatWindow.mDrawBorderRight),
+     mWindow(nullptr),
      mMessageLines(pThatWindow.mMessageLines),
      mSpecialChars(pThatWindow.mSpecialChars),
      mMessageAttrs(pThatWindow.mMessageAttrs),
@@ -609,51 +732,24 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
      mHorizTitleAlignment(pThatWindow.mHorizTitleAlignment),
      mHorizMessageAlignment(pThatWindow.mHorizMessageAlignment),
      mHorizStatusAlignment(pThatWindow.mHorizStatusAlignment),
+     mVerticalMessageAlignment(pThatWindow.mVerticalMessageAlignment),
      mDrawMessage(pThatWindow.mDrawMessage),
+     mDrawTitle(pThatWindow.mDrawTitle),
+     mDrawStatus(pThatWindow.mDrawStatus),
      mDrawSpecialChars(pThatWindow.mDrawSpecialChars),
-     // Note: The onFocus and onLeave functions are copied straight across
-     // here, but before we were using shared_ptr objects for them, we
-     // called setFocusFunctions() to copy them from the other window.
      mOnFocusFunction(pThatWindow.mOnFocusFunction),
      mOnLeaveFunction(pThatWindow.mOnLeaveFunction),
-     //mOnFocusFunction(nullptr),
-     //mOnLeaveFunction(nullptr),
      mIsModal(false),
      mLeaveNow(false),
-     // Note: mKeyFunctions and mMouseFunctions are copied straight across
-     // here, but before we were using shared_ptr objects for them, we called
-     // setKeyFunctions() and setMouseFunctions() to copy them from the other
-     // window.
      mKeyFunctions(pThatWindow.mKeyFunctions),
      mMouseFunctions(pThatWindow.mMouseFunctions),
      mQuitKeys(pThatWindow.mQuitKeys),
      mExitKeys(pThatWindow.mExitKeys),
      mHotkeyHighlighting(pThatWindow.mHotkeyHighlighting),
      mMouse(pThatWindow.mMouse),
-     mPanel(nullptr),
-     mExtTitleWindow(pThatWindow.mExtTitleWindow),
-     mExtStatusWindow(pThatWindow.mExtStatusWindow),
-     mTitleParent(nullptr),
-     mStatusParent(nullptr),
-     mParentWindow(pThatWindow.mParentWindow != this ? pThatWindow.mParentWindow : nullptr),
-     mFocus(false),
-     mBorderStyle(pThatWindow.mBorderStyle),
-     mEnabled(pThatWindow.mEnabled),
-     mDisableCursorOnShow(pThatWindow.mDisableCursorOnShow),
-     mLastKey(pThatWindow.mLastKey),
-     mChangeColorsOnFocus(pThatWindow.mChangeColorsOnFocus),
-     mShowSubwinsForward(pThatWindow.mShowSubwinsForward),
-     mShowSelfBeforeSubwins(pThatWindow.mShowSelfBeforeSubwins),
-     mReturnCode(pThatWindow.mReturnCode),
-     mRunOnFocus(pThatWindow.mRunOnFocus),
-     mRunOnLeave(pThatWindow.mRunOnLeave),
      mTitleStrings(pThatWindow.mTitleStrings),
      mStatusStrings(pThatWindow.mStatusStrings),
-     mName(pThatWindow.mName),
-     mDrawBorderTop(pThatWindow.mDrawBorderTop),
-     mDrawBorderBottom(pThatWindow.mDrawBorderBottom),
-     mDrawBorderLeft(pThatWindow.mDrawBorderLeft),
-     mDrawBorderRight(pThatWindow.mDrawBorderRight)
+     mName(pThatWindow.mName)
 {
    // Create mWindow and mPanel
    mWindow = newwin(pThatWindow.height(), pThatWindow.width(), pThatWindow.top(), pThatWindow.left());
@@ -702,6 +798,12 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
 
 cxWindow::~cxWindow()
 {
+   if (mIsBeingDestroyed)
+   {
+      return;
+   }
+   mIsBeingDestroyed = true;
+
 #ifdef DEBUG_TESTS
    fprintf(stderr, "cxWindow::~cxWindow() started for %p (mPanel=%p, mWindow=%p)\n", (void*)this, (void*)mPanel, (void*)mWindow);
 #endif
@@ -2252,6 +2354,7 @@ cxWindow& cxWindow::operator =(const cxWindow& pThatWindow)
       mStatusColorPair = pThatWindow.mStatusColorPair;
    }
 
+   mIsBeingDestroyed = false;
    return(*this);
 } // operator =
 
@@ -4961,13 +5064,10 @@ void cxWindow::removeSubWindow(const cxWindow *pSubWindow)
    {
       // Use a local copy of mWindows to safely check for the window
       // while we modify the actual mWindows vector.
-      // IMPORTANT: If we erase from mWindows and it was the last shared_ptr,
-      // it will trigger destruction of the subwindow.
-      // If the subwindow is currently being destroyed (i.e. it called us from its dtor),
-      // then erase() is still safe because there's at least one other reference
-      // (the one in the dtor's 'this' pointer, or the unique_ptr in the test).
-      // BUT if we were the ONLY ones holding it, erase() would trigger a nested 
-      // destructor call, which we MUST avoid if it's already being destroyed.
+      // IMPORTANT: To prevent nested destruction if pSubWindow is already being destroyed,
+      // we can move the shared_ptr out of the vector and let it be destroyed
+      // at the end of this scope.
+      std::shared_ptr<cxWindow> target;
       
       for (auto it = panel->mWindows.begin(); it != panel->mWindows.end(); )
       {
@@ -4979,11 +5079,7 @@ void cxWindow::removeSubWindow(const cxWindow *pSubWindow)
                panel->mWindowIter = panel->mWindows.end();
             }
 
-            // To prevent nested destruction if pSubWindow is already being destroyed,
-            // we can move the shared_ptr out of the vector and let it be destroyed
-            // at the end of this scope, OR we can check if it's the last reference.
-            // Since we don't easily know if it's being destroyed, we'll just erase it.
-            // If it's being destroyed, its use_count is already > 0 (from the dtor caller).
+            target = *it;
             it = panel->mWindows.erase(it);
          }
          else
@@ -4991,6 +5087,8 @@ void cxWindow::removeSubWindow(const cxWindow *pSubWindow)
             ++it;
          }
       }
+      // target goes out of scope here and might trigger destruction
+      // but only if it wasn't already being destroyed.
    }
 } // removeSubWindow
 
@@ -5521,31 +5619,32 @@ void cxWindow::freeWindow()
 #ifdef DEBUG_TESTS
    fprintf(stderr, "cxWindow::freeWindow() started for %p (mPanel=%p, mWindow=%p)\n", (void*)this, (void*)mPanel, (void*)mWindow);
 #endif
-   if (mPanel != nullptr)
+
+   // Use local copies and null them out immediately to prevent re-entrant issues
+   PANEL *tempPanel = mPanel;
+   mPanel = nullptr;
+   WINDOW *tempWindow = mWindow;
+   mWindow = nullptr;
+
+   if (cxBase::cxInitialized())
    {
-      void* tempPanel = mPanel;
-      mPanel = nullptr;
-      if (cxBase::cxInitialized())
+      if (tempPanel != nullptr)
       {
 #ifdef DEBUG_TESTS
-         fprintf(stderr, "cxWindow::freeWindow() calling del_panel(%p) for %p\n", tempPanel, (void*)this);
+         fprintf(stderr, "cxWindow::freeWindow() calling del_panel(%p) for %p\n", (void*)tempPanel, (void*)this);
 #endif
-         set_panel_userptr((PANEL*)tempPanel, nullptr);
-         del_panel((PANEL*)tempPanel);
+         set_panel_userptr(tempPanel, nullptr);
+         del_panel(tempPanel);
       }
-   }
-   if (mWindow != nullptr)
-   {
-      void* tempWin = mWindow;
-      mWindow = nullptr;
-      if (cxBase::cxInitialized())
+      if (tempWindow != nullptr)
       {
 #ifdef DEBUG_TESTS
-         fprintf(stderr, "cxWindow::freeWindow() calling delwin(%p) for %p\n", tempWin, (void*)this);
+         fprintf(stderr, "cxWindow::freeWindow() calling delwin(%p) for %p\n", (void*)tempWindow, (void*)this);
 #endif
-         delwin((WINDOW*)tempWin);
+         delwin(tempWindow);
       }
    }
+
 #ifdef DEBUG_TESTS
    fprintf(stderr, "cxWindow::freeWindow() finished for %p\n", (void*)this);
 #endif

@@ -2591,6 +2591,37 @@ class cxWindow : public cxObject
 
    protected:
 
+      bool mIsBeingDestroyed = false;     // Whether or not the window is being destroyed
+      PANEL *mPanel = nullptr;            // For layered window management
+      cxWindow *mExtTitleWindow;          // Optionally used for the title instead of the title line.
+      cxWindow *mExtStatusWindow;         // Optionally used for status instead
+                                          //  of the status line.
+      cxWindow *mTitleParent = nullptr;   // Pointer to a window using me for its title
+      cxWindow *mStatusParent = nullptr;  // Pointer to a window using me for its status
+      std::string mExtTitleTemp;          // Keeps track of old external title window text
+      std::string mExtStatusTemp;         // Keeps track of old external status window text
+      cxWindow *mParentWindow;            // Pointer to the parent window (can be nullptr for none)
+      cxWindowPtrContainer mSubWindows;   // Contains subwindows for this window
+      bool mFocus = false;                // Whether or not the window has focus
+      eBorderStyle mBorderStyle;          // Border style
+      bool mEnabled = true;               // Whether or not the window is enabled
+      bool mDisableCursorOnShow = true;   // Whether or not to disable the cursor in show()
+      bool mExitOnMouseOutside = false;  // Exit modal input loop on mouse click outside window
+      int mLastKey = NOKEY;               // The last key typed by the user during an input loop
+      bool mChangeColorsOnFocus = false;  // Whether or not to apply colors upon setting focus
+      bool mShowSubwinsForward = true;    // If true, the subwindows will be shown in
+                                          //  forward order; if false, they will be shown
+                                          //  in reverse order.
+      bool mShowSelfBeforeSubwins = true; // Whether or not to show this window before
+                                          //  showing the subwindows
+      long mReturnCode = cxID_EXIT;       // Keeps track of the return code set by showModal()
+      bool mRunOnFocus = true;            // Whether or not to run the onFocus function
+      bool mRunOnLeave = true;            // Whether or not to run the onLeave function
+      bool mDrawBorderTop = true;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mDrawBorderBottom = true; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mDrawBorderLeft = true;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
+      bool mDrawBorderRight = true;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
+
       /**
        * \brief Everything in the window is written here; this is an nCurses window structure
        */
@@ -2961,41 +2992,12 @@ class cxWindow : public cxObject
       bool onLeaveFunctionIsSet() const;
 
    private:
-      PANEL *mPanel = nullptr;            // For layered window management
-      cxWindow *mExtTitleWindow;          // Optionally used for the title instead of the title line.
-      cxWindow *mExtStatusWindow;         // Optionally used for status instead
-                                          //  of the status line.
-      cxWindow *mTitleParent = nullptr;   // Pointer to a window using me for its title
-      cxWindow *mStatusParent = nullptr;  // Pointer to a window using me for its status
-      std::string mExtTitleTemp;          // Keeps track of old external title window text
-      std::string mExtStatusTemp;         // Keeps track of old external status window text
-      cxWindow *mParentWindow;            // Pointer to the parent window (can be nullptr for none)
-      cxWindowPtrContainer mSubWindows;   // Contains subwindows for this window
-      bool mFocus = false;                // Whether or not the window has focus
-      eBorderStyle mBorderStyle;          // Border style
-      bool mEnabled = true;               // Whether or not the window is enabled
-      bool mDisableCursorOnShow = true;   // Whether or not to disable the cursor in show()
-      bool mExitOnMouseOutside = false;  // Exit modal input loop on mouse click outside window
-      int mLastKey = NOKEY;               // The last key typed by the user during an input loop
-      bool mChangeColorsOnFocus = false;  // Whether or not to apply colors upon setting focus
-      bool mShowSubwinsForward = true;    // If true, the subwindows will be shown in
-                                          //  forward order; if false, they will be shown
-                                          //  in reverse order.
-      bool mShowSelfBeforeSubwins = true; // Whether or not to show this window before
-                                          //  showing the subwindows
-      long mReturnCode = cxID_EXIT;       // Keeps track of the return code set by showModal()
-      bool mRunOnFocus = true;            // Whether or not to run the onFocus function
-      bool mRunOnLeave = true;            // Whether or not to run the onLeave function
       // mTitleStrings and mStatusStrings keep track of horizontal positions
       // and strings to write for the title and status lines, respectively.
       std::map<int, std::string> mTitleStrings;
       std::map<int, std::string> mStatusStrings;
       // mName provides an alternate way to identify a window.
       std::string mName;
-      bool mDrawBorderTop = true;    // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mDrawBorderBottom = true; // Display the bottom border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mDrawBorderLeft = true;   // Display the left border (only applicable if borderstyle != eBS_NOBORDER)
-      bool mDrawBorderRight = true;  // Display the top border (only applicable if borderstyle != eBS_NOBORDER)
 
       //// Helper functions
 

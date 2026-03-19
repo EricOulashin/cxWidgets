@@ -56,8 +56,8 @@ if ($#ARGV == 1) {
    $exp->spawn($exe) or die "Warning: Could not run ($exe)";
    # Wait for the process to start and ncurses to initialize
    # If we don't wait, the first test's output might be lost or the process might not be ready for input
-   select(undef, undef, undef, 0.2);
-   $exp->expect(1, 
+   select(undef, undef, undef, 0.4);
+   $exp->expect(2, 
       [ qr/$label/ =>
          sub {
             $exp->send("$value\r");
