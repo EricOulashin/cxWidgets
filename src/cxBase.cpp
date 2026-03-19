@@ -77,6 +77,10 @@ namespace cxBase
 
 void cxBase::init(bool pEnableMouse)
 {
+   if (getenv("TERM") == nullptr)
+   {
+      setenv("TERM", "xterm", 1);
+   }
    WINDOW* tmpWindow=initscr();         // initialize the curses library
    if (tmpWindow == nullptr)
    {

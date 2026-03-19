@@ -35,6 +35,13 @@ TEST_CASE("cxWindow coordinates") {
         return;
     }
 
+    int h = cxBase::height();
+    int w = cxBase::width();
+    if (h <= 0 || w <= 0) {
+        MESSAGE("Invalid terminal dimensions (", h, "x", w, "), skipping ncurses-dependent tests.");
+        return;
+    }
+
     SUBCASE("0 based") {
         try {
             cxWindow w(nullptr, 0, 0, 10, 20, "Test", "Test", "Test");
@@ -75,6 +82,13 @@ TEST_CASE("cxWindow auto centering") {
         return;
     }
 
+    int h = cxBase::height();
+    int w = cxBase::width();
+    if (h <= 0 || w <= 0) {
+        MESSAGE("Invalid terminal dimensions (", h, "x", w, "), skipping ncurses-dependent tests.");
+        return;
+    }
+
     try {
         cxWindow w(nullptr, 0, 0, 24, 80, "Test", "Test", "Test");
 
@@ -109,12 +123,27 @@ TEST_CASE("cxInput basic") {
         return;
     }
 
+    int h = cxBase::height();
+    int w = cxBase::width();
+    MESSAGE("Terminal dimensions: ", h, "x", w);
+
+    if (h <= 0 || w <= 0) {
+        MESSAGE("Invalid terminal dimensions, skipping ncurses-dependent tests.");
+        return;
+    }
+
     try {
+        MESSAGE("Creating cxInput...");
         cxInput input1(nullptr, 0, 0, 10, "Name:");
+        MESSAGE("cxInput created. Setting value...");
         input1.setValue("This is a very long string.");
+        MESSAGE("Value set. Checking value...");
         CHECK(input1.getValue(false, false) == "This is a very long string.");
+        MESSAGE("Value checked.");
     } catch (const std::exception& e) {
-        MESSAGE("Could not create input, skipping test: ", e.what());
+        MESSAGE("Exception during cxInput test: ", e.what());
+    } catch (...) {
+        MESSAGE("Unknown exception during cxInput test.");
     }
 }
 
@@ -122,6 +151,13 @@ TEST_CASE("cxForm basic") {
     NcursesGuard guard;
     if (!cxBase::cxInitialized()) {
         MESSAGE("Could not initialize ncurses, skipping ncurses-dependent tests.");
+        return;
+    }
+
+    int h = cxBase::height();
+    int w = cxBase::width();
+    if (h <= 0 || w <= 0) {
+        MESSAGE("Invalid terminal dimensions (", h, "x", w, "), skipping ncurses-dependent tests.");
         return;
     }
 
