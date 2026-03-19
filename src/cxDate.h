@@ -4,22 +4,30 @@
 
 // Copyright (c) 2007 Eric Oulashin
 //
-// cxDate.h - Date class for the cxWidgets library (C++14-compatible).
+// cxDate.h - C++17-improved date class for the cxWidgets library.
 // This is a modernized version of the original 'date' class (date.h/date.cpp),
-// renamed to cxDate to follow cxWidgets naming conventions.
+// renamed to cxDate to follow cxWidgets naming conventions, and updated to use
+// C++17 standard features throughout.
 //
 // Changes from the original 'date' class:
 //  - Class renamed from 'date' to 'cxDate'
+//  - [[nodiscard]] attributes added to accessor/query methods
 //  - noexcept specifications added to non-throwing methods
+//  - std::string_view used for read-only string parameters
+//  - std::optional<cxDate> returned by tryParse() for safe parsing
 //  - std::chrono used in today() for current date retrieval
 //  - std::stoi() replaces atoi() for safer string-to-int conversion
 //  - std::to_string() replaces the custom anythingToString<T>() template
+//  - inline constexpr replaces #define for numeric constants
 //  - static cxDate today() added as a clear, expressive convenience method
 //  - Default member initializers used in the class definition
 //  - = default used for copy constructor, copy assignment, and destructor
+//  - std::clamp used for range-clamping in validateDateElements()
 
 #include <string>
+#include <string_view>
 #include <iostream>
+#include <optional>
 
 // Date format enumeration (kept compatible with original date.h)
 enum eDateFormats
@@ -50,7 +58,6 @@ enum eWeekDays
    eSATURDAY
 };
 
-/*
 // C++17: inline constexpr replaces #define for compile-time constants
 inline constexpr int CXDATE_DEFAULT_YEAR           = 2000;
 inline constexpr int CXDATE_YEAR_2DIGIT_LAST_CENT  = 49;
@@ -60,20 +67,11 @@ inline constexpr int CXDATE_END_MONTH              = 12;
 inline constexpr int CXDATE_START_DAY              = 1;
 inline constexpr int CXDATE_YEAR_MIN               = 1800;
 inline constexpr int CXDATE_YEAR_MAX               = 2500;
-*/
-
-#define CXDATE_DEFAULT_YEAR           2000
-#define CXDATE_YEAR_2DIGIT_LAST_CENT  49
-#define CXDATE_MONTHS_IN_YEAR         12
-#define CXDATE_START_MONTH            1
-#define CXDATE_END_MONTH              12
-#define CXDATE_START_DAY              1
-#define CXDATE_YEAR_MIN               1800
-#define CXDATE_YEAR_MAX               2500
 
 /**
  * \class cxDate
- * \brief Enables easy management of dates. C++14-compatible.
+ * \brief Enables easy management of dates. C++17-enhanced version of the
+ * original 'date' class.
  *
  * Note: Months and days are 1-based (months 1-12, days 1-31).
  * Julian date calculations assume noon for time of day, so Julian dates
@@ -96,12 +94,12 @@ public:
           char pSepChar = '-') noexcept;
 
    /** Constructor from a date string (e.g. "2026-03-16"). */
-   cxDate(const std::string& pDateStr,
+   cxDate(std::string_view pDateStr,
           eDateFormats pDateFormat = YYYY_MM_DD,
           char pSepChar = '-');
 
    /** Constructor from a date string with auto-detected format. */
-   cxDate(const std::string& pDateStr, char pSepChar);
+   cxDate(std::string_view pDateStr, char pSepChar);
 
    /** Constructor from a Julian date number. */
    cxDate(long pJulianDate,
@@ -113,36 +111,36 @@ public:
    cxDate& operator=(const cxDate&) = default;
 
    // -----------------------------------------------------------------------
-   // Accessors (all noexcept)
+   // Accessors (all [[nodiscard]] and noexcept)
    // -----------------------------------------------------------------------
 
    /** @return The 4-digit year component of the date. */
-   int getYear() const noexcept
+   [[nodiscard]] int getYear() const noexcept
    {
       return mYear;
    }
    /** @return The month component of the date (1–12). */
-   int getMonth() const noexcept
+   [[nodiscard]] int getMonth() const noexcept
    {
       return mMonth;
    }
    /** @return The day-of-month component of the date (1–31). */
-   int getDay() const noexcept
+   [[nodiscard]] int getDay() const noexcept
    {
       return mDay;
    }
    /** @return The date format used by toString() and stream output. */
-   eDateFormats getDateFormat() const noexcept
+   [[nodiscard]] eDateFormats getDateFormat() const noexcept
    {
       return mDateFormat;
    }
    /** @return The separator character used in formatted date strings (e.g. '-'). */
-   char getSepChar() const noexcept
+   [[nodiscard]] char getSepChar() const noexcept
    {
       return mSepChar;
    }
    /** @return True if the date is formatted in long human-readable form. */
-   bool getDisplayLong() const noexcept
+   [[nodiscard]] bool getDisplayLong() const noexcept
    {
       return mDisplayLong;
    }
@@ -174,7 +172,7 @@ public:
     * Sets year, month, and day simultaneously.
     * @return true if the date is valid; false if values were out of range.
     */
-   bool setDate(int pYear, int pMonth, int pDay) noexcept;
+   [[nodiscard]] bool setDate(int pYear, int pMonth, int pDay) noexcept;
 
    // -----------------------------------------------------------------------
    // Date arithmetic
@@ -203,17 +201,17 @@ public:
    void operator-=(int pNumDays) noexcept;
 
    /** @return True if this date equals @p pThat. */
-   bool operator==(const cxDate& pThat) const noexcept;
+   [[nodiscard]] bool operator==(const cxDate& pThat) const noexcept;
    /** @return True if this date differs from @p pThat. */
-   bool operator!=(const cxDate& pThat) const noexcept;
+   [[nodiscard]] bool operator!=(const cxDate& pThat) const noexcept;
    /** @return True if this date is later than @p pThat. */
-   bool operator> (const cxDate& pThat) const noexcept;
+   [[nodiscard]] bool operator> (const cxDate& pThat) const noexcept;
    /** @return True if this date is later than or equal to @p pThat. */
-   bool operator>=(const cxDate& pThat) const noexcept;
+   [[nodiscard]] bool operator>=(const cxDate& pThat) const noexcept;
    /** @return True if this date is earlier than @p pThat. */
-   bool operator< (const cxDate& pThat) const noexcept;
+   [[nodiscard]] bool operator< (const cxDate& pThat) const noexcept;
    /** @return True if this date is earlier than or equal to @p pThat. */
-   bool operator<=(const cxDate& pThat) const noexcept;
+   [[nodiscard]] bool operator<=(const cxDate& pThat) const noexcept;
 
    cxDate  operator++(int) noexcept;  // post-increment (advance one day)
    cxDate& operator++()    noexcept;  // pre-increment  (advance one day)
@@ -221,11 +219,11 @@ public:
    cxDate& operator--()    noexcept;  // pre-decrement  (go back one day)
 
    /** @return A new date that is @p pNumDays days after this date. */
-   cxDate operator+(int pNumDays)       const noexcept;
+   [[nodiscard]] cxDate operator+(int pNumDays)       const noexcept;
    /** @return A new date that is @p pNumDays days before this date. */
-   cxDate operator-(int pNumDays)       const noexcept;
+   [[nodiscard]] cxDate operator-(int pNumDays)       const noexcept;
    /** @return The signed number of days between this date and @p pThat. */
-   int    operator-(const cxDate& pThat) const noexcept;
+   [[nodiscard]] int    operator-(const cxDate& pThat) const noexcept;
 
    /** Writes the formatted date to @p pOS. */
    friend std::ostream& operator<<(std::ostream& pOS, const cxDate& pDate);
@@ -237,25 +235,25 @@ public:
    // -----------------------------------------------------------------------
 
    /** @return The date as a formatted string (format determined by mDateFormat). */
-   std::string toString() const;
+   [[nodiscard]] std::string toString() const;
    /**
     * Parses @p pDateStr and updates this date.
     * @return True on success; false if the string could not be parsed.
     */
-   bool fromString(const std::string& pDateStr);
+   bool fromString(std::string_view pDateStr);
 
    // -----------------------------------------------------------------------
    // Utility
    // -----------------------------------------------------------------------
 
    /** @return The number of days in the current month. */
-   int       numMonthDays()  const noexcept;
+   [[nodiscard]] int       numMonthDays()  const noexcept;
    /** @return True if the current year is a leap year. */
-   bool      isLeapYear()    const noexcept;
+   [[nodiscard]] bool      isLeapYear()    const noexcept;
    /** @return The day of the week for this date. */
-   eWeekDays dayOfWeek()     const noexcept;
+   [[nodiscard]] eWeekDays dayOfWeek()     const noexcept;
    /** @return The day-of-week name as a string (e.g. "Monday"). */
-   std::string dayOfWeekStr()  const;
+   [[nodiscard]] std::string dayOfWeekStr()  const;
 
    // -----------------------------------------------------------------------
    // Static methods
@@ -265,35 +263,39 @@ public:
     * @return The number of days in @p pMonth of @p pYear,
     *         accounting for leap years.
     */
-   static int       numMonthDays(int pMonth, int pYear)       noexcept;
+   [[nodiscard]] static int       numMonthDays(int pMonth, int pYear)       noexcept;
    /** @return True if @p pYear is a leap year. */
-   static bool      isLeapYear(int pYear)                     noexcept;
+   [[nodiscard]] static bool      isLeapYear(int pYear)                     noexcept;
    /** @return The day of the week for the given year/month/day. */
-   static eWeekDays dayOfWeek(int pYear, int pMonth, int pDay) noexcept;
+   [[nodiscard]] static eWeekDays dayOfWeek(int pYear, int pMonth, int pDay) noexcept;
    /** @return The name of @p pWeekDay as a string (e.g. "Monday"). */
-   static std::string dayOfWeekStr(eWeekDays pWeekDay);
+   [[nodiscard]] static std::string dayOfWeekStr(eWeekDays pWeekDay);
    /** @return The day-of-week name for the given year/month/day. */
-   static std::string dayOfWeekStr(int pYear, int pMonth, int pDay);
+   [[nodiscard]] static std::string dayOfWeekStr(int pYear, int pMonth, int pDay);
    /**
     * @return The full or abbreviated name of @p pMonth (1–12).
     * @param pAbbreviated If true, returns a 3-letter abbreviation.
     */
-   static std::string monthName(int pMonth, bool pAbbreviated = false);
+   [[nodiscard]] static std::string monthName(int pMonth, bool pAbbreviated = false);
 
    /** Returns today's date as "YYYY-MM-DD", or in long format if pLong=true. */
-   static std::string getToday(bool pLong = false);
+   [[nodiscard]] static std::string getToday(bool pLong = false);
    /** @return The current 4-digit year. */
-   static int     getCurrentYear() noexcept;
-
-   /** Returns today's date as a cxDate object. */
-   static cxDate today() noexcept;
+   [[nodiscard]] static int     getCurrentYear() noexcept;
 
    /**
-    * Tries to parse a date string into @p outDate.
-    * @return True if parsing succeeded; false otherwise.
+    * C++17 addition: returns today's date as a cxDate object.
+    * More expressive than the string-based getToday().
     */
-   static bool tryParse(const std::string& pDateStr,
-      cxDate& outDate,
+   [[nodiscard]] static cxDate today() noexcept;
+
+   /**
+    * C++17 addition: tries to parse a date string, returning an
+    * std::optional<cxDate> so the caller can check success without
+    * exceptions or sentinel values.
+    */
+   [[nodiscard]] static std::optional<cxDate> tryParse(
+      std::string_view pDateStr,
       eDateFormats pDateFormat = YYYY_MM_DD,
       char pSepChar = '-');
 
@@ -302,7 +304,7 @@ public:
    // -----------------------------------------------------------------------
 
    /** @return This date as a Julian day number. */
-   long toJulian() const noexcept;
+   [[nodiscard]] long toJulian() const noexcept;
    /** @return The Julian day number for the given year/month/day. */
    static long  toJulian(int pYear, int pMonth, int pDay) noexcept;
    /** Sets this date from a Julian day number. */
@@ -315,9 +317,9 @@ public:
    // -----------------------------------------------------------------------
 
    /** @return The date format detected from @p pDateStr, or UNKNOWN. */
-   static eDateFormats getDateFormat(const std::string& pDateStr);
+   [[nodiscard]] static eDateFormats getDateFormat(std::string_view pDateStr);
    /** @return A human-readable string name for @p pDateFormat. */
-   static std::string getDateFormatStr(eDateFormats pDateFormat);
+   [[nodiscard]] static std::string getDateFormatStr(eDateFormats pDateFormat);
 
    // -----------------------------------------------------------------------
    // Calendar output
@@ -350,9 +352,8 @@ private:
    // Returns true if all values were already valid.
    static bool validateDateElements(int pYear, int& pMonth, int& pDay) noexcept;
 
-   static std::string getMonthName(int pMonth);
-   static bool   allDigits(const std::string& pStr)        noexcept;
-   static bool   startsWithNumber(const std::string& pStr) noexcept;
+   [[nodiscard]] static std::string getMonthName(int pMonth);
+   [[nodiscard]] static bool        allDigits(std::string_view pStr) noexcept;
 };
 
 #endif // __CXDATE_H__
