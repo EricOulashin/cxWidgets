@@ -702,6 +702,9 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
 
 cxWindow::~cxWindow()
 {
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::~cxWindow() started for %p\n", (void*)this);
+#endif
    // Free the memory used by the key functions and mouse event functions
    clearKeyFunctions();
    clearMouseFunctions();
@@ -726,7 +729,10 @@ cxWindow::~cxWindow()
       mExtTitleWindow->setMessage(mExtTitleTemp);
       if (!(mExtTitleWindow->isHidden()))
       {
-         mExtTitleWindow->show();
+         if (cxBase::cxInitialized())
+         {
+            mExtTitleWindow->show();
+         }
       }
    }
    if (mExtStatusWindow != nullptr)
@@ -734,7 +740,10 @@ cxWindow::~cxWindow()
       mExtStatusWindow->setMessage(mExtStatusTemp);
       if (!(mExtStatusWindow->isHidden()))
       {
-         mExtStatusWindow->show();
+         if (cxBase::cxInitialized())
+         {
+            mExtStatusWindow->show();
+         }
       }
    }
 
@@ -749,17 +758,20 @@ cxWindow::~cxWindow()
          if ((parentType == "cxPanel") || (parentType == "cxSearchPanel"))
          {
             cxPanel *parentPanel = dynamic_cast<cxPanel*>(mParentWindow);
-            cxPanel::cxWindowPtrCollection::iterator iter = parentPanel->mWindows.begin();
-            for (; iter != parentPanel->mWindows.end(); ++iter)
+            if (parentPanel != nullptr)
             {
-               if (iter->get() == this)
+               cxPanel::cxWindowPtrCollection::iterator iter = parentPanel->mWindows.begin();
+               for (; iter != parentPanel->mWindows.end(); ++iter)
                {
-                  // A pointer to this window was found in the
-                  // panel's mWindows..  Remove it from its
-                  // mWindows (note: there should be only 1 pointer
-                  // to this window in a parent window).
-                  parentPanel->mWindows.erase(iter);
-                  break;
+                  if (iter->get() == this)
+                  {
+                     // A pointer to this window was found in the
+                     // panel's mWindows..  Remove it from its
+                     // mWindows (note: there should be only 1 pointer
+                     // to this window in a parent window).
+                     parentPanel->mWindows.erase(iter);
+                     break;
+                  }
                }
             }
          }
@@ -793,6 +805,9 @@ cxWindow::~cxWindow()
       }
    }
 
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::~cxWindow() calling hide() for %p\n", (void*)this);
+#endif
    // Hide the window (to make sure it doesn't show anymore), and then free
    // the memory used by mWindow and mPanel.
    if (cxBase::cxInitialized())
@@ -802,7 +817,13 @@ cxWindow::~cxWindow()
    // Update the physical screen
    //update_panels();
 
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::~cxWindow() calling freeWindow() for %p\n", (void*)this);
+#endif
    freeWindow();
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::~cxWindow() finished for %p\n", (void*)this);
+#endif
 } // dtor
 
 void cxWindow::centerHoriz(bool pRefresh)
@@ -5399,10 +5420,16 @@ void cxWindow::reCreatePanel()
 // Frees the memory used by mWindow
 void cxWindow::freeWindow()
 {
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::freeWindow() started for %p (mPanel=%p, mWindow=%p)\n", (void*)this, (void*)mPanel, (void*)mWindow);
+#endif
    if (mPanel != nullptr)
    {
       if (cxBase::cxInitialized())
       {
+#ifdef DEBUG_TESTS
+         fprintf(stderr, "cxWindow::freeWindow() calling del_panel(%p)\n", (void*)mPanel);
+#endif
          del_panel(mPanel);
       }
       mPanel = nullptr;
@@ -5411,10 +5438,16 @@ void cxWindow::freeWindow()
    {
       if (cxBase::cxInitialized())
       {
+#ifdef DEBUG_TESTS
+         fprintf(stderr, "cxWindow::freeWindow() calling delwin(%p)\n", (void*)mWindow);
+#endif
          delwin(mWindow);
       }
       mWindow = nullptr;
    }
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::freeWindow() finished for %p\n", (void*)this);
+#endif
 } // freeWindow
 
 // Combines all the messages lines into one

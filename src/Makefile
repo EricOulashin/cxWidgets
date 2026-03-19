@@ -55,7 +55,7 @@ else
    ifeq ($(OS),SCO)
       CFLAGS=-fPIC -Wall -Werror -std=$(CPP_STANDARD) -pedantic $(INCDIR) $(LIBDIR_OPT)
    else
-      CFLAGS=-fPIC -DWANT_TIMEOUT -Wall -Werror -std=$(CPP_STANDARD) -pedantic $(INCDIR)
+      CFLAGS=-fPIC -DWANT_TIMEOUT -Wall -Werror -std=$(CPP_STANDARD) -pedantic $(INCDIR) -DDEBUG_TESTS
    endif
 endif
 
