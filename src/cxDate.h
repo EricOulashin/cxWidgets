@@ -58,6 +58,7 @@ enum eWeekDays
    eSATURDAY
 };
 
+/*
 // C++17: inline constexpr replaces #define for compile-time constants
 inline constexpr int CXDATE_DEFAULT_YEAR           = 2000;
 inline constexpr int CXDATE_YEAR_2DIGIT_LAST_CENT  = 49;
@@ -67,6 +68,16 @@ inline constexpr int CXDATE_END_MONTH              = 12;
 inline constexpr int CXDATE_START_DAY              = 1;
 inline constexpr int CXDATE_YEAR_MIN               = 1800;
 inline constexpr int CXDATE_YEAR_MAX               = 2500;
+*/
+
+#define CXDATE_DEFAULT_YEAR           2000
+#define CXDATE_YEAR_2DIGIT_LAST_CENT  49
+#define CXDATE_MONTHS_IN_YEAR         12
+#define CXDATE_START_MONTH            1
+#define CXDATE_END_MONTH              12
+#define CXDATE_START_DAY              1
+#define CXDATE_YEAR_MIN               1800
+#define CXDATE_YEAR_MAX               2500
 
 /**
  * \class cxDate
