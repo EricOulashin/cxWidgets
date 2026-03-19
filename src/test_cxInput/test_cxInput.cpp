@@ -6,6 +6,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace cx;
 
 int main(int argc, char* argv[]) {
    cx::init();
