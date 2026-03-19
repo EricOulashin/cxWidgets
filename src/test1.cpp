@@ -1,8 +1,8 @@
 // Copyright (c) 2026 E. Oulashin
 // Copyright (c) 2005-2007 Michael H. Kinney
 //
-#include "cxBase.h"
-using namespace cxBase;
+#include "cxUtils.h"
+using namespace cx;
 #include "cxDialog.h"
 #include "cxMessageDialog.h"
 #include "cxForm.h"
@@ -83,7 +83,7 @@ string onFocus(void *theComboBox, void *unused2, void *unused3, void *unused4)
 //// MAIN ////
 int main(int argc, char* argv[])
 {
-   cxBase::init();
+   cx::init();
 
    cxForm iForm(nullptr, 2, 2, 9, 20, "Test");
    iForm.append(1, 1, 1, 15, "A:");
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
    }
    */
 
-   cxBase::cleanup();
+   cx::cleanup();
    return (0);
 } // main
 

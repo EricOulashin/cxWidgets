@@ -1,12 +1,12 @@
 // Copyright (c) 2026 E. Oulashin
-#ifndef __CXBASE_H__
-#define __CXBASE_H__
+#ifndef __CXUTILS_H__
+#define __CXUTILS_H__
 
 /*
- * cxBase.h - Contains cxWidgets utility functions.
+ * cxUtils.h - Contains cxWidgets utility functions.
  * For the library to work, you will need to put
- * "cxBase::init();" at the beginning of your program and
- * "cxBase::cleanup();" at the end of your program.
+ * "cx::init();" at the beginning of your program and
+ * "cx::cleanup();" at the end of your program.
  * This does the screen initialization/cleanup.
  *
  * Copyright (c) 2005-2007 Michael H. Kinney
@@ -29,10 +29,10 @@
 #include <set>
 #include <list>
 
-/** \namespace cxBase
+/** \namespace cx
  * \brief Contains some miscellaneous cxWidgets helper functions.
  */
-namespace cxBase
+namespace cx
 {
 
    /**
@@ -430,12 +430,12 @@ namespace cxBase
 
    /**
     * \brief Runs a command on the system, calling the system() function.
-    * \brief If your application has called cxBase::init(), this
+    * \brief If your application has called cx::init(), this
     * \brief function should be called to run a system command.
-    * \brief After running cxBase::init(), cxBase::cleanup() must be
+    * \brief After running cx::init(), cx::cleanup() must be
     * \brief called before running system commands to get the
     * \brief terminal back to the state it was in before; then,
-    * \brief cxBase::init() must be called again after the call to
+    * \brief cx::init() must be called again after the call to
     * \brief system() to restore cxWidgets graphical functions.
     * \brief This function does the wrapping for you.
     *
@@ -728,7 +728,7 @@ namespace cxBase
 
    /**
     * \brief Returns whether a key is a navigational key, according to
-    * \brief cxBase's list of navigational keys.  The defaults are the arrow
+    * \brief cx's list of navigational keys.  The defaults are the arrow
     * \brief keys, pageUp, pageDown, tab, and shift-tab.  cxMultiLineInput
     * \brief has its own list of navigational keys, but this may be useful
     * \brief for other things.
@@ -741,14 +741,14 @@ namespace cxBase
 
    /**
     * \brief Add a key to be considered a "navigational" key.  The key will
-    * \brief be added to cxBase's set of navigational keys.
+    * \brief be added to cx's set of navigational keys.
     *
     * @param pKey The key to be added
     */
    void addNavKey(int pKey);
 
    /**
-    * \brief Removes a key from cxBase's list of "navigational" keys.
+    * \brief Removes a key from cx's list of "navigational" keys.
     *
     * @param pKey The key to be removed
     */
@@ -780,6 +780,6 @@ namespace cxBase
     */
    bool findString(const std::string& pSearch, int& pRow, int& pCol, WINDOW *pWin = nullptr);
 
-} // end of namespace cxBase
+} // namespace cx
 
-#endif
+#endif // __CXUTILS_H__

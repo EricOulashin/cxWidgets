@@ -31,6 +31,8 @@
 #include <map>
 #include <memory>
 
+namespace cx {
+
 enum eMLIF
 {
    eMLIF_COMMA_SEP = 0,
@@ -2438,5 +2440,8 @@ class cxMultiLineInput : public cxWindow
       // Whether word wrapping is enabled (default true)
       bool mWordWrap = true;
 };
+
+
+} // namespace cx
 
 #endif

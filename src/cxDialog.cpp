@@ -4,6 +4,8 @@
 #include "cxDialog.h"
 using std::string;
 
+namespace cx {
+
 cxDialog::cxDialog(cxWindow *pParentWindow, int pRow,
                    int pCol, int pHeight,
                    int pWidth,
@@ -147,3 +149,5 @@ string cxDialog::cxTypeStr() const
 {
    return("cxDialog");
 } // cxTypeStr
+
+} // namespace cx

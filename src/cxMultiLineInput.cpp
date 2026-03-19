@@ -2,7 +2,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxMultiLineInput.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxForm.h"
 #include "cxStringUtils.h"
 #include "cxValidators.h"
@@ -27,6 +27,9 @@ using cxValidators::isValidWholeNumStr;
 // TODO: For a single-character input, it looks like the onLeave function runs
 //  even when the focus hasn't left the input.
 
+
+namespace cx {
+
 cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
                  int pCol, int pHeight, int pWidth, const string& pLabel,
                  eBorderStyle pBorderStyle, eInputOptions pInputOption,
@@ -37,7 +40,7 @@ cxMultiLineInput::cxMultiLineInput(cxWindow *pParentWindow, int pRow,
               "", "", "", pBorderStyle, nullptr, nullptr),
      mExtValue(pExtValue),
      mInputType(pInputType),
-     mExtendedHelpColor(cxBase::getDefaultMessageColor()),
+     mExtendedHelpColor(cx::getDefaultMessageColor()),
      /*
      mRightLabel(nullptr, (hasBorder() ? pRow + 1 : pRow),
                  right() + 1 + pRightLabelOffset, pRightLabelHeight,
@@ -1039,8 +1042,8 @@ void cxMultiLineInput::resize(int pNewHeight, int pNewWidth, bool pRefresh)
       }
       int col = left();
       int row = top();
-      const int maxHeight = (int)(cxBase::height()) - row;
-      const int maxWidth = (int)(cxBase::width()) - col;
+      const int maxHeight = (int)(cx::height()) - row;
+      const int maxWidth = (int)(cx::width()) - col;
 
       // Adjust pNewHeight & pNewWidth if necessary
       if (pNewHeight < minHeight)
@@ -1783,7 +1786,7 @@ void cxMultiLineInput::bringToTop(bool pRefresh)
 
    if (pRefresh)
    {
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
 } // bringToTop
 
@@ -2440,7 +2443,7 @@ string cxMultiLineInput::inputValidator()
    //  true, then display a message box with the warning.
    if ((retval != "") && mValidatorFuncMessageBox)
    {
-      cxBase::messageBox(retval + " (" + getValue() + ")");
+      cx::messageBox(retval + " (" + getValue() + ")");
    }
 
    return(retval);
@@ -2888,7 +2891,7 @@ string cxMultiLineInput::getExtendedHelpKeyStrings() const
    for (int helpKey : mExtendedHelpKeys)
    {
       if (retval != "") { retval += ","; }
-      retval += cxBase::getKeyStr(helpKey);
+      retval += cx::getKeyStr(helpKey);
    }
 
    return(retval);
@@ -3336,12 +3339,12 @@ long cxMultiLineInput::doInputLoop(bool pShowInputs, bool& pRunOnLeaveFunction)
       {
          if (mExtendedHelp != "")
          {
-            cxBase::messageBox(mExtendedHelp, mExtendedHelpColor,
+            cx::messageBox(mExtendedHelp, mExtendedHelpColor,
                                mExtendedHelpAttribute);
          }
          else
          {
-            cxBase::messageBox("Extended help is not available for this input.",
+            cx::messageBox("Extended help is not available for this input.",
                                mExtendedHelpColor, mExtendedHelpAttribute);
          }
       }
@@ -4234,3 +4237,5 @@ void cxMultiLineInput::reflowFrom(int pFromLine)
    }
    // Any remaining overflow text is lost (lines are finite)
 }
+
+} // namespace cx

@@ -14,6 +14,8 @@
 #include "cxFrame.h"
 #include <memory>
 
+namespace cx {
+
 /**
  * \brief Holds application setup & exit logic, as well as the application's main frame.
  * \brief <b>This class is not finished yet and currently shouldn't be used.</a>
@@ -73,5 +75,7 @@ class cxApp : public cxObject
    private:
       std::shared_ptr<cxFrame> mAppFrame; // The application's frame
 };
+
+} // namespace cx
 
 #endif

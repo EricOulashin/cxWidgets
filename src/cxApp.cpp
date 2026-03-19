@@ -2,6 +2,8 @@
 #include "cxApp.h"
 // Note: This is not complete!
 
+namespace cx {
+
 cxApp::cxApp()
 {
 }
@@ -39,3 +41,5 @@ std::string cxApp::cxTypeStr() const
 {
    return("cxApp");
 } // cxTypeStr
+
+} // namespace cx

@@ -34,6 +34,8 @@
 #include <utility>
 #include <memory>
 
+namespace cx {
+
 class cxWindow;
 typedef std::vector<cxWindow*> cxWindowPtrContainer;
 
@@ -3046,5 +3048,8 @@ class cxWindow : public cxObject
       inline bool anySubwinHasThisParent();
 
 }; // end of class cxWindow
+
+
+} // namespace cx
 
 #endif

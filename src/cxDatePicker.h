@@ -48,6 +48,8 @@
 #include "cxDate.h"
 #include <memory>
 
+namespace cx {
+
 /**
  * \brief This is a dialog that displays a calendar, allowing the user to choose a date while viewing a calendar; this dialog also allows the user to navigate through the months and specify different years to view calendars of various months and years.
  */
@@ -271,5 +273,7 @@ private:
    /// Refreshes just the calendar grid area and the date-header line.
    void refreshCalendar();
 };
+
+} // namespace cx
 
 #endif // __CXDATEPICKER_H__

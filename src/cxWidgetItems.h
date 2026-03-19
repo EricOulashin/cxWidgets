@@ -1,6 +1,9 @@
 // Copyright (c) 2026 E. Oulashin
 #ifndef __CXWIDGETITEMS_H__
 #define __CXWIDGETITEMS_H__
+
+namespace cx {
+
 // Copyright (c) 2006-2007 Michael H. Kinney
 //
 
@@ -48,5 +51,7 @@ enum e_WidgetItems
    eDATA,           // Data items (general)
    eHOTKEY          // Hotkey
 };
+
+} // namespace cx
 
 #endif

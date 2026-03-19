@@ -2,7 +2,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxForm.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxMultiForm.h"
 #include "cxFunctionKeyCases.h"
 #include <set>
@@ -18,7 +18,9 @@ using std::insert_iterator;
 using std::shared_ptr;
 using std::make_shared;
 using std::dynamic_pointer_cast;
-using cxBase::stringWithoutHotkeyChars;
+using cx::stringWithoutHotkeyChars;
+
+namespace cx {
 
 cxForm::cxForm(cxWindow *pParentWindow, int pRow,
                int pCol, int pHeight,
@@ -99,7 +101,7 @@ cxForm::~cxForm()
    //  destroyed (via ncurses or the cxWindow destructor).  But I ran into a
    //  situation where a cxForm wasn't disappearing when it was destroyed for
    //  some reason..  So, hide it here.
-   if (cxBase::cxInitialized())
+   if (cx::cxInitialized())
    {
       hide();
    }
@@ -269,11 +271,11 @@ shared_ptr<cxMultiLineInput> cxForm::append(int pRow, int pCol, int pHeight, int
       }
       catch (const std::bad_alloc& e)
       {
-         cxBase::messageBox("Warning: Not enough memory to add an input to the form");
+         cx::messageBox("Warning: Not enough memory to add an input to the form");
       }
       catch (...)
       {
-         cxBase::messageBox("Warning: Unknown error trying to add an input to the form");
+         cx::messageBox("Warning: Unknown error trying to add an input to the form");
       }
    }
 
@@ -708,11 +710,11 @@ shared_ptr<cxMultiLineInput> cxForm::append(int pHeight, int pWidth,
    }
    catch (const std::bad_alloc& e)
    {
-      cxBase::messageBox("Warning: Not enough memory to add an input to the form");
+      cx::messageBox("Warning: Not enough memory to add an input to the form");
    }
    catch (...)
    {
-      cxBase::messageBox("Warning: Unknown error trying to add an input to the form");
+      cx::messageBox("Warning: Unknown error trying to add an input to the form");
    }
 
    return(input);
@@ -4379,7 +4381,7 @@ void cxForm::bringToTop(bool pRefresh)
 
    if (pRefresh)
    {
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
 } // bringToTop
 
@@ -4871,7 +4873,7 @@ void cxForm::getNavKeyStrings(set<string>& pNavKeyStrings) const
    set<int>::const_iterator iter = navKeys.begin();
    for (; iter != navKeys.end(); ++iter)
    {
-      pNavKeyStrings.insert(cxBase::getKeyStr(*iter));
+      pNavKeyStrings.insert(cx::getKeyStr(*iter));
    }
 } // getNavKeyStrings
 
@@ -4959,7 +4961,7 @@ string cxForm::getExtendedHelpKeyStrings() const
    for (int helpKey : mExtendedHelpKeys)
    {
       if (retval != "") { retval += ","; }
-      retval += cxBase::getKeyStr(helpKey);
+      retval += cx::getKeyStr(helpKey);
    }
 
    return(retval);
@@ -5347,8 +5349,8 @@ void cxForm::fitToInputs()
 
    // Move & resize this window if it will fit inside
    //  the main screen.
-   if ((smallestLeft >= cxBase::left()) && (smallestTop >= cxBase::top()) &&
-       (largestRight <= cxBase::right()) && (largestBottom <= cxBase::bottom()))
+   if ((smallestLeft >= cx::left()) && (smallestTop >= cx::top()) &&
+       (largestRight <= cx::right()) && (largestBottom <= cx::bottom()))
        {
       move(smallestTop, smallestLeft);
       resize(largestBottom-smallestTop+1, largestRight-smallestLeft+1);
@@ -5934,7 +5936,7 @@ long cxForm::doInputLoop(bool& pRunOnLeaveFunction)
          }
          else
          {
-            cxBase::messageBox("This form has no editable fields.");
+            cx::messageBox("This form has no editable fields.");
             continueOn = false;
          }
 
@@ -5980,7 +5982,7 @@ long cxForm::doInputLoop(bool& pRunOnLeaveFunction)
       if (mWaitForInputIfEmpty)
       {
          // Disable the cursor (storing the previous cursor state)
-         bool prevCursorState = cxBase::toggleCursor(false);
+         bool prevCursorState = cx::toggleCursor(false);
 
          // We have a loop here in case the user presses ESC but
          //  we're not allowed to quit (in that case, we'll keep on
@@ -6056,7 +6058,7 @@ long cxForm::doInputLoop(bool& pRunOnLeaveFunction)
          }
 
          // Set the previous cursor state back
-         cxBase::toggleCursor(prevCursorState);
+         cx::toggleCursor(prevCursorState);
       }
 
       if (mLoopEndFunction != nullptr && mLoopEndFunction->functionIsSet())
@@ -6363,7 +6365,7 @@ void cxForm::addJumpKeys(const string& pItemText, int pIndex)
 {
    set<char> hotkeys;
    // Get the hotkeys from the string
-   cxBase::getHotkeyChars(pItemText, hotkeys, true, false);
+   cx::getHotkeyChars(pItemText, hotkeys, true, false);
    // Add the hotkeys as input jump keys
    set<char>::const_iterator iter = hotkeys.begin();
    for (; iter != hotkeys.end(); ++iter)
@@ -6409,7 +6411,7 @@ void cxForm::showJumpMenu()
       while ((returnCode != cxID_QUIT) &&
             !(getInput((int)returnCode)->canBeEditable()))
             {
-         cxBase::messageBox("Sorry, that field cannot be edited.");
+         cx::messageBox("Sorry, that field cannot be edited.");
          returnCode = jumpMenu.showModal();
       }
 
@@ -6432,7 +6434,7 @@ void cxForm::showJumpMenu()
          }
          else
          {
-            cxBase::messageBox("Sorry, that field cannot be edited.");
+            cx::messageBox("Sorry, that field cannot be edited.");
          }
       }
 
@@ -6485,7 +6487,7 @@ void cxForm::applyAttrDefaults(shared_ptr<cxMultiLineInput>& pInput)
    getAttrs(item, attrs);
    if (attrs.size() == 0)
    {
-      cxBase::getAttrs(item, attrs);
+      cx::getAttrs(item, attrs);
    }
 
    // Apply the attributes from cxBase
@@ -6512,3 +6514,5 @@ void cxForm::applyWinAttributes(shared_ptr<cxMultiLineInput>& pInput)
       }
    }
 } // applyWinAttributes
+
+} // namespace cx

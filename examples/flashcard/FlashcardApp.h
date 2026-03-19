@@ -2,7 +2,7 @@
 #define __FLASHCARDAPP_H__
 
 #include "../../src/cxWindow.h"
-#include "../../src/cxBase.h"
+#include "../../src/cxUtils.h"
 #include "../../src/cxKeyDefines.h"
 #include <vector>
 #include <string>
@@ -12,7 +12,7 @@ struct Card {
     std::string back;
 };
 
-class FlashcardApp : public cxWindow {
+class FlashcardApp : public cx::cxWindow {
 public:
     FlashcardApp(int pHeight, int pWidth);
 

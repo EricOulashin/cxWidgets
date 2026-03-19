@@ -8,6 +8,9 @@ using std::string;
 using std::shared_ptr;
 using std::lock_guard;
 
+
+namespace cx {
+
 cxTimer::cxTimer(const shared_ptr<cxFunction>& pFuncPtr, unsigned int pDelayMS, bool pWaitInSeparateThread)
    : mFunction(pFuncPtr),
      mDelay(pDelayMS),
@@ -138,3 +141,5 @@ void cxTimer::wait()
       doWaitLoop();
    }
 }
+
+} // namespace cx

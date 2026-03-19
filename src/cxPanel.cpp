@@ -19,6 +19,9 @@ using std::pair;
 //  This is because these methods could be overridden in a deriving class to
 //  return something a little different than this class expects.
 
+
+namespace cx {
+
 cxPanel::cxPanel(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
                  int pWidth, const string& pTitle, const string& pMessage,
                  const string& pStatus, eBorderStyle pBorderStyle,
@@ -1731,3 +1734,5 @@ cxPanel& cxPanel::operator =(const cxPanel& pThatPanel)
 {
    return(*this);
 }
+
+} // namespace cx

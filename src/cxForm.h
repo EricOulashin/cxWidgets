@@ -21,6 +21,8 @@
 #include <map>
 #include <memory>
 
+namespace cx {
+
 #define DEFAULT_CXFORM_JUMPMENU_KEY KEY_F(4)  // Default hotkey for input jumping
 
 // This is used in append() for specifying the type of input to append, either
@@ -3340,5 +3342,8 @@ when the user presses the 'n' key.
       friend class cxMultiForm;
       friend class cxPanel;
 };
+
+
+} // namespace cx
 
 #endif

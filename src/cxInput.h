@@ -21,6 +21,8 @@
 #include <memory>
 
 // Forward declaration
+namespace cx {
+
 class cxMultiLineInput;
 
 /** \class cxInput
@@ -1116,5 +1118,8 @@ class cxInput : public cxWindow
       bool validatorFunctionIsSet() const;
 
 };
+
+
+} // namespace cx
 
 #endif

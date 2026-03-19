@@ -4,8 +4,8 @@
  *
  *  Copyright (c) 2006-2007 Michael H. Kinney
  */
-#include "cxBase.h"
-using namespace cxBase;
+#include "cxUtils.h"
+using namespace cx;
 #include "cxWindow.h"
 #include "cxStringUtils.h"
 using namespace cxStringUtils;
@@ -18,7 +18,7 @@ using namespace std;
 //// MAIN ////
 int main(int argc, char* argv[])
 {
-   cxBase::init();
+   cx::init();
 
    cxObject ourcxObject;
    ourcxObject.UseColors(true);
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
       key=getch();
       erase();
       mvwprintw(stdscr, 0, 0, "Press ESC to quit.");
-      keyStr=cxBase::getKeyStr(key);
+      keyStr=cx::getKeyStr(key);
       if (keyStr == "ESC")
       {
          continueOn=false;
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
    }
 
    // cleanup
-   cxBase::cleanup();
+   cx::cleanup();
    return(0);
 } // main
 

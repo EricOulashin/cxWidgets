@@ -8,6 +8,8 @@
 #include "cxWindow.h"
 #include <string>
 
+namespace cx {
+
 class cxLabel : public cxWindow
 {
    public:
@@ -67,5 +69,7 @@ class cxLabel : public cxWindow
    private:
       std::string mText; // The text displayed by the label
 };
+
+} // namespace cx
 
 #endif // __CXLABEL_H__

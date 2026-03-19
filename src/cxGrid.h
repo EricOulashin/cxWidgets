@@ -21,6 +21,8 @@
 #include <vector>
 #include <memory>
 
+namespace cx {
+
 class cxGrid : public cxWindow
 {
    public:
@@ -419,5 +421,7 @@ class cxGrid : public cxWindow
        */
       long inputLoop();
 };
+
+} // namespace cx
 
 #endif // __CXGRID_H__

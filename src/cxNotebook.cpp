@@ -3,7 +3,7 @@
 
 #include "cxNotebook.h"
 #include "cxMenu.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxStringUtils.h"
 #include <exception>
 #include <typeinfo> // for try/catch
@@ -17,6 +17,9 @@ using cxStringUtils::Find;
 using std::list;
 using std::shared_ptr;
 using std::make_shared;
+
+
+namespace cx {
 
 cxNotebook::cxNotebook(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
                        int pWidth, bool pLabelsOnTop, bool pLeftLabelSpace,
@@ -1435,7 +1438,7 @@ long cxNotebook::doInputLoop(bool& pRunOnLeaveFunction)
       //  let the user know, and don't do the input loop.
       if (!anyEnabledWindows())
       {
-         cxBase::messageBox(mAllDisabledMsg);
+         cx::messageBox(mAllDisabledMsg);
          return(cxID_EXIT);
       }
 
@@ -1471,7 +1474,7 @@ long cxNotebook::doInputLoop(bool& pRunOnLeaveFunction)
                {
                   if (!selectNextWin())
                   {
-                     cxBase::messageBox(mAllDisabledMsg);
+                     cx::messageBox(mAllDisabledMsg);
                      return(cxID_EXIT);
                   }
                }
@@ -1543,7 +1546,7 @@ long cxNotebook::doInputLoop(bool& pRunOnLeaveFunction)
                                        {
                                           // The window is disabled - Show a
                                           //  message to the user.
-                                          cxBase::messageBox(mWindowDisabledMsg);
+                                          cx::messageBox(mWindowDisabledMsg);
                                        }
                                     }
                                     break;
@@ -1709,13 +1712,13 @@ long cxNotebook::doInputLoop(bool& pRunOnLeaveFunction)
          if (continueOn && !anyEnabledWindows())
          {
             continueOn = false;
-            cxBase::messageBox(mAllDisabledMsg);
+            cx::messageBox(mAllDisabledMsg);
          }
       }
    }
    else
    {
-      cxBase::messageBox(mNoWindowsMsg);
+      cx::messageBox(mNoWindowsMsg);
    }
 
    // mLeaveNow should be false.
@@ -2222,9 +2225,11 @@ void cxNotebook::showNavMenu()
             else
             {
                // The window is disabled - Show a message to the user.
-               cxBase::messageBox(mWindowDisabledMsg);
+               cx::messageBox(mWindowDisabledMsg);
             }
          }
       }
    }
 } // showNavMenu
+
+} // namespace cx

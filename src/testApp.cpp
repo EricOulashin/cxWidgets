@@ -4,7 +4,7 @@
 // This is a "testbed" for the different functionality of the cxWidgets.
 // It's mainly used for testing/debugging. (use examples at own risk!!!) ;-)
 
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxDialog.h"
 #include "cxMessageDialog.h"
 #include "cxForm.h"
@@ -36,7 +36,7 @@
 #include <memory>
 #include <cassert>
 using namespace cxStringUtils;
-using namespace cxBase;
+using namespace cx;
 using namespace std;
 using std::shared_ptr;
 using std::make_shared;
@@ -621,21 +621,21 @@ string inputYesNo(void *theInput, void *, void *, void *);
 // These functions can be used for simple key, onLeave, & validator function tests.
 string testKeyFunction(void *unused, void *unused2)
 {
-   cxBase::messageBox("testKeyFunction()");
+   cx::messageBox("testKeyFunction()");
 
    return("");
 } // testKeyFunction
 
 string testOnFocusFunction(void *unused, void *unused2, void *unused3, void *unused4)
 {
-   cxBase::messageBox("testOnFocusFunction()");
+   cx::messageBox("testOnFocusFunction()");
 
    return("");
 } // testOnFocusFunction
 
 string testOnLeaveFunction(void *unused, void *unused2, void *unused3, void *unused4)
 {
-   cxBase::messageBox("testOnLeaveFunction()");
+   cx::messageBox("testOnLeaveFunction()");
 
    return("");
 } // testOnLeaveFunction
@@ -648,7 +648,7 @@ string testInputValidator(void *theMultiLineInput, void *unused2, void *unused3,
    cxMultiLineInput *pInput = static_cast<cxMultiLineInput*>(theMultiLineInput);
    if (pInput->getValue() != "test")
    {
-      cxBase::messageBox("Warning: Input is not 'test'");
+      cx::messageBox("Warning: Input is not 'test'");
       retval = "Input is not 'test'";
    }
 
@@ -656,7 +656,7 @@ string testInputValidator(void *theMultiLineInput, void *unused2, void *unused3,
 } // testInputValidator
 
 // Title & status windows (must be created after
-// calling cxBase::init()
+// calling cx::init()
 shared_ptr<cxWindow> gTitleLine;
 shared_ptr<cxWindow> gStatusLine;
 
@@ -666,23 +666,23 @@ string getMenuItemIDStr(long pMenuItemID);
 
 string someWeirdFunc(void *theForm, void *unused)
 {
-   cxBase::messageBox("Hello.");
+   cx::messageBox("Hello.");
    return("");
 }
 
 //// MAIN ////
 int main(int argc, char* argv[])
 {
-   cxBase::init(true);
-   cxBase::setAttr(eDATA_EDITABLE, cxBase::getAttr("UNDERLINE"));
+   cx::init(true);
+   cx::setAttr(eDATA_EDITABLE, cx::getAttr("UNDERLINE"));
 
    cxObject ourcxObject;
    ourcxObject.UseColors(true);
 
    // Create & display the title & status windows
-   gTitleLine = make_shared<cxWindow>(nullptr, 0, 0, 1, cxBase::width(), "",
+   gTitleLine = make_shared<cxWindow>(nullptr, 0, 0, 1, cx::width(), "",
                                       "cxWidgets test application", "", eBS_NOBORDER);
-   gStatusLine = make_shared<cxWindow>(nullptr, cxBase::height()-1, 0, 1, cxBase::width(),
+   gStatusLine = make_shared<cxWindow>(nullptr, cx::height()-1, 0, 1, cx::width(),
                                        "", "Status", "", eBS_NOBORDER);
    gStatusLine->setHorizMessageAlignment(eHP_CENTER);
    gTitleLine->show();
@@ -698,7 +698,7 @@ int main(int argc, char* argv[])
    iInput->setName("someInput");
    //iInput->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
    iForm.setKeyFunction(KEY_F(5), someWeirdFunc, &iForm, nullptr, false, false, true);
-   cxBase::messageBox("testApp: First input's first input's exit keys:" + iForm.getInput(0)->firstInputExitKeys() + ":");
+   cx::messageBox("testApp: First input's first input's exit keys:" + iForm.getInput(0)->firstInputExitKeys() + ":");
    iForm.showModal();
    */
 
@@ -801,7 +801,7 @@ int main(int argc, char* argv[])
    messageBox(os.str());
 */
 
-   cxBase::cleanup();
+   cx::cleanup();
 
    return (0);
 } // main
@@ -1134,7 +1134,7 @@ void doMenu()
             continueOn=false;
             break;
          case -1:
-            cxBase::messageBox("-1");
+            cx::messageBox("-1");
             break;
          case menuCode:
             testMenu1();
@@ -1574,11 +1574,11 @@ void msgOK()
    cxMessageDialog a(nullptr, 12, 12, 10, 20, "I am ok", "This is a test.", cxOK, "Status");
    if (a.showModal() == cxID_OK)
    {
-      cxBase::messageBox("You chose OK");
+      cx::messageBox("You chose OK");
    }
    else
    {
-      cxBase::messageBox("You chose Cancel");
+      cx::messageBox("You chose Cancel");
    }
 }
 
@@ -1587,11 +1587,11 @@ void msgOKCancel()
    cxMessageDialog a(nullptr, 12, 12, 10, 20, "Somethin...", "This is a test.", cxOK|cxCANCEL, "Status");
    if (a.showModal() == cxID_OK)
    {
-      cxBase::messageBox("You chose OK");
+      cx::messageBox("You chose OK");
    }
    else
    {
-      cxBase::messageBox("You chose Cancel");
+      cx::messageBox("You chose Cancel");
    }
 }
 
@@ -1600,11 +1600,11 @@ void msgCancel()
    cxMessageDialog a(nullptr, 12, 12, 10, 20, "Somethin...", "Going to cancel...", cxCANCEL, "Status");
    if (a.showModal() == cxID_OK)
    {
-      cxBase::messageBox("You chose OK");
+      cx::messageBox("You chose OK");
    }
    else
    {
-      cxBase::messageBox("You chose Cancel");
+      cx::messageBox("You chose Cancel");
    }
 }
 
@@ -1613,25 +1613,25 @@ void msgYes()
    cxMessageDialog a(nullptr, 12, 12, 10, 20, "Answer!", "This is a test.", cxYES, "Status");
    if (a.showModal() == cxID_OK)
    {
-      cxBase::messageBox("You chose OK");
+      cx::messageBox("You chose OK");
    }
    else
    {
-      cxBase::messageBox("You chose Cancel");
+      cx::messageBox("You chose Cancel");
    }
 }
 
 void msgYesNo()
 {
    cxMessageDialog a(nullptr, 12, 12, 10, 20, "Answer!", "Is this a good test? (defaults to YES)", cxYES|cxNO, "Status");
-   //cxBase::dump("msgYesNo.scn");
+   //cx::dump("msgYesNo.scn");
    if (a.showModal() == cxID_OK)
    {
-      cxBase::messageBox("You chose OK");
+      cx::messageBox("You chose OK");
    }
    else
    {
-      cxBase::messageBox("You chose Cancel");
+      cx::messageBox("You chose Cancel");
    }
 }
 
@@ -1642,11 +1642,11 @@ void msgNoYes()
    //noButton->setFocus(false, false, false);
    if (a.showModal() == cxID_OK)
    {
-      cxBase::messageBox("You chose OK");
+      cx::messageBox("You chose OK");
    }
    else
    {
-      cxBase::messageBox("You chose Cancel");
+      cx::messageBox("You chose Cancel");
    }
 }
 
@@ -1655,11 +1655,11 @@ void msgNo()
    cxMessageDialog a(nullptr, 2, 2, 10, 20, "Answer!", "Is this a bad test?", cxNO, "Status");
    if (a.showModal() == cxID_OK)
    {
-      cxBase::messageBox("You chose OK");
+      cx::messageBox("You chose OK");
    }
    else
    {
-      cxBase::messageBox("You chose Cancel");
+      cx::messageBox("You chose Cancel");
    }
 }
 
@@ -1713,7 +1713,7 @@ void testMenu1()
    wrefresh(stdscr);
    //aMenu.move(2, 75);
    int returnCode = aMenu.showModal();
-   cxBase::messageBox("itemWasSelected() returns: " +
+   cx::messageBox("itemWasSelected() returns: " +
                       string(aMenu.itemWasSelected() ? "true" : "false"));
    // Display which menu item the user chose
    std::ostringstream os;
@@ -1945,7 +1945,7 @@ void attributesSetter()
          }
          iWindow.setAttr(item, tmpAttribute);
          iForm.setAttr(item, tmpAttribute);
-         cxBase::setAttr(item, tmpAttribute);
+         cx::setAttr(item, tmpAttribute);
          iWindow.show();
          iForm.show();
       }
@@ -2043,7 +2043,7 @@ void cxMenuScrolling()
    //iMenu.move(2, 2);
    iMenu.setTopItem("Item 4");
    long retCode = iMenu.showModal();
-   cxBase::messageBox("You chose item " + cxStringUtils::toString(retCode));
+   cx::messageBox("You chose item " + cxStringUtils::toString(retCode));
 }
 
 void inputsWithFKeys()
@@ -2121,7 +2121,7 @@ void cxInputMasking()
    cxInput iInput(nullptr, 5, 30, 30, "Password:");
    iInput.toggleMasking(true);
    //iInput.setValue("12345");
-   //cxBase::messageBox("Value before showModal:" + iInput.getValue() + ":");
+   //cx::messageBox("Value before showModal:" + iInput.getValue() + ":");
    iInput.showModal();
 
    messageBox("You entered:" + iInput.getValue() + ":");
@@ -2171,7 +2171,7 @@ string someFunction3(cxMultiLineInput& input)
 
 string hello()
 {
-   cxBase::messageBox("hello");
+   cx::messageBox("hello");
    return("");
 } // hello
 
@@ -2251,12 +2251,12 @@ void setInputLabel()
 {
    cxInput iInput(nullptr, 15, 0, 20, "Test:");
    iInput.showModal();
-   cxBase::messageBox(iInput.getValue());
+   cx::messageBox(iInput.getValue());
    //iInput.show();
    //getch();
    iInput.setLabel("New label:");
    iInput.showModal();
-   cxBase::messageBox(iInput.getValue());
+   cx::messageBox(iInput.getValue());
    //iInput.show();
    //getch();
 }
@@ -2348,7 +2348,7 @@ void cxWindowCopyConstructor()
    string message = "This tests the cxWindow copy constructor.  " \
                     "If the app doesn't crash and the " \
                     "function keys do what they're supposed to do, this test passes!";
-   cxBase::messageDialog(message);
+   cx::messageDialog(message);
 
    // Create the original window dynamically, and delete it after it's copied.
    //  This way, we can truly see if the copy constructor works okay.  If it
@@ -2381,7 +2381,7 @@ void demoPanels()
    iWindow4.show(false);
    iWindow5.show(false);
    iWindow6.show(false);
-   cxBase::messageDialog("Each time you press a key, a window will move, and you can watch what happens as the screen refreshes.");
+   cx::messageDialog("Each time you press a key, a window will move, and you can watch what happens as the screen refreshes.");
    getch();
    iWindow2.move(0, 22);
    getch();
@@ -2538,7 +2538,7 @@ void borderlessForm()
    iForm.setAllValueColor(eRED_WHITE);
    iForm.setAutoExit(true);
    iForm.showModal();
-   cxBase::dump(true, "borderlessForm.scn");
+   cx::dump(true, "borderlessForm.scn");
 } // borderlessForm
 
 void unselectableMenuItem()
@@ -2567,7 +2567,7 @@ void testFormReadOnly()
    int i = 0;
 
    iForm.show();
-   cxBase::dump(true, "formReadOnly.scn");
+   cx::dump(true, "formReadOnly.scn");
 
    long choice = iForm.showModal();
    while(choice != cxID_QUIT)
@@ -2700,7 +2700,7 @@ void cxWindowAssignment()
 {
    string message = "This tests the cxWindow assignment operator.  "
                   + string("If the app doesn't crash, this test passes!");
-   cxBase::messageDialog(message);
+   cx::messageDialog(message);
 
    // Note: mParentWindow is not copied from one cxWindow to another.
    //  The reason is that segfaults could happen if it was copied.
@@ -2719,7 +2719,7 @@ void cxMenuAssignment()
 {
    string message = "This tests the cxMenu assignment operator.  "
                   + string("If the app doesn't crash, this test passes!");
-   cxBase::messageDialog(message);
+   cx::messageDialog(message);
 
    cxMenu menuCopy;
    menuCopy.append("These will", 1);
@@ -2742,7 +2742,7 @@ void cxFormAssignment()
 {
    //string message = "This tests the cxForm assignment operator.  "
    //               + string("If the app doesn't crash, this test passes!");
-   //cxBase::messageDialog(message);
+   //cx::messageDialog(message);
    cxForm formCopy(nullptr, 5, 2, 8, 50, "This will go away");
    formCopy.append(1, 1, 1, 25, "This will be gone too:");
    formCopy.append(2, 1, 1, 25, "And so will this:");
@@ -2779,7 +2779,7 @@ void multiLineInputResize()
 
 void setValFunc()
 {
-   cxForm iForm(nullptr, 0, 0, cxBase::height(), cxBase::width(), "Test form");
+   cxForm iForm(nullptr, 0, 0, cx::height(), cx::width(), "Test form");
    // this should pop up messageBox with "Success" as a message.
    iForm.append(1, 1, 1, 15, "test:", "", "Just Hit Enter.");
    iForm.setValue("test:", "Hit Enter");
@@ -2818,7 +2818,7 @@ void formUpArrowFunction()
    iForm.append(2, 1, 1, 18, "Input 2:");
    auto func = make_shared<cxFunction0>(genericMessageFunction);
    iForm.setOnLeaveFunction(0, func);
-   iForm.setKeyFunction(KEY_UP, cxBase::noOp, nullptr, nullptr, true);
+   iForm.setKeyFunction(KEY_UP, cx::noOp, nullptr, nullptr, true);
    iForm.showModal();
    if (iForm.getLastKey() == KEY_UP)
    {
@@ -3065,7 +3065,7 @@ string multiForm2_goToForm1_Input1(void *theMultiForm, void *unused, void *unuse
    {
       return("");
    }
-   //cxBase::messageBox("in multiForm2_goToForm1_Input1");
+   //cx::messageBox("in multiForm2_goToForm1_Input1");
    cxMultiForm *pMultiForm = (cxMultiForm*)theMultiForm;
    pMultiForm->setCurrentSubform(0);
    pMultiForm->getForm(0)->setCurrentInput(0);
@@ -3079,7 +3079,7 @@ string multiForm2_goToForm3_Input1(void *theMultiForm, void *unused, void *unuse
    {
       return("");
    }
-   //cxBase::messageBox("in multiForm2_goToForm3_Input1");
+   //cx::messageBox("in multiForm2_goToForm3_Input1");
    cxMultiForm *pMultiForm = (cxMultiForm*)theMultiForm;
    pMultiForm->setCurrentSubform(2);
    pMultiForm->getForm(2)->setCurrentInput(0);
@@ -3245,7 +3245,7 @@ void integerValidate()
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 15, "Integer:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
    iInput.showModal();
-   cxBase::messageBox("value:" + iInput.getValue() + ":");
+   cx::messageBox("value:" + iInput.getValue() + ":");
 } // integerValidate
 
 void floatingPtValidate()
@@ -3253,7 +3253,7 @@ void floatingPtValidate()
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 25, "Floating-pt #:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_FLOATING_PT);
    iInput.showModal();
-   cxBase::messageBox("value:" + iInput.getValue() + ":");
+   cx::messageBox("value:" + iInput.getValue() + ":");
 } // floatingPtValidate
 
 void integerValidateOnForm()
@@ -3300,7 +3300,7 @@ string showAMessageBox(void *classTypeStr, void *unused)
 
 void keyFunctionAutoExitOnLastFormInput()
 {
-   cxBase::messageBox("F3 is set up on the first and last inputs of the form, and it's set up to exit the inputs after the function runs.  After pressing F3 on input 1, it should move to input 2.  After pressing F3 on input 3 (the last input), the form should exit.");
+   cx::messageBox("F3 is set up on the first and last inputs of the form, and it's set up to exit the inputs after the function runs.  After pressing F3 on input 1, it should move to input 2.  After pressing F3 on input 3 (the last input), the form should exit.");
 
    cxForm iForm(nullptr, 1, 0, 5, 27, "Test form", eBS_SINGLE_LINE);
    shared_ptr<cxMultiLineInput> input1 = iForm.append(1, 1, 1, 25, "Input 1:");
@@ -3562,7 +3562,7 @@ void cxMenuWithMultipleItemHotkeys()
    if (retval != cxID_QUIT)
    {
       string message = "You chose item " + cxStringUtils::toString(retval);
-      cxBase::messageBox(message);
+      cx::messageBox(message);
    }
 } // cxMenuWithMultipleItemHotkeys
 
@@ -3708,7 +3708,7 @@ void cxPanelTest2()
    //  a read-only form at the top, a menu in the middle, and a form at the
    //  bottom.  Note: The order of appending the windows to the panel is
    //  important.
-   cxPanel iPanel(nullptr, 1, 0, cxBase::height()-2, cxBase::width(), "Panel", "",
+   cxPanel iPanel(nullptr, 1, 0, cx::height()-2, cx::width(), "Panel", "",
                   "", eBS_SINGLE_LINE);
    // Add a form with all read-only inputs at the top of the panel
    shared_ptr<cxForm> infoForm = make_shared<cxForm>(nullptr, 0, 0, 1, iPanel.width()-2, "Info form", eBS_NOBORDER);
@@ -3940,7 +3940,7 @@ void cxPanelWindowSwap()
 
 void cxPanel_cxMenuUpArrowLeave()
 {
-   cxBase::messageBox("In menu 2, pressing up arrow on the first item will "
+   cx::messageBox("In menu 2, pressing up arrow on the first item will "
                        "go to menu 1.");
 
    cxPanel iPanel(nullptr, 1, 0, height()-2, width(), "Test panel", "", "",
@@ -3969,9 +3969,9 @@ void cxPanel_cxMenuUpArrowLeave()
 
 string getMenuItemIDStr(long pMenuItemID)
 {
-   // Default the string version to whatever cxBase::getReturnCodeStr()
+   // Default the string version to whatever cx::getReturnCodeStr()
    //  says, in case the ID code isn't handeled in the switch.
-   string menuItemIDStr = cxBase::getReturnCodeStr(pMenuItemID);
+   string menuItemIDStr = cx::getReturnCodeStr(pMenuItemID);
 
    switch (pMenuItemID)
    {
@@ -4408,7 +4408,7 @@ string getMenuItemIDStr(long pMenuItemID)
 
 void windowFunctionKeyNoOnLeave()
 {
-   cxBase::messageBox("The next window has an onLeave function.  It will be "
+   cx::messageBox("The next window has an onLeave function.  It will be "
                       "fired after any keypress except F1, which fires a key "
                       "function and is set not to run the onLeave function.");
    cxWindow iWindow(nullptr, 1, 0, 12, 50, "Test", "This is a test window.");
@@ -4419,7 +4419,7 @@ void windowFunctionKeyNoOnLeave()
 
 void formFunctionKeyNoOnLeave()
 {
-   cxBase::messageBox("The form here has an onLeave function.  It will be "
+   cx::messageBox("The form here has an onLeave function.  It will be "
                       "fired when you tab through the inputs on the form.  F1 "
                       "fires a key function and is set to leave and not run "
                       "the onLeave function.");
@@ -4436,7 +4436,7 @@ void formFunctionKeyNoOnLeave()
 
 void cxMultiLineInputFunctionKeyNoValidator()
 {
-   cxBase::messageBox("The input has a validator that validates that you've "
+   cx::messageBox("The input has a validator that validates that you've "
                       "typed \"test\".  F1 is set up to run a function and "
                       "have the input leave focus without running the validator.");
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Input:");
@@ -4447,7 +4447,7 @@ void cxMultiLineInputFunctionKeyNoValidator()
 
 void cxFormMultiLineInputFunctionKeyNoValidator()
 {
-   cxBase::messageBox("Input 1 on the form has an onLeave function and a "
+   cx::messageBox("Input 1 on the form has an onLeave function and a "
                       "validator.  F1 on input 1 fires a key function and is "
                       "set to leave input 1 and not run its onLeave function "
                       "or its validator.");
@@ -4481,9 +4481,9 @@ void cxFormNavKeys()
    set<int>::const_iterator keyIter = navKeys.begin();
    for (; keyIter != navKeys.end(); ++keyIter)
    {
-      navKeysStr += " " + cxBase::getKeyStr(*keyIter);
+      navKeysStr += " " + cx::getKeyStr(*keyIter);
    }
-   cxBase::messageBox("cxForm::getNavKeys() returns:" + navKeysStr);
+   cx::messageBox("cxForm::getNavKeys() returns:" + navKeysStr);
    // Test cxForm::getNavKeyStrings()
    navKeysStr = "";
    set<string> navKeyStrings;
@@ -4493,8 +4493,8 @@ void cxFormNavKeys()
    {
       navKeysStr += " " + *strIter;
    }
-   cxBase::messageBox("cxForm::getNavKeyStrings() returns:" + navKeysStr);
-   cxBase::messageBox("Is pageDown a nav key on the form?: " +
+   cx::messageBox("cxForm::getNavKeyStrings() returns:" + navKeysStr);
+   cx::messageBox("Is pageDown a nav key on the form?: " +
                 string(iForm.hasNavKey(PAGE_DOWN) ? "Yes" : "No"));
 } // cxFormNavKeys
 
@@ -4521,7 +4521,7 @@ void cxFormStartAtFirstInput()
    iForm.setAutoExit(true);
    iForm.setStartAtFirstInput(true);
    iForm.showModal();
-   cxBase::messageBox("showing again");
+   cx::messageBox("showing again");
    iForm.showModal();
 } // cxFormStartAtFirstInput
 
@@ -4540,12 +4540,12 @@ string onFocusWinForCxPanelGetLastPage(void *thePanel, void *theCurrentWindow,
    shared_ptr<cxWindow> lastWindow = pPanel->getLastWindow();
    if (nullptr != lastWindow)
    {
-      cxBase::messageBox("On focus of this window:" + pCurrentWindow->getTitle()
+      cx::messageBox("On focus of this window:" + pCurrentWindow->getTitle()
              + ":, the last window title is:" + lastWindow->getTitle() + ":");
    }
    else
    {
-      cxBase::messageBox("On focus of this window:" + pCurrentWindow->getTitle()
+      cx::messageBox("On focus of this window:" + pCurrentWindow->getTitle()
                          + ":, the last window is nullptr.");
    }
 
@@ -4604,7 +4604,7 @@ void cxPanelGetLastWindow()
 
    // Show the panel again..  The last window should be the window that had
    //  focus the last time it was shown.
-   cxBase::messageBox("Showing the panel again..");
+   cx::messageBox("Showing the panel again..");
    iPanel.showModal();
 } // cxPanelGetLastWindow
 
@@ -4612,14 +4612,14 @@ void cxPanelGetLastWindow()
 //  test.
 string buttonClickFunction(void *theButton, void *unused, void *unused2, void *unused3)
 {
-   cxBase::messageBox("Button click function called");
+   cx::messageBox("Button click function called");
    return("");
 } // buttonClickFunction
 
 // Tester for a cxButton used with an onClick event function
 void cxButtonOnClick()
 {
-   cxBase::messageBox("If you press enter or click on the next button, its "
+   cx::messageBox("If you press enter or click on the next button, its "
                       "onClick function will fire.");
 
    cxButton iButton(nullptr, 1, 0, 3, 10, "Button");
@@ -4647,14 +4647,14 @@ void cxMenuMiscTests()
       assert(iMenu.getItemTextByReturnCode(-1) == "");
    }
 
-   cxBase::messageBox("If you see this, the tests passed!");
+   cx::messageBox("If you see this, the tests passed!");
 } // cxMenuMiscTests
 
 // Event functions for search panels
 string onFocusForm(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3)
                    {
-   //cxBase::messageBox("onFocusForm");
+   //cx::messageBox("onFocusForm");
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
    pSearchPanel->getMenu()->setStatus("ESC=Quit  F4=Goto  ENTER=Go  TAB=Next  sTAB=Previous", true);
    //pSearchPanel->getMenu()->setStatus("", true);
@@ -4666,7 +4666,7 @@ string onFocusForm(void *theSearchPanel, void *unused, void *unused2,
 string onLeaveForm(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3)
                    {
-   //cxBase::messageBox("onLeaveForm");
+   //cx::messageBox("onLeaveForm");
    //cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
    //pSearchPanel->getForm()->setStatus("");
    /*
@@ -4682,7 +4682,7 @@ string onLeaveForm(void *theSearchPanel, void *unused, void *unused2,
 string onFocusMenu(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3)
                    {
-   //cxBase::messageBox("onFocusMenu");
+   //cx::messageBox("onFocusMenu");
    if (theSearchPanel == nullptr)
    {
       return("");
@@ -4715,7 +4715,7 @@ string onFocusMenu(void *theSearchPanel, void *unused, void *unused2,
 string onLeaveMenu(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3)
                    {
-   //cxBase::messageBox("onLeaveMenu");
+   //cx::messageBox("onLeaveMenu");
    if (theSearchPanel == nullptr)
    {
       return("");
@@ -4728,7 +4728,7 @@ string onLeaveMenu(void *theSearchPanel, void *unused, void *unused2,
 string formOnEnter(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3)
                    {
-   //cxBase::messageBox("formOnEnter");
+   //cx::messageBox("formOnEnter");
    if (theSearchPanel == nullptr)
    {
       return("");
@@ -4750,7 +4750,7 @@ string menuOnEnter(void *theSearchPanel, void *unused, void *unused2,
 
    cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
    shared_ptr<cxMenu> iMenu = pSearchPanel->getMenu();
-   cxBase::messageBox("The '" + iMenu->getCurrentItemText() + "' item was selected.", "ha ha");
+   cx::messageBox("The '" + iMenu->getCurrentItemText() + "' item was selected.", "ha ha");
 
    return("");
 } // menuOnEnter
@@ -4758,7 +4758,7 @@ string menuOnEnter(void *theSearchPanel, void *unused, void *unused2,
 string searchPanelOnFocus(void *theSearchPanel, void *unused, void *unused2,
                    void *unused3)
                    {
-   //cxBase::messageBox("searchPanelOnFocus");
+   //cx::messageBox("searchPanelOnFocus");
    if (theSearchPanel == nullptr)
    {
       return("");
@@ -4805,11 +4805,11 @@ void cxSearchPanelTest()
    iSearchPanel.showModal();
    if (iSearchPanel.itemWasSelected())
    {
-      cxBase::messageBox("You chose this item:" + iSearchPanel.getSelectedItem() + ":");
+      cx::messageBox("You chose this item:" + iSearchPanel.getSelectedItem() + ":");
    }
    else
    {
-      cxBase::messageBox("An item was not selected.");
+      cx::messageBox("An item was not selected.");
    }
 } // cxSearchPanelTest
 
@@ -4835,12 +4835,12 @@ void cxSearchPanelResize()
    iSearchPanel.resize(23, 60, false);
    iSearchPanel.showModal();
 
-   cxBase::messageBox("Now testing setFormHeight()");
+   cx::messageBox("Now testing setFormHeight()");
    shared_ptr<cxForm> iForm = iSearchPanel.getForm(); // To get the form's current height
    iSearchPanel.setFormHeight(iForm->height()-2, false);
    iSearchPanel.showModal();
 
-   cxBase::messageBox("Now testing setMenuHeight()");
+   cx::messageBox("Now testing setMenuHeight()");
    shared_ptr<cxMenu> iMenu = iSearchPanel.getMenu(); // To get the menu's current height
    iSearchPanel.setMenuHeight(iMenu->height()-2, false);
    iSearchPanel.showModal();
@@ -4885,10 +4885,10 @@ void cxMenuResize()
    {
       iMenu.append("Item " + toString(i), i);
    }
-   cxBase::messageBox("Showing menu before resize");
+   cx::messageBox("Showing menu before resize");
    iMenu.showModal();
    iMenu.resize(8, 16);
-   cxBase::messageBox("After resize");
+   cx::messageBox("After resize");
    iMenu.showModal();
 } // cxMenuResize
 
@@ -4901,12 +4901,12 @@ void cxWindowAlignTest()
    iWindow.setMessage("1 dead center");
    iWindow.center();
    iWindow.show();
-   //text=cxBase::getString(cxBase::bottom() / 2, (cxBase::width() / 2) + (windowWidth / 2), 2);
-   //cxBase::messageBox(text);
+   //text=cx::getString(cx::bottom() / 2, (cx::width() / 2) + (windowWidth / 2), 2);
+   //cx::messageBox(text);
    //assert(text == "1 ");
    int foundRow=-2;
    int foundCol=-2;
-   cxBase::messageBox("foundRow:" + toString(foundRow) + " foundCol:" + toString(foundCol));
+   cx::messageBox("foundRow:" + toString(foundRow) + " foundCol:" + toString(foundCol));
    iWindow.info();
    iWindow.show();
    sleep(1);
@@ -5403,14 +5403,14 @@ void cxWindowSizeTest()
 {
    try
    {
-      cxBase::messageBox("about to clean up");
-      cxBase::cleanup();
-      cxBase::init();
-      cxBase::messageBox("cleaned up and re-inited");
-      cxBase::cleanup();
-      cxBase::init();
-      cxBase::messageBox("cleaned up and re-inited again");
-      cxBase::cleanup();
+      cx::messageBox("about to clean up");
+      cx::cleanup();
+      cx::init();
+      cx::messageBox("cleaned up and re-inited");
+      cx::cleanup();
+      cx::init();
+      cx::messageBox("cleaned up and re-inited again");
+      cx::cleanup();
    }
    catch(const cxWidgetsException &e)
    {
@@ -5418,7 +5418,7 @@ void cxWindowSizeTest()
    }
 
    {
-      if (cxBase::cxInitialized())
+      if (cx::cxInitialized())
       {
          cxWindow iWindow(nullptr, "1", "1", "1");
          iWindow.show();
@@ -5428,7 +5428,7 @@ void cxWindowSizeTest()
    }
 
    {
-      if (cxBase::cxInitialized())
+      if (cx::cxInitialized())
       {
          cxWindow iWindow(nullptr, "12345", "xxxxxxxxxxxxxxxxxx", "");
          iWindow.show();
@@ -5583,7 +5583,7 @@ void cxMultiLineInputNumericFloatingPt()
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 30, "Floating-point:");
    iInput.setInputType(eINPUT_TYPE_NUMERIC_FLOATING_PT);
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNumericFloatingPt
 
 void cxMultiLineInputNumericFloatingPtWithRange()
@@ -5593,7 +5593,7 @@ void cxMultiLineInputNumericFloatingPtWithRange()
    iInput.setRangeDouble(2.0, 5.0);
    iInput.validatorFuncMessageBox(true);
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNumericFloatingPtWithRange
 
 void cxMultiLineInputNumericWhole()
@@ -5603,7 +5603,7 @@ void cxMultiLineInputNumericWhole()
    auto func = make_shared<cxFunction0>(hello,  false, false, true);
    iInput.setKeyFunction(KEY_F(8), func);
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNumericWhole
 
 void cxMultiLineInputNumericWholeWithRange()
@@ -5613,7 +5613,7 @@ void cxMultiLineInputNumericWholeWithRange()
    iInput.setRangeInt(2, 5);
    iInput.validatorFuncMessageBox(true);
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNumericWholeWithRange
 
 void cxMultiLineInputTextValidation()
@@ -5626,7 +5626,7 @@ void cxMultiLineInputTextValidation()
       iInput.setValidOptions("abc");
       iInput.validatorFuncMessageBox(true);
       iInput.showModal();
-      cxBase::messageBox("Value:" + iInput.getValue() + ":");
+      cx::messageBox("Value:" + iInput.getValue() + ":");
    }
 
    {
@@ -5639,7 +5639,7 @@ void cxMultiLineInputTextValidation()
       iInput.addValidOption("f");
       iInput.validatorFuncMessageBox(true);
       iInput.showModal();
-      cxBase::messageBox("Value:" + iInput.getValue() + ":");
+      cx::messageBox("Value:" + iInput.getValue() + ":");
    }
 } // cxMultiLineInputTextValidation
 
@@ -5649,7 +5649,7 @@ void cxMultiLineInputForceUpper()
    iInput.setForceUpper(true);
    iInput.validatorFuncMessageBox(true);
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputForceUpper
 
 void cxMultiLineInputNonBlank()
@@ -5658,7 +5658,7 @@ void cxMultiLineInputNonBlank()
    iInput.setAllowBlank(false);
    iInput.validatorFuncMessageBox(true);
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputNonBlank
 
 void cxMultiLineInputTextValidationNonBlankForceUpper()
@@ -5673,7 +5673,7 @@ void cxMultiLineInputTextValidationNonBlankForceUpper()
       iInput.setAllowBlank(false);
       iInput.setForceUpper(true);
       iInput.showModal();
-      cxBase::messageBox("Value:" + iInput.getValue() + ":");
+      cx::messageBox("Value:" + iInput.getValue() + ":");
    }
 
    {
@@ -5688,13 +5688,13 @@ void cxMultiLineInputTextValidationNonBlankForceUpper()
       iInput.setAllowBlank(false);
       iInput.setForceUpper(true);
       iInput.showModal();
-      cxBase::messageBox("Value:" + iInput.getValue() + ":");
+      cx::messageBox("Value:" + iInput.getValue() + ":");
    }
 } // cxMultiLineInputTextValidationNonBlankForceUpper
 
 void cxMultiLineInputTextValidationAutoCompletion()
 {
-   cxBase::messageBox("For this input, \"EMAIL\" and \"EMULE\" are valid.");
+   cx::messageBox("For this input, \"EMAIL\" and \"EMULE\" are valid.");
 
    cxMultiLineInput iInput(nullptr, 2, 0, 1, 20, "Input:", eBS_NOBORDER,
                            eINPUT_EDITABLE, eINPUT_TYPE_TEXT);
@@ -5706,7 +5706,7 @@ void cxMultiLineInputTextValidationAutoCompletion()
    iInput.addValidOption("EMULE", "eMule");
    iInput.validatorFuncMessageBox(true);
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputTextValidationAutoCompletion
 
 void cxMultiLineInputExtendedHelpKey()
@@ -5715,15 +5715,15 @@ void cxMultiLineInputExtendedHelpKey()
    iInput.setExtendedHelp("This is the extended help.");
    iInput.setExtendedHelpKey(KEY_F(1));
    iInput.setUseExtendedHelpKeys(true);
-   cxBase::messageBox("The extended help keys are " +
+   cx::messageBox("The extended help keys are " +
                       iInput.getExtendedHelpKeyStrings());
    iInput.showModal();
 
-   cxBase::messageBox("The extended help key will now be changed to F2.");
+   cx::messageBox("The extended help key will now be changed to F2.");
    iInput.setExtendedHelpKey(KEY_F(2));
    iInput.showModal();
 
-   cxBase::messageBox("The extended help key will now be diabled.");
+   cx::messageBox("The extended help key will now be diabled.");
    iInput.setUseExtendedHelpKeys(false);
    iInput.showModal();
 } // cxMultiLineInputExtendedHelpKey
@@ -5737,15 +5737,15 @@ void cxFormExtendedHelpKey()
    iForm.append(2, 27, 1, 25, "Input 4:");
    iForm.setExtendedHelpKey(KEY_F(1));
    iForm.setUseExtendedHelpKeys(true);
-   cxBase::messageBox("The extended help keys are " +
+   cx::messageBox("The extended help keys are " +
                       iForm.getExtendedHelpKeyStrings());
    iForm.showModal();
 
-   cxBase::messageBox("The extended help key will now be changed to F2.");
+   cx::messageBox("The extended help key will now be changed to F2.");
    iForm.setExtendedHelpKey(KEY_F(2));
    iForm.showModal();
 
-   cxBase::messageBox("The extended help key will now be diabled.");
+   cx::messageBox("The extended help key will now be diabled.");
    iForm.setUseExtendedHelpKeys(false);
    iForm.showModal();
 } // cxFormExtendedHelpKey
@@ -5876,7 +5876,7 @@ string storeSearchMenuOnEnter(void *theSearchPanel, void *unused, void *unused2,
 
    //cxSearchPanel *pSearchPanel = static_cast<cxSearchPanel*>(theSearchPanel);
    //shared_ptr<cxMenu> iMenu = pSearchPanel->getMenu();
-   //cxBase::messageBox("The '" + iMenu->getCurrentItemText() + "' item was selected.", "ha ha");
+   //cx::messageBox("The '" + iMenu->getCurrentItemText() + "' item was selected.", "ha ha");
 
    return("");
 } // storeSearchMenuOnEnter
@@ -5939,7 +5939,7 @@ string storeSearch(void *theInput, void *unused)
    if (searchRetval != cxID_QUIT)
    {
       //messageBox("searchRetval:" + toString(searchRetval));
-      //cxBase::messageBox("Selected item:" + iSearchPanel.getSelectedItem() + ":");
+      //cx::messageBox("Selected item:" + iSearchPanel.getSelectedItem() + ":");
       // Get the store # from the selected item - Get the selected item and
       //  strip off the first part - Look for the last space and get the
       //  substring after that position.
@@ -6050,21 +6050,21 @@ void cxFormAppendPair()
                1, 30, "Store #:", "", "", eINPUT_EDITABLE, "stno");
          if (inputs.first != nullptr)
          {
-            cxBase::messageBox("First input name:" + inputs.first->getName() + ":");
+            cx::messageBox("First input name:" + inputs.first->getName() + ":");
             inputs.first->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
          }
          else
          {
-            cxBase::messageBox("Warning: The first input is nullptr");
+            cx::messageBox("Warning: The first input is nullptr");
          }
          if (inputs.second != nullptr)
          {
-            cxBase::messageBox("Second input name:" + inputs.second->getName() + ":");
+            cx::messageBox("Second input name:" + inputs.second->getName() + ":");
             inputs.second->setInputType(eINPUT_TYPE_NUMERIC_WHOLE);
          }
          else
          {
-            cxBase::messageBox("Warning: The second input is nullptr");
+            cx::messageBox("Warning: The second input is nullptr");
          }
 
          iForm.showModal();
@@ -6088,21 +6088,21 @@ void cxFormAppendPair()
          map<string, string>::iterator iter = values.begin();
          for (; iter != values.end(); ++iter)
          {
-            cxBase::messageBox(iter->first + ":" + iter->second + ":");
+            cx::messageBox(iter->first + ":" + iter->second + ":");
          }
       }
    }
    catch (const cxWidgetsException& e)
    {
-      cxBase::messageBox("cxWidgets exception caught: " + e.getErrorMsg());
+      cx::messageBox("cxWidgets exception caught: " + e.getErrorMsg());
    }
    catch (const std::exception& e)
    {
-      cxBase::messageBox("std::exception caught: " + string(e.what()));
+      cx::messageBox("std::exception caught: " + string(e.what()));
    }
    catch (...)
    {
-      cxBase::messageBox("Unknown exception caught");
+      cx::messageBox("Unknown exception caught");
    }
 } // cxFormAppendPair
 
@@ -6115,7 +6115,7 @@ void cxFormAppendComboBoxPair()
                            1, 30, "Store:", "", "", eINPUT_EDITABLE, "store");
       if (comboBoxes.first != nullptr)
       {
-         cxBase::messageBox("First combo box name:" + comboBoxes.first->getName() + ":");
+         cx::messageBox("First combo box name:" + comboBoxes.first->getName() + ":");
          comboBoxes.first->appendToMenu("Portland");
          comboBoxes.first->appendToMenu("Aloha");
          comboBoxes.first->appendToMenu("Vancouver");
@@ -6123,11 +6123,11 @@ void cxFormAppendComboBoxPair()
       }
       else
       {
-         cxBase::messageBox("Warning: The first combo box is nullptr");
+         cx::messageBox("Warning: The first combo box is nullptr");
       }
       if (comboBoxes.second != nullptr)
       {
-         cxBase::messageBox("Second combo box name:" + comboBoxes.second->getName() + ":");
+         cx::messageBox("Second combo box name:" + comboBoxes.second->getName() + ":");
          comboBoxes.second->appendToMenu("Portland");
          comboBoxes.second->appendToMenu("Aloha");
          comboBoxes.second->appendToMenu("Vancouver");
@@ -6135,27 +6135,27 @@ void cxFormAppendComboBoxPair()
       }
       else
       {
-         cxBase::messageBox("Warning: The second combo box is nullptr");
+         cx::messageBox("Warning: The second combo box is nullptr");
       }
    }
    catch (const cxWidgetsException& e)
    {
-      cxBase::messageBox("cxWidgets exception caught: " + e.getErrorMsg());
+      cx::messageBox("cxWidgets exception caught: " + e.getErrorMsg());
    }
    catch (const std::exception& e)
    {
-      cxBase::messageBox("std::exception caught: " + string(e.what()));
+      cx::messageBox("std::exception caught: " + string(e.what()));
    }
    catch (...)
    {
-      cxBase::messageBox("Unknown exception caught");
+      cx::messageBox("Unknown exception caught");
    }
    iForm.showModal();
 } // cxFormAppendComboBoxPair
 
 void cxMultiLineInputSetValue()
 {
-   cxBase::messageBox("This test uses assert() to validate the tests.  If "
+   cx::messageBox("This test uses assert() to validate the tests.  If "
                       "the program doesn't bail, then all the tests passed.");
 
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 70, "Input:");
@@ -6253,21 +6253,21 @@ void cxMultiLineInputMaxInputLength()
 {
    cxMultiLineInput iInput(nullptr, 1, 0, 2, 10, "Input:", eBS_NOBORDER);
    iInput.setMaxInputLength(10);
-   cxBase::messageBox("The max input length is " + toString(iInput.getMaxInputLength()));
+   cx::messageBox("The max input length is " + toString(iInput.getMaxInputLength()));
    iInput.showModal();
-   cxBase::messageBox("Value:" + iInput.getValue() + ":");
+   cx::messageBox("Value:" + iInput.getValue() + ":");
 } // cxMultiLineInputMaxInputLength
 
 void cxMultiLineInputExtendedHelpColorsAndAttrs()
 {
    cxMultiLineInput iInput(nullptr, 1, 0, 1, 10, "Input:", eBS_NOBORDER);
    iInput.setExtendedHelp("This is the extended help.");
-   cxBase::messageBox("Using default extended help color & attribute");
+   cx::messageBox("Using default extended help color & attribute");
    iInput.showModal();
 
    iInput.setExtendedHelpColor(eGREEN_BLACK);
    iInput.setExtendedHelpAttribute(A_BOLD);
-   cxBase::messageBox("Changed the extended help color & attribute");
+   cx::messageBox("Changed the extended help color & attribute");
    iInput.showModal();
 } // cxMultiLineInputExtendedHelpColorsAndAttrs
 
@@ -6312,11 +6312,11 @@ void cxMenuAltItemText()
 
    // Show the menu & display the user's selection
    iMenu.showModal();
-   cxBase::messageBox("Your choice (display text):" + iMenu.getCurrentItemText(true) + ":");
-   cxBase::messageBox("Your choice (alt text):" + iMenu.getCurrentItemText(false) + ":");
+   cx::messageBox("Your choice (display text):" + iMenu.getCurrentItemText(true) + ":");
+   cx::messageBox("Your choice (alt text):" + iMenu.getCurrentItemText(false) + ":");
    // Get the current item's display text & alternate display text
-   cxBase::messageBox("Current item display text:" + iMenu.getCurrentItemText(true) + ":");
-   cxBase::messageBox("Current item alternate text:" + iMenu.getCurrentItemText(false) + ":");
+   cx::messageBox("Current item display text:" + iMenu.getCurrentItemText(true) + ":");
+   cx::messageBox("Current item alternate text:" + iMenu.getCurrentItemText(false) + ":");
 } // cxMenuAltItemText
 
 void cxComboBoxNotEditableMenuEnabled()
@@ -6330,7 +6330,7 @@ void cxComboBoxNotEditableMenuEnabled()
    iComboBox.appendToMenu("Item 3");
    iComboBox.setEditable(false);
    iComboBox.showModal();
-   cxBase::messageBox("Value:" + iComboBox.getValue() + ":");
+   cx::messageBox("Value:" + iComboBox.getValue() + ":");
 } // cxComboBoxNotEditableMenuEnabled
 
 void cxMultiLineInputOverrideOnKeypress()
@@ -6374,7 +6374,7 @@ void cxWindowVariousBorderStyles()
 // reports the chosen date (or that the user cancelled).
 void cxDatePickerTest()
 {
-   cxBase::messageBox("On the cxDatePicker, use tab to move "
+   cx::messageBox("On the cxDatePicker, use tab to move "
                       "between controls, arrow keys to navigate the "
                       "calendar, and Enter/OK to confirm a date.");
    cxDatePicker picker(nullptr); // centered, defaults to today
@@ -6382,17 +6382,17 @@ void cxDatePickerTest()
    if (result == cxID_OK)
    {
       const cxDate& chosen = picker.getSelectedDate();
-      cxBase::messageBox("You chose: " + chosen.toString());
+      cx::messageBox("You chose: " + chosen.toString());
    }
    else
    {
-      cxBase::messageBox("Date selection was cancelled.");
+      cx::messageBox("Date selection was cancelled.");
    }
 } // cxDatePickerTest
 
 void cxOpenFileDialogTest()
 {
-   cxBase::messageBox("cxOpenFileDialog: Use Tab to move between controls. "
+   cx::messageBox("cxOpenFileDialog: Use Tab to move between controls. "
                       "Arrow keys navigate directory/file lists. "
                       "Enter on a directory enters it; Enter on a file confirms. "
                       "Left/Right on File type cycles filters.");
@@ -6405,17 +6405,17 @@ void cxOpenFileDialogTest()
    long result = dlg.showModal();
    if (result == cxID_OK)
    {
-      cxBase::messageBox("Selected file: " + dlg.getSelectedFilePath());
+      cx::messageBox("Selected file: " + dlg.getSelectedFilePath());
    }
    else
    {
-      cxBase::messageBox("File selection was cancelled.");
+      cx::messageBox("File selection was cancelled.");
    }
 } // cxOpenFileDialogTest
 
 string gridButtonClicked()
 {
-   cxBase::messageBox("This button was clicked");
+   cx::messageBox("This button was clicked");
    return "";
 }
 
@@ -6423,7 +6423,7 @@ void cxGridTest()
 {
    // Get terminal dimensions and calculate grid size
    int termHeight = 0, termWidth = 0;
-   cxBase::getTermDimensions(termHeight, termWidth);
+   cx::getTermDimensions(termHeight, termWidth);
    //const int gridWidth = termWidth - 4;
    //const int gridHeight = termHeight - 4;
    const int gridWidth = 60;

@@ -29,6 +29,8 @@
 #include <iostream>
 #include <optional>
 
+namespace cx {
+
 // Date format enumeration (kept compatible with original date.h)
 enum eDateFormats
 {
@@ -355,5 +357,7 @@ private:
    [[nodiscard]] static std::string getMonthName(int pMonth);
    [[nodiscard]] static bool        allDigits(std::string_view pStr) noexcept;
 };
+
+} // namespace cx
 
 #endif // __CXDATE_H__

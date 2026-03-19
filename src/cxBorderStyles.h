@@ -15,6 +15,8 @@
 
  #include <string>
 
+namespace cx {
+
 /**
 * \enum eBorderStyle Defines border styles used by cxWindow and its derivitives:
 * eBS_NOBORDER: This signifies windows without a border
@@ -38,5 +40,7 @@ enum eBorderStyle
  * \return A string representation of the eBorderStyle value.
  */
 std::string eBorderStyleToStr(eBorderStyle borderStyle);
+
+} // namespace cx
 
 #endif

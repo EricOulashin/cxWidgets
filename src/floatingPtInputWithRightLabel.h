@@ -10,6 +10,8 @@
 #include "cxMultiLineInput.h"
 #include <string>
 
+namespace cx {
+
 class floatingPtInputWithRightLabel : public cxMultiLineInput
 {
    public:
@@ -27,5 +29,7 @@ class floatingPtInputWithRightLabel : public cxMultiLineInput
       //  right label.
       std::string onKeypress() override;
 };
+
+} // namespace cx
 
 #endif

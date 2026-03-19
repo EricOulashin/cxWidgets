@@ -1,13 +1,13 @@
-#include "../../src/cxBase.h"
+#include "../../src/cxUtils.h"
 #include "SnakeGame.h"
 
 int main() {
-    cxBase::init();
+    cx::init();
     
     SnakeGame game(20, 60);
     game.show();
     game.run();
     
-    cxBase::cleanup();
+    cx::cleanup();
     return 0;
 }

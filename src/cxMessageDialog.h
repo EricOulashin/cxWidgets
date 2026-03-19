@@ -10,6 +10,8 @@
 #include <string>
 #include <memory>
 
+namespace cx {
+
 #define OKBTN_HEIGHT 3
 #define OKBTN_WIDTH 4
 #define CANCELBTN_HEIGHT 3
@@ -167,5 +169,7 @@ class cxMessageDialog : public cxDialog
       }
 
 }; // end of class cxMessageDialog
+
+} // namespace cx
 
 #endif

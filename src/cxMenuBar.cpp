@@ -1,7 +1,7 @@
 // Copyright (c) 2026 E. Oulashin
 
 #include "cxMenuBar.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include <ncurses.h>
 #include <algorithm>
 #include <cctype>
@@ -12,7 +12,10 @@ using std::shared_ptr;
 using std::set;
 using std::map;
 
+namespace cx {
+
 // Constructor
+
 cxMenuBar::cxMenuBar(cxWindow *pParentWindow, int pRow, int pCol,
                      int pWidth, eBorderStyle pBorderStyle)
    : cxWindow(pParentWindow, pRow, pCol, 1, pWidth,
@@ -707,3 +710,5 @@ long cxMenuBar::inputLoop()
 
    return returnCode;
 }
+
+} // namespace cx

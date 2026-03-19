@@ -12,6 +12,8 @@
 #include <string>
 #include <memory>
 
+namespace cx {
+
 /** \class cxFileViewer
  * \brief Represents a window that displays a file.
  * While the object is being displayed with showModal(), the user
@@ -111,5 +113,7 @@ class cxFileViewer : public cxScrolledWindow
       // Disable the use of setLoopEndFunction from the outside
       void setLoopEndFunction(const std::shared_ptr<cxFunction>& pFuncPtr) override;
 };
+
+} // namespace cx
 
 #endif

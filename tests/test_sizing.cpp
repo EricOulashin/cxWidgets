@@ -1,6 +1,7 @@
 #include "cxMessageDialog.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include <iostream>
+using namespace cx;
 #include <vector>
 #include <string>
 #include <cassert>
@@ -20,7 +21,7 @@ public:
 };
 
 int main() {
-    cxBase::init();
+    cx::init();
     
     // Simulate the problematic message
     std::string title = "Centipede Game";
@@ -56,13 +57,13 @@ int main() {
         assert(dialog.getMessageLines()[4] == "Press any key to start!");
 
         std::cout << "TEST PASSED!" << std::endl;
-        cxBase::cleanup();
+        cx::cleanup();
     } catch (const std::exception& e) {
-        cxBase::cleanup();
+        cx::cleanup();
         std::cerr << "Caught exception: " << e.what() << std::endl;
         return 1;
     } catch (...) {
-        cxBase::cleanup();
+        cx::cleanup();
         std::cerr << "Caught unknown exception" << std::endl;
         return 1;
     }

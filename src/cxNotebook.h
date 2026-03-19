@@ -10,6 +10,8 @@
 #include <map>
 #include <memory>
 
+namespace cx {
+
 /** \class cxNotebook
  * \brief This class represents a notebook control, which manages multiple
  * \brief cxPanels with associated tabs.  This derives from cxPanel; this
@@ -823,5 +825,7 @@ class cxNotebook: public cxPanel
       void showNavMenu();
 
 }; // end of class cxNotebook
+
+} // namespace cx
 
 #endif

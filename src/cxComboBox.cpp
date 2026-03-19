@@ -3,11 +3,13 @@
 
 #include "cxComboBox.h"
 #include "cxForm.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include <set>
 using std::string;
 using std::set;
-using cxBase::stringWithoutHotkeyChars;
+using cx::stringWithoutHotkeyChars;
+
+namespace cx {
 
 cxComboBox::cxComboBox(cxWindow *pParentWindow,
                        int pRow, int pCol,
@@ -730,3 +732,5 @@ long cxComboBox::showMenuModal(bool pShowMenu, bool& pContinueOn)
 
    return(returnCode);
 } // showDropDownmenu
+
+} // namespace cx

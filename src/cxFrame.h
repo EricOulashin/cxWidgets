@@ -13,6 +13,8 @@
 #include "cxWindow.h"
 #include "cxMenu.h"
 
+namespace cx {
+
 /**
  * \brief Similar to wxFrame and other frame classes in GUI frameworks, this
  * \brief class represents a window that contains a title, possibly a menu bar,
@@ -71,5 +73,7 @@ class cxFrame : public cxWindow
       cxMenu mMenuBar;
       cxWindow *mViewWindow; // The window to be displayed inside the frame
 };
+
+} // namespace cx
 
 #endif

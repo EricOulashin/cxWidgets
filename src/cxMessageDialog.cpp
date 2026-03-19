@@ -6,6 +6,9 @@ using std::string;
 using std::make_pair;
 using std::make_shared;
 
+
+namespace cx {
+
 cxMessageDialog::cxMessageDialog(cxWindow *pParentWindow, int pRow,
                    int pCol, int pHeight,
                    int pWidth,
@@ -308,7 +311,7 @@ void cxMessageDialog::setFocus(const std::shared_ptr<cxButton>& pButton, bool pS
    if (pButton != nullptr)
    {
 
-      attr_t focusAttr=cxBase::hasAttr(eHOTKEY, A_STANDOUT) ? A_REVERSE : A_STANDOUT ;
+      attr_t focusAttr=cx::hasAttr(eHOTKEY, A_STANDOUT) ? A_REVERSE : A_STANDOUT ;
 
       if (mOKBtn == pButton)
       {
@@ -532,3 +535,5 @@ long cxMessageDialog::doInputLoop()
 
 // The show() is private in this class to prevent it from being called from the
 //  outside, but it is defined here just in case it is called within this class.
+
+} // namespace cx

@@ -1,7 +1,7 @@
 // Copyright (c) 2026 E. Oulashin
 
 #include "cxGrid.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxButton.h"
 #include <ncurses.h>
 #include <algorithm>
@@ -12,6 +12,8 @@ using std::vector;
 using std::shared_ptr;
 using std::make_shared;
 using std::set;
+
+namespace cx {
 
 // Helper: Generate default column label (A, B, ..., Z, AA, AB, ...)
 string cxGrid::defaultColLabel(int pCol)
@@ -495,7 +497,7 @@ long cxGrid::show(bool pBringToTop, bool pShowSubwindows)
       }
    }
 
-   cxBase::updateWindows();
+   cx::updateWindows();
    return returnVal;
 }
 
@@ -614,7 +616,7 @@ long cxGrid::inputLoop()
          // Non-interactive cell (cxLabel, etc.) - show it (non-modally)
          // and get the keypress at the grid level so we don't busy-loop.
          cell->show(true, false);
-         cxBase::updateWindows();
+         cx::updateWindows();
          curs_set(0);
          lastKey = wgetch(mWindow);
       }
@@ -895,7 +897,7 @@ void cxGrid::bringToTop(bool pRefresh)
       }
    }
    if (pRefresh)
-      cxBase::updateWindows();
+      cx::updateWindows();
 }
 
 bool cxGrid::hasFocus() const
@@ -1308,3 +1310,5 @@ bool cxGrid::getShowRowHeaders() const
 {
    return mShowRowHeaders;
 }
+
+} // namespace cx

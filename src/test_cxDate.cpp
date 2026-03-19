@@ -5,6 +5,7 @@
 #include <string>
 
 using namespace std;
+using namespace cx;
 
 void test_Constructors() {
     // Default constructor (today)

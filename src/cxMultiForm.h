@@ -28,6 +28,8 @@
 #include <vector>
 #include <memory>
 
+namespace cx {
+
 /** \class cxMultiForm
  * \brief Represents a form that can
  * \brief contain subforms (forms within the
@@ -810,5 +812,8 @@ class cxMultiForm : public cxForm
       //  efficiency).
       inline bool subformIsEnabledAndEditable(unsigned int pIndex);
 };
+
+
+} // namespace cx
 
 #endif

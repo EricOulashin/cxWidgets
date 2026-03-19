@@ -7,6 +7,9 @@ using std::string;
 
 // Default constructor - Takes a text string and
 //  a validator string.
+
+namespace cx {
+
 cxTextValidator::cxTextValidator(const string& pTextStr,
                         const string& pValidatorStr)
    : mTextStr(pTextStr),
@@ -473,3 +476,5 @@ inline bool cxTextValidator::isValidatorChar(char pChar)
           (pChar == 'p') || (pChar == 'P') || (pChar == 'x') ||
           (pChar == 'X') || (pChar == 'r'));
 }
+
+} // namespace cx

@@ -2,6 +2,8 @@
 #ifndef __CXMESSAGEDIALOGSTYLES_H__
 #define __CXMESSAGEDIALOGSTYLES_H__
 
+namespace cx {
+
 // Copyright (c) 2006-2007 Michael H. Kinney
 
 // This file defines an enumeration for message dialog styles, which control
@@ -18,5 +20,7 @@ enum eMessageDialogStyles
    cxYES_DEFAULT = 0,  // (default)
    cxNO_DEFAULT = 32    // Set No button to default
 };
+
+} // namespace cx
 
 #endif

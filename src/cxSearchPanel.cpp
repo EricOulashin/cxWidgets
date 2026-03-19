@@ -9,6 +9,9 @@ using std::shared_ptr;
 using std::make_shared;
 using std::dynamic_pointer_cast;
 
+
+namespace cx {
+
 cxSearchPanel::cxSearchPanel(cxWindow *pParentWindow, int pRow, int pCol,
                  int pHeight, int pWidth, const string& pFormTitle,
                  const string& pMenuTitle, eBorderStyle pFormBorderStyle,
@@ -991,3 +994,5 @@ string cxSearchPanel::menuOnSelect(void *theSearchPanel, void *unused)
 
    return("");
 } // menuOnSelect
+
+} // namespace cx

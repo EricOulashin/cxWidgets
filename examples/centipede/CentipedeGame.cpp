@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 
+using namespace cx;
+
 CentipedeGame::CentipedeGame(int pHeight, int pWidth)
     : cxWindow(nullptr, 0, 0, pHeight, pWidth),
       mGameOver(false),
@@ -73,7 +75,7 @@ void CentipedeGame::draw() {
         writeText(height() / 2, (width() / 2) - 5, "GAME OVER", false);
     }
 
-    cxBase::updateWindows();
+    cx::updateWindows();
 }
 
 bool CentipedeGame::isMushroomAt(int x, int y) {
@@ -165,7 +167,7 @@ void CentipedeGame::run() {
     keypad(mWindow, TRUE);
     wtimeout(mWindow, 50); // Faster than snake
 
-    cxBase::messageBox("Centipede Game", "Arrows: Move\nSpace: Shoot\n'q' or ESC: Quit\n\nPress any key to start!");
+    cx::messageBox("Centipede Game", "Arrows: Move\nSpace: Shoot\n'q' or ESC: Quit\n\nPress any key to start!");
 
     while (!mGameOver) {
         int ch = wgetch(mWindow);

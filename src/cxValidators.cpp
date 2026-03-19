@@ -5,6 +5,7 @@
 #include "cxMultiLineInput.h"
 #include <cctype> // For isprint()
 using std::string;
+using namespace cx;
 
 string cxValidators::intOnKeyValidator(void *theInput, void *clearOnSpace)
 {

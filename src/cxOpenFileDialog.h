@@ -52,6 +52,8 @@
 #include <vector>
 #include <memory>
 
+namespace cx {
+
 /**
  * \brief This is a dialog class that is designed to allow the user to choose a filename in a specific directory, with a directory browser. This class is designed to be similar to file choosers in GUI libraries, such as OpenFileDialog in .NET Core 8, QtFileDilog in Qt, etc.
  */
@@ -258,5 +260,7 @@ private:
    static std::string formatFileSize(uintmax_t pSize);
    static std::string truncStr(const std::string& pStr, int pMaxW);
 };
+
+} // namespace cx
 
 #endif // __CXOPENFILEDIALOG_H__

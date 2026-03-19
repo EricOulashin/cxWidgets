@@ -6,7 +6,7 @@
 #include "cxDatePicker.h"
 #include "cxKeyDefines.h"
 #include "cxReturnCodes.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 
 #include <sstream>
 #include <iomanip>
@@ -16,6 +16,8 @@
 using std::string;
 using std::vector;
 using std::make_shared;
+
+namespace cx {
 
 // ---------------------------------------------------------------------------
 // Constructor / Destructor
@@ -469,7 +471,7 @@ int cxDatePicker::getDayAtScreenPos(int pScreenRow, int pScreenCol) const
 void cxDatePicker::highlightButton(std::shared_ptr<cxButton>& pBtn, bool pOn)
 {
    if (!pBtn) return;
-   attr_t attr = cxBase::hasAttr(eHOTKEY, A_STANDOUT) ? A_REVERSE : A_STANDOUT;
+   attr_t attr = cx::hasAttr(eHOTKEY, A_STANDOUT) ? A_REVERSE : A_STANDOUT;
    if (pOn)
    {
       pBtn->setFocusColors(attr);
@@ -955,3 +957,5 @@ long cxDatePicker::doInputLoop()
    mLeaveNow = false;
    return returnCode;
 }
+
+} // namespace cx

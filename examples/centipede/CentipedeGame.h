@@ -2,7 +2,7 @@
 #define __CENTIPEDEGAME_H__
 
 #include "../../src/cxWindow.h"
-#include "../../src/cxBase.h"
+#include "../../src/cxUtils.h"
 #include "../../src/cxKeyDefines.h"
 #include <vector>
 #include <list>
@@ -17,7 +17,7 @@ struct CentipedeSegment {
     bool descending;
 };
 
-class CentipedeGame : public cxWindow {
+class CentipedeGame : public cx::cxWindow {
 public:
     CentipedeGame(int pHeight, int pWidth);
 

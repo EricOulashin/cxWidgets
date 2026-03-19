@@ -9,11 +9,14 @@
 #include "cxScrolledWindow.h"
 #include "cxStringUtils.h"
 #include "cxMultiLineInput.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxValidators.h"
 using cxStringUtils::strToLower;
 using std::string;
 using std::shared_ptr;
+
+
+namespace cx {
 
 cxScrolledWindow::cxScrolledWindow(cxWindow *pParentWindow,
              int pRow, int pCol, int pHeight, int pWidth,
@@ -934,7 +937,7 @@ void cxScrolledWindow::doGoToLine()
 void cxScrolledWindow::doSearch()
 {
    // Prompt the user for text
-   int winWidth = (cxBase::width() > 45 ? 45 : cxBase::width());
+   int winWidth = (cx::width() > 45 ? 45 : cx::width());
    cxMultiLineInput searchInput(this, 1, 1, 1, winWidth, "Keyword:", eBS_SINGLE_LINE);
    searchInput.setTitle("Search", false);
    if (mUseLastKeyword)
@@ -986,7 +989,7 @@ void cxScrolledWindow::doSearch()
       }
       if (!found)
       {
-         cxBase::messageBox("Not found");
+         cx::messageBox("Not found");
       }
    }
    searchInput.hide();
@@ -1016,3 +1019,5 @@ void cxScrolledWindow::drawHorizontalScrollArrows()
       }
    }
 } // drawHorizontalScrollArrows
+
+} // namespace cx

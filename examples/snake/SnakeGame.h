@@ -2,7 +2,7 @@
 #define __SNAKEGAME_H__
 
 #include "../../src/cxWindow.h"
-#include "../../src/cxBase.h"
+#include "../../src/cxUtils.h"
 #include "../../src/cxKeyDefines.h"
 #include <deque>
 
@@ -10,7 +10,7 @@ struct Point {
     int x, y;
 };
 
-class SnakeGame : public cxWindow {
+class SnakeGame : public cx::cxWindow {
 public:
     SnakeGame(int pHeight, int pWidth);
 

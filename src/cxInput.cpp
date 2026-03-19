@@ -2,7 +2,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxInput.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxStringUtils.h"
 #include "cxMultiLineInput.h"
 #include <locale.h>
@@ -16,7 +16,9 @@ using cxStringUtils::isPrintable;
 using std::isupper;
 using std::shared_ptr;
 using std::make_shared;
-using cxBase::visualStrLen;
+using cx::visualStrLen;
+
+namespace cx {
 
 // Default the input clear key to F10
 int cxInput::inputClearKey = KEY_F(10);
@@ -49,7 +51,7 @@ cxInput::cxInput(cxWindow *pParentWindow, int pRow,
    // Set up the X input cursor position
    if (mMessageLines.size() > 0)
    {
-      mInputStartX = (int)(cxBase::visualStrLen(mMessageLines[0]));
+      mInputStartX = (int)(cx::visualStrLen(mMessageLines[0]));
    }
 
    // If there's a border, the X & Y positions
@@ -243,7 +245,7 @@ long cxInput::show(bool pBringToTop, bool pShowSubwindows)
       draw();
       returnVal = cxWindow::show(pBringToTop, false);
       // Update this input's window
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
    else
    {
@@ -455,7 +457,7 @@ void cxInput::setLabel(const string& pLabel)
    //  to see how they're initially set up).
    if (mMessageLines.size() > 0)
    {
-      mInputStartX = (int)(cxBase::visualStrLen(mMessageLines[0]));
+      mInputStartX = (int)(cx::visualStrLen(mMessageLines[0]));
    }
 
    if (hasBorder())
@@ -1304,7 +1306,7 @@ void cxInput::refreshValue(bool pRefresh)
    // If pRefresh is true, update this input's window
    if (pRefresh)
    {
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
 } // refreshValue
 
@@ -1800,12 +1802,12 @@ void cxInput::enableAttrs(WINDOW *pWin, e_WidgetItems pItem)
          }
          else
          {
-            cxBase::enableAttrs(pWin, pItem);
+            cx::enableAttrs(pWin, pItem);
          }
       }
       else
       {
-         cxBase::enableAttrs(pWin, pItem);
+         cx::enableAttrs(pWin, pItem);
       }
    }
 } // enableAttrs
@@ -1862,12 +1864,12 @@ void cxInput::disableAttrs(WINDOW *pWin, e_WidgetItems pItem)
          }
          else
          {
-            cxBase::disableAttrs(pWin, pItem);
+            cx::disableAttrs(pWin, pItem);
          }
       }
       else
       {
-         cxBase::disableAttrs(pWin, pItem);
+         cx::disableAttrs(pWin, pItem);
       }
    }
 } // disableAttrs
@@ -2190,7 +2192,7 @@ long cxInput::doInputLoop(int x, int y, int rightLimit, bool updatePrevInput,
                }
                break;
             case KEY_LEFT:
-               if (cxBase::termType == "wy50")
+               if (cx::termType == "wy50")
                {
                   // Wyse50 terminal: backspace behavior
                   if (mCursorPos > 0)
@@ -2383,7 +2385,7 @@ void cxInput::draw()
 void cxInput::idleTimeoutHandler(int pSignal)
 {
    // A window that has focus should be the topmost window on the stack.
-   cxWindow *topWindow = cxBase::getTopWindow();
+   cxWindow *topWindow = cx::getTopWindow();
    if (topWindow != nullptr)
    {
       try
@@ -2532,3 +2534,5 @@ bool cxInput::validatorFunctionIsSet() const
 
    return(isSet);
 } // validatorFunctionIsSet
+
+} // namespace cx

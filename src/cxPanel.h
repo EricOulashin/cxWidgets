@@ -9,6 +9,8 @@
 #include <vector>
 #include <memory>
 
+namespace cx {
+
 /**
  * \brief cxPanel is a window that contains other windows.  When showModal()
  * \brief is called, focus will cycle through all the subwindows in the order
@@ -874,5 +876,7 @@ class cxPanel : public cxWindow
       cxPanel(const cxPanel& pThatPanel);
       cxPanel& operator =(const cxPanel& pThatPanel);
 };
+
+} // namespace cx
 
 #endif

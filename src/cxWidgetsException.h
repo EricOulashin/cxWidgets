@@ -6,6 +6,8 @@
 
 #include <string>
 
+namespace cx {
+
 /** \class cxWidgetsException
  *  \brief Represents an exception in cxWidgets
  *  \brief with an error string.
@@ -48,5 +50,7 @@ class cxWidgetsException
    private:
       std::string mErrorMsg;
 };
+
+} // namespace cx
 
 #endif

@@ -34,6 +34,8 @@ using std::istream;
 using std::setw;
 using std::endl;
 
+namespace cx {
+
 // ---------------------------------------------------------------------------
 // Constructors
 // ---------------------------------------------------------------------------
@@ -869,3 +871,5 @@ bool cxDate::allDigits(std::string_view pStr) noexcept
    return std::all_of(pStr.begin(), pStr.end(),
       [](unsigned char c){ return std::isdigit(c); });
 }
+
+} // namespace cx

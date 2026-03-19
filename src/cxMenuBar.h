@@ -24,6 +24,8 @@
 #include <memory>
 #include <map>
 
+namespace cx {
+
 /**
  * \brief This is a menu bar class, designed for displaying a horizontal
  * \brief menu.
@@ -219,5 +221,7 @@ class cxMenuBar : public cxWindow
       // Helper: the main input loop
       long inputLoop();
 };
+
+} // namespace cx
 
 #endif // __CXMENUBAR_H__

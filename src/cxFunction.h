@@ -13,6 +13,8 @@
 #include <string>
 #include <memory>
 
+namespace cx {
+
 // Typedefs for various function pointer types
 typedef std::string (*funcPtr0)();
 typedef std::string (*funcPtr2)(void *p1, void *p2);
@@ -1589,5 +1591,7 @@ class cxFunction4RefTemplated : public cxFunction
       T3& mParam3;  // The third parameter to pass to the function
       T4& mParam4;  // The fourth parameter to pass to the function
 };
+
+} // namespace cx
 
 #endif

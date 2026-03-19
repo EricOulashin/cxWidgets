@@ -3,6 +3,9 @@
 
 #include "cxObject.h"
 
+
+namespace cx {
+
 bool cxObject::useColors(true);
 bool cxObject::useBeeps(true);
 
@@ -33,3 +36,5 @@ std::string cxObject::cxTypeStr() const
 {
    return("cxObject");
 } // cxTypeStr
+
+} // namespace cx

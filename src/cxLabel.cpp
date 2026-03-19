@@ -1,10 +1,12 @@
 // Copyright (c) 2026 E. Oulashin
 
 #include "cxLabel.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include <ncurses.h>
 
 using std::string;
+
+namespace cx {
 
 cxLabel::cxLabel(cxWindow *pParentWindow, int pRow, int pCol,
                  int pWidth, const string& pText,
@@ -35,7 +37,7 @@ long cxLabel::show(bool pBringToTop, bool pShowSubwindows)
 {
    draw();
    long returnVal = cxWindow::show(pBringToTop, false);
-   cxBase::updateWindows();
+   cx::updateWindows();
    return returnVal;
 }
 
@@ -89,6 +91,8 @@ void cxLabel::setText(const string& pText, bool pRefresh)
    if (pRefresh)
    {
       draw();
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
 }
+
+} // namespace cx

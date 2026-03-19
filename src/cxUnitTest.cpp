@@ -5,8 +5,8 @@
 
 #define TESTS  // This has significance in some places..
 
-#include "cxBase.h"
-using namespace cxBase;
+#include "cxUtils.h"
+using namespace cx;
 #include "cxWindow.h"
 #include "cxMenu.h"
 #include "cxInput.h"
@@ -215,7 +215,7 @@ string someFunction(void *p1, void *p2)
 
 int main(int argc, char* argv[])
 {
-   cxBase::init();
+   cx::init();
 
    {
       // test 0 based
@@ -458,7 +458,7 @@ int main(int argc, char* argv[])
    {
       // Test cxWindow's 3rd constructor
       cxWindow w(nullptr, "Title", "Message", "Status");
-      int expectedTop = cxBase::centerRow() - (w.height() / 2);
+      int expectedTop = cx::centerRow() - (w.height() / 2);
       assert(w.top()==expectedTop);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -482,7 +482,7 @@ int main(int argc, char* argv[])
    {
       // Test cxWindow's 4th constructor
       cxWindow w(nullptr, "Message", "Status");
-      int expectedTop = cxBase::centerRow() - (w.height() / 2);
+      int expectedTop = cx::centerRow() - (w.height() / 2);
       assert(w.top()==expectedTop);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -506,7 +506,7 @@ int main(int argc, char* argv[])
    {
       // Test cxWindow's 5th constructor
       cxWindow w(nullptr, "Message");
-      int expectedTop = cxBase::centerRow() - (w.height() / 2);
+      int expectedTop = cx::centerRow() - (w.height() / 2);
       assert(w.top()==expectedTop);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -530,7 +530,7 @@ int main(int argc, char* argv[])
    {
       // Test cxWindow's 6th constructor
       cxWindow w(nullptr, eHP_LEFT, "Title", "Message", "Status");
-      int expectedTop = cxBase::centerRow() - (w.height() / 2);
+      int expectedTop = cx::centerRow() - (w.height() / 2);
       assert(w.top()==expectedTop);
       assert(w.left()==0);
       assert(w.height()==3);
@@ -554,7 +554,7 @@ int main(int argc, char* argv[])
    {
       // Test cxWindow's 6th constructor
       cxWindow w(nullptr, eHP_CENTER, "Title", "Message", "Status");
-      int expectedTop = cxBase::centerRow() - (w.height() / 2);
+      int expectedTop = cx::centerRow() - (w.height() / 2);
       assert(w.top()==expectedTop);
       //assert(w.left()==((right()-left())/2)-4-1);
       assert(w.height()==3);
@@ -578,13 +578,13 @@ int main(int argc, char* argv[])
    {
       // Test cxWindow's 6th constructor
       cxWindow w(nullptr, eHP_RIGHT, "Title", "Message", "Status");
-      int expectedTop = cxBase::centerRow() - (w.height() / 2);
+      int expectedTop = cx::centerRow() - (w.height() / 2);
       assert(w.top()==expectedTop);
-      assert(w.left()==cxBase::right()-9+1);  // It has a width of 9
+      assert(w.left()==cx::right()-9+1);  // It has a width of 9
       assert(w.height()==3);
       assert(w.width()==9);
       assert(w.bottom()==expectedTop + w.height() - 1);
-      assert(w.right()==cxBase::right());
+      assert(w.right()==cx::right());
       assert(w.getTitle() == "Title");
       assert(w.getStatus() == "Status");
       assert(w.getMessage() == "Message");
@@ -1227,12 +1227,12 @@ int main(int argc, char* argv[])
 
    // Get the main screen width & height (to show later, for
    //  informational purposes, since I can't think of a good
-   //  way to test cxBase::width() and cxBase::height() right
+   //  way to test cx::width() and cx::height() right
    //  now).
-   //int screenWidth = cxBase::width();
-   //int screenHeight = cxBase::height();
+   //int screenWidth = cx::width();
+   //int screenHeight = cx::height();
 
-   cxBase::cleanup();
+   cx::cleanup();
 
    //cout << "Screen width: " << screenWidth << endl;
    //cout << "Screen height: " << screenHeight << endl;

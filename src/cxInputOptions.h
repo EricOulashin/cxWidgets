@@ -1,6 +1,9 @@
 // Copyright (c) 2026 E. Oulashin
 #ifndef __CXINPUTOPTIONS_H__
 #define __CXINPUTOPTIONS_H__
+
+namespace cx {
+
 // Copyright (c) 2005-2007 Michael H. Kinney
 //
 
@@ -18,5 +21,7 @@ enum eInputOptions
    eINPUT_EDITABLE = 0,
    eINPUT_READONLY
 };
+
+} // namespace cx
 
 #endif

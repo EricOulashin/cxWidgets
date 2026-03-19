@@ -3,6 +3,8 @@
 #include "cxBorderStyles.h"
 using std::string;
 
+namespace cx {
+
 string eBorderStyleToStr(eBorderStyle borderStyle)
 {
     switch (borderStyle)
@@ -23,3 +25,5 @@ string eBorderStyleToStr(eBorderStyle borderStyle)
             return "Unknown";
     }
 }
+
+} // namespace cx

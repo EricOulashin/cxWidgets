@@ -6,6 +6,8 @@
 using std::string;
 using std::make_shared;
 
+namespace cx {
+
 cxButton::cxButton(cxWindow *pParentWindowPtr, int pRow, int pCol, int pHeight,
                    int pWidth, const string& pLabel, eBorderStyle pBorderStyle)
    : cxWindow(pParentWindowPtr, pRow, pCol, pHeight, pWidth, "", pLabel, "",
@@ -292,3 +294,5 @@ void cxButton::copyOnClickFunction(const cxButton& pButton)
       }
    }
 } // copyOnClickFunction
+
+} // namespace cx

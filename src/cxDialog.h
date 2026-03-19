@@ -4,9 +4,11 @@
 
 // Copyright (c) 2005-2007 Michael H. Kinney
 
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxWindow.h"
 #include <string>
+
+namespace cx {
 
 /** \class cxDialog
  * \brief Represents a dialog window on the screen (i.e., something to be shown
@@ -129,5 +131,7 @@ class cxDialog : public cxWindow
 
    private:
 };
+
+} // namespace cx
 
 #endif

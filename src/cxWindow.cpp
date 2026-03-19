@@ -2,7 +2,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxWindow.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxStringUtils.h"
 #include "cxPanel.h"
 #include <algorithm>
@@ -28,6 +28,9 @@ using std::map;
 using cxStringUtils::SplitStringRegex;
 using cxStringUtils::toString;
 
+
+namespace cx {
+
 cxWindow::cxWindow(cxWindow *pParentWindow,
                    int pRow, int pCol, int pHeight, int pWidth,
                    const string& pTitle, const string& pMessage,
@@ -47,8 +50,8 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
    // Also, based on the window position (pCol and pRow) and the height & width
    //  of the main screen, make sure that the window height & width are not
    //  too big.
-   const int maxHeight = (int)(cxBase::height()) - pRow;
-   const int maxWidth = (int)(cxBase::width()) - pCol;
+   const int maxHeight = (int)(cx::height()) - pRow;
+   const int maxWidth = (int)(cx::width()) - pCol;
    if (pHeight < 0)
    {
       if (pParentWindow != nullptr)
@@ -57,7 +60,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
       }
       else
       {
-         pHeight = cxBase::height() + pHeight;
+         pHeight = cx::height() + pHeight;
       }
    }
    // If pHeight is more than the maximum possible window height that the
@@ -75,7 +78,7 @@ cxWindow::cxWindow(cxWindow *pParentWindow,
       }
       else
       {
-         pWidth = cxBase::width() + pWidth;
+         pWidth = cx::width() + pWidth;
       }
    }
    else if ((pWidth > 0) && (pWidth > maxWidth))
@@ -795,7 +798,7 @@ cxWindow::~cxWindow()
 
    // Hide the window (to make sure it doesn't show anymore), and then free
    // the memory used by mWindow and mPanel.
-   if (cxBase::cxInitialized())
+   if (cx::cxInitialized())
    {
       hide();
    }
@@ -835,15 +838,15 @@ void cxWindow::alignHoriz(eHPosition pPosition, bool pRefresh)
    {
       if (pPosition == eHP_CENTER)
       {
-         leftCol = cxBase::centerCol() - (width() / 2);
+         leftCol = cx::centerCol() - (width() / 2);
       }
       else if (pPosition == eHP_LEFT)
       {
-         leftCol = cxBase::left();
+         leftCol = cx::left();
       }
       else if (pPosition == eHP_RIGHT)
       {
-         leftCol = cxBase::right() - width() + 1;
+         leftCol = cx::right() - width() + 1;
       }
    }
 
@@ -880,15 +883,15 @@ void cxWindow::alignVert(eVPosition pPosition, bool pRefresh)
    {
       if (pPosition == eVP_CENTER)
       {
-         topRow = cxBase::centerRow() - (height() / 2);
+         topRow = cx::centerRow() - (height() / 2);
       }
       else if (pPosition == eVP_TOP)
       {
-         topRow = cxBase::top();
+         topRow = cx::top();
       }
       else if (pPosition == eVP_BOTTOM)
       {
-         topRow = cxBase::bottom() - height() + 1;
+         topRow = cx::bottom() - height() + 1;
       }
    }
 
@@ -1432,7 +1435,7 @@ long cxWindow::show(bool pBringToTop, bool pShowSubwindows)
    }
 
    // Update the physical screen
-   cxBase::updateWindows();
+   cx::updateWindows();
    return(cxID_EXIT);
 } // show
 
@@ -1676,7 +1679,7 @@ void cxWindow::erase(bool pEraseSubwindows)
    }
 
    // Update the physical screen
-   cxBase::updateWindows();
+   cx::updateWindows();
 } // erase
 
 void cxWindow::bringToTop(bool pRefresh)
@@ -1685,7 +1688,7 @@ void cxWindow::bringToTop(bool pRefresh)
    top_panel(mPanel);
    if (pRefresh)
    {
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
 } // bringToTop
 
@@ -1695,7 +1698,7 @@ void cxWindow::bringToBottom(bool pRefresh)
    bottom_panel(mPanel);
    if (pRefresh)
    {
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
 } // bringToBottom
 
@@ -1787,7 +1790,7 @@ void cxWindow::hide(bool pHideSubwindows)
    }
 
    // Update the physical screen
-   cxBase::updateWindows();
+   cx::updateWindows();
 } // hide
 
 void cxWindow::unhide(bool pUnhideSubwindows)
@@ -1808,7 +1811,7 @@ void cxWindow::unhide(bool pUnhideSubwindows)
       }
 
       // Update the physical screen
-      cxBase::updateWindows();
+      cx::updateWindows();
    }
 } // unhide
 
@@ -3377,7 +3380,7 @@ void cxWindow::getQuitKeyStrings(vector<string>& pKeys) const
 
    for (const auto& mapPair : mQuitKeys)
    {
-      pKeys.push_back(cxBase::getKeyStr(mapPair.first));
+      pKeys.push_back(cx::getKeyStr(mapPair.first));
    }
 } // getQuitKeyStrings
 
@@ -3388,7 +3391,7 @@ string cxWindow::getQuitKeyListString() const
    for (const auto mapPair : mQuitKeys )
    {
       if (quitKeyList != "") { quitKeyList += ","; }
-      quitKeyList += cxBase::getKeyStr(mapPair.first);
+      quitKeyList += cx::getKeyStr(mapPair.first);
    }
 
    return(quitKeyList);
@@ -3400,7 +3403,7 @@ void cxWindow::getExitKeyStrings(vector<string>& pKeys) const
 
    for (const auto& exitKeyPair : mExitKeys)
    {
-      pKeys.push_back(cxBase::getKeyStr(exitKeyPair.first));
+      pKeys.push_back(cx::getKeyStr(exitKeyPair.first));
    }
 } // getExitKeyStrings
 
@@ -3411,7 +3414,7 @@ string cxWindow::getExitKeyListString() const
    for (const auto& exitKeyPair : mExitKeys)
    {
       if (exitKeyList != "") { exitKeyList += ","; }
-      exitKeyList += cxBase::getKeyStr(exitKeyPair.first);
+      exitKeyList += cx::getKeyStr(exitKeyPair.first);
    }
 
    return(exitKeyList);
@@ -3600,7 +3603,7 @@ void cxWindow::drawMessage()
             writeWithHighlighting(mWindow, msgLine, currentRowInWindow, currentStartX,
                                 innerWidth);
             // Fill in the rest of the line with spaces
-            int visualLen = (int)cxBase::visualStrLen(msgLine);
+            int visualLen = (int)cx::visualStrLen(msgLine);
             for (int i = currentStartX + visualLen; i < leftmostCol + innerWidth; ++i)
             {
                mvwaddch(mWindow, currentRowInWindow, i, ' ');
@@ -3725,7 +3728,7 @@ void cxWindow::setStatusColor(e_cxColors pColor)
    attr_t tmpAttr = 0;
    setElementColor(mStatusColorPair, tmpAttr, pColor);
    // Add the attribute to the status attribute set
-   cxBase::addAttr(eSTATUS, tmpAttr);
+   cx::addAttr(eSTATUS, tmpAttr);
 } // setStatusColor
 
 void cxWindow::setBorderColor(e_cxColors pColor)
@@ -4009,19 +4012,19 @@ MEVENT cxWindow::getMouseEvent() const
 
 string cxWindow::getString(int pRow, int pCol, int pNumber)
 {
-   return(cxBase::getString(pRow, pCol, pNumber, mWindow));
+   return(cx::getString(pRow, pCol, pNumber, mWindow));
 } // getString
 
 void cxWindow::info()
 {
    cxWindow iWindow(nullptr, 0, 0, 20, 30, "Info", "", "Press any key");
    iWindow.addMessageLineBelow("Entire Screen:");
-   iWindow.addMessageLineBelow("top():" + toString(cxBase::top()) + ":");
-   iWindow.addMessageLineBelow("left():" + toString(cxBase::left()) + ":");
-   iWindow.addMessageLineBelow("right():" + toString(cxBase::right()) + ":");
-   iWindow.addMessageLineBelow("bottom():" + toString(cxBase::bottom()) + ":");
-   iWindow.addMessageLineBelow("height():" + toString(cxBase::height()) + ":");
-   iWindow.addMessageLineBelow("width():" + toString(cxBase::width()) + ":");
+   iWindow.addMessageLineBelow("top():" + toString(cx::top()) + ":");
+   iWindow.addMessageLineBelow("left():" + toString(cx::left()) + ":");
+   iWindow.addMessageLineBelow("right():" + toString(cx::right()) + ":");
+   iWindow.addMessageLineBelow("bottom():" + toString(cx::bottom()) + ":");
+   iWindow.addMessageLineBelow("height():" + toString(cx::height()) + ":");
+   iWindow.addMessageLineBelow("width():" + toString(cx::width()) + ":");
    iWindow.addMessageLineBelow("");
    iWindow.addMessageLineBelow("This window:");
    iWindow.addMessageLineBelow("top():" + toString(top()) + ":");
@@ -4099,7 +4102,7 @@ int cxWindow::getMouseState() const
 string cxWindow::getMouseStateStr() const
 {
 #ifdef NCURSES_MOUSE_VERSION
-   return(cxBase::getMouseStateStr(mMouse.bstate));
+   return(cx::getMouseStateStr(mMouse.bstate));
 #else
    return("");
 #endif
@@ -4199,7 +4202,7 @@ void cxWindow::getFunctionKeyStrings(vector<string>& pKeys) const
 
    for (const auto& keyFuncPair : mKeyFunctions)
    {
-      pKeys.emplace_back(cxBase::getKeyStr(keyFuncPair.first));
+      pKeys.emplace_back(cx::getKeyStr(keyFuncPair.first));
    }
 } // getFunctionKeyStrings
 
@@ -4417,8 +4420,8 @@ void cxWindow::resize(int pNewHeight, int pNewWidth, bool pRefresh)
       int row = top();
 
       // Make sure the window won't get resized too small or too big.
-      const int maxHeight = cxBase::height() - row;
-      const int maxWidth = cxBase::width() - col;
+      const int maxHeight = cx::height() - row;
+      const int maxWidth = cx::width() - col;
       if (pNewHeight <= 0)
       {
          pNewHeight = 1; // Minimal, but init() will probably change this..
@@ -4514,8 +4517,8 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
    // unless they remain <= 0 after calculation.
    int newWidth = pWidth;   // if we have to override the width
    int newHeight = pHeight; // if we have to override the height
-   const int maxHeight = (int)(cxBase::height()) - pRow;
-   const int maxWidth = (int)(cxBase::width()) - pCol;
+   const int maxHeight = (int)(cx::height()) - pRow;
+   const int maxWidth = (int)(cx::width()) - pCol;
 
    // Split message on newlines (\n) (if it has newlines,
    // the message won't display correctly)
@@ -4527,7 +4530,7 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
    cxStringUtils::SplitStringRegex(message, "\n", initialLines);
    for (const string& line : initialLines)
    {
-      int currentLineLen = (mHotkeyHighlighting ? cxBase::visualStrLen(line) : line.length());
+      int currentLineLen = (mHotkeyHighlighting ? cx::visualStrLen(line) : line.length());
       if (currentLineLen > maxMsgLineLen)
       {
          maxMsgLineLen = currentLineLen;
@@ -4646,7 +4649,7 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
          // characters as part of the string length.
          if (mHotkeyHighlighting)
          {
-            stringLen = cxBase::visualStrLen(msgLine);
+            stringLen = cx::visualStrLen(msgLine);
          }
          else
          {
@@ -4668,7 +4671,7 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
                // possible..  if not, shorten the word).
                if (mHotkeyHighlighting)
                {
-                  stringLen = cxBase::visualStrLen(word);
+                  stringLen = cx::visualStrLen(word);
                }
                else
                {
@@ -4800,10 +4803,10 @@ void cxWindow::init(int pRow, int pCol, int pHeight, int pWidth,
    // if we have something realistic to display...
    if ((newWidth >= 1) && (newHeight >= 1))
    {
-      setMessageColor(cxBase::getDefaultMessageColor());
-      setTitleColor(cxBase::getDefaultTitleColor());
-      setStatusColor(cxBase::getDefaultStatusColor());
-      setBorderColor(cxBase::getDefaultBorderColor());
+      setMessageColor(cx::getDefaultMessageColor());
+      setTitleColor(cx::getDefaultTitleColor());
+      setStatusColor(cx::getDefaultStatusColor());
+      setBorderColor(cx::getDefaultBorderColor());
 
       // Free the memory used by mWindow and mPanel (just in case), and
       //  (re-)create them.
@@ -4901,7 +4904,7 @@ void cxWindow::setElementColor(short& pColorPair, attr_t& pElementAttr, e_cxColo
    pColorPair = pColor;
 
    // If the color's brightness bit is set, then the attribute needs to be bold.
-   if (cxBase::colorIsBright(pColor))
+   if (cx::colorIsBright(pColor))
    {
       pElementAttr = A_BOLD;
    }
@@ -4959,12 +4962,12 @@ void cxWindow::enableAttrs(WINDOW *pWin, e_WidgetItems pItem)
       }
       else
       {
-         cxBase::enableAttrs(pWin, pItem);
+         cx::enableAttrs(pWin, pItem);
       }
    }
    else
    {
-      cxBase::enableAttrs(pWin, pItem);
+      cx::enableAttrs(pWin, pItem);
    }
 } // enableAttrs
 
@@ -5016,7 +5019,7 @@ void cxWindow::disableAttrs(WINDOW *pWin, e_WidgetItems pItem)
       }
       else
       {
-         cxBase::disableAttrs(pWin, pItem);
+         cx::disableAttrs(pWin, pItem);
       }
    }
 } // disableAttrs
@@ -5180,7 +5183,7 @@ void cxWindow::getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
    //  the message length and an arbitrary place to split it if it's big.
    if (pPosition == eHP_CENTER)
    {
-      const int someWidth = (cxBase::width() >= 30 ? 30 : cxBase::width());
+      const int someWidth = (cx::width() >= 30 ? 30 : cx::width());
       if (pMessage.length() >= 15)
       {
          if (!hasBorder())
@@ -5237,7 +5240,7 @@ void cxWindow::getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
          }
          else
          {
-            pCol = cxBase::right() - width + 1;
+            pCol = cx::right() - width + 1;
          }
          break;
       case eHP_CENTER: // This is the default
@@ -5248,7 +5251,7 @@ void cxWindow::getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
          }
          else
          {
-            pCol=((cxBase::width() - width) / 2);
+            pCol=((cx::width() - width) / 2);
          }
          break;
    }
@@ -5259,7 +5262,7 @@ void cxWindow::getRowColBasedOn(cxWindow *pParentWindow, eHPosition pPosition,
    }
    else
    {
-      pRow=(cxBase::centerRow() - 1);
+      pRow=(cx::centerRow() - 1);
    }
 
    if (pRow < 0) { pRow=0; }
@@ -6205,3 +6208,5 @@ bool cxWindow::onLeaveFunctionIsSet() const
 
    return(funcIsSet);
 } // onLeaveFunctionIsSet
+
+} // namespace cx

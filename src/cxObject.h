@@ -22,6 +22,8 @@
 #include "cxWidgetsException.h" // Included here so that
                                 //  everything has access to it
 
+namespace cx {
+
 typedef std::vector<std::string> stringContainer;
 typedef std::vector<std::string>::iterator stringContainerIterator;
 
@@ -97,5 +99,7 @@ class cxObject
        */
       static bool useBeeps;
 };
+
+} // namespace cx
 
 #endif

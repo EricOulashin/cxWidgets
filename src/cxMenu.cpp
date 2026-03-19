@@ -13,7 +13,7 @@
 //  cxWindow::writeWithHighlighting().
 
 #include "cxMenu.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxMultiLineInput.h"
 #include "cxStringUtils.h"
 #include <set>
@@ -27,13 +27,15 @@ using std::set;
 using std::vector;
 using std::shared_ptr;
 using std::make_shared;
-using cxBase::stringWithoutHotkeyChars;
-using cxBase::messageBox;
+using cx::stringWithoutHotkeyChars;
+using cx::messageBox;
 using cxStringUtils::Find;
 using cxStringUtils::toUpper;
 using cxStringUtils::toString;
 using cxStringUtils::stringTo;
 using std::set;
+
+namespace cx {
 
 cxMenu::cxMenu(cxWindow *pParentWindow, int pRow, int pCol, int pHeight,
                int pWidth, const string& pTitle, cxWindow *pExtTitleWindow,
@@ -687,8 +689,8 @@ void cxMenu::resize(int pNewHeight, int pNewWidth, bool pRefresh)
    if (((pNewHeight != height()) || (pNewWidth != width())) &&
        (pNewHeight > 0) && (pNewWidth > 0))
        {
-      const int maxHeight = cxBase::height() - top();
-      const int maxWidth = cxBase::width() - left();
+      const int maxHeight = cx::height() - top();
+      const int maxWidth = cx::width() - left();
       if ((pNewHeight <= maxHeight) && (pNewWidth <= maxWidth))
       {
          int leftSide = left();
@@ -2687,12 +2689,12 @@ void cxMenu::enableAttrs(WINDOW *pWin, e_WidgetItems pItem)
          }
          else
          {
-            cxBase::enableAttrs(pWin, pItem);
+            cx::enableAttrs(pWin, pItem);
          }
       }
       else
       {
-         cxBase::enableAttrs(pWin, pItem);
+         cx::enableAttrs(pWin, pItem);
       }
    }
 } // enableAttrs
@@ -2741,12 +2743,12 @@ void cxMenu::disableAttrs(WINDOW *pWin, e_WidgetItems pItem)
          }
          else
          {
-            cxBase::disableAttrs(pWin, pItem);
+            cx::disableAttrs(pWin, pItem);
          }
       }
       else
       {
-         cxBase::disableAttrs(pWin, pItem);
+         cx::disableAttrs(pWin, pItem);
       }
    }
 } // disableAttrs
@@ -2870,7 +2872,7 @@ void cxMenu::drawMenuItem(int pItemIndex, int pSubWinRow, bool pRefreshSubwindow
 
    //scrollok(mSubWindow, false);
    // currentCol is the current horizontal position in the window
-   int currentCol = (int)cxBase::stringWithoutHotkeyChars(itemStr).length();
+   int currentCol = (int)cx::stringWithoutHotkeyChars(itemStr).length();
 
    // Fill the rest of the line with spaces (to fill
    //  in the background color & overwrite stuff that may
@@ -2902,7 +2904,7 @@ void cxMenu::addHotKey(const string& pItemText)
    set<char> hotkeys;
    // Get the hotkey characters from the text, converting their
    //  case to lowercase.
-   cxBase::getHotkeyChars(pItemText, hotkeys, true, false);
+   cx::getHotkeyChars(pItemText, hotkeys, true, false);
    set<char>::const_iterator iter = hotkeys.begin();
    for (; iter != hotkeys.end(); ++iter)
    {
@@ -3068,7 +3070,7 @@ void cxMenu::doSearch()
    // winWidth will be used as the width of the
    //  input box and error window used in this
    //  method.
-   int winWidth = (cxBase::width() > 25 ? 25 : cxBase::width());
+   int winWidth = (cx::width() > 25 ? 25 : cx::width());
    cxMultiLineInput searchInput(this, 1, 1, 1, winWidth, "Keyword:", eBS_SINGLE_LINE);
    searchInput.setTitle("Search", false);
    searchInput.center(false);
@@ -3081,8 +3083,8 @@ void cxMenu::doSearch()
       searchInput.setValue(mSearchText);
    }
    // Set up a key for the input to clear the keyword.  This uses the return
-   //  value of cxBase::noOp(), which does nothing and returns a blank string.
-   searchInput.setKeyFunction(cxBase::getMenuClearKeywordKey(), cxBase::noOp,
+   //  value of cx::noOp(), which does nothing and returns a blank string.
+   searchInput.setKeyFunction(cx::getMenuClearKeywordKey(), cx::noOp,
                               nullptr, nullptr, true, false, true);
 
    if (searchInput.showModal() != ESC)
@@ -3600,3 +3602,5 @@ void cxMenu::checkEventFunctionPointers(const cxMenu& pMenu)
       }
    }
 } // checkEventFunctionPointers
+
+} // namespace cx

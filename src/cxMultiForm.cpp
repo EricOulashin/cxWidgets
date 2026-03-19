@@ -2,7 +2,7 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 
 #include "cxMultiForm.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 #include <map>
 #include <utility>
 using std::string;
@@ -11,6 +11,9 @@ using std::map;
 using std::pair;
 using std::shared_ptr;
 using std::make_shared;
+
+
+namespace cx {
 
 cxMultiForm::cxMultiForm(cxWindow *pParentWindow, int pRow,
                          int pCol, int pHeight,
@@ -1050,7 +1053,7 @@ long cxMultiForm::doInputLoop(bool pShowSubforms)
       {
          if (!getWaitForInputIfEmpty())
          {
-            cxBase::messageBox("This multiForm has no editable inputs and no enabled/editable subforms.");
+            cx::messageBox("This multiForm has no editable inputs and no enabled/editable subforms.");
          }
          else
          {
@@ -1737,3 +1740,5 @@ inline bool cxMultiForm::subformIsEnabledAndEditable(unsigned int pIndex)
    return(mForms[pIndex]->isEnabled() &&
           mForms[pIndex]->hasEditableInputs());
 } // subformIsEnabledAndEditable
+
+} // namespace cx

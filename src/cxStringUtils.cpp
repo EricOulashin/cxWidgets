@@ -16,6 +16,7 @@ using std::vector;
 using std::list;
 using std::ostringstream;
 using std::transform;
+using namespace cx;
 
 #ifndef NDEBUG
 #define NDEBUG

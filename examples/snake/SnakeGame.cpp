@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 
+using namespace cx;
+
 SnakeGame::SnakeGame(int pHeight, int pWidth)
     : cxWindow(nullptr, 0, 0, pHeight, pWidth),
       mDirection(RIGHT),
@@ -55,7 +57,7 @@ void SnakeGame::draw() {
         writeText(height() / 2, (width() / 2) - 5, "GAME OVER", false);
     }
 
-    cxBase::updateWindows();
+    cx::updateWindows();
 }
 
 void SnakeGame::update() {
@@ -99,7 +101,7 @@ void SnakeGame::run() {
     keypad(mWindow, TRUE);   // Enable special keys
     wtimeout(mWindow, 100);  // 100ms timeout for wgetch
 
-    cxBase::messageBox("Snake Game", "Use Arrow Keys to move.\nPress 'q' or ESC to quit.\n\nPress any key to start!", 0, 25);
+    cx::messageBox("Snake Game", "Use Arrow Keys to move.\nPress 'q' or ESC to quit.\n\nPress any key to start!", 0, 25);
 
     while (!mGameOver) {
         int ch = wgetch(mWindow);

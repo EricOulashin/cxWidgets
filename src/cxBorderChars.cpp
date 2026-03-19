@@ -2,6 +2,8 @@
 
 #include "cxBorderChars.h"
 
+namespace cx {
+
 cxBorderChars::cxBorderChars(eBorderStyle pBorderStyle)
 {
    switch (pBorderStyle)
@@ -45,3 +47,5 @@ cxBorderChars::cxBorderChars(eBorderStyle pBorderStyle)
          break;
    }
 }
+
+} // namespace cx

@@ -2,6 +2,8 @@
 #ifndef __CXCOLORS__H__
 #define __CXCOLORS__H__
 
+namespace cx {
+
 /**
  * \brief cxColors.h - contains an enumeration of the
  *  colors available for the cxWidgets objects.
@@ -148,5 +150,7 @@ enum e_cxColors
    // Note: Next color added should be
    //  eBLACK_CYAN + 2 so that it's even
 };
+
+} // namespace cx
 
 #endif

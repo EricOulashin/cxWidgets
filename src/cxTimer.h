@@ -10,6 +10,8 @@
 #include <mutex>
 #include <atomic>
 
+namespace cx {
+
 /**
  * \brief Represents a timer that will run a function after
  * \brief a specified number of milliseconds.  <b>This class is not
@@ -110,5 +112,7 @@ class cxTimer
       // and then runs the function.
       void wait();
 };
+
+} // namespace cx
 
 #endif

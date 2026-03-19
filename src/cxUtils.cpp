@@ -1,6 +1,6 @@
 // Copyright (c) 2026 E. Oulashin
 /*
- * cxBase.cpp - Contains cxWidgets utility functions.
+ * cxUtils.cpp - Contains cxWidgets utility functions.
  *
  * Copyright (c) 2005-2007 Michael H. Kinney
  *
@@ -11,7 +11,7 @@
  *                    added some default colors.
  */
 
-#include "cxBase.h"
+#include "cxUtils.h"
 #include <signal.h> // For signal handling
 #include <cstdlib>  // For getenv(), tolower(), and toupper()
 #include <cctype>   // For toupper()
@@ -35,11 +35,12 @@ using std::cerr;
 using std::endl;
 using cxStringUtils::toString;
 using cxStringUtils::isPrintable;
+using namespace cx;
 
-// mInitialized is used to store whether cxBase::init() has been called.
+// mInitialized is used to store whether cx::init() has been called.
 //  It's declared here because the compiler gives a warning if it is declared
-//  in cxBase.h.
-namespace cxBase
+//  in cxUtils.h.
+namespace cx
 {
 
    bool mInitialized = false;
@@ -75,7 +76,7 @@ namespace cxBase
    e_cxColors mDefaultBorderColor = eGRAY_BLUE;
 }
 
-void cxBase::init(bool pEnableMouse)
+void cx::init(bool pEnableMouse)
 {
    WINDOW* tmpWindow=initscr();         // initialize the curses library
    if (tmpWindow == nullptr)
@@ -198,7 +199,7 @@ void cxBase::init(bool pEnableMouse)
       init_pair(eBLACK_CYAN,       COLOR_BLACK,   COLOR_CYAN);
    }
 
-   signal(SIGWINCH, cxBase::signalHandler);
+   signal(SIGWINCH, cx::signalHandler);
 
    // Set up some default values for various cxWidgets items
    mMenuSelectionAttrs.insert(A_REVERSE); // Selected cxMenu items
@@ -224,10 +225,10 @@ void cxBase::init(bool pEnableMouse)
 
    refresh();
 
-   cxBase::mInitialized = true;
+   cx::mInitialized = true;
 } // init
 
-void cxBase::cleanup()
+void cx::cleanup()
 {
    // Only do this if cxWidgets is initialized, or else the program will
    //  segfault.
@@ -238,18 +239,18 @@ void cxBase::cleanup()
       erase();
       endwin();
       //delwin(stdscr);
-      cxBase::mInitialized = false;
+      cx::mInitialized = false;
    }
 } // cleanup
 
-int cxBase::top()
+int cx::top()
 {
    int row = 0, col = 0;
    getbegyx(stdscr, row, col);
    return(row);
 } // top
 
-int cxBase::centerRow()
+int cx::centerRow()
 {
    int row = 0, col = 0, center = 0;
    getmaxyx(stdscr, row, col);
@@ -257,7 +258,7 @@ int cxBase::centerRow()
    return(center);
 } // centerRow
 
-int cxBase::bottom()
+int cx::bottom()
 {
    // getmaxyx() returns the screen size, but the column numbers are 0-based,
    //  so we need to subtract 1.
@@ -266,7 +267,7 @@ int cxBase::bottom()
    return(theHeight - 1);
 } // bottom
 
-int cxBase::left()
+int cx::left()
 {
    int row = 0, col = 0;
    getbegyx(stdscr, row, col);
@@ -274,7 +275,7 @@ int cxBase::left()
    return(col);
 } // left
 
-int cxBase::centerCol()
+int cx::centerCol()
 {
    int theHeight = 0, theWidth = 0;
    getmaxyx(stdscr, theHeight, theWidth);
@@ -282,7 +283,7 @@ int cxBase::centerCol()
    return(theWidth / 2);
 } // centerCol
 
-int cxBase::right()
+int cx::right()
 {
    // getmaxyx() returns the screen size, but the column numbers are 0-based,
    //  so we need to subtract 1.
@@ -292,7 +293,7 @@ int cxBase::right()
    return(theWidth - 1);
 } // right
 
-int cxBase::width()
+int cx::width()
 {
    // getmaxyx() returns the screen size
    int theHeight = 0, theWidth = 0;
@@ -301,65 +302,65 @@ int cxBase::width()
    return(theWidth);
 } // width
 
-int cxBase::height()
+int cx::height()
 {
    int theHeight = 0, theWidth = 0;
    getmaxyx(stdscr, theHeight, theWidth);
    return(theHeight);
 } // height
 
-void cxBase::getTermDimensions(int& pHeight, int& pWidth)
+void cx::getTermDimensions(int& pHeight, int& pWidth)
 {
-   pHeight = cxBase::height();
-   pWidth = cxBase::width();
+   pHeight = cx::height();
+   pWidth = cx::width();
 } // getTermDimensions
 
-bool cxBase::resizeTerm(int pNewHeight, int pNewWidth)
+bool cx::resizeTerm(int pNewHeight, int pNewWidth)
 {
    return(resize_term(pNewHeight, pNewWidth) == OK);
 } // resizeTerm
 
-e_cxColors cxBase::getDefaultMessageColor()
+e_cxColors cx::getDefaultMessageColor()
 {
-   return(cxBase::mDefaultMessageColor);
+   return(cx::mDefaultMessageColor);
 } // getDefaultMessageColor
 
-void cxBase::setDefaultMessageColor(e_cxColors pColor)
+void cx::setDefaultMessageColor(e_cxColors pColor)
 {
-   cxBase::mDefaultMessageColor = pColor;
+   cx::mDefaultMessageColor = pColor;
 } // setDefaultMessageColor
 
-e_cxColors cxBase::getDefaultTitleColor()
+e_cxColors cx::getDefaultTitleColor()
 {
-   return(cxBase::mDefaultTitleColor);
+   return(cx::mDefaultTitleColor);
 } // getDefaultTitleColor
 
-void cxBase::setDefaultTitleColor(e_cxColors pColor)
+void cx::setDefaultTitleColor(e_cxColors pColor)
 {
-   cxBase::mDefaultTitleColor = pColor;
+   cx::mDefaultTitleColor = pColor;
 } // setDefaultTitleColor
 
-e_cxColors cxBase::getDefaultStatusColor()
+e_cxColors cx::getDefaultStatusColor()
 {
-   return(cxBase::mDefaultStatusColor);
+   return(cx::mDefaultStatusColor);
 } // getDefaultStatusColor
 
-void cxBase::setDefaultStatusColor(e_cxColors pColor)
+void cx::setDefaultStatusColor(e_cxColors pColor)
 {
-   cxBase::mDefaultStatusColor = pColor;
+   cx::mDefaultStatusColor = pColor;
 } // setDefaultStatusColor
 
-e_cxColors cxBase::getDefaultBorderColor()
+e_cxColors cx::getDefaultBorderColor()
 {
-   return(cxBase::mDefaultBorderColor);
+   return(cx::mDefaultBorderColor);
 } // getDefaultBorderColor
 
-void cxBase::setDefaultBorderColor(e_cxColors pColor)
+void cx::setDefaultBorderColor(e_cxColors pColor)
 {
-   cxBase::mDefaultBorderColor = pColor;
+   cx::mDefaultBorderColor = pColor;
 } // setDefaultBorderColor
 
-void cxBase::messageBox(int pRow, int pCol, int pHeight, int pWidth,
+void cx::messageBox(int pRow, int pCol, int pHeight, int pWidth,
                         const string& pTitle, const string& pMessage,
                         const string& pStatus, eBorderStyle pBorderStyle)
                         {
@@ -368,7 +369,7 @@ void cxBase::messageBox(int pRow, int pCol, int pHeight, int pWidth,
    aWindow.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
-void cxBase::messageBox(int pRow, int pCol, const string& pTitle,
+void cx::messageBox(int pRow, int pCol, const string& pTitle,
                         const string& pMessage,
                         const string& pStatus)
                         {
@@ -377,14 +378,14 @@ void cxBase::messageBox(int pRow, int pCol, const string& pTitle,
    aWindow.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
-void cxBase::messageBox(int pRow, int pCol, const string& pMessage)
+void cx::messageBox(int pRow, int pCol, const string& pMessage)
 {
    cxWindow aWindow(nullptr, pRow, pCol, "", pMessage, "");
    aWindow.showModal(true, true, false);
    aWindow.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
-void cxBase::messageBox(const string& pTitle, const string& pMessage,
+void cx::messageBox(const string& pTitle, const string& pMessage,
                         const string& pStatus)
 {
    cxMessageDialog msgDlg(nullptr, pTitle, pMessage);
@@ -393,7 +394,7 @@ void cxBase::messageBox(const string& pTitle, const string& pMessage,
    msgDlg.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
-void cxBase::messageBox(const std::string& pTitle, const std::string& pMessage,
+void cx::messageBox(const std::string& pTitle, const std::string& pMessage,
                    const std::string& pStatus, int pHeight, int pWidth)
 {
    cxMessageDialog msgDlg(nullptr, pTitle, pMessage, pHeight, pWidth);
@@ -403,7 +404,7 @@ void cxBase::messageBox(const std::string& pTitle, const std::string& pMessage,
 } // messageBox
 
 
-void cxBase::messageBox(const std::string& pMessage, const std::string& pStatus, int pHeight, int pWidth)
+void cx::messageBox(const std::string& pMessage, const std::string& pStatus, int pHeight, int pWidth)
 {
    cxMessageDialog msgDlg(nullptr, "Info", pMessage, pHeight, pWidth);
    msgDlg.setStatus(pStatus);
@@ -411,7 +412,7 @@ void cxBase::messageBox(const std::string& pMessage, const std::string& pStatus,
    msgDlg.hide(); // Hide the window so it doesn't show anymore
 } // messageBox
 
-void cxBase::messageBox(const string& pMessage, e_cxColors pMessageColor,
+void cx::messageBox(const string& pMessage, e_cxColors pMessageColor,
                         attr_t pMessageAttr, e_cxColors pTitleColor,
                         e_cxColors pStatusColor, e_cxColors pBorderColor)
                         {
@@ -424,14 +425,14 @@ void cxBase::messageBox(const string& pMessage, e_cxColors pMessageColor,
    msgDlg.showModal();
 } // messageBox
 
-void cxBase::messageDialog(const string& pMessage)
+void cx::messageDialog(const string& pMessage)
 {
    cxMessageDialog msgDlg(nullptr, "Info", pMessage);
    msgDlg.showModal();
    msgDlg.hide(); // Hide the window so it doesn't show anymore
 } // messageDialog
 
-void cxBase::messageDialog(const list<string>& pMessages)
+void cx::messageDialog(const list<string>& pMessages)
 {
    cxMessageDialog msgDlg(nullptr, 0, 0, height(), width(), "Info", "");
    msgDlg.addMessageLinesBelow(pMessages);
@@ -440,7 +441,7 @@ void cxBase::messageDialog(const list<string>& pMessages)
    msgDlg.hide(); // Hide the window so it doesn't show anymore
 } // messageDialog
 
-void cxBase::splash(const string& pTitle, const string& pMessage, int pSleep)
+void cx::splash(const string& pTitle, const string& pMessage, int pSleep)
 {
    cxWindow aWindow(nullptr, pTitle, pMessage, "");
    aWindow.show();
@@ -448,7 +449,7 @@ void cxBase::splash(const string& pTitle, const string& pMessage, int pSleep)
    aWindow.hide();
 } // splash
 
-void cxBase::splash(const string& pMessage, int pSleep)
+void cx::splash(const string& pMessage, int pSleep)
 {
    cxWindow aWindow(nullptr, pMessage);
    aWindow.show();
@@ -457,7 +458,7 @@ void cxBase::splash(const string& pMessage, int pSleep)
 } // splash
 
 // Erases the screen
-void cxBase::eraseScreen()
+void cx::eraseScreen()
 {
    // Only do this if cxWidgets is initialized, or else the program will
    //  segfault.
@@ -468,7 +469,7 @@ void cxBase::eraseScreen()
    }
 } // eraseScreen
 
-void cxBase::updateWindows()
+void cx::updateWindows()
 {
    // Only do this if cxWidgets is initialized, or else the program will
    //  segfault.
@@ -479,7 +480,7 @@ void cxBase::updateWindows()
    }
 } // updateWindows
 
-bool cxBase::isFunctionKey(int pKey)
+bool cx::isFunctionKey(int pKey)
 {
    return((pKey == KEY_F(1)) ||
           (pKey == KEY_F(2)) ||
@@ -497,14 +498,14 @@ bool cxBase::isFunctionKey(int pKey)
           (pKey == KEY_PPAGE));
 } // isFunctionKey
 
-bool cxBase::toggleCursor(bool pToggleCursor)
+bool cx::toggleCursor(bool pToggleCursor)
 {
    // If pToggleCursor is true, use 1; otherwise, use 0.
    int previous = curs_set(pToggleCursor ? 1 : 0);
    return(previous != 0); // Return the previous cursor state
 } // toggleCursor
 
-string cxBase::getTermType()
+string cx::getTermType()
 {
    // NOTE: Do not re-write this to be one line.
    // If you run a program from cron, you may not
@@ -523,12 +524,12 @@ string cxBase::getTermType()
    return(retval);
 } // getTermType
 
-bool cxBase::colorIsBright(e_cxColors pColor)
+bool cx::colorIsBright(e_cxColors pColor)
 {
    return((pColor & cxCOLOR_BRIGHT) == cxCOLOR_BRIGHT);
 } // colorIsBright
 
-int cxBase::countHotkeys(const string& pStr)
+int cx::countHotkeys(const string& pStr)
 {
    int hotkeyCount = 0;
 
@@ -549,7 +550,7 @@ int cxBase::countHotkeys(const string& pStr)
    return(hotkeyCount);
 } // countHotkeys
 
-string cxBase::stringWithoutHotkeyChars(const string& pStr)
+string cx::stringWithoutHotkeyChars(const string& pStr)
 {
    string updatedStr(pStr);
    unsigned strLen = 0;
@@ -574,12 +575,12 @@ string cxBase::stringWithoutHotkeyChars(const string& pStr)
    return(updatedStr);
 } // stringWithoutHotkeyChars
 
-unsigned cxBase::visualStrLen(const string& pStr)
+unsigned cx::visualStrLen(const string& pStr)
 {
    return(stringWithoutHotkeyChars(pStr).length());
 } // visualStrLen
 
-string cxBase::bringToTop(void *theWindow, void* unused)
+string cx::bringToTop(void *theWindow, void* unused)
 {
    if (theWindow != nullptr)
    {
@@ -590,7 +591,7 @@ string cxBase::bringToTop(void *theWindow, void* unused)
    return("");
 } // bringToTop
 
-string cxBase::cxFormShowModal(void* theForm, void* unused)
+string cx::cxFormShowModal(void* theForm, void* unused)
 {
    string retval = toString(cxID_QUIT);
 
@@ -603,7 +604,7 @@ string cxBase::cxFormShowModal(void* theForm, void* unused)
    return(retval);
 } // cxFormShowModal
 
-string cxBase::cxMenuShowModal(void* theMenu, void* unused)
+string cx::cxMenuShowModal(void* theMenu, void* unused)
 {
    string retval = toString(cxID_QUIT);
 
@@ -616,26 +617,26 @@ string cxBase::cxMenuShowModal(void* theMenu, void* unused)
    return(retval);
 } // cxFormShowModal
 
-string cxBase::noOp(void *p1, void *p2)
+string cx::noOp(void *p1, void *p2)
 {
    return("");
 } // noOp
 
-string cxBase::noOp(void *p1, void *p2, void *p3, void *p4)
+string cx::noOp(void *p1, void *p2, void *p3, void *p4)
 {
    return("");
 } // noOp
 
-int cxBase::runSystemCmd(const string& pCmd)
+int cx::runSystemCmd(const string& pCmd)
 {
-   cxBase::cleanup();
+   cx::cleanup();
    int retval = system(pCmd.c_str());
-   cxBase::init();
+   cx::init();
 
    return(retval);
 } // runSystemCmd
 
-void cxBase::writeText(int pRow, int pCol, const string& pText,
+void cx::writeText(int pRow, int pCol, const string& pText,
                        attr_t pAttr, e_cxColors pColor)
                        {
    // Only do this if cxWidgets is initialized, or else the program will
@@ -654,7 +655,7 @@ void cxBase::writeText(int pRow, int pCol, const string& pText,
    }
 } // writeText
 
-void cxBase::getHotkeyChars(const string& pStr, set<char>& pHotkeys,
+void cx::getHotkeyChars(const string& pStr, set<char>& pHotkeys,
                             bool pConvertCase, bool pToUpper)
                             {
    pHotkeys.clear();
@@ -688,7 +689,7 @@ void cxBase::getHotkeyChars(const string& pStr, set<char>& pHotkeys,
    }
 } // getHotkeyChars
 
-void cxBase::showAllWindows(bool pBringToTop)
+void cx::showAllWindows(bool pBringToTop)
 {
    // Only do this if cxWidgets is initialized, or else the program will
    //  segfault.
@@ -717,7 +718,7 @@ void cxBase::showAllWindows(bool pBringToTop)
    }
 } // showAllWindows
 
-cxWindow* cxBase::getTopWindow()
+cxWindow* cx::getTopWindow()
 {
    cxWindow *topWindow = nullptr;
 
@@ -732,7 +733,7 @@ cxWindow* cxBase::getTopWindow()
    return(topWindow);
 } // getTopWindow
 
-cxWindow* cxBase::getBottomWindow()
+cxWindow* cx::getBottomWindow()
 {
    cxWindow *bottomWindow = nullptr;
 
@@ -747,7 +748,7 @@ cxWindow* cxBase::getBottomWindow()
    return(bottomWindow);
 } // getTopWindow
 
-string cxBase::getKeyStr(int pKey)
+string cx::getKeyStr(int pKey)
 {
    string keyStr;
    switch(pKey)
@@ -979,7 +980,7 @@ string cxBase::getKeyStr(int pKey)
    return(keyStr);
 } // getKeyStr
 
-string cxBase::getMouseStateStr(int pMouseState)
+string cx::getMouseStateStr(int pMouseState)
 {
    string mouseStateStr;
    switch(pMouseState)
@@ -1055,7 +1056,7 @@ string cxBase::getMouseStateStr(int pMouseState)
    return(mouseStateStr);
 } // getMouseStateStr
 
-string cxBase::getReturnCodeStr(long pReturnCode)
+string cx::getReturnCodeStr(long pReturnCode)
 {
    string retval;
 
@@ -1084,7 +1085,7 @@ string cxBase::getReturnCodeStr(long pReturnCode)
    return(retval);
 } // getReturnCodeStr
 
-string cxBase::getInputOptionStr(eInputOptions pInputOption)
+string cx::getInputOptionStr(eInputOptions pInputOption)
 {
    string retval;
 
@@ -1104,7 +1105,7 @@ string cxBase::getInputOptionStr(eInputOptions pInputOption)
    return(retval);
 } // getInputKindStr
 
-string cxBase::getBorderStyleStr(eBorderStyle pBorderStyle)
+string cx::getBorderStyleStr(eBorderStyle pBorderStyle)
 {
    string retval;
 
@@ -1127,7 +1128,7 @@ string cxBase::getBorderStyleStr(eBorderStyle pBorderStyle)
    return(retval);
 } // getBorderStyleStr
 
-string cxBase::getInputTypeStr(eInputTypes pInputType)
+string cx::getInputTypeStr(eInputTypes pInputType)
 {
    string retval;
 
@@ -1150,7 +1151,7 @@ string cxBase::getInputTypeStr(eInputTypes pInputType)
    return(retval);
 } // getInputTypeStr
 
-void cxBase::signalHandler(int pSignal)
+void cx::signalHandler(int pSignal)
 {
    switch (pSignal)
    {
@@ -1161,7 +1162,7 @@ void cxBase::signalHandler(int pSignal)
 
 // TODO: There's a problem with this method.  If the user presses ESC instead
 //  of choosing yes or no, this will return false, as if the user chose "No".
-bool cxBase::promptYesNo(const string& pMessage, const string& pTitle,
+bool cx::promptYesNo(const string& pMessage, const string& pTitle,
                          long pButtons)
                          {
    bool retval = false;
@@ -1183,12 +1184,12 @@ bool cxBase::promptYesNo(const string& pMessage, const string& pTitle,
    return(retval);
 } // promptYesNo
 
-bool cxBase::cxInitialized()
+bool cx::cxInitialized()
 {
-   return(cxBase::mInitialized);
+   return(cx::mInitialized);
 } // cxInitialized
 
-void cxBase::addAttr(e_WidgetItems pItem, attr_t pAttr)
+void cx::addAttr(e_WidgetItems pItem, attr_t pAttr)
 {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
@@ -1197,32 +1198,32 @@ void cxBase::addAttr(e_WidgetItems pItem, attr_t pAttr)
    switch(pItem)
    {
       case eMESSAGE:        // Message
-         attrSet = &cxBase::mMessageAttrs;
+         attrSet = &cx::mMessageAttrs;
          break;
       case eTITLE:          // Title
-         attrSet = &cxBase::mTitleAttrs;
+         attrSet = &cx::mTitleAttrs;
          break;
       case eSTATUS:         // Status
-         attrSet = &cxBase::mStatusAttrs;
+         attrSet = &cx::mStatusAttrs;
          break;
       case eBORDER:         // Borders
-         attrSet = &cxBase::mBorderAttrs;
+         attrSet = &cx::mBorderAttrs;
          break;
       case eMENU_SELECTION: // Menu selection
-         attrSet = &cxBase::mMenuSelectionAttrs;
+         attrSet = &cx::mMenuSelectionAttrs;
          break;
       case eLABEL:          // Labels
-         attrSet = &cxBase::mLabelAttrs;
+         attrSet = &cx::mLabelAttrs;
          break;
       case eDATA:           // Data items (general)
       case eDATA_READONLY:  // Read-only data items
-         attrSet = &cxBase::mDataReadonlyAttrs;
+         attrSet = &cx::mDataReadonlyAttrs;
          break;
       case eDATA_EDITABLE:  // Editable data items
-         attrSet = &cxBase::mDataEditableAttrs;
+         attrSet = &cx::mDataEditableAttrs;
          break;
       case eHOTKEY:         // Hotkey
-         attrSet = &cxBase::mHotkeyAttrs;
+         attrSet = &cx::mHotkeyAttrs;
          break;
    }
 
@@ -1233,7 +1234,7 @@ void cxBase::addAttr(e_WidgetItems pItem, attr_t pAttr)
    }
 } // addAttr
 
-void cxBase::setAttr(e_WidgetItems pItem, attr_t pAttr)
+void cx::setAttr(e_WidgetItems pItem, attr_t pAttr)
 {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
@@ -1242,32 +1243,32 @@ void cxBase::setAttr(e_WidgetItems pItem, attr_t pAttr)
    switch(pItem)
    {
       case eMESSAGE:        // Message
-         attrSet = &cxBase::mMessageAttrs;
+         attrSet = &cx::mMessageAttrs;
          break;
       case eTITLE:          // Title
-         attrSet = &cxBase::mTitleAttrs;
+         attrSet = &cx::mTitleAttrs;
          break;
       case eSTATUS:         // Status
-         attrSet = &cxBase::mStatusAttrs;
+         attrSet = &cx::mStatusAttrs;
          break;
       case eBORDER:         // Borders
-         attrSet = &cxBase::mBorderAttrs;
+         attrSet = &cx::mBorderAttrs;
          break;
       case eMENU_SELECTION: // Menu selection
-         attrSet = &cxBase::mMenuSelectionAttrs;
+         attrSet = &cx::mMenuSelectionAttrs;
          break;
       case eLABEL:          // Labels
-         attrSet = &cxBase::mLabelAttrs;
+         attrSet = &cx::mLabelAttrs;
          break;
       case eDATA_READONLY:  // Read-only data items
-         attrSet = &cxBase::mDataReadonlyAttrs;
+         attrSet = &cx::mDataReadonlyAttrs;
          break;
       case eDATA:           // Data items (general)
       case eDATA_EDITABLE:  // Editable data items
-         attrSet = &cxBase::mDataEditableAttrs;
+         attrSet = &cx::mDataEditableAttrs;
          break;
       case eHOTKEY:         // Hotkey
-         attrSet = &cxBase::mHotkeyAttrs;
+         attrSet = &cx::mHotkeyAttrs;
          break;
    }
 
@@ -1279,7 +1280,7 @@ void cxBase::setAttr(e_WidgetItems pItem, attr_t pAttr)
    }
 } // setAttr
 
-void cxBase::removeAttr(e_WidgetItems pItem, attr_t pAttr)
+void cx::removeAttr(e_WidgetItems pItem, attr_t pAttr)
 {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
@@ -1288,32 +1289,32 @@ void cxBase::removeAttr(e_WidgetItems pItem, attr_t pAttr)
    switch(pItem)
    {
       case eMESSAGE:        // Message
-         attrSet = &cxBase::mMessageAttrs;
+         attrSet = &cx::mMessageAttrs;
          break;
       case eTITLE:          // Title
-         attrSet = &cxBase::mTitleAttrs;
+         attrSet = &cx::mTitleAttrs;
          break;
       case eSTATUS:         // Status
-         attrSet = &cxBase::mStatusAttrs;
+         attrSet = &cx::mStatusAttrs;
          break;
       case eBORDER:         // Borders
-         attrSet = &cxBase::mBorderAttrs;
+         attrSet = &cx::mBorderAttrs;
          break;
       case eMENU_SELECTION: // Menu selection
-         attrSet = &cxBase::mMenuSelectionAttrs;
+         attrSet = &cx::mMenuSelectionAttrs;
          break;
       case eLABEL:          // Labels
-         attrSet = &cxBase::mLabelAttrs;
+         attrSet = &cx::mLabelAttrs;
          break;
       case eDATA:           // Data items (general)
       case eDATA_READONLY:  // Read-only data items
-         attrSet = &cxBase::mDataReadonlyAttrs;
+         attrSet = &cx::mDataReadonlyAttrs;
          break;
       case eDATA_EDITABLE:  // Editable data items
-         attrSet = &cxBase::mDataEditableAttrs;
+         attrSet = &cx::mDataEditableAttrs;
          break;
       case eHOTKEY:         // Hotkey
-         attrSet = &cxBase::mHotkeyAttrs;
+         attrSet = &cx::mHotkeyAttrs;
          break;
    }
 
@@ -1324,7 +1325,7 @@ void cxBase::removeAttr(e_WidgetItems pItem, attr_t pAttr)
    }
 } // removeAttr
 
-void cxBase::removeAttrs(e_WidgetItems pItem)
+void cx::removeAttrs(e_WidgetItems pItem)
 {
    // attrSet is a pointer that will be set to point to the correct attribute
    //  set, depending on the value of pItem.
@@ -1333,32 +1334,32 @@ void cxBase::removeAttrs(e_WidgetItems pItem)
    switch(pItem)
    {
       case eMESSAGE:        // Message
-         attrSet = &cxBase::mMessageAttrs;
+         attrSet = &cx::mMessageAttrs;
          break;
       case eTITLE:          // Title
-         attrSet = &cxBase::mTitleAttrs;
+         attrSet = &cx::mTitleAttrs;
          break;
       case eSTATUS:         // Status
-         attrSet = &cxBase::mStatusAttrs;
+         attrSet = &cx::mStatusAttrs;
          break;
       case eBORDER:         // Borders
-         attrSet = &cxBase::mBorderAttrs;
+         attrSet = &cx::mBorderAttrs;
          break;
       case eMENU_SELECTION: // Menu selection
-         attrSet = &cxBase::mMenuSelectionAttrs;
+         attrSet = &cx::mMenuSelectionAttrs;
          break;
       case eLABEL:          // Labels
-         attrSet = &cxBase::mLabelAttrs;
+         attrSet = &cx::mLabelAttrs;
          break;
       case eDATA:           // Data items (general)
       case eDATA_READONLY:  // Read-only data items
-         attrSet = &cxBase::mDataReadonlyAttrs;
+         attrSet = &cx::mDataReadonlyAttrs;
          break;
       case eDATA_EDITABLE:  // Editable data items
-         attrSet = &cxBase::mDataEditableAttrs;
+         attrSet = &cx::mDataEditableAttrs;
          break;
       case eHOTKEY:         // Hotkey
-         attrSet = &cxBase::mHotkeyAttrs;
+         attrSet = &cx::mHotkeyAttrs;
          break;
    }
 
@@ -1369,44 +1370,44 @@ void cxBase::removeAttrs(e_WidgetItems pItem)
    }
 } // removeAttrs
 
-void cxBase::getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs)
+void cx::getAttrs(e_WidgetItems pItem, set<attr_t>& pAttrs)
 {
    pAttrs.clear();
 
    switch(pItem)
    {
       case eMESSAGE:        // Message
-         pAttrs = cxBase::mMessageAttrs;
+         pAttrs = cx::mMessageAttrs;
          break;
       case eTITLE:          // Title
-         pAttrs = cxBase::mTitleAttrs;
+         pAttrs = cx::mTitleAttrs;
          break;
       case eSTATUS:         // Status
-         pAttrs = cxBase::mStatusAttrs;
+         pAttrs = cx::mStatusAttrs;
          break;
       case eBORDER:         // Borders
-         pAttrs = cxBase::mBorderAttrs;
+         pAttrs = cx::mBorderAttrs;
          break;
       case eMENU_SELECTION: // Menu selection
-         pAttrs = cxBase::mMenuSelectionAttrs;
+         pAttrs = cx::mMenuSelectionAttrs;
          break;
       case eLABEL:          // Labels
-         pAttrs = cxBase::mLabelAttrs;
+         pAttrs = cx::mLabelAttrs;
          break;
       case eDATA:           // Data items (general)
       case eDATA_READONLY:  // Read-only data items
-         pAttrs = cxBase::mDataReadonlyAttrs;
+         pAttrs = cx::mDataReadonlyAttrs;
          break;
       case eDATA_EDITABLE:  // Editable data items
-         pAttrs = cxBase::mDataEditableAttrs;
+         pAttrs = cx::mDataEditableAttrs;
          break;
       case eHOTKEY:         // Hotkey
-         pAttrs = cxBase::mHotkeyAttrs;
+         pAttrs = cx::mHotkeyAttrs;
          break;
    }
 } // getAttrs
 
-bool cxBase::hasAttr(e_WidgetItems pItem, attr_t pAttr)
+bool cx::hasAttr(e_WidgetItems pItem, attr_t pAttr)
 {
    bool retval=false;
    set<attr_t> attrs;
@@ -1416,7 +1417,7 @@ bool cxBase::hasAttr(e_WidgetItems pItem, attr_t pAttr)
    return(retval);
 } // hasAttr
 
-void cxBase::enableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
+void cx::enableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
 {
    if (nullptr != pWindow)
    {
@@ -1427,32 +1428,32 @@ void cxBase::enableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
       switch(pItem)
       {
          case eMESSAGE:        // Message
-            attrSet = &cxBase::mMessageAttrs;
+            attrSet = &cx::mMessageAttrs;
             break;
          case eTITLE:          // Title
-            attrSet = &cxBase::mTitleAttrs;
+            attrSet = &cx::mTitleAttrs;
             break;
          case eSTATUS:         // Status
-            attrSet = &cxBase::mStatusAttrs;
+            attrSet = &cx::mStatusAttrs;
             break;
          case eBORDER:         // Borders
-            attrSet = &cxBase::mBorderAttrs;
+            attrSet = &cx::mBorderAttrs;
             break;
          case eMENU_SELECTION: // Menu selection
-            attrSet = &cxBase::mMenuSelectionAttrs;
+            attrSet = &cx::mMenuSelectionAttrs;
             break;
          case eLABEL:          // Labels
-            attrSet = &cxBase::mLabelAttrs;
+            attrSet = &cx::mLabelAttrs;
             break;
          case eDATA:           // Data items (general)
          case eDATA_READONLY:  // Read-only data items
-            attrSet = &cxBase::mDataReadonlyAttrs;
+            attrSet = &cx::mDataReadonlyAttrs;
             break;
          case eDATA_EDITABLE:  // Editable data items
-            attrSet = &cxBase::mDataEditableAttrs;
+            attrSet = &cx::mDataEditableAttrs;
             break;
          case eHOTKEY:         // Hotkey
-            attrSet = &cxBase::mHotkeyAttrs;
+            attrSet = &cx::mHotkeyAttrs;
             break;
       }
 
@@ -1468,7 +1469,7 @@ void cxBase::enableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
    }
 } // enableAttrs
 
-void cxBase::disableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
+void cx::disableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
 {
    if (nullptr != pWindow)
    {
@@ -1479,32 +1480,32 @@ void cxBase::disableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
       switch(pItem)
       {
          case eMESSAGE:        // Message
-            attrSet = &cxBase::mMessageAttrs;
+            attrSet = &cx::mMessageAttrs;
             break;
          case eTITLE:          // Title
-            attrSet = &cxBase::mTitleAttrs;
+            attrSet = &cx::mTitleAttrs;
             break;
          case eSTATUS:         // Status
-            attrSet = &cxBase::mStatusAttrs;
+            attrSet = &cx::mStatusAttrs;
             break;
          case eBORDER:         // Borders
-            attrSet = &cxBase::mBorderAttrs;
+            attrSet = &cx::mBorderAttrs;
             break;
          case eMENU_SELECTION: // Menu selection
-            attrSet = &cxBase::mMenuSelectionAttrs;
+            attrSet = &cx::mMenuSelectionAttrs;
             break;
          case eLABEL:          // Labels
-            attrSet = &cxBase::mLabelAttrs;
+            attrSet = &cx::mLabelAttrs;
             break;
          case eDATA:           // Data items (general)
          case eDATA_READONLY:  // Read-only data items
-            attrSet = &cxBase::mDataReadonlyAttrs;
+            attrSet = &cx::mDataReadonlyAttrs;
             break;
          case eDATA_EDITABLE:  // Editable data items
-            attrSet = &cxBase::mDataEditableAttrs;
+            attrSet = &cx::mDataEditableAttrs;
             break;
          case eHOTKEY:         // Hotkey
-            attrSet = &cxBase::mHotkeyAttrs;
+            attrSet = &cx::mHotkeyAttrs;
             break;
       }
 
@@ -1520,7 +1521,7 @@ void cxBase::disableAttrs(WINDOW *pWindow, e_WidgetItems pItem)
    }
 } // disableAttrs
 
-attr_t cxBase::getAttr(const string& pAttr)
+attr_t cx::getAttr(const string& pAttr)
 {
    attr_t retval=A_NORMAL;
    if (pAttr == "NORMAL")
@@ -1550,7 +1551,7 @@ attr_t cxBase::getAttr(const string& pAttr)
    return(retval);
 } // getAttr
 
-string cxBase::getAttrStr(attr_t pAttr)
+string cx::getAttrStr(attr_t pAttr)
 {
    string attrStr = "Unknown";
 
@@ -1581,7 +1582,7 @@ string cxBase::getAttrStr(attr_t pAttr)
    return(attrStr);
 } // getAttrStr
 
-string cxBase::getWidgetItemStr(e_WidgetItems pItem)
+string cx::getWidgetItemStr(e_WidgetItems pItem)
 {
    string itemStr;
 
@@ -1622,18 +1623,18 @@ string cxBase::getWidgetItemStr(e_WidgetItems pItem)
    return(itemStr);
 } // getWidgetItemStr
 
-void cxBase::setMenuClearKeywordKey(int pKey)
+void cx::setMenuClearKeywordKey(int pKey)
 {
-   cxBase::mMenuClearKeywordKey = pKey;
+   cx::mMenuClearKeywordKey = pKey;
 } // setMenuClearKeywordKey
 
-int cxBase::getMenuClearKeywordKey()
+int cx::getMenuClearKeywordKey()
 {
-   return(cxBase::mMenuClearKeywordKey);
+   return(cx::mMenuClearKeywordKey);
 } // getMenuClearKeywordKey
 
 // Note: This works, but prints even HIDDEN panel's border characters.
-string cxBase::dump(bool pFancy, const string& pFilename)
+string cx::dump(bool pFancy, const string& pFilename)
 {
    string retval;
 
@@ -1643,7 +1644,7 @@ string cxBase::dump(bool pFancy, const string& pFilename)
       filename=pFilename;
    }
 
-   cxBase::updateWindows();
+   cx::updateWindows();
 
    const int mainHeight=height();
    const int mainWidth=width();
@@ -1842,7 +1843,7 @@ string cxBase::dump(bool pFancy, const string& pFilename)
 
 /*
 // NOTE: This works, but does not print border characters.
-string cxBase::dump(const string& pFilename) {
+string cx::dump(const string& pFilename) {
    string retval;
 
    string filename="temp.scn";
@@ -1886,22 +1887,22 @@ string cxBase::dump(const string& pFilename) {
 } // dump
 */
 
-bool cxBase::isNavKey(int pKey)
+bool cx::isNavKey(int pKey)
 {
    return(mNavKeys.find(pKey) != mNavKeys.end());
 } // isNavigationalKey
 
-void cxBase::addNavKey(int pKey)
+void cx::addNavKey(int pKey)
 {
    mNavKeys.insert(pKey);
 } // addNavKey
 
-void cxBase::removeNavKey(int pKey)
+void cx::removeNavKey(int pKey)
 {
    mNavKeys.erase(pKey);
 } // removeNavKey
 
-string cxBase::getString(int pRow, int pCol, int pNumber, WINDOW *pWin)
+string cx::getString(int pRow, int pCol, int pNumber, WINDOW *pWin)
 {
    string retval;
 
@@ -1932,7 +1933,7 @@ string cxBase::getString(int pRow, int pCol, int pNumber, WINDOW *pWin)
    return(retval);
 } // getString
 
-bool cxBase::findString(const string& pSearch, int& pRow, int& pCol, WINDOW *pWin)
+bool cx::findString(const string& pSearch, int& pRow, int& pCol, WINDOW *pWin)
 {
    bool retval=false;
    pRow=-1;

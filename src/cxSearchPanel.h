@@ -13,6 +13,8 @@
 #include <string>
 #include <memory>
 
+namespace cx {
+
 /**
   * \brief This class is based on cxPanel, and it contains a cxForm at the top
   * \brief and a cxMenu below the form.  This class was designed as something
@@ -747,5 +749,7 @@ class cxSearchPanel : public cxPanel
       //  menu.
       static std::string menuOnSelect(void *theSearchPanel, void *unused);
 };
+
+} // namespace cx
 
 #endif

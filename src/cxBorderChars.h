@@ -16,6 +16,8 @@
 #include "cxBorderStyles.h"
 #include <ncurses.h>
 
+namespace cx {
+
 /**
 * \struct cxBorderChars Defines border characters to be used in drawing a box (i.e., in cxWindow and all its derivitives).
 * The characters all defult to a single line.
@@ -35,5 +37,7 @@ struct cxBorderChars
    chtype bottomLeft = ACS_LLCORNER;
    chtype bottomRight = ACS_LRCORNER;
 };
+
+} // namespace cx
 
 #endif

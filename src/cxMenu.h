@@ -18,6 +18,8 @@
 #include <vector>
 #include <memory>
 
+namespace cx {
+
 #define DEFAULT_CXMENU_SEARCH_KEY '/'     // Default search key
 #define DEFAULT_CXMENU_ALT_PGUP_KEY '.'   // Default alternate PgUp key
 #define DEFAULT_CXMENU_ALT_PGDOWN_KEY ',' // Default alternate PgDown key
@@ -1219,5 +1221,7 @@ class cxMenu : public cxWindow
       //  pMenu: Another cxMenu being copied
       void checkEventFunctionPointers(const cxMenu& pMenu);
 };
+
+} // namespace cx
 
 #endif

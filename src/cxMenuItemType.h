@@ -1,6 +1,9 @@
 // Copyright (c) 2026 E. Oulashin
 #ifndef __CXMENUITEMTYPE_H__
 #define __CXMENUITEMTYPE_H__
+
+namespace cx {
+
 // Copyright (c) 2005-2007 Michael H. Kinney
 //
 // This header defines the enumeration
@@ -15,5 +18,7 @@ enum cxMenuItemType
    cxITEM_SEPARATOR,
    cxITEM_UNSELECTABLE
 };
+
+} // namespace cx
 
 #endif

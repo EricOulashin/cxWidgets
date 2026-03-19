@@ -5,6 +5,8 @@
 #include "cxFunction.h"
 using std::string;
 
+namespace cx {
+
 //// cxFunction class methods
 
 cxFunction::cxFunction(bool pUseReturnVal, bool pExitAfterRun, bool pRunOnLeaveFunction)
@@ -290,3 +292,5 @@ string cxFunction4::cxTypeStr() const
 {
    return("cxFunction4");
 } // cxTypeStr
+
+} // namespace cx

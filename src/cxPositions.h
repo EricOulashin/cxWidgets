@@ -1,6 +1,9 @@
 // Copyright (c) 2026 E. Oulashin
 #ifndef __CXPOSITIONS_H__
 #define __CXPOSITIONS_H__
+
+namespace cx {
+
 // Copyright (c) 2005-2007 Michael H. Kinney
 //
 // This file defines an enumeration for
@@ -25,5 +28,7 @@ enum eVPosition
    eVP_TOP,
    eVP_BOTTOM
 };
+
+} // namespace cx
 
 #endif

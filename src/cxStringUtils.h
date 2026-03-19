@@ -109,9 +109,9 @@ namespace cxStringUtils
    std::string toString(const long double& x);
    std::string toString(const unsigned& x);
    std::string toString(const unsigned long& x);
-   std::string toString(const eReturnCode& x);
-   std::string toString(const eInputOptions& x);
-   std::string toString(const eBorderStyle& x);
+   std::string toString(const cx::eReturnCode& x);
+   std::string toString(const cx::eInputOptions& x);
+   std::string toString(const cx::eBorderStyle& x);
    std::string toString(const void* x);
 
    void test_toString();

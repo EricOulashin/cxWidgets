@@ -1,6 +1,8 @@
 #include "FlashcardApp.h"
 #include <fstream>
 
+using namespace cx;
+
 FlashcardApp::FlashcardApp(int pHeight, int pWidth)
     : cxWindow(nullptr, 0, 0, pHeight, pWidth),
       mCurrentCardIdx(0),
@@ -17,7 +19,7 @@ FlashcardApp::FlashcardApp(int pHeight, int pWidth)
 void FlashcardApp::loadCards(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        cxBase::messageBox("Error", "Could not open " + filename);
+        cx::messageBox("Error", "Could not open " + filename);
         return;
     }
 
@@ -74,7 +76,7 @@ void FlashcardApp::draw() {
 }
 
 void FlashcardApp::showHelp() {
-    cxBase::messageBox("Flashcard Help",
+    cx::messageBox("Flashcard Help",
         "Right Arrow : Next Card\n"
         "Left Arrow  : Previous Card\n"
         "Space       : Flip Card\n"
@@ -92,14 +94,14 @@ void FlashcardApp::run() {
     keypad(mWindow, TRUE);
 
     if (mCards.empty()) {
-        cxBase::messageBox("Flashcard", "No cards found in cards.txt.\nExiting.");
+        cx::messageBox("Flashcard", "No cards found in cards.txt.\nExiting.");
         return;
     }
 
     bool quit = false;
     while (!quit) {
         draw();
-        cxBase::updateWindows();
+        cx::updateWindows();
         int ch = wgetch(mWindow);
         switch (ch) {
             case KEY_RIGHT:

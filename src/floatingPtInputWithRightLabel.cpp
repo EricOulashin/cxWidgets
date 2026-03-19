@@ -2,6 +2,9 @@
 #include "floatingPtInputWithRightLabel.h"
 using std::string;
 
+
+namespace cx {
+
 floatingPtInputWithRightLabel::floatingPtInputWithRightLabel(cxWindow *pParentWindow,
                                 int pRow, int pCol, int pHeight, int pWidth,
                                 const string& pLabel, eBorderStyle pBorderStyle,
@@ -24,3 +27,5 @@ string floatingPtInputWithRightLabel::onKeypress()
 
    return(retval);
 } // onKeypress
+
+} // namespace cx

@@ -37,8 +37,15 @@
  */
 
 #include <set>
+
+namespace cx {
+
 using std::set;
 
+/**
+ * \class cxComboBox
+ * \brief A text box that also has a drop-down box with a list of items that the user can choose from
+  */
 class cxComboBox : public cxMultiLineInput
 {
    public:
@@ -445,5 +452,7 @@ class cxComboBox : public cxMultiLineInput
       // Return: The return code for use with the input loop & showModal()
       long showMenuModal(bool pShowMenu, bool& pContinueOn);
 };
+
+} // namespace cx
 
 #endif

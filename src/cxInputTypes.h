@@ -1,6 +1,9 @@
 // Copyright (c) 2026 E. Oulashin
 #ifndef __CXINPUTTYPES_H__
 #define __CXINPUTTYPES_H__
+
+namespace cx {
+
 // Copyright (c) 2007 Michael H. Kinney
 //
 
@@ -19,5 +22,7 @@ enum eInputTypes
    eINPUT_TYPE_NUMERIC_FLOATING_PT,
    eINPUT_TYPE_NUMERIC_WHOLE
 };
+
+} // namespace cx
 
 #endif

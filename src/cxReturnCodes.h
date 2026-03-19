@@ -1,6 +1,9 @@
 // Copyright (c) 2026 E. Oulashin
 #ifndef __CXRETURNCODES_H__
 #define __CXRETURNCODES_H__
+
+namespace cx {
+
 // Copyright (c) 2005-2007 Michael H. Kinney
 //
 // This file defines return codes used by
@@ -28,5 +31,7 @@ enum eReturnCode
    cxID_QUIT = -397L,
    cxFIRST_AVAIL_RETURN_CODE = 0L
 };
+
+} // namespace cx
 
 #endif

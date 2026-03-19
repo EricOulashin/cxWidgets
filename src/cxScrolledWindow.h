@@ -7,6 +7,8 @@
 #include "cxFunction.h"
 #include <string>
 
+namespace cx {
+
 #define DEFAULT_CXSCROLLEDWINDOW_SEARCH_KEY '/'     // Default search key
 #define DEFAULT_CXSCROLLEDWINDOW_GOTO_KEY CTRL_G    // Default key to go to a line#
 #define DEFAULT_CXSCROLLEDWINDOW_ALT_PGUP_KEY '.'   // Default alternate PgUp key
@@ -422,5 +424,7 @@ class cxScrolledWindow : public cxWindow
       // Puts the horizontal scroll arrows in place on the bottom border.
       void drawHorizontalScrollArrows();
 };
+
+} // namespace cx
 
 #endif

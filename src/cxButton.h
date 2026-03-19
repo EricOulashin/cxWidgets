@@ -22,6 +22,8 @@
 #include <string>
 #include <memory>
 
+namespace cx {
+
 class cxButton : public cxWindow
 {
    public:
@@ -205,5 +207,7 @@ class cxButton : public cxWindow
       //  the copy constructor and the = operator.
       void copyOnClickFunction(const cxButton& pButton);
 };
+
+} // namespace cx
 
 #endif

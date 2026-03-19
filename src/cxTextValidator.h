@@ -12,6 +12,8 @@
 
 #include <string>
 
+namespace cx {
+
 /** \class cxTextValidator
  * \brief Provides some text validation functionality.  See README.txt for
  * \brief  details of validation strings.
@@ -122,5 +124,7 @@ class cxTextValidator
       // Returns whether a character is a validator character.
       static inline bool isValidatorChar(char pChar);
 };
+
+} // namespace cx
 
 #endif

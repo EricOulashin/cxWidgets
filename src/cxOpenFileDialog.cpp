@@ -6,7 +6,7 @@
 #include "cxOpenFileDialog.h"
 #include "cxKeyDefines.h"
 #include "cxReturnCodes.h"
-#include "cxBase.h"
+#include "cxUtils.h"
 
 #include <filesystem>
 #include <algorithm>
@@ -24,6 +24,9 @@ namespace fs = std::filesystem;
 // ---------------------------------------------------------------------------
 // Constructor / Destructor
 // ---------------------------------------------------------------------------
+
+
+namespace cx {
 
 cxOpenFileDialog::cxOpenFileDialog(cxWindow *pParentWindow, int pRow, int pCol,
                                    const string& pTitle, const string& pInitialDir)
@@ -1114,3 +1117,5 @@ string cxOpenFileDialog::truncStr(const string& pStr, int pMaxW)
    if (pMaxW <= 3) return pStr.substr(0, pMaxW);
    return pStr.substr(0, pMaxW - 3) + "...";
 }
+
+} // namespace cx

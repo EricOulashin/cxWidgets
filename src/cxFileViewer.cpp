@@ -1,7 +1,7 @@
 // Copyright (c) 2026 E. Oulashin
 // Copyright (c) 2005-2007 Michael H. Kinney
 
-#include "cxBase.h"
+#include "cxUtils.h"
 #include "cxFileViewer.h"
 #include "cxStringUtils.h"
 #include <fstream>
@@ -9,6 +9,8 @@ using std::string;
 using std::set;
 using std::map;
 using std::ifstream;
+
+namespace cx {
 
 cxFileViewer::cxFileViewer(cxWindow *pParentWindow, const string& pFilename,
                            int pRow, int pCol, int pHeight, int pWidth)
@@ -185,3 +187,5 @@ void cxFileViewer::setLoopEndFunction(const std::shared_ptr<cxFunction>& pFuncPt
 {
    cxScrolledWindow::setLoopEndFunction(pFuncPtr);
 } // setLoopEndFunction
+
+} // namespace cx

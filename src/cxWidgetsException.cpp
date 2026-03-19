@@ -4,6 +4,9 @@
 #include "cxWidgetsException.h"
 using std::string;
 
+
+namespace cx {
+
 cxWidgetsException::cxWidgetsException(const string& pErrorMsg)
    : mErrorMsg(pErrorMsg)
 {
@@ -22,3 +25,5 @@ string cxWidgetsException::cxTypeStr() const
 {
    return("cxWidgetsException");
 } // cxTypeStr
+
+} // namespace cx
