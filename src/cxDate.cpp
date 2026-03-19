@@ -1,17 +1,14 @@
 // Copyright (c) 2026 E. Oulashin
 /**
  * @file cxDate.cpp
- * \brief C++17-improved implementation of the cxDate class.
+ * \brief C++14-compatible implementation of the cxDate class.
  *
  * Modernizations applied vs. the original date.cpp:
  *  - std::chrono used in today() / getToday() for current date (thread-safe)
  *  - std::stoi() replaces atoi() / istringstream-based int parsing
  *  - std::to_string() replaces the custom anythingToString<T>() template
- *  - noexcept and [[nodiscard]] propagated from the header
- *  - std::clamp used in validateDateElements() for range clamping
+ *  - noexcept propagated from the header
  *  - Range-based for loops used where applicable
- *  - std::string_view parameters avoid unnecessary string copies
- *  - std::optional<cxDate> returned from tryParse()
  *
  */
 
@@ -22,9 +19,7 @@
 #include <iomanip>
 #include <cassert>
 #include <cctype>
-#include <cmath>
-#include <algorithm>   // std::clamp, std::all_of
-#include <stdexcept>   // std::invalid_argument from std::stoi
+#include <algorithm>   // std::min, std::max, std::all_of
 
 using std::string;
 using std::ostringstream;
@@ -32,7 +27,6 @@ using std::istringstream;
 using std::ostream;
 using std::istream;
 using std::setw;
-using std::endl;
 
 // ---------------------------------------------------------------------------
 // Constructors
@@ -66,7 +60,7 @@ cxDate::cxDate(int pYear, int pMonth, int pDay,
    validateDateElements(mYear, mMonth, mDay);
 }
 
-cxDate::cxDate(std::string_view pDateStr,
+cxDate::cxDate(const std::string& pDateStr,
                eDateFormats pDateFormat, char pSepChar)
    : mDateFormat(pDateFormat != UNKNOWN ? pDateFormat : YYYY_MM_DD),
      mSepChar(pSepChar)
@@ -74,7 +68,7 @@ cxDate::cxDate(std::string_view pDateStr,
    fromString(pDateStr);
 }
 
-cxDate::cxDate(std::string_view pDateStr, char pSepChar)
+cxDate::cxDate(const std::string& pDateStr, char pSepChar)
    : mSepChar(pSepChar)
 {
    eDateFormats fmt = getDateFormat(pDateStr);
@@ -384,7 +378,7 @@ string cxDate::toString() const
    return os.str();
 }
 
-bool cxDate::fromString(std::string_view pDateStr)
+bool cxDate::fromString(const std::string& pDateStr)
 {
    const size_t len = pDateStr.size();
    if (len != 6 && len != 8 && len != 10)
@@ -645,16 +639,18 @@ cxDate cxDate::today() noexcept
    return cxDate(); // default constructor already retrieves today
 }
 
-std::optional<cxDate> cxDate::tryParse(std::string_view pDateStr,
-                                        eDateFormats pDateFormat,
-                                        char pSepChar)
+bool cxDate::tryParse(const std::string& pDateStr,
+                       cxDate& outDate,
+                       eDateFormats pDateFormat,
+                       char pSepChar)
 {
    cxDate d(pDateFormat, pSepChar);
    if (d.fromString(pDateStr))
    {
-      return d;
+      outDate = d;
+      return true;
    }
-   return std::nullopt;
+   return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -701,7 +697,7 @@ void cxDate::fromJulian(long pJulianDate,
 // Date format detection
 // ---------------------------------------------------------------------------
 
-eDateFormats cxDate::getDateFormat(std::string_view pDateStr)
+eDateFormats cxDate::getDateFormat(const std::string& pDateStr)
 {
    eDateFormats fmt = UNKNOWN;
    const size_t len = pDateStr.size();
@@ -836,15 +832,14 @@ void cxDate::yearCalendar(int pYear, ostream& pOutStream, int pTrailingEndlines)
 bool cxDate::validateDateElements(int pYear, int& pMonth, int& pDay) noexcept
 {
    bool valid = true;
-   // C++17: std::clamp for concise range-clamping
-   int clampedMonth = std::clamp(pMonth, CXDATE_START_MONTH, CXDATE_END_MONTH);
+   int clampedMonth = std::max(CXDATE_START_MONTH, std::min(pMonth, CXDATE_END_MONTH));
    if (clampedMonth != pMonth)
    {
       pMonth = clampedMonth; valid = false;
    }
 
    int maxDay = numMonthDays(pMonth, pYear);
-   int clampedDay = std::clamp(pDay, CXDATE_START_DAY, maxDay);
+   int clampedDay = std::max(CXDATE_START_DAY, std::min(pDay, maxDay));
    if (clampedDay != pDay)
    {
       pDay = clampedDay; valid = false;
@@ -863,13 +858,13 @@ string cxDate::getMonthName(int pMonth)
    return (pMonth >= 1 && pMonth <= 12) ? abbr[pMonth-1] : "Unk";
 }
 
-bool cxDate::allDigits(std::string_view pStr) noexcept
+bool cxDate::allDigits(const std::string& pStr) noexcept
 {
    return std::all_of(pStr.begin(), pStr.end(),
       [](unsigned char c){ return std::isdigit(c); });
 }
 
-bool cxDate::startsWithNumber(std::string_view pStr) noexcept
+bool cxDate::startsWithNumber(const std::string& pStr) noexcept
 {
    return !pStr.empty() && std::isdigit(static_cast<unsigned char>(pStr[0]));
 }
