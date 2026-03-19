@@ -702,6 +702,9 @@ cxWindow::cxWindow(const cxWindow& pThatWindow)
 
 cxWindow::~cxWindow()
 {
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::~cxWindow() started for %p\n", (void*)this);
+#endif
    // Free the memory used by the key functions and mouse event functions
    clearKeyFunctions();
    clearMouseFunctions();
@@ -747,6 +750,9 @@ cxWindow::~cxWindow()
    // Remove this window from the parent window's subwindow list.
    if (mParentWindow != nullptr)
    {
+#ifdef DEBUG_TESTS
+      fprintf(stderr, "cxWindow::~cxWindow() removing from parent %p\n", (void*)mParentWindow);
+#endif
       // If we are already being destroyed, we must be careful not to
       // trigger redundant or dangerous cleanup in the parent.
       cxWindow* parent = mParentWindow;
@@ -771,10 +777,11 @@ cxWindow::~cxWindow()
    {
       hide();
    }
-   // Update the physical screen
-   //update_panels();
 
    freeWindow();
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::~cxWindow() finished for %p\n", (void*)this);
+#endif
 } // dtor
 
 void cxWindow::centerHoriz(bool pRefresh)
@@ -1746,8 +1753,13 @@ bool cxWindow::isBelow(const cxWindow& pThatWindow) const
 
 void cxWindow::hide(bool pHideSubwindows)
 {
+   if (!cxBase::cxInitialized())
+   {
+      return;
+   }
+
    // If not already hidden, hide the window.
-   if (mPanel != nullptr && cxBase::cxInitialized() && panel_hidden(mPanel) == FALSE)
+   if (mPanel != nullptr && panel_hidden(mPanel) == FALSE)
    {
       hide_panel(mPanel);
    }
@@ -1755,9 +1767,12 @@ void cxWindow::hide(bool pHideSubwindows)
    // Tell each subwindow to hide itself
    if (pHideSubwindows)
    {
-      for (cxWindow*& subWin : mSubWindows)
+      for (cxWindow* subWin : mSubWindows)
       {
-         subWin->hide(pHideSubwindows);
+         if (subWin != nullptr)
+         {
+            subWin->hide(pHideSubwindows);
+         }
       }
    }
 
@@ -1767,18 +1782,29 @@ void cxWindow::hide(bool pHideSubwindows)
 
 void cxWindow::unhide(bool pUnhideSubwindows)
 {
+   if (!cxBase::cxInitialized())
+   {
+      return;
+   }
+
    // Only let the window be un-hidden if it's
    //  enabled.
-   if (mEnabled && cxBase::cxInitialized())
+   if (mEnabled)
    {
-      show_panel(mPanel);
+      if (mPanel != nullptr)
+      {
+         show_panel(mPanel);
+      }
 
       // Tell each subwindow to unhide itself
       if (pUnhideSubwindows)
       {
-         for (cxWindow*& subWin : mSubWindows)
+         for (cxWindow* subWin : mSubWindows)
          {
-            subWin->unhide(pUnhideSubwindows);
+            if (subWin != nullptr)
+            {
+               subWin->unhide(pUnhideSubwindows);
+            }
          }
       }
 
@@ -5410,10 +5436,16 @@ void cxWindow::reCreatePanel()
 // Frees the memory used by mWindow
 void cxWindow::freeWindow()
 {
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::freeWindow() started for %p (mPanel=%p, mWindow=%p)\n", (void*)this, (void*)mPanel, (void*)mWindow);
+#endif
    if (mPanel != nullptr)
    {
       if (cxBase::cxInitialized())
       {
+#ifdef DEBUG_TESTS
+         fprintf(stderr, "cxWindow::freeWindow() calling del_panel(%p)\n", (void*)mPanel);
+#endif
          del_panel(mPanel);
       }
       mPanel = nullptr;
@@ -5422,10 +5454,16 @@ void cxWindow::freeWindow()
    {
       if (cxBase::cxInitialized())
       {
+#ifdef DEBUG_TESTS
+         fprintf(stderr, "cxWindow::freeWindow() calling delwin(%p)\n", (void*)mWindow);
+#endif
          delwin(mWindow);
       }
       mWindow = nullptr;
    }
+#ifdef DEBUG_TESTS
+   fprintf(stderr, "cxWindow::freeWindow() finished for %p\n", (void*)this);
+#endif
 } // freeWindow
 
 // Combines all the messages lines into one

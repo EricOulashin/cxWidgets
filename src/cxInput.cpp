@@ -809,13 +809,23 @@ void cxInput::getInputText(string& pValue, int pX, bool pCheckPrintable)
       // Get the text in the window from mInputStartX up to the cursor
       //  position.  If there is a border, the input will be on row 1;
       //  without a border, the input will be on row 0.
+      int requestLen = pX - mInputStartX + 1;
+      if (requestLen > mInputLen)
+      {
+         requestLen = mInputLen;
+      }
+      if (requestLen < 0)
+      {
+         requestLen = 0;
+      }
+
       if (hasBorder())
       {
-         numChars = mvwinchnstr(mWindow, 1, mInputStartX, buffer, pX - mInputStartX + 1);
+         numChars = mvwinchnstr(mWindow, 1, mInputStartX, buffer, requestLen);
       }
       else
       {
-         numChars = mvwinchnstr(mWindow, 0, mInputStartX, buffer, pX - mInputStartX + 1);
+         numChars = mvwinchnstr(mWindow, 0, mInputStartX, buffer, requestLen);
       }
       // The ncurses data type 'chtype' contains both the
       //  character and attribute information.  In order to
