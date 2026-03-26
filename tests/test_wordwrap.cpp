@@ -4,27 +4,34 @@
 #include <cassert>
 #include "../src/cxStringUtils.h"
 
+using std::vector;
+using std::string;
+using std::cout;
+using std::cerr;
+using std::endl;
+
+
 // Mock some of cxWidgets behavior since we don't want to initialize ncurses for a simple string test
 // or we can just test the logic that cxWindow::init uses.
 
-std::vector<std::string> wrapText(const std::string& message, int innerWidth) {
-    std::vector<std::string> mMessageLines;
+vector<string> wrapText(const string& message, int innerWidth) {
+    vector<string> mMessageLines;
     if (message == "") return mMessageLines;
 
-    std::vector<std::string> iMessageLines;
+    vector<string> iMessageLines;
     cxStringUtils::SplitStringRegex(message, "\n", iMessageLines);
     if (iMessageLines.empty() && !message.empty()) {
         iMessageLines.push_back(message);
     }
 
-    for (const std::string& msgLine : iMessageLines) {
+    for (const string& msgLine : iMessageLines) {
         if ((int)msgLine.length() <= innerWidth) {
             mMessageLines.push_back(msgLine);
         } else {
-            std::string currentLine;
-            std::vector<std::string> words;
+            string currentLine;
+            vector<string> words;
             cxStringUtils::SplitStringRegex(msgLine, " ", words);
-            for (const std::string& word : words) {
+            for (const string& word : words) {
                 if ((int)word.length() >= innerWidth) {
                     if (!currentLine.empty()) {
                         if (currentLine.back() == ' ') currentLine.pop_back();
@@ -62,14 +69,14 @@ void test_wrapping() {
     // "A high-level, interpreted, general-purpose programming language." is 62 chars long.
     // If width is 60, it MUST wrap.
     
-    std::string text1 = "A high-level, interpreted, general-purpose programming language.";
+    string text1 = "A high-level, interpreted, general-purpose programming language.";
     int width = 60;
     int innerWidth = width - 4; // FlashcardApp uses width - 4 in its manual check
     
     auto lines = wrapText(text1, innerWidth);
     
-    std::cout << "Test 1 lines:" << std::endl;
-    for (auto& l : lines) std::cout << "  [" << l << "]" << std::endl;
+    cout << "Test 1 lines:" << endl;
+    for (auto& l : lines) cout << "  [" << l << "]" << endl;
     
     // Check that "language." is not split
     bool languageSplit = false;
@@ -79,10 +86,10 @@ void test_wrapping() {
     assert(!languageSplit);
 
     // Case 2: Docker text
-    std::string text2 = "A set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.";
+    string text2 = "A set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.";
     lines = wrapText(text2, innerWidth);
-    std::cout << "Test 2 lines:" << std::endl;
-    for (auto& l : lines) std::cout << "  [" << l << "]" << std::endl;
+    cout << "Test 2 lines:" << endl;
+    for (auto& l : lines) cout << "  [" << l << "]" << endl;
     
     for (auto& l : lines) {
         assert((int)l.length() <= innerWidth);
@@ -91,6 +98,6 @@ void test_wrapping() {
 
 int main() {
     test_wrapping();
-    std::cout << "All tests passed!" << std::endl;
+    cout << "All tests passed!" << endl;
     return 0;
 }
