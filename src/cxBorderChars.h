@@ -14,7 +14,7 @@
  */
 
 #include "cxBorderStyles.h"
-#include <ncurses.h>
+#include "cxPlatform.h"
 
 namespace cx {
 

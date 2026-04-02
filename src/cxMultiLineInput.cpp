@@ -2247,6 +2247,7 @@ void cxMultiLineInput::getNavKeys(set<int>& pNavKeys) const
    pNavKeys = mNavKeys;
 } // getNavKeys
 
+#if defined(WANT_TIMEOUT) && !defined(_WIN32)
 void cxMultiLineInput::setTimeout(int pTimeout)
 {
    for (const auto& input : mInputs)
@@ -2269,6 +2270,7 @@ int cxMultiLineInput::getTimeout() const
 
    return(timeout);
 } // getTimeout
+#endif // defined(WANT_TIMEOUT) && !defined(_WIN32)
 
 string cxMultiLineInput::cxTypeStr() const
 {

@@ -1,6 +1,6 @@
 # cxWidgets
-This is an object-oriented text user interface library for Linux written in C++.  This is intended for
-those developing a text terminal-based software application in Linux with C++.
+This is an object-oriented text user interface library for Linux, macOS, and Windows written in C++.  This is intended for
+those developing a text terminal-based software application in C++.
 
 This is a wrapper around <a href='https://invisible-island.net/ncurses/' target='_blank'>nCurses</a>; thus,
 this library requires the package libncurses-dev to be installed, and any software that uses this (and
@@ -111,6 +111,62 @@ Some notable make commands
 </ul>
 
 The makefile supports using ccache if it's available on the system.
+
+## Building on Windows (Visual Studio 2022)
+
+cxWidgets also builds on Windows using Visual Studio 2022. The Windows build uses
+[PDCurses](https://github.com/wmcbrine/PDCurses) (WinCon backend) as a drop-in replacement for
+ncurses, providing a ncurses-compatible API via the Windows Console API.
+
+### Prerequisites
+
+- Visual Studio 2022 (Community, Professional, or Enterprise) with the **Desktop development with C++** workload installed.
+- PDCurses is included as a **git submodule** at `vs/pdcurses/`. When cloning cxWidgets, initialize it with:
+  ```
+  git clone --recurse-submodules https://github.com/EricOulashin/cxWidgets.git
+  ```
+  Or, if you already have a clone without the submodule:
+  ```
+  git submodule update --init
+  ```
+
+### Building
+
+Open `vs/cxWidgets.sln` in Visual Studio 2022 and build the solution (Build → Build Solution or
+Rebuild Solution). Both **Debug|x64** and **Release|x64** configurations are supported.
+
+You can also build from the command line using MSBuild:
+```
+cd vs
+msbuild cxWidgets.sln -t:Rebuild -p:Configuration=Debug -p:Platform=x64
+msbuild cxWidgets.sln -t:Rebuild -p:Configuration=Release -p:Platform=x64
+```
+
+### Output files
+
+All build outputs are placed in `vs/bin/Debug/` or `vs/bin/Release/`:
+
+| File | Description |
+|------|-------------|
+| `pdcurses.lib` | PDCurses static library (ncurses-compatible for Windows) |
+| `cxWidgets_static.lib` | cxWidgets static library |
+| `cxWidgets.lib` / `cxWidgets.dll` | cxWidgets dynamic library (DLL) and its import library |
+| `testApp.exe` | Manual test application |
+
+### Linking your project against cxWidgets on Windows
+
+Link against `cxWidgets_static.lib` (static) or `cxWidgets.lib` + `cxWidgets.dll` (dynamic),
+plus `pdcurses.lib` and `user32.lib`. Add `vs/pdcurses` and `src` to your include directories.
+
+### Platform compatibility notes
+
+- **PDCurses** (WinCon backend) provides the same ncurses API used on Linux/macOS, so cxWidgets
+  source code is fully shared across platforms.
+- **WANT_TIMEOUT** (signal-based idle timeout via `SIGALRM`) is automatically disabled on Windows
+  since Windows does not support `SIGALRM`.
+- **POSIX regex** (`<regex.h>`) is replaced with C++17 `<regex>` on Windows.
+- The platform compatibility header `src/cxPlatform.h` handles all platform differences
+  automatically — no source changes are needed when porting applications between platforms.
 
 ## Screenshots
 These are some screenshots of the test app, showing examples of what you can do with cxWidgets:

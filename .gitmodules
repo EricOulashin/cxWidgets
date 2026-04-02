@@ -1,0 +1,4 @@
+[submodule "vs/pdcurses"]
+	path = vs/pdcurses
+	url = https://github.com/wmcbrine/PDCurses.git
+	ignore = untracked

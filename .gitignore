@@ -68,6 +68,20 @@ devnotes.txt
 # IDE
 .idea/
 
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+ipch/
+
+# Visual Studio build output (vs/ subdirectory)
+vs/bin/
+vs/obj/
+
 # Demo
 snake_demo
 snake_demo.dSYM

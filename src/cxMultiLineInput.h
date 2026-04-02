@@ -1364,6 +1364,7 @@ class cxMultiLineInput : public cxWindow
        */
       virtual void getNavKeys(std::set<int>& pNavKeys) const;
 
+#if defined(WANT_TIMEOUT) && !defined(_WIN32)
       /**
        * \brief Sets the amount of time (in seconds) that the input should
        * \brief wait when idle before exiting the input loop (0 = no timeout).
@@ -1381,6 +1382,7 @@ class cxMultiLineInput : public cxWindow
        *  the input loop (0 = no timeout).
        */
       int getTimeout() const;
+#endif // defined(WANT_TIMEOUT) && !defined(_WIN32)
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to

@@ -7,7 +7,13 @@
  * Copyright (c) 2004-2007 Michael H. Kinney
  */
 
-#include <regex.h>
+#ifdef _WIN32
+   // Windows: use C++17 std::regex (POSIX regex.h not available)
+   #include <regex>
+#else
+   // Unix/Linux/macOS: POSIX regex
+   #include <regex.h>
+#endif
 #include <cctype>  // For isdigit(), isalpha, etc.
 #include <string>
 #include <vector>
@@ -109,6 +115,7 @@ namespace cxStringUtils
    std::string toString(const long double& x);
    std::string toString(const unsigned& x);
    std::string toString(const unsigned long& x);
+   std::string toString(const unsigned long long& x);
    std::string toString(const cx::eReturnCode& x);
    std::string toString(const cx::eInputOptions& x);
    std::string toString(const cx::eBorderStyle& x);

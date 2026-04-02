@@ -3,7 +3,7 @@
 #include "cxGrid.h"
 #include "cxUtils.h"
 #include "cxButton.h"
-#include <ncurses.h>
+#include "cxPlatform.h"
 #include <algorithm>
 #include <sstream>
 
