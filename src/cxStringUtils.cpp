@@ -8,7 +8,7 @@
 #include "cxStringUtils.h"
 #include "cxMiscDefines.h"
 #include <assert.h>
-#include <ncurses.h> // For ncurses key codes
+#include "cxPlatform.h" // For platform-specific curses includes (and ncurses key codes on Unix)
 #include <typeinfo>
 #include <algorithm>
 using std::string;
@@ -24,15 +24,38 @@ using namespace cx;
 
 // Splits a string based on a regular expression, similar to
 //  Perl's split function.
-void cxStringUtils::SplitStringRegex(const string& input, const string& regex,
+void cxStringUtils::SplitStringRegex(const string& input, const string& regexStr,
        vector<string>& resultContainer)
-       {
-   regex_t pattern;          // Pattern to match
-   int flags = REG_EXTENDED; // Allow extened regular expressions
-
+{
    resultContainer.clear();
 
-   if( regcomp(&pattern, regex.c_str(), flags) == 0 )
+#ifdef _WIN32
+   // Windows: use C++17 std::regex
+   try
+   {
+      std::regex pattern(regexStr, std::regex::extended);
+      std::sregex_iterator it(input.begin(), input.end(), pattern);
+      std::sregex_iterator end;
+      size_t lastPos = 0;
+      for (; it != end; ++it)
+      {
+         const std::smatch& m = *it;
+         size_t matchPos = static_cast<size_t>(m.position());
+         size_t matchLen = static_cast<size_t>(m.length());
+         if (matchPos > lastPos)
+            resultContainer.push_back(input.substr(lastPos, matchPos - lastPos));
+         lastPos = matchPos + (matchLen > 0 ? matchLen : 1);
+      }
+      if (!resultContainer.empty() && lastPos < input.size())
+         resultContainer.push_back(input.substr(lastPos));
+   }
+   catch (...) {}
+#else
+   // Unix/Linux/macOS: use POSIX regex
+   regex_t pattern;          // Pattern to match
+   int flags = REG_EXTENDED; // Allow extended regular expressions
+
+   if( regcomp(&pattern, regexStr.c_str(), flags) == 0 )
    {
       regmatch_t match;  // Start/end info for regex matches
 
@@ -43,7 +66,7 @@ void cxStringUtils::SplitStringRegex(const string& input, const string& regex,
       while( (regexec(&pattern, inputCStr+(sizeof(char)*wordStart),
                      1, &match, 0) == 0) &&
              (wordStart < (int)input.size()) )
-             {
+      {
          // Insert the substring into resultContainer, if a
          //  match is found.
          if( match.rm_so != -1 )
@@ -59,15 +82,6 @@ void cxStringUtils::SplitStringRegex(const string& input, const string& regex,
 
             resultContainer.push_back(input.substr(wordStart, wordLength));
 
-            // The end offset of the current match should
-            //  be added to wordStart so that the next
-            //  word in the string is extracted.  However,
-            //  if the end offset is 0, the best we can do
-            //  is to just increment wordStart by 1 (if the
-            //  regex contains something like a 0-or-more
-            //  match, it could match every character..which
-            //  is true, since each character _is_ separated
-            //  by 0 or more matches..)
             if( match.rm_eo != 0 )
                wordStart += match.rm_eo;
             else
@@ -87,9 +101,10 @@ void cxStringUtils::SplitStringRegex(const string& input, const string& regex,
       {
          resultContainer.push_back(input.substr(wordStart));
       }
-   }
 
-   regfree(&pattern);
+      regfree(&pattern);
+   }
+#endif
 
    // If resultContainer has no elements and input is non-blank,
    //  that means the regex wasn't found..  so just insert the
@@ -106,9 +121,22 @@ void cxStringUtils::SplitStringRegex(const string& input, const string& regex,
 // useBasicRegex specifies whether to use basic regular
 //  expressions (when false, extended regular exprssions
 //  are used).
-bool cxStringUtils::Find(const string& input, const string& regex, bool useBasicRegex)
+bool cxStringUtils::Find(const string& input, const string& regexStr, bool useBasicRegex)
 {
    bool found(false);
+
+#ifdef _WIN32
+   // Windows: use C++17 std::regex
+   try
+   {
+      auto flags = useBasicRegex ?
+         std::regex::basic : std::regex::extended;
+      std::regex re(regexStr, flags);
+      found = std::regex_search(input, re);
+   }
+   catch (...) {}
+#else
+   // Unix/Linux/macOS: use POSIX regex
    regex_t regEx;
    int cflags;
 
@@ -125,23 +153,38 @@ bool cxStringUtils::Find(const string& input, const string& regex, bool useBasic
 
    // Compile the regular expression and execute it..  If regexec
    //  returns 0, that means it was found.
-   if( regcomp(&regEx, regex.c_str(), cflags) == 0 )
+   if( regcomp(&regEx, regexStr.c_str(), cflags) == 0 )
    {
       if( regexec(&regEx, input.c_str(), 0, nullptr, 0) == 0 )
          found = true;
       regfree(&regEx);
    }
+#endif
 
    return found;
 }
 
 // Performs a regular expression search on a string and
 //  copies the resulting string into output.
-void cxStringUtils::Find(const string& input, const string& regex, string& output)
+void cxStringUtils::Find(const string& input, const string& regexStr, string& output)
 {
+#ifdef _WIN32
+   // Windows: use C++17 std::regex
+   try
+   {
+      std::regex pattern(regexStr, std::regex::extended);
+      std::smatch m;
+      if (std::regex_search(input, m, pattern))
+         output = m[0].str();
+      else
+         output.erase();
+   }
+   catch (...) { output.erase(); }
+#else
+   // Unix/Linux/macOS: use POSIX regex
    regex_t pattern;  // Regex pattern to be matched
 
-   if( regcomp(&pattern, regex.c_str(), REG_EXTENDED) == 0 )
+   if( regcomp(&pattern, regexStr.c_str(), REG_EXTENDED) == 0 )
    {
       regmatch_t match;  // Start/end info for regex matches
       if( regexec(&pattern, input.c_str(), 1, &match, 0) == 0 )
@@ -150,6 +193,7 @@ void cxStringUtils::Find(const string& input, const string& regex, string& outpu
          output.erase();
       regfree(&pattern);
    }
+#endif
 }
 
 // Performs a search & replace basd on a regular expression
@@ -159,8 +203,43 @@ void cxStringUtils::Find(const string& input, const string& regex, string& outpu
 //  the regular expression string was found.
 bool cxStringUtils::Replace(string& srcStr, const string& regexStr,
         const string& replacementStr)
-        {
+{
    bool regexFound(false);
+
+#ifdef _WIN32
+   // Windows: use C++17 std::regex
+   // Note: std::regex back-references in replacement use $1, $2, etc.
+   // We translate the \\1, \\2 style to $1, $2 for std::regex_replace.
+   try
+   {
+      std::regex re(regexStr, std::regex::extended);
+      // Translate \\N back-references to $N for std::regex_replace
+      string fmtStr;
+      for (size_t i = 0; i < replacementStr.size(); ++i)
+      {
+         if (replacementStr[i] == '\\' && i + 1 < replacementStr.size()
+             && isdigit((unsigned char)replacementStr[i+1]))
+         {
+            fmtStr += '$';
+            fmtStr += replacementStr[i+1];
+            ++i;
+         }
+         else
+         {
+            fmtStr += replacementStr[i];
+         }
+      }
+      string result = std::regex_replace(srcStr, re, fmtStr,
+                                          std::regex_constants::format_first_only);
+      if (result != srcStr)
+      {
+         regexFound = true;
+         srcStr = result;
+      }
+   }
+   catch (...) {}
+#else
+   // Unix/Linux/macOS: use POSIX regex
    regex_t regex;  // Regular expression to match
 
    // Compile the regex
@@ -192,7 +271,6 @@ bool cxStringUtils::Replace(string& srcStr, const string& regexStr,
                      // We've found a reference to a parenthecised
                      //  subexpression..  Copy the characters from
                      //  srcStr to result.
-                     //int referenceNum = atoi(&(replacementStr[i+1]));
                      int referenceNum = replacementStr[i+1]-48;
 
                      if( referenceNum > 0 && referenceNum < (int)regex.re_nsub+1 )
@@ -222,6 +300,7 @@ bool cxStringUtils::Replace(string& srcStr, const string& regexStr,
 
       delete [] matches;
    }
+#endif
 
    return regexFound;
 }
@@ -358,6 +437,13 @@ std::string cxStringUtils::toString(const unsigned& x)
 } // toString
 
 std::string cxStringUtils::toString(const unsigned long& x)
+{
+   ostringstream oss;
+   oss << x;
+   return oss.str();
+} // toString
+
+std::string cxStringUtils::toString(const unsigned long long& x)
 {
    ostringstream oss;
    oss << x;

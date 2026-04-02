@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{B2C3D4E5-F6A7-8901-BCDE-F12345678901}</ProjectGuid>
+    <RootNamespace>cxWidgets</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\cxWidgets\$(Configuration)\</IntDir>
+    <TargetName>cxWidgets_static</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\cxWidgets\$(Configuration)\</IntDir>
+    <TargetName>cxWidgets_static</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>PDC_WINCON;PDC_FORCE_UTF8;WANT_TIMEOUT;_WIN64;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)pdcurses;$(ProjectDir)pdcurses\wincon;$(ProjectDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- Suppress MSVC warnings that are pedantic but not problematic -->
+      <DisableSpecificWarnings>4996;4244;4267;4018;4800;4805</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>PDC_WINCON;PDC_FORCE_UTF8;WANT_TIMEOUT;_WIN64;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)pdcurses;$(ProjectDir)pdcurses\wincon;$(ProjectDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4244;4267;4018;4800;4805</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\cxApp.cpp" />
+    <ClCompile Include="..\src\cxBorderChars.cpp" />
+    <ClCompile Include="..\src\cxBorderStyles.cpp" />
+    <ClCompile Include="..\src\cxButton.cpp" />
+    <ClCompile Include="..\src\cxComboBox.cpp" />
+    <ClCompile Include="..\src\cxDate.cpp" />
+    <ClCompile Include="..\src\cxDatePicker.cpp" />
+    <ClCompile Include="..\src\cxDialog.cpp" />
+    <ClCompile Include="..\src\cxFileViewer.cpp" />
+    <ClCompile Include="..\src\cxForm.cpp" />
+    <ClCompile Include="..\src\cxFunction.cpp" />
+    <ClCompile Include="..\src\cxGrid.cpp" />
+    <ClCompile Include="..\src\cxInput.cpp" />
+    <ClCompile Include="..\src\cxLabel.cpp" />
+    <ClCompile Include="..\src\cxMenu.cpp" />
+    <ClCompile Include="..\src\cxMenuBar.cpp" />
+    <ClCompile Include="..\src\cxMessageDialog.cpp" />
+    <ClCompile Include="..\src\cxMultiForm.cpp" />
+    <ClCompile Include="..\src\cxMultiLineInput.cpp" />
+    <ClCompile Include="..\src\cxNotebook.cpp" />
+    <ClCompile Include="..\src\cxObject.cpp" />
+    <ClCompile Include="..\src\cxOpenFileDialog.cpp" />
+    <ClCompile Include="..\src\cxPanel.cpp" />
+    <ClCompile Include="..\src\cxScrolledWindow.cpp" />
+    <ClCompile Include="..\src\cxSearchPanel.cpp" />
+    <ClCompile Include="..\src\cxStringUtils.cpp" />
+    <ClCompile Include="..\src\cxTextValidator.cpp" />
+    <ClCompile Include="..\src\cxTimer.cpp" />
+    <ClCompile Include="..\src\cxUtils.cpp" />
+    <ClCompile Include="..\src\cxValidators.cpp" />
+    <ClCompile Include="..\src\cxWidgetsException.cpp" />
+    <ClCompile Include="..\src\cxWindow.cpp" />
+    <ClCompile Include="..\src\floatingPtInputWithRightLabel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\cxApp.h" />
+    <ClInclude Include="..\src\cxBorderChars.h" />
+    <ClInclude Include="..\src\cxBorderStyles.h" />
+    <ClInclude Include="..\src\cxButton.h" />
+    <ClInclude Include="..\src\cxColors.h" />
+    <ClInclude Include="..\src\cxComboBox.h" />
+    <ClInclude Include="..\src\cxDate.h" />
+    <ClInclude Include="..\src\cxDatePicker.h" />
+    <ClInclude Include="..\src\cxDialog.h" />
+    <ClInclude Include="..\src\cxFileViewer.h" />
+    <ClInclude Include="..\src\cxForm.h" />
+    <ClInclude Include="..\src\cxFunction.h" />
+    <ClInclude Include="..\src\cxFunctionKeyCases.h" />
+    <ClInclude Include="..\src\cxGrid.h" />
+    <ClInclude Include="..\src\cxInput.h" />
+    <ClInclude Include="..\src\cxInputOptions.h" />
+    <ClInclude Include="..\src\cxInputTypes.h" />
+    <ClInclude Include="..\src\cxKeyDefines.h" />
+    <ClInclude Include="..\src\cxLabel.h" />
+    <ClInclude Include="..\src\cxMenu.h" />
+    <ClInclude Include="..\src\cxMenuBar.h" />
+    <ClInclude Include="..\src\cxMenuItemType.h" />
+    <ClInclude Include="..\src\cxMessageDialog.h" />
+    <ClInclude Include="..\src\cxMessageDialogStyles.h" />
+    <ClInclude Include="..\src\cxMiscDefines.h" />
+    <ClInclude Include="..\src\cxMultiForm.h" />
+    <ClInclude Include="..\src\cxMultiLineInput.h" />
+    <ClInclude Include="..\src\cxNotebook.h" />
+    <ClInclude Include="..\src\cxObject.h" />
+    <ClInclude Include="..\src\cxOpenFileDialog.h" />
+    <ClInclude Include="..\src\cxPanel.h" />
+    <ClInclude Include="..\src\cxPlatform.h" />
+    <ClInclude Include="..\src\cxPositions.h" />
+    <ClInclude Include="..\src\cxReturnCodes.h" />
+    <ClInclude Include="..\src\cxScrolledWindow.h" />
+    <ClInclude Include="..\src\cxSearchPanel.h" />
+    <ClInclude Include="..\src\cxStringUtils.h" />
+    <ClInclude Include="..\src\cxTextValidator.h" />
+    <ClInclude Include="..\src\cxTimer.h" />
+    <ClInclude Include="..\src\cxUtils.h" />
+    <ClInclude Include="..\src\cxValidators.h" />
+    <ClInclude Include="..\src\cxWidgetItems.h" />
+    <ClInclude Include="..\src\cxWidgetsException.h" />
+    <ClInclude Include="..\src\cxWindow.h" />
+    <ClInclude Include="..\src\floatingPtInputWithRightLabel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="pdcurses.vcxproj">
+      <Project>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

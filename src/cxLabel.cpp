@@ -2,7 +2,7 @@
 
 #include "cxLabel.h"
 #include "cxUtils.h"
-#include <ncurses.h>
+#include "cxPlatform.h"
 
 using std::string;
 

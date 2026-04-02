@@ -1380,7 +1380,7 @@ cxWindow* cxWindow::getExtStatusWindow() const
 bool cxWindow::isHidden() const
 {
    if (mPanel == nullptr) return true;
-   return(panel_hidden(mPanel) == TRUE);
+   return(CX_PANEL_IS_HIDDEN(mPanel));
 } // isHidden
 
 long cxWindow::show(bool pBringToTop, bool pShowSubwindows)
@@ -1775,7 +1775,7 @@ bool cxWindow::isBelow(const cxWindow& pThatWindow) const
 void cxWindow::hide(bool pHideSubwindows)
 {
    // If not already hidden, hide the window.
-   if (mPanel != nullptr && panel_hidden(mPanel) == FALSE)
+   if (mPanel != nullptr && CX_PANEL_IS_VISIBLE(mPanel))
    {
       hide_panel(mPanel);
    }

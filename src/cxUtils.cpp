@@ -92,7 +92,9 @@ void cx::init(bool pEnableMouse)
    noecho();                 // do not echo characters
    intrflush(stdscr, FALSE); // flush on interrupt (Do we need/want this???)
    curs_set(0);              // Disable the cursor (it looks funky sometimes)
+#ifndef _WIN32
    ESCDELAY=0;               // change the ESCAPE key delay to 0
+#endif
 
    //trace(TRACE_MAXIMUM); // turn on maximum trace debugging
 
@@ -200,7 +202,10 @@ void cx::init(bool pEnableMouse)
       init_pair(eBLACK_CYAN,       COLOR_BLACK,   COLOR_CYAN);
    }
 
+#ifndef _WIN32
+   // SIGWINCH (window resize) is a POSIX signal not available on Windows
    signal(SIGWINCH, cx::signalHandler);
+#endif
 
    // Set up some default values for various cxWidgets items
    mMenuSelectionAttrs.insert(A_REVERSE); // Selected cxMenu items
@@ -1161,7 +1166,11 @@ void cx::signalHandler(int pSignal)
 {
    switch (pSignal)
    {
-      case SIGWINCH:  // Window attributes changed
+#ifndef _WIN32
+      case SIGWINCH:  // Window attributes changed (POSIX only)
+         break;
+#endif
+      default:
          break;
    }
 } // signalHandler
@@ -1575,9 +1584,12 @@ string cx::getAttrStr(attr_t pAttr)
       case A_REVERSE:
          attrStr = "REVERSE";
          break;
+#ifndef CX_A_DIM_EQUALS_A_NORMAL
+      // On PDCurses (Windows), A_DIM == A_NORMAL == 0, so skip this case
       case A_DIM:
          attrStr = "DIM";
          break;
+#endif
       case A_BOLD:
          attrStr = "BOLD";
          break;

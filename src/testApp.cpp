@@ -28,7 +28,9 @@
 #include "cxGrid.h"
 #include "cxLabel.h"
 #include "floatingPtInputWithRightLabel.h"
+#ifndef _WIN32
 #include <unistd.h> //  for sleep()
+#endif
 #include <stdlib.h>
 #include <iostream>
 #include <string>

@@ -8,8 +8,7 @@
 //  the cxWidgets UI framework and contains
 //  defaults for some things.
 
-#include <ncurses.h>
-#include <panel.h>
+#include "cxPlatform.h"
 
 #include <cstdio>
 #include <string>

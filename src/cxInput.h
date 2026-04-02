@@ -12,8 +12,8 @@
 #include "cxTextValidator.h"
 #include "cxInputOptions.h"
 #include "cxColors.h"
-#ifdef WANT_TIMEOUT
-#include <sys/signal.h> // For sigaction
+#if defined(WANT_TIMEOUT) && !defined(_WIN32)
+#include <sys/signal.h> // For sigaction (POSIX only)
 #endif
 #include <string>
 #include <map>
@@ -833,6 +833,7 @@ class cxInput : public cxWindow
        */
       virtual std::string runValidatorFunction() const;
 
+#if defined(WANT_TIMEOUT) && !defined(_WIN32)
       /**
        * \brief Sets the amount of time (in seconds) that the input should
        * \brief wait when idle before exiting the input loop (0 = no timeout).
@@ -848,6 +849,7 @@ class cxInput : public cxWindow
        * @return
        */
       int getTimeout() const;
+#endif // defined(WANT_TIMEOUT) && !defined(_WIN32)
 
       /**
        * \brief Returns the name of the cxWidgets class.  This can be used to

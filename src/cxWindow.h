@@ -22,7 +22,9 @@
 #include "cxMiscDefines.h"
 #include "cxFunction.h"
 #include "cxWidgetItems.h"
-#include <unistd.h>
+// cxPlatform.h is already included via cxObject.h and provides
+// <unistd.h> on Unix or Windows equivalents on Windows.
+// Do not include <unistd.h> directly here for cross-platform portability.
 #include <sstream>
 #include <iostream>
 #include <fstream>
