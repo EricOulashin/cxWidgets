@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build-unix:
     name: Build and Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -44,3 +44,21 @@ jobs:
           export COLUMNS=80
           export LINES=24
           make alltest CFLAGS+="-fPIC -DWANT_TIMEOUT -Werror -std=c++17 -pedantic -I. -I.."
+
+  build-windows:
+    name: Build (Windows)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build Release
+        run: |
+          cd vs
+          msbuild cxWidgets.sln -t:Rebuild -p:Configuration=Release -p:Platform=x64
