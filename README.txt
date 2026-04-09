@@ -57,7 +57,7 @@ Background:
   of formats. (i.e., phone number formatting, etc.)
 
 Authors:
-   Eric Oulashin (eric@oulashin.com)
+   Eric Oulashin (eric.oulashin@gmail.com)
    Mike Kinney (kinneym@redacesolutions.com)
    Glen Thorne (gthorne@whoneedsmicrosoft.com)
 
