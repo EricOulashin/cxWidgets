@@ -3,7 +3,7 @@
 # Requires: fakeroot, alien (install in CI or locally before running).
 set -e
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-VER="$(tr -d ' \t\r\n' < "$ROOT/VERSION")"
+VER="$(tr -d ' \t\r\n' < "$ROOT/CXWIDGETS_VERSION")"
 DEB_ARCH="$(dpkg-architecture -qDEB_HOST_ARCH 2>/dev/null || echo amd64)"
 DEB="libcxwidgets-dev_${VER}_${DEB_ARCH}.deb"
 mkdir -p "${ROOT}/dist"

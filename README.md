@@ -94,14 +94,16 @@ We had also been able to build the library on OS X (Darwin), though that hasn't 
 ## Versioning
 
 cxWidgets uses [semantic versioning](https://semver.org/) for releases. The authoritative version is the
-contents of the `VERSION` file at the repository root (for example `1.0.0` on a single line).
+contents of **`CXWIDGETS_VERSION`** at the repository root (for example `1.0.0` on a single line). This
+file must not be named `VERSION`: with `-I..` while building from `src/`, a root file named `VERSION`
+is mistaken for the C++20 standard header `<version>` on macOS (typically case-insensitive filesystems).
 
-- **`VERSION`** — bump this when you tag or publish a release (major / minor / patch).
+- **`CXWIDGETS_VERSION`** — bump this when you tag or publish a release (major / minor / patch).
 - **`src/cxVersion.h`** — C/C++ macros `CXWIDGETS_VERSION_MAJOR`, `CXWIDGETS_VERSION_MINOR`,
   `CXWIDGETS_VERSION_PATCH`, and `CXWIDGETS_VERSION_STRING`. Regenerate this file after changing
-  `VERSION` by running `scripts/generate-cxVersion-h.sh`.
-- **`Doxyfile`** — keep `PROJECT_NUMBER` in sync with `VERSION`.
-- **Shared libraries** — On Linux, the build produces a real file `libcxWidgets.so.M.N.P` (from `VERSION`),
+  `CXWIDGETS_VERSION` by running `scripts/generate-cxVersion-h.sh`.
+- **`Doxyfile`** — keep `PROJECT_NUMBER` in sync with `CXWIDGETS_VERSION`.
+- **Shared libraries** — On Linux, the build produces a real file `libcxWidgets.so.M.N.P` (from `CXWIDGETS_VERSION`),
   `SONAME` `libcxWidgets.so.M` (`M` is the major version), and `libcxWidgets.so` as a symlink. On macOS,
   the same idea is expressed with `libcxWidgets.M.N.P.dylib` and `libcxWidgets.M.dylib` symlinks.
 

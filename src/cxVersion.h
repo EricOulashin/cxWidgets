@@ -1,6 +1,6 @@
 // Copyright (c) 2005-2007 Michael H. Kinney
 //
-// Auto-generated from ../VERSION; run scripts/generate-cxVersion-h.sh after changing VERSION.
+// Auto-generated from ../CXWIDGETS_VERSION; run scripts/generate-cxVersion-h.sh after changing it.
 
 #ifndef CX_VERSION_H
 #define CX_VERSION_H

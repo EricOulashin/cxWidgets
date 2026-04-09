@@ -5,8 +5,9 @@
 # Get OS name
 OS = $(shell uname)
 
-# Library version (semantic versioning) — keep in sync with ../VERSION
-VERSION_FILE := ../VERSION
+# Library version (semantic versioning) — keep in sync with ../CXWIDGETS_VERSION
+# (Do not use a file named "VERSION": with -I.. it shadows C++20 <version> on case-insensitive FS.)
+VERSION_FILE := ../CXWIDGETS_VERSION
 VERSION := $(shell cat $(VERSION_FILE) 2>/dev/null | tr -d ' \t\n\r' || echo 0.0.0)
 VMAJOR := $(shell echo $(VERSION) | cut -d. -f1)
 

@@ -2,7 +2,7 @@
 # Build a Debian package from a completed GNU make build in src/.
 set -e
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-VER="$(tr -d ' \t\r\n' < "$ROOT/VERSION")"
+VER="$(tr -d ' \t\r\n' < "$ROOT/CXWIDGETS_VERSION")"
 DEB_ARCH="$(dpkg-architecture -qDEB_HOST_ARCH 2>/dev/null || echo amd64)"
 MULTIARCH="$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null || echo x86_64-linux-gnu)"
 STAGE="$(mktemp -d)"

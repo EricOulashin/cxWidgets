@@ -76,7 +76,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           set -e
-          VER="$(tr -d ' \t\r\n' < VERSION)"
+          VER="$(tr -d ' \t\r\n' < CXWIDGETS_VERSION)"
           NAME="cxWidgets-macos-sdk-${VER}"
           mkdir -p "${NAME}/include/cx" "${NAME}/lib"
           cp src/*.h "${NAME}/include/cx/"
@@ -130,7 +130,7 @@ jobs:
         shell: pwsh
         working-directory: ${{ github.workspace }}
         run: |
-          $v = (Get-Content -Path "VERSION" -Raw).Trim()
+          $v = (Get-Content -Path "CXWIDGETS_VERSION" -Raw).Trim()
           $dir = "cxWidgets-windows-sdk-$v"
           New-Item -ItemType Directory -Path "$dir/include/cx" -Force | Out-Null
           New-Item -ItemType Directory -Path "$dir/lib" -Force | Out-Null
