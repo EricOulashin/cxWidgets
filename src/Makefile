@@ -5,6 +5,19 @@
 # Get OS name
 OS = $(shell uname)
 
+# Library version (semantic versioning) — keep in sync with ../VERSION
+VERSION_FILE := ../VERSION
+VERSION := $(shell cat $(VERSION_FILE) 2>/dev/null | tr -d ' \t\n\r' || echo 0.0.0)
+VMAJOR := $(shell echo $(VERSION) | cut -d. -f1)
+
+ifeq ($(OS),Darwin)
+LIB_REAL := libcxWidgets.$(VERSION).dylib
+LIB_SONAME := libcxWidgets.$(VMAJOR).dylib
+else ifneq ($(OS),AIX)
+LIB_REAL := libcxWidgets.so.$(VERSION)
+LIB_SONAME := libcxWidgets.so.$(VMAJOR)
+endif
+
 # These help us swig cxWidgets for Perl
 PERL = /usr/bin/perl
 SWIG = /usr/bin/swig
@@ -72,21 +85,33 @@ examples: $(STATIC_LIB)
 test_sizing: ../tests/test_sizing.cpp $(STATIC_LIB)
 	$(CC) -o test_sizing $(CFLAGS) -I. ../tests/test_sizing.cpp $(STATIC_LIB) $(LIBS_OPT)
 
-# Library file targets
-$(DYNAMIC_LIB): $(WIDGETS_OBJS)
-ifeq ($(OS),Darwin)
-	$(CC) -dynamiclib -install_name $(DYNAMIC_LIB) -o $(DYNAMIC_LIB) $(CFLAGS) $(WIDGETS_OBJS) $(LIBS_OPT) -lc
-else
+# Library file targets (versioned SONAME on Linux / macOS; AIX unchanged)
 ifeq ($(OS),AIX)
+$(DYNAMIC_LIB): $(WIDGETS_OBJS)
 	rm -f $(STATIC_LIB)
 	ar rvu $(STATIC_LIB) $(WIDGETS_OBJS)
 	ranlib $(STATIC_LIB)
+else ifeq ($(OS),Darwin)
+$(LIB_REAL): $(WIDGETS_OBJS)
+	$(CC) -dynamiclib -current_version $(VERSION) -compatibility_version $(VMAJOR).0.0 \
+		-install_name $(LIB_SONAME) -o $(LIB_REAL) $(CFLAGS) $(WIDGETS_OBJS) $(LIBS_OPT) -lc
+
+$(LIB_SONAME): $(LIB_REAL)
+	ln -sf $(LIB_REAL) $(LIB_SONAME)
+
+$(DYNAMIC_LIB): $(LIB_SONAME)
+	ln -sf $(LIB_SONAME) $(DYNAMIC_LIB)
 else
-	$(CC) -shared -Wl,-soname,$(DYNAMIC_LIB) -o $(DYNAMIC_LIB) $(WIDGETS_OBJS) $(LIBS_OPT) -lc
-	# Create a static library for non-AIX too..
+$(LIB_REAL): $(WIDGETS_OBJS)
+	$(CC) -shared -Wl,-soname,$(LIB_SONAME) -o $(LIB_REAL) $(CFLAGS) $(WIDGETS_OBJS) $(LIBS_OPT) -lc
 	ar rvu $(STATIC_LIB) $(WIDGETS_OBJS)
 	ranlib $(STATIC_LIB)
-endif
+
+$(LIB_SONAME): $(LIB_REAL)
+	ln -sf $(LIB_REAL) $(LIB_SONAME)
+
+$(DYNAMIC_LIB): $(LIB_SONAME)
+	ln -sf $(LIB_SONAME) $(DYNAMIC_LIB)
 endif
 
 $(STATIC_LIB): $(WIDGETS_OBJS)
@@ -98,7 +123,13 @@ install: $(DYNAMIC_LIB) $(STATIC_LIB)
 	mkdir -p $(INSTALL_INC) 2>/dev/null
 	cp *.h $(INSTALL_INC)
 	cp $(STATIC_LIB) $(LIBDIR)
+ifeq ($(OS),AIX)
 	cp $(DYNAMIC_LIB) $(LIBDIR)
+else
+	cp $(LIB_REAL) $(LIBDIR)
+	cp $(LIB_SONAME) $(LIBDIR)
+	cp $(DYNAMIC_LIB) $(LIBDIR)
+endif
 
 # cxWidgets object file targets
 
@@ -267,7 +298,7 @@ cxWidgets_wrap.cxx: $(CXH)
 
 # Cleanup
 clean:
-	rm -f *.o *.a *.so *.dylib $(STATIC_LIB) $(DYNAMIC_LIB) testApp cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test_wordwrap test1 testcxInput keys trace test_sizing
+	rm -f *.o *.a $(STATIC_LIB) *.so *.so.* *.dylib libcxWidgets.*.dylib testApp cxUnitTest test_cxStringUtils test_cxDate test_cxValidators test_wordwrap test1 testcxInput keys trace test_sizing
 	$(MAKE) -C ../examples/flashcard clean
 	$(MAKE) -C ../examples/centipede clean
 	$(MAKE) -C ../examples/snake clean

@@ -2,15 +2,21 @@ name: CI Build and Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-unix:
-    name: Build and Test (${{ matrix.os }})
+    name: Build, test, and SDK (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
 
@@ -22,14 +28,16 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libncurses-dev libpanel-dev expect libexpect-perl
+          sudo apt-get install -y libncurses-dev libpanel-dev expect libexpect-perl alien fakeroot dpkg-dev
 
       - name: Install dependencies (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          # ncurses is usually pre-installed on macOS, but let's ensure we have everything
-          # Brew can be used if additional libraries are needed.
-          echo "Using pre-installed ncurses/panel/menu on macOS"
+          echo "Using system ncurses/panel/menu on macOS"
+          brew list doxygen 2>/dev/null || brew install doxygen
+
+      - name: Sync generated version header
+        run: ./scripts/generate-cxVersion-h.sh
 
       - name: Build
         run: |
@@ -39,14 +47,60 @@ jobs:
       - name: Test
         run: |
           cd src
-          # Setting TERM, COLUMNS, and LINES for ncurses tests
           export TERM=xterm
           export COLUMNS=80
           export LINES=24
           make alltest CFLAGS+="-fPIC -DWANT_TIMEOUT -Werror -std=c++17 -pedantic -I. -I.."
 
+      - name: Linux — build .deb and .rpm packages
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          ./packaging/build-deb.sh
+          ./packaging/build-rpm.sh
+
+      - name: Linux — upload package artifacts
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: |
+            dist/*.deb
+            dist/*.rpm
+
+      - name: macOS — regenerate HTML docs (optional)
+        if: matrix.os == 'macos-latest'
+        working-directory: ${{ github.workspace }}
+        run: command -v doxygen >/dev/null && doxygen Doxyfile || true
+
+      - name: macOS — bundle SDK (.tar.gz)
+        if: matrix.os == 'macos-latest'
+        run: |
+          set -e
+          VER="$(tr -d ' \t\r\n' < VERSION)"
+          NAME="cxWidgets-macos-sdk-${VER}"
+          mkdir -p "${NAME}/include/cx" "${NAME}/lib"
+          cp src/*.h "${NAME}/include/cx/"
+          cp src/libcxWidgets.a "${NAME}/lib/"
+          for f in src/libcxWidgets*.dylib; do
+            if [ -e "$f" ]; then
+              cp -P "$f" "${NAME}/lib/"
+            fi
+          done
+          if [ -d docs/html ]; then
+            cp -R docs/html "${NAME}/docs-html"
+          fi
+          mkdir -p dist
+          tar czvf "dist/${NAME}.tar.gz" "${NAME}"
+
+      - name: macOS — upload SDK artifact
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-sdk
+          path: dist/cxWidgets-macos-sdk-*.tar.gz
+
   build-windows:
-    name: Build (Windows)
+    name: Build (Windows) and SDK
     runs-on: windows-latest
 
     steps:
@@ -62,3 +116,97 @@ jobs:
         run: |
           cd vs
           msbuild cxWidgets.sln -t:Rebuild -p:Configuration=Release -p:Platform=x64
+
+      - name: Install Doxygen (optional)
+        run: choco install doxygen.install -y --no-progress
+        continue-on-error: true
+
+      - name: Regenerate HTML docs (optional)
+        working-directory: ${{ github.workspace }}
+        run: doxygen Doxyfile
+        continue-on-error: true
+
+      - name: Create Windows SDK zip
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: |
+          $v = (Get-Content -Path "VERSION" -Raw).Trim()
+          $dir = "cxWidgets-windows-sdk-$v"
+          New-Item -ItemType Directory -Path "$dir/include/cx" -Force | Out-Null
+          New-Item -ItemType Directory -Path "$dir/lib" -Force | Out-Null
+          Copy-Item -Path "src/*.h" -Destination "$dir/include/cx/"
+          $rel = "vs/bin/Release"
+          foreach ($p in @("cxWidgets_static.lib", "cxWidgets.lib", "cxWidgets.dll", "pdcurses.lib")) {
+            $f = Join-Path $rel $p
+            if (Test-Path $f) { Copy-Item $f "$dir/lib/" }
+          }
+          if (Test-Path "docs/html") {
+            Copy-Item -Recurse "docs/html" "$dir/docs-html"
+          }
+          New-Item -ItemType Directory -Path "dist" -Force | Out-Null
+          Compress-Archive -Path $dir -DestinationPath "dist/$dir.zip" -Force
+
+      - name: Upload Windows SDK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-sdk
+          path: dist/cxWidgets-windows-sdk-*.zip
+
+  publish-package-repositories:
+    name: Publish APT and YUM indexes (GitHub Pages)
+    runs-on: ubuntu-latest
+    needs: [build-unix]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - name: Download Linux packages from this workflow
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-packages
+          path: incoming
+
+      - name: Install repository tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y createrepo-c dpkg-dev
+
+      - name: Merge with existing gh-pages linux-repo and refresh indexes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          mkdir -p publish/apt publish/yum/x86_64
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          if git ls-remote --heads "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" gh-pages | grep -q gh-pages; then
+            git clone --branch gh-pages --depth 1 "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" prev
+            if [ -d prev/linux-repo ]; then
+              cp -a prev/linux-repo/. publish/
+            fi
+          fi
+          shopt -s nullglob
+          for f in incoming/*.deb; do
+            [ -f "$f" ] && cp "$f" publish/apt/
+          done
+          for f in incoming/*.rpm; do
+            [ -f "$f" ] && cp "$f" publish/yum/x86_64/
+          done
+          cd publish/apt
+          dpkg-scanpackages . /dev/null 2>/dev/null | gzip -9c > Packages.gz
+          cd ../..
+          if [ -d publish/yum/x86_64/repodata ]; then
+            createrepo_c --update publish/yum/x86_64
+          else
+            createrepo_c publish/yum/x86_64
+          fi
+
+      - name: Deploy linux-repo to GitHub Pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./publish
+          destination_dir: linux-repo
+          keep_files: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com

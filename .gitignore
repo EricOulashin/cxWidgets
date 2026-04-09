@@ -82,6 +82,11 @@ ipch/
 vs/bin/
 vs/obj/
 
+# Local packaging output
+dist/
+src/libcxWidgets.so.1
+src/libcxWidgets.so.1.0.0
+
 # Demo
 snake_demo
 snake_demo.dSYM

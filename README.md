@@ -91,6 +91,79 @@ Ubuntu, Debian, etc.
 
 We had also been able to build the library on OS X (Darwin), though that hasn't been tested recently.
 
+## Versioning
+
+cxWidgets uses [semantic versioning](https://semver.org/) for releases. The authoritative version is the
+contents of the `VERSION` file at the repository root (for example `1.0.0` on a single line).
+
+- **`VERSION`** — bump this when you tag or publish a release (major / minor / patch).
+- **`src/cxVersion.h`** — C/C++ macros `CXWIDGETS_VERSION_MAJOR`, `CXWIDGETS_VERSION_MINOR`,
+  `CXWIDGETS_VERSION_PATCH`, and `CXWIDGETS_VERSION_STRING`. Regenerate this file after changing
+  `VERSION` by running `scripts/generate-cxVersion-h.sh`.
+- **`Doxyfile`** — keep `PROJECT_NUMBER` in sync with `VERSION`.
+- **Shared libraries** — On Linux, the build produces a real file `libcxWidgets.so.M.N.P` (from `VERSION`),
+  `SONAME` `libcxWidgets.so.M` (`M` is the major version), and `libcxWidgets.so` as a symlink. On macOS,
+  the same idea is expressed with `libcxWidgets.M.N.P.dylib` and `libcxWidgets.M.dylib` symlinks.
+
+## CI build artifacts
+
+[GitHub Actions](https://github.com/EricOulashin/cxWidgets/actions) builds each push and pull request
+against `main`. Completed workflows expose downloadable artifacts (retention follows GitHub’s default
+policy), including:
+
+| Artifact | Contents |
+|----------|-----------|
+| **linux-packages** | `.deb` for Debian/Ubuntu-style systems and an `.rpm` produced via `alien` (test on Fedora/RHEL derivatives). |
+| **windows-sdk** | Zip layout: `include/cx/*.h`, `lib/` with Release `cxWidgets_static.lib`, import library, DLL, `pdcurses.lib`, and `docs-html/` when Doxygen runs or pre-generated docs are present. |
+| **macos-sdk** | `.tar.gz` with the same general layout: headers under `include/cx/`, static and versioned dynamic libraries under `lib/`, and `docs-html/` when available. |
+
+## Linux package repositories (APT and YUM) via GitHub Pages
+
+When changes land on `main`, the workflow can publish a **flat** APT repository and a **createrepo**-style
+YUM tree under the `linux-repo/` directory on the **`gh-pages`** branch. You must enable
+[GitHub Pages](https://docs.github.com/en/pages) for the repository (typically “Deploy from branch” →
+`gh-pages`). Package indexes are **not** GPG-signed; the snippets below disable signature checks for this
+unofficial repository (appropriate only if you trust the source).
+
+Replace the host/path if you use a fork or a different GitHub username.
+
+**APT (Debian, Ubuntu, Linux Mint, etc.)**
+
+Create `/etc/apt/sources.list.d/cxwidgets.list`:
+
+```
+deb [trusted=yes arch=amd64] https://ericoulashin.github.io/cxWidgets/linux-repo/apt ./
+```
+
+Then:
+
+```
+sudo apt update
+sudo apt install libcxwidgets-dev
+```
+
+**YUM/DNF (Fedora, RHEL, AlmaLinux, etc.)**
+
+Create `/etc/yum.repos.d/cxwidgets.repo`:
+
+```
+[cxwidgets-github]
+name=cxWidgets (GitHub Pages)
+baseurl=https://ericoulashin.github.io/cxWidgets/linux-repo/yum/x86_64
+enabled=1
+gpgcheck=0
+```
+
+Then install the development package provided by the RPM (name may match `libcxwidgets-dev` or similar
+depending on how `alien` named the RPM):
+
+```
+sudo dnf install 'libcxwidgets*'    # or: yum install ...
+```
+
+New `.deb` / `.rpm` builds are appended when CI runs on `main`; refresh indexes with `sudo apt update` or
+`sudo dnf clean expire-cache && sudo dnf makecache`.
+
 ## Building
 There is a makefile in the src directory.  You can build from the command line by going into the src
 directory and running make.  That will build object files (*.o) which you can link your project against.
