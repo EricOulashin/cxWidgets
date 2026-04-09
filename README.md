@@ -121,17 +121,45 @@ policy), including:
 
 ## Linux package repositories (APT and YUM) via GitHub Pages
 
-When changes land on `main`, the workflow can publish a **flat** APT repository and a **createrepo**-style
-YUM tree under the `linux-repo/` directory on the **`gh-pages`** branch. You must enable
-[GitHub Pages](https://docs.github.com/en/pages) for the repository (typically “Deploy from branch” →
-`gh-pages`). Package indexes are **not** GPG-signed; the snippets below disable signature checks for this
-unofficial repository (appropriate only if you trust the source).
+When a workflow run on **`main`** succeeds, CI can publish a **flat** APT repository and a **createrepo**-style
+YUM tree on the **`gh-pages`** branch under **`linux-repo/`**. Everything below assumes the
+GitHub Pages site is enabled for this repo.
 
-Replace the host/path if you use a fork or a different GitHub username.
+### One-time setup (project maintainer)
 
-**APT (Debian, Ubuntu, Linux Mint, etc.)**
+1. In the GitHub repo: **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
+3. Choose branch **`gh-pages`**, folder **`/ (root)`**, then save.
+4. Push to **`main`** (or use **Actions → CI Build and Test → Run workflow**) so the **Publish APT and YUM indexes** job runs. It only runs on pushes to **`main`**, not on pull requests.
 
-Create `/etc/apt/sources.list.d/cxwidgets.list`:
+Until **`gh-pages`** exists and that job has run at least once, the APT URL will return **404** and `apt` will report **Unable to locate package**.
+
+### Check that the APT index exists
+
+Replace the host and repo name if you use a fork (Pages URL is `https://<user>.github.io/<repo>/`).
+
+```bash
+curl -fsSL -o /dev/null -w '%{http_code}\n' \
+  https://ericoulashin.github.io/cxWidgets/linux-repo/apt/Packages.gz
+```
+
+You want **`200`**. **`404`** means Pages is not deployed yet, the path is wrong, or the publish job failed.
+
+### Architecture
+
+CI currently builds **`amd64`** packages only. Confirm before using the APT line:
+
+```bash
+dpkg --print-architecture
+```
+
+If that prints **`arm64`** (or anything other than **`amd64`**), this APT repo will not offer **`libcxwidgets-dev`** until an **`arm64`** (or multi-arch) build is published. Use [Building](#building) from source, or install a downloaded `.deb` only if it matches your architecture.
+
+### APT (Debian, Ubuntu, Linux Mint, etc.)
+
+Package indexes are **not** GPG-signed. Using **`trusted=yes`** is only appropriate if you trust this source.
+
+**Classic `sources.list` drop-in** — create `/etc/apt/sources.list.d/cxwidgets.list`:
 
 ```
 deb [trusted=yes arch=amd64] https://ericoulashin.github.io/cxWidgets/linux-repo/apt ./
@@ -139,10 +167,35 @@ deb [trusted=yes arch=amd64] https://ericoulashin.github.io/cxWidgets/linux-repo
 
 Then:
 
-```
+```bash
 sudo apt update
 sudo apt install libcxwidgets-dev
 ```
+
+If **`apt update`** prints errors for that URL (404, certificate, etc.), fix Pages or the URL before retrying **`apt install`**.
+
+**DEB822 (Ubuntu 22.04+)** — e.g. `/etc/apt/sources.list.d/cxwidgets.sources`:
+
+```
+Types: deb
+URIs: https://ericoulashin.github.io/cxWidgets/linux-repo/apt
+Suites: ./
+Components:
+Architectures: amd64
+Trusted: yes
+```
+
+### Install the `.deb` directly (no APT metadata)
+
+If Pages is broken or you prefer a one-off install after a release landed on **`gh-pages`**:
+
+```bash
+VER=1.0.0
+curl -fLO "https://raw.githubusercontent.com/EricOulashin/cxWidgets/gh-pages/linux-repo/apt/libcxwidgets-dev_${VER}_amd64.deb"
+sudo apt install ./libcxwidgets-dev_${VER}_amd64.deb
+```
+
+Adjust **`VER`**, **`EricOulashin/cxWidgets`**, and **`amd64`** to match the file that actually exists on the **`gh-pages`** branch (browse the repo on GitHub, branch **`gh-pages`**, path **`linux-repo/apt/`**).
 
 **YUM/DNF (Fedora, RHEL, AlmaLinux, etc.)**
 

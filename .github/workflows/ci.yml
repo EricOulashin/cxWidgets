@@ -156,7 +156,9 @@ jobs:
     name: Publish APT and YUM indexes (GitHub Pages)
     runs-on: ubuntu-latest
     needs: [build-unix]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     permissions:
       contents: write
     steps:
@@ -165,6 +167,17 @@ jobs:
         with:
           name: linux-packages
           path: incoming
+
+      - name: Require a .deb in the artifact (publish job must not run with an empty repo)
+        run: |
+          shopt -s nullglob
+          debs=(incoming/*.deb)
+          if [ ${#debs[@]} -eq 0 ]; then
+            echo "No .deb files under incoming/. The linux-packages artifact is missing or empty."
+            echo "Check that the Ubuntu CI job built packages and uploaded the artifact."
+            exit 1
+          fi
+          echo "Found ${#debs[@]} Debian package(s)."
 
       - name: Install repository tools
         run: |
@@ -176,37 +189,53 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          mkdir -p publish/apt publish/yum/x86_64
+          # Deploy publish/ to the *root* of gh-pages so URLs are /linux-repo/apt/... and
+          # .nojekyll sits at the site root (avoids GitHub Pages / Jekyll eating some paths).
+          mkdir -p publish/linux-repo/apt publish/linux-repo/yum/x86_64
+          touch publish/.nojekyll
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           if git ls-remote --heads "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" gh-pages | grep -q gh-pages; then
             git clone --branch gh-pages --depth 1 "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" prev
             if [ -d prev/linux-repo ]; then
-              cp -a prev/linux-repo/. publish/
+              cp -a prev/linux-repo/. publish/linux-repo/
             fi
           fi
           shopt -s nullglob
           for f in incoming/*.deb; do
-            [ -f "$f" ] && cp "$f" publish/apt/
+            [ -f "$f" ] && cp "$f" publish/linux-repo/apt/
           done
           for f in incoming/*.rpm; do
-            [ -f "$f" ] && cp "$f" publish/yum/x86_64/
+            [ -f "$f" ] && cp "$f" publish/linux-repo/yum/x86_64/
           done
-          cd publish/apt
-          dpkg-scanpackages . /dev/null 2>/dev/null | gzip -9c > Packages.gz
-          cd ../..
-          if [ -d publish/yum/x86_64/repodata ]; then
-            createrepo_c --update publish/yum/x86_64
+          cd publish/linux-repo/apt
+          dpkg-scanpackages . /dev/null > Packages
+          gzip -9cn Packages > Packages.gz
+          # Minimal Release file so apt can validate the flat suite (optional but helps some apt versions).
+          {
+            echo "Origin: cxWidgets"
+            echo "Label: cxWidgets"
+            echo "Suite: stable"
+            echo "Architectures: amd64"
+            echo "Components:"
+            echo "Description: cxWidgets unofficial APT (GitHub Actions)"
+            echo "Date: $(date -Ru)"
+            echo "SHA256:"
+            printf ' %s %s %s\n' "$(sha256sum Packages | awk '{print $1}')" "$(stat -c%s Packages)" "Packages"
+            printf ' %s %s %s\n' "$(sha256sum Packages.gz | awk '{print $1}')" "$(stat -c%s Packages.gz)" "Packages.gz"
+          } > Release
+          cd ../../..
+          if [ -d publish/linux-repo/yum/x86_64/repodata ]; then
+            createrepo_c --update publish/linux-repo/yum/x86_64
           else
-            createrepo_c publish/yum/x86_64
+            createrepo_c publish/linux-repo/yum/x86_64
           fi
 
-      - name: Deploy linux-repo to GitHub Pages branch
+      - name: Deploy GitHub Pages (repository root on branch gh-pages)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./publish
-          destination_dir: linux-repo
           keep_files: true
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com
