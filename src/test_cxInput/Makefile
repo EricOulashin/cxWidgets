@@ -10,9 +10,6 @@ all: test_cxInput
 
 test_cxInput: test_cxInput.cpp
 	$(CC) -o test_cxInput $(CFLAGS) -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/..' test_cxInput.cpp -L.. $(LIBS)
-ifeq ($(OS),Darwin)
-	install_name_tool -change libcxWidgets.dylib @executable_path/../libcxWidgets.dylib test_cxInput
-endif
 
 clean:
 	rm -f *.o test_cxInput

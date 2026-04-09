@@ -95,7 +95,7 @@ $(DYNAMIC_LIB): $(WIDGETS_OBJS)
 else ifeq ($(OS),Darwin)
 $(LIB_REAL): $(WIDGETS_OBJS)
 	$(CC) -dynamiclib -current_version $(VERSION) -compatibility_version $(VMAJOR).0.0 \
-		-install_name $(LIB_SONAME) -o $(LIB_REAL) $(CFLAGS) $(WIDGETS_OBJS) $(LIBS_OPT) -lc
+		-install_name @rpath/$(LIB_SONAME) -o $(LIB_REAL) $(CFLAGS) $(WIDGETS_OBJS) $(LIBS_OPT) -lc
 
 $(LIB_SONAME): $(LIB_REAL)
 	ln -sf $(LIB_REAL) $(LIB_SONAME)
@@ -266,9 +266,9 @@ alltest: test_cxStringUtils test_cxDate test_cxValidators test_wordwrap
 	./test_cxDate
 	./test_cxValidators
 	./test_wordwrap
+	+make testcxInput
 	@echo "Note: cxUnitTest requires ncurses tracing and might fail if not properly configured."
 	./cxUnitTest
-	+make testcxInput
 
 test: alltest
 
