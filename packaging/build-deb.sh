@@ -21,7 +21,7 @@ Section: libdevel
 Priority: optional
 Architecture: ${DEB_ARCH}
 Maintainer: Eric Oulashin <eric.oulashin@gmail.com>
-Depends: libncurses6 | libncurses5, libtinfo6 | libtinfo5, libpanel6 | libpanel5, libmenu6 | libmenu5
+Depends: libncurses6 | libncurses5, libtinfo6 | libtinfo5, libpanel6 | libpanel5 | libncurses6 | libncurses5, libmenu6 | libmenu5 | libncurses6 | libncurses5
 Description: Development files for cxWidgets (ncurses-based C++ TUI library)
  Static and shared libraries plus C++ headers for linking against cxWidgets.
 EOF
