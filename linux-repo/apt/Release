@@ -4,7 +4,7 @@ Suite: stable
 Architectures: amd64
 Components:
 Description: cxWidgets unofficial APT (GitHub Actions)
-Date: Thu, 09 Apr 2026 17:59:11 +0000
+Date: Mon, 13 Apr 2026 17:20:13 +0000
 SHA256:
- d99cd36c4373aa7dd49a66f604fb1316b1e14213488d4b8fc8d09f8288fa7dd5 627 Packages
- 288821db05f844fb0908afbc6dafc0ad095932596ab4565b6240c3d0ad956728 433 Packages.gz
+ 779d12636cc59555fc6efdd82d9087625482fc452e5338c8d85a3e7889dfebb5 683 Packages
+ a64efcf2e9b52ce659fdbb54388bdc0f61f7c046289bbab5451557bf1825592c 441 Packages.gz
