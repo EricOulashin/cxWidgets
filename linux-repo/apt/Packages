@@ -4,10 +4,10 @@ Architecture: amd64
 Maintainer: Eric Oulashin <eric.oulashin@gmail.com>
 Depends: libncurses6 | libncurses5, libtinfo6 | libtinfo5, libpanel6 | libpanel5 | libncurses6 | libncurses5, libmenu6 | libmenu5 | libncurses6 | libncurses5
 Filename: ./libcxwidgets-dev_1.0.0_amd64.deb
-Size: 1362890
-MD5sum: 9b10c2fd5e6cb74bc88797ab9bb5b251
-SHA1: ca7ef1cef6d186041b445059c0e53f50d645f7ec
-SHA256: 641930f073fd0870afd77e6ce22fb22f601f5156f202f0261dfd3f9d76d2a301
+Size: 1362568
+MD5sum: 367407dac5c41365656d9d7dd4a9fe76
+SHA1: a29c6f8bda6f059ea8e1deb8f961782820542e80
+SHA256: 87ee386d0cbe614b04b95baab3c23409fb5e86a914a771974ac47a736885ded3
 Section: libdevel
 Priority: optional
 Description: Development files for cxWidgets (ncurses-based C++ TUI library)
